@@ -124,7 +124,7 @@ namespace ConstructEngine.Directory
         /// <param name="filename"></param>
         /// <param name="Player"></param>
 
-        public static void SearchForObjects(string filename, Entity Player = null)
+        public static void SearchForObjects(string filename, Entity player = null)
         {
             var root = LoadJson(filename);
 
@@ -137,16 +137,17 @@ namespace ConstructEngine.Directory
                 Type type = GetTypeByName<ConstructObject>(entity.name);
                 if (type != null)
                 {
-                    var obj = (ConstructObject)Activator.CreateInstance(type);
+                    var obj = (ConstructObject)Activator.CreateInstance(type, player);
                     obj.Rectangle = new(entity.x, entity.y, entity.width, entity.height);
                     obj.Name = entity.name;
                     obj.Values = normalDict;
-                    obj.Player = Player;
                     obj.CurrentSceneManager = Engine.SceneManager;
-                    ConstructObject.LoadObjects();
                 }
             }
+
+            ConstructObject.LoadObjects();
         }
+
 
         /// <summary>
         /// Instantiates all the entites from the GetEntityData dictionary and sets their position.
@@ -220,16 +221,12 @@ namespace ConstructEngine.Directory
             string defaultTileTexture = null, 
             string defaultTileRegion = null)
         {
-            // 1. Instantiate all entities
             InstantiateEntities(filename);
 
-            // 2. Load ConstructObjects
             SearchForObjects(filename, Player);
 
-            // 3. Load decals
             SearchForDecals(filename);
 
-            // 4. Load tilemaps if ContentManager and defaults are provided
             if (!string.IsNullOrEmpty(defaultTileTexture) && !string.IsNullOrEmpty(defaultTileRegion))
             {
                 LoadTilemap(Engine.Content, filename, defaultTileTexture, defaultTileRegion);

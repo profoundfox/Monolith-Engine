@@ -2,11 +2,12 @@ using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using ConstructEngine.Area;
+using ConstructEngine.Components.Entity;
 using Microsoft.Xna.Framework;
 
 namespace ConstructEngine.Objects
 {
-    public class CollisionObject : ConstructObject, ConstructObject.IObject
+    public class CollisionObject : ConstructObject, IObject
     {
         
         public bool Collidable { get; set; }
@@ -15,7 +16,7 @@ namespace ConstructEngine.Objects
         
         public Area2D Collider { get; set; }
 
-        public CollisionObject()
+        public CollisionObject(Entity player) : base(player)
         {
 
         }

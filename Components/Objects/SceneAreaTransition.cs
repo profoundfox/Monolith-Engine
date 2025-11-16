@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace ConstructEngine.Objects
 {
-    public class SceneAreaTransition : ConstructObject, ConstructObject.IObject
+    public class SceneAreaTransition : ConstructObject, IObject
     {
         public Scene.IScene Scene { get; set; }
 
