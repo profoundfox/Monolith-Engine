@@ -21,6 +21,7 @@ namespace ConstructEngine.Objects
         
         public Rectangle Rectangle { get; set; }
         public string Name { get; set; }
+        public Vector2 Position {get => new Vector2(Rectangle.X, Rectangle.Y);}
         public Dictionary<string, object> Values { get; set; }
 
         public ConstructObject()

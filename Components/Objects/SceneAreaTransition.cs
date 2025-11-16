@@ -35,15 +35,15 @@ namespace ConstructEngine.Objects
         {
             if (Rectangle != null)
             {
-                if (Rectangle.Intersects(Player.KinematicBase.Collider.Rect))
+                if (Rectangle.Intersects(Engine.MainCharacter.KinematicBase.Collider.Rect))
                 {
                     if (resetScene)
                     {
-                        CurrentSceneManager.ReloadCurrentScene();
+                        Engine.SceneManager.ReloadCurrentScene();
                     }
                     else
                     {
-                        CurrentSceneManager.AddScene(ChangeSceneWithAssembly());
+                        Engine.SceneManager.AddScene(ChangeSceneWithAssembly());
                     }
                 }
             }
@@ -69,7 +69,7 @@ namespace ConstructEngine.Objects
 
 
 
-                    Scene.IScene instance = (Scene.IScene)Activator.CreateInstance(type, CurrentSceneManager);
+                    Scene.IScene instance = (Scene.IScene)Activator.CreateInstance(type, Engine.SceneManager);
 
                     return instance;
 

@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
-using ConstructEngine.Components.Entity;
 using ConstructEngine.Graphics;
 using ConstructEngine.Objects;
 using ConstructEngine.Util;
@@ -95,53 +94,47 @@ namespace ConstructEngine.Directory
         }
 
         /// <summary>
-        /// Finds an entity in the level file extracts the position and parses the type, returns a dictionary with its position and the entity.
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <returns></returns>
-
-        public static Dictionary<Entity, Vector2> GetEntityData(string filename)
-        {
-            var root = LoadJson(filename);
-            var entityDict = new Dictionary<Entity, Vector2>();
-
-            foreach (var entity in root.layers.Where(l => l.entities != null).SelectMany(l => l.entities))
-            {
-                Type type = GetTypeByName<Entity>(entity.name);
-                if (type != null)
-                {
-                    Entity instance = (Entity)Activator.CreateInstance(type);
-                    entityDict[instance] = new Vector2(entity.x, entity.y);
-                }
-            }
-
-            return entityDict;
-        }
-
-        /// <summary>
         /// Searches for ConstructObjects within the enties layer in the level file, sets the object's values from the file.
         /// </summary>
         /// <param name="filename"></param>
         /// <param name="Player"></param>
 
-        public static void SearchForObjects(string filename, Entity player = null)
+        public static void SearchForObjects(string filename)
         {
             var root = LoadJson(filename);
 
-            foreach (var entity in root.layers.Where(l => l.entities != null).SelectMany(l => l.entities))
+            foreach (var entity in root.layers
+                                    .Where(l => l.entities != null)
+                                    .SelectMany(l => l.entities))
             {
-                if (entity.values == null) continue;
+                Dictionary<string, object> normalDict = entity.values != null 
+                    ? ParseValues(entity.values) 
+                    : new Dictionary<string, object>();
 
-                var normalDict = ParseValues(entity.values);
+                Type type = AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(a =>
+                    {
+                        try
+                        {
+                            return a.GetTypes();
+                        }
+                        catch (ReflectionTypeLoadException ex)
+                        {
+                            return ex.Types.Where(t => t != null);
+                        }
+                    })
+                    .FirstOrDefault(t => t.IsSubclassOf(typeof(ConstructObject)) && t.Name == entity.name);
 
-                Type type = GetTypeByName<ConstructObject>(entity.name);
                 if (type != null)
                 {
-                    var obj = (ConstructObject)Activator.CreateInstance(type, player);
+                    var obj = (ConstructObject)Activator.CreateInstance(type);
                     obj.Rectangle = new(entity.x, entity.y, entity.width, entity.height);
                     obj.Name = entity.name;
                     obj.Values = normalDict;
-                    obj.CurrentSceneManager = Engine.SceneManager;
+                }
+                else
+                {
+                    Console.WriteLine($"Type '{entity.name}' not found or not a subclass of ConstructObject.");
                 }
             }
 
@@ -149,22 +142,8 @@ namespace ConstructEngine.Directory
         }
 
 
-        /// <summary>
-        /// Instantiates all the entites from the GetEntityData dictionary and sets their position.
-        /// </summary>
-        /// <param name="filePath"></param>
 
-        public static void InstantiateEntities(string filePath)
-        {
-            var entityDict = GetEntityData(filePath);
-            foreach (var kv in entityDict)
-            {
-                Entity.EntityList.Add(kv.Key);
-                kv.Key.Load();
-                kv.Key.KinematicBase.Collider.Rect.X = (int)kv.Value.X;
-                kv.Key.KinematicBase.Collider.Rect.Y = (int)kv.Value.Y;
-            }
-        }
+
 
         /// <summary>
         /// Creates a tilemap from the level's data list, uses the texture region system to make it work with atlases. 
@@ -217,13 +196,11 @@ namespace ConstructEngine.Directory
         /// <param name="defaultTileRegion"></param>
         public static void FromFile(
             string filename, 
-            Entity Player = null, 
             string defaultTileTexture = null, 
             string defaultTileRegion = null)
         {
-            InstantiateEntities(filename);
 
-            SearchForObjects(filename, Player);
+            SearchForObjects(filename);
 
             SearchForDecals(filename);
 

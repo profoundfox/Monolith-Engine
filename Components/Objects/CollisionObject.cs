@@ -2,7 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.ComponentModel;
 using ConstructEngine.Area;
-using ConstructEngine.Components.Entity;
+using ConstructEngine.Components;
 using Microsoft.Xna.Framework;
 
 namespace ConstructEngine.Objects
@@ -16,7 +16,7 @@ namespace ConstructEngine.Objects
         
         public Area2D Collider { get; set; }
 
-        public CollisionObject(Entity player) : base(player)
+        public CollisionObject()
         {
 
         }
@@ -57,8 +57,8 @@ namespace ConstructEngine.Objects
 
             if (OneWay)
             {
-                bool playerAbove = Player.KinematicBase.Collider.Rect.Bottom <= Collider.Rect.Top;
-                bool movingDown = Player.KinematicBase.Velocity.Y >= 0;
+                bool playerAbove = Engine.MainCharacter.KinematicBase.Collider.Rect.Bottom <= Collider.Rect.Top;
+                bool movingDown = Engine.MainCharacter.KinematicBase.Velocity.Y >= 0;
 
                 if (playerAbove && movingDown)
                 {

@@ -8,7 +8,7 @@ using ConstructEngine.Input;
 using ConstructEngine.Graphics;
 using ConstructEngine.UI;
 using ConstructEngine.Area;
-using ConstructEngine.Components.Entity;
+using ConstructEngine.Components;
 using ConstructEngine.Util;
 
 using Gum.Wireframe;
@@ -31,7 +31,7 @@ namespace ConstructEngine
         public static SpriteBatch SpriteBatch { get; private set; }
         public static SpriteFont Font { get; private set; }
         public Effect PostProcessingShader { get; set; }
-
+        public static KinematicEntity MainCharacter {get; set;}
         public static SceneManager SceneManager { get; private set; }
         public static InputManager Input { get; private set; }
         public GumService GumUI { get; private set; }
@@ -240,7 +240,7 @@ namespace ConstructEngine
         {
             ParallaxBackground.BackgroundList.Clear();
             Tilemap.Tilemaps.Clear();
-            Entity.EntityList.Clear();
+            KinematicEntity.EntityList.Clear();
             Area2D.AreaList.Clear();
             ConstructObject.ObjectList.Clear();
             Ray2D.RayList.Clear();

@@ -1,7 +1,7 @@
 using ConstructEngine.Area;
 using Microsoft.Xna.Framework;
 using System;
-using ConstructEngine.Components.Entity;
+using ConstructEngine.Components;
 using ConstructEngine.Helpers;
 using ConstructEngine.Util.Tween;
 
@@ -45,7 +45,7 @@ namespace ConstructEngine.Graphics
         }
         
         
-        public void Follow(Entity targetEntity)
+        public void Follow(KinematicEntity targetEntity)
         {
             if (targetEntity == null) return;
 
