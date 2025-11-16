@@ -57,7 +57,6 @@ namespace ConstructEngine
 
         private static bool quit;
 
-        private EngineConfig Config;
 
         public Engine(EngineConfig config)
         {
@@ -65,8 +64,6 @@ namespace ConstructEngine
                 throw new InvalidOperationException("Only one Engine instance can exist.");
 
             Instance = this;
-
-            Config = config;
 
             Title = config.Title;
             VirtualWidth = config.VirtualWidth;
