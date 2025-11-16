@@ -22,12 +22,13 @@ namespace ConstructEngine.Util
                 e.Update(gameTime);
             }
         }
-        
+          
 
         public static void DrawEntities(SpriteBatch spriteBatch)
         {
-            foreach (Entity.IEntity e in Entity.EntityList)
+            for (int i = Entity.EntityList.Count - 1; i >= 0; i--)
             {
+                Entity.IEntity e = Entity.EntityList[i];
                 e.Draw(spriteBatch);
             }
         }

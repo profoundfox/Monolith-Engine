@@ -15,6 +15,7 @@ using Gum.Wireframe;
 using RenderingLibrary;
 using MonoGameGum;
 using ConstructEngine.Objects;
+using ConstructEngine.Util.Tween;
 
 namespace ConstructEngine
 {
@@ -25,7 +26,7 @@ namespace ConstructEngine
         public static GraphicsDeviceManager Graphics { get; private set; }
         public static new GraphicsDevice GraphicsDevice { get; private set; }
         public static RenderTarget2D RenderTarget { get; private set; }
-
+        public static TweenManager TweenManager {get; private set;}
         public static new ContentManager Content { get; private set; }
         public static SpriteBatch SpriteBatch { get; private set; }
         public static SpriteFont Font { get; private set; }
@@ -104,12 +105,14 @@ namespace ConstructEngine
         }
 
         protected override void Initialize()
-        {
+        {   
+            TweenManager = new TweenManager();
             SceneManager = new SceneManager();
             Input = new InputManager();
             Input.InitializeBinds(DefaultInput.Binds);
 
             base.Initialize();
+
 
             Window.ClientSizeChanged += (_, _) =>
             {
@@ -138,6 +141,7 @@ namespace ConstructEngine
             if ((ExitOnEscape && Input.Keyboard.IsKeyDown(Keys.Escape)) || quit)
                 Exit();
 
+            TweenManager.Update();
             SceneManager.UpdateCurrentScene(gameTime);
             GumManager.UpdateAll(gameTime);
             GumUI?.Update(this, gameTime);
