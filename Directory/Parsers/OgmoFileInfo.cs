@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ConstructEngine.Directory
 {
-    public class OgmoReader
+    public class OgmoFileInfo
     {
         public class Root
         {

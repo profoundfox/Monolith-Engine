@@ -74,6 +74,8 @@ namespace ConstructEngine
             IntegerScaling = config.IntegerScaling;
             AllowUserResizing = config.AllowUserResizing;
             IsBorderless = config.IsBorderless;
+            IsFixedTimeStep = config.IsFixedTimeStep;
+            IsMouseVisible = config.IsMouseVisible;
             SynchronizeWithVerticalRetrace = config.SynchronizeWithVerticalRetrace;
             ExitOnEscape = config.ExitOnEscape;
             FontPath = config.FontPath;
@@ -86,12 +88,8 @@ namespace ConstructEngine
             };
 
             Content = base.Content;
-            Content.RootDirectory = "Content";
+            Content.RootDirectory = config.RootContentDirectory;
 
-            Window.Title = Title ?? "Construct Engine - Unnamed Project";
-            IsMouseVisible = true;
-
-            Window.AllowUserResizing = true;
 
             Window.AllowUserResizing = AllowUserResizing;
             Window.IsBorderless = IsBorderless;
@@ -99,7 +97,6 @@ namespace ConstructEngine
             Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 
-            IsFixedTimeStep = IsFixedTimeStep;
             Graphics.SynchronizeWithVerticalRetrace = SynchronizeWithVerticalRetrace;
             Graphics.ApplyChanges();
 

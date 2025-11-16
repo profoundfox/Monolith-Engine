@@ -40,5 +40,9 @@ namespace ConstructEngine.Objects
             void Load();
             void Update(GameTime gameTime);
         }
+
+        public static void LoadObjects() => ConstructObject.ObjectList.ForEach(o => o.Load());
+        public static void DrawObjects(SpriteBatch spriteBatch) => ConstructObject.ObjectList.ForEach(o => o.Draw(spriteBatch));
+        public static void UpdateObjects(GameTime gameTime) => ConstructObject.ObjectList.ForEach(o => o.Update(gameTime));
     }
 }

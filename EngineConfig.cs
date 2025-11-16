@@ -17,6 +17,12 @@ namespace ConstructEngine
         public string Title = "My Game";
 
         /// <summary>
+        /// The root directory of assets.
+        /// Default: "Content"
+        /// </summary>
+        public string RootContentDirectory = "Content";
+
+        /// <summary>
         /// Internal render width in pixels (before scaling).
         /// Default: 640
         /// </summary>
@@ -52,6 +58,12 @@ namespace ConstructEngine
         /// Default: true
         /// </summary>
         public bool IsBorderless = true;
+
+        /// <summary>
+        /// If true, the mouse is visible
+        /// Default: false
+        /// </summary>
+        public bool IsMouseVisible = false;
 
         /// <summary>
         /// If true, the engine updates as fast as possible.

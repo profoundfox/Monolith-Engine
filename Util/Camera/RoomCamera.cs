@@ -20,12 +20,6 @@ namespace ConstructEngine.Graphics
         
         private bool Entered = false;
 
-
-
-
-
-
-
         public RoomCamera(float zoom)
         {
             Zoom = zoom;
@@ -40,8 +34,6 @@ namespace ConstructEngine.Graphics
                 (int)(Engine.VirtualWidth / Zoom),
                 (int)(Engine.VirtualHeight / Zoom)
             );
-
-
         }
         
         private void UpdateCameraRectangle()
