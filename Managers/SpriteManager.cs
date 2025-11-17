@@ -7,8 +7,8 @@ namespace ConstructEngine.Managers
 {
     public class SpriteManager
     {
-        public static List<Sprite> Sprites = new();
-        public static Dictionary<string, Sprite> SpriteMap = new Dictionary<string, Sprite>();
+        public List<Sprite> Sprites = new();
+        public Dictionary<string, Sprite> SpriteMap = new Dictionary<string, Sprite>();
         
         /// <summary>
         /// Creates a SpriteManager.
@@ -53,13 +53,10 @@ namespace ConstructEngine.Managers
 
         public void DrawAllSprites(SpriteBatch spriteBatch)
         {
-            
-            for (int i = Sprites.Count - 1; i >= 0; i--)
+            foreach (var s in Sprites) 
             {
-                Sprite s = Sprites[i];
+                Engine.DrawManager.Draw(s);
             }
-
-        
         }
 
     }

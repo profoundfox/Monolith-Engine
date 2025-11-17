@@ -80,8 +80,9 @@ namespace ConstructEngine.Managers
                 SourceRectangle = sourceRect
             }, layer);
         }
-        public void DrawSprite(Sprite sprite, DrawLayer layer = DrawLayer.Middleground)
+        public void Draw(Sprite sprite, DrawLayer layer = DrawLayer.Middleground)
         {
+            Console.WriteLine("yes");
             Queue(new DrawCall
             {
                 Texture = sprite.Region.Texture,
@@ -102,6 +103,7 @@ namespace ConstructEngine.Managers
         {
             foreach (DrawLayer layer in Enum.GetValues(typeof(DrawLayer)))
             {
+                
                 var queue = _drawQueues[(DrawLayer)layer];
                 if (queue.Count == 0) continue;
 
@@ -115,8 +117,10 @@ namespace ConstructEngine.Managers
 
                 foreach (var call in queue)
                 {
+
                     if (call.Texture != null)
-                    {
+                    {   
+                        Console.WriteLine($"{call.Texture} {call.Position} {call.SourceRectangle} {call.Color} {call.Rotation} {call.Origin} {call.Scale} {call.Effects} {call.LayerDepth}");
                         _spriteBatch.Draw(
                             call.Texture,
                             call.Position,
@@ -128,10 +132,6 @@ namespace ConstructEngine.Managers
                             call.Effects,
                             call.LayerDepth
                         );
-                    }
-                    else
-                    {
-                        // TODO: handle text draws here if using DrawText queue
                     }
                 }
 

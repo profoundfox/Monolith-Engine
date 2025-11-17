@@ -134,6 +134,7 @@ namespace ConstructEngine
 
             Window.AllowUserResizing = Config.AllowUserResizing;
             Window.IsBorderless = Config.IsBorderless;
+            IsFixedTimeStep = Config.IsFixedTimeStep;
 
             Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
