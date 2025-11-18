@@ -192,7 +192,7 @@ namespace ConstructEngine.Managers
             if (!IsStackEmpty() && !_sceneFrozen)
             {
                 Engine.TweenManager.Update();
-                CObject.UpdateObjects(gameTime);
+                CTObject.UpdateObjects(gameTime);
                 GetCurrentScene()?.Update(gameTime);
             }
 
@@ -209,7 +209,12 @@ namespace ConstructEngine.Managers
         public void DrawCurrentScene(SpriteBatch spriteBatch)
         {
             if (!IsStackEmpty())
+            {
+                Engine.SpriteManager.DrawAllSprites(spriteBatch);
+                Engine.DrawManager.DrawTilemaps(spriteBatch);
+                CTObject.DrawObjects(spriteBatch);
                 GetCurrentScene()?.Draw(spriteBatch);
+            }
 
             for (int i = BackseatComponent.BackseatComponentList.Count - 1; i >= 0; i--)
                 BackseatComponent.BackseatComponentList[i].Draw(spriteBatch);
@@ -239,7 +244,7 @@ namespace ConstructEngine.Managers
         private void GetAndSetPlayer()
         {
             KinematicEntity mainCharacter =
-            CObject.ObjectList
+            CTObject.ObjectList
                 .FirstOrDefault(e => e.GetType() == Engine.Instance.Config.MainCharacterType)
                 as KinematicEntity;
 
@@ -256,7 +261,7 @@ namespace ConstructEngine.Managers
             KinematicEntity.EntityList.Clear();
             Engine.SpriteManager.Empty();
             Area2D.AreaList.Clear();
-            CObject.ObjectList.Clear();
+            CTObject.ObjectList.Clear();
             Ray2D.RayList.Clear();
         }
     }

@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 
 namespace ConstructEngine.Util
@@ -7,6 +8,7 @@ namespace ConstructEngine.Util
     {
         event Action<IState, string> TransitionRequested;
         void OnEnter();
+        
         void Update(GameTime gameTime);
         void OnExit();
     }

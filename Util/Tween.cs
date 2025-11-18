@@ -1,8 +1,9 @@
 using System;
 using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
+using ConstructEngine.Helpers;
 
-namespace ConstructEngine.Util.Tween
+namespace ConstructEngine.Util
 {
     public class Tween
     {

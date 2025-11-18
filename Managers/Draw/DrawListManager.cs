@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ConstructEngine.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -9,6 +10,11 @@ namespace ConstructEngine.Managers
     /// </summary>
     public partial class DrawManager
     {
+        /// <summary>
+        /// A list of tilemaps that will be drawn alongside queued draw calls.
+        /// </summary>
+        public List<Tilemap> Tilemaps = new List<Tilemap>();
+
         public void DrawTilemaps(SpriteBatch spriteBatch)
         {
             foreach (Tilemap tilemap in Tilemaps)

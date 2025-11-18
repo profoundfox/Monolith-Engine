@@ -202,8 +202,8 @@ namespace ConstructEngine
             GumUI?.Update(this, gameTime);
             
 
-            if (CCamera.CurrentCamera != null)
-                DrawManager.SetCamera(CCamera.CurrentCamera.Transform);
+            if (CTCamera.CurrentCamera != null)
+                DrawManager.SetCamera(CTCamera.CurrentCamera.Transform);
 
             base.Update(gameTime);
         }
@@ -218,9 +218,6 @@ namespace ConstructEngine
 
             GraphicsDevice.Clear(Color.DarkSlateGray);
 
-            CObject.DrawObjects(SpriteBatch);
-            SpriteManager.DrawAllSprites(SpriteBatch);
-            DrawManager.DrawTilemaps(SpriteBatch);
             SceneManager.DrawCurrentScene(SpriteBatch);
 
             DrawManager.Flush();

@@ -7,7 +7,7 @@ using ConstructEngine.Util.Tween;
 
 namespace ConstructEngine.Graphics
 {
-    public class RoomCamera : CCamera
+    public class RoomCamera : CTCamera
     {
         private Tween cameraXTween;
         private Tween cameraYTween;

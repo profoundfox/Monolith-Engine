@@ -15,7 +15,7 @@ namespace ConstructEngine.Objects
         void Draw(SpriteBatch spriteBatch);
     }
 
-    public class CObject : IObject
+    public class CTObject : IObject
     {
         public static List<IObject> ObjectList { get; private set; } = new();
         public static Dictionary<string, IObject> ObjectDict { get; private set; } = new();
@@ -25,9 +25,11 @@ namespace ConstructEngine.Objects
         public Vector2 Position {get => new Vector2(Rectangle.X, Rectangle.Y);}
         public Dictionary<string, object> Values { get; set; }
 
-        public CObject()
+        public CTObject()
         {
             ObjectList.Add(this);
+
+            Console.WriteLine(Name);
         }
 
         public virtual void Load() { }

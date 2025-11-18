@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using ConstructEngine.Util;
 
-namespace ConstructEngine.Util.Tween
+namespace ConstructEngine.Managers
 {
     public class TweenManager
     {

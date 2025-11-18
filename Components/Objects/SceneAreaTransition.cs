@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace ConstructEngine.Objects
 {
-    public class SceneAreaTransition : CObject, IObject
+    public class SceneAreaTransition : CTObject, IObject
     {
 
         private bool resetScene = false;

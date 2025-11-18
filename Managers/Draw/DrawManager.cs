@@ -17,6 +17,11 @@ namespace ConstructEngine.Managers
         UI
     }
 
+    public enum CSpriteEffects
+    {
+        
+    }
+
     /// <summary>
     /// Represents a single batched sprite draw call containing all rendering
     /// parameters needed to draw a texture using SpriteBatch.
@@ -38,6 +43,9 @@ namespace ConstructEngine.Managers
         public SpriteEffects Effects;
         public float LayerDepth;
         public Effect Effect;
+        public bool LoopX;
+        public bool LoopY;
+        public Vector2 Offset;
     }
 
     /// <summary>
@@ -49,11 +57,6 @@ namespace ConstructEngine.Managers
         private readonly SpriteBatch _spriteBatch;
         private readonly Dictionary<DrawLayer, List<DrawCall>> _drawQueues;
         private Matrix _cameraTransform = Matrix.Identity;
-
-        /// <summary>
-        /// A list of tilemaps that will be drawn alongside queued draw calls.
-        /// </summary>
-        public List<Tilemap> Tilemaps = new List<Tilemap>();
 
         /// <summary>
         /// Creates a new DrawManager using the provided SpriteBatch.
@@ -87,6 +90,8 @@ namespace ConstructEngine.Managers
             _drawQueues[layer].Add(drawCall);
         }
 
+    
+
         /// <summary>
         /// Draws all queued sprites to the screen, grouped by layer and then cleared.
         /// </summary>
@@ -98,7 +103,7 @@ namespace ConstructEngine.Managers
         {
             foreach (DrawLayer layer in Enum.GetValues(typeof(DrawLayer)))
             {
-                var queue = _drawQueues[(DrawLayer)layer];
+                var queue = _drawQueues[layer];
                 if (queue.Count == 0) continue;
 
                 _spriteBatch.Begin(
@@ -112,10 +117,18 @@ namespace ConstructEngine.Managers
                 {
                     if (call.Texture != null)
                     {
+                        Rectangle src = call.SourceRectangle ?? new Rectangle(0, 0, call.Texture.Width, call.Texture.Height);
+
+                        // Apply looping offsets
+                        if (call.LoopX)
+                            src.X = ((int)call.Offset.X) % call.Texture.Width;
+                        if (call.LoopY)
+                            src.Y = ((int)call.Offset.Y) % call.Texture.Height;
+
                         _spriteBatch.Draw(
                             call.Texture,
                             call.Position,
-                            call.SourceRectangle,
+                            src,
                             call.Color,
                             call.Rotation,
                             call.Origin,

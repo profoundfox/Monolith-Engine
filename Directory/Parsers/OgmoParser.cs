@@ -129,11 +129,11 @@ namespace ConstructEngine.Directory
                             return ex.Types.Where(t => t != null);
                         }
                     })
-                    .FirstOrDefault(t => t.IsSubclassOf(typeof(CObject)) && t.Name == entity.name);
+                    .FirstOrDefault(t => t.IsSubclassOf(typeof(CTObject)) && t.Name == entity.name);
 
                 if (type != null)
                 {
-                    var obj = (CObject)Activator.CreateInstance(type);
+                    var obj = (CTObject)Activator.CreateInstance(type);
                     obj.Rectangle = new(entity.x, entity.y, entity.width, entity.height);
                     obj.Name = entity.name;
                     obj.Values = normalDict;
@@ -144,7 +144,7 @@ namespace ConstructEngine.Directory
                 }
             }
 
-            CObject.LoadObjects();
+            CTObject.LoadObjects();
         }
 
 
