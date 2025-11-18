@@ -35,17 +35,10 @@ namespace ConstructEngine.Managers
 
             SceneIntervention();
 
-            var cfg = scene.Config;
-
-            String FilePath = cfg.DataPath;
-            String TilemapTexturePath = cfg.TilemapTexturePath;
-            String TilemapRegion = cfg.TilemapRegion;
-
             scene.Initialize();
             scene.Load();
 
-            if (cfg.DataPath != null)
-                OgmoParser.FromFile(FilePath, TilemapTexturePath, TilemapRegion);
+            CTObject.LoadObjects();
 
             GetAndSetPlayer();
 

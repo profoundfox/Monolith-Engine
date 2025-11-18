@@ -43,9 +43,28 @@ namespace ConstructEngine.Managers
         public SpriteEffects Effects;
         public float LayerDepth;
         public Effect Effect;
+        public bool UseCamera;
         public bool LoopX;
         public bool LoopY;
         public Vector2 Offset;
+
+        public DrawCall(bool initializeDefaults)
+        {
+            Texture = null;
+            Position = Vector2.Zero;
+            SourceRectangle = null;
+            Color = Color.White;
+            Rotation = 0f;
+            Origin = Vector2.Zero;
+            Scale = Vector2.One;
+            Effects = SpriteEffects.None;
+            LayerDepth = 0f;
+            Effect = null;
+            LoopX = false;
+            LoopY = false;
+            Offset = Vector2.Zero;
+            UseCamera = true;
+        }
     }
 
     /// <summary>
@@ -99,6 +118,7 @@ namespace ConstructEngine.Managers
         /// Layers are drawn from back to front, and SpriteBatch is begun and ended
         /// once per layer. UI layer is drawn without camera transform.
         /// </remarks>
+        
         public void Flush()
         {
             foreach (DrawLayer layer in Enum.GetValues(typeof(DrawLayer)))
@@ -106,42 +126,66 @@ namespace ConstructEngine.Managers
                 var queue = _drawQueues[layer];
                 if (queue.Count == 0) continue;
 
-                _spriteBatch.Begin(
-                    SpriteSortMode.BackToFront,
-                    BlendState.AlphaBlend,
-                    SamplerState.PointClamp,
-                    transformMatrix: layer == DrawLayer.UI ? Matrix.Identity : _cameraTransform
-                );
+                var cameraCalls = queue.FindAll(c => c.UseCamera);
+                var screenCalls = queue.FindAll(c => !c.UseCamera);
 
-                foreach (var call in queue)
+                if (cameraCalls.Count > 0)
                 {
-                    if (call.Texture != null)
-                    {
-                        Rectangle src = call.SourceRectangle ?? new Rectangle(0, 0, call.Texture.Width, call.Texture.Height);
+                    _spriteBatch.Begin(
+                        SpriteSortMode.BackToFront,
+                        BlendState.AlphaBlend,
+                        SamplerState.PointClamp,
+                        transformMatrix: layer == DrawLayer.UI ? Matrix.Identity : _cameraTransform
+                    );
 
-                        // Apply looping offsets
-                        if (call.LoopX)
-                            src.X = ((int)call.Offset.X) % call.Texture.Width;
-                        if (call.LoopY)
-                            src.Y = ((int)call.Offset.Y) % call.Texture.Height;
+                    foreach (var call in cameraCalls)
+                        DrawInternal(call);
 
-                        _spriteBatch.Draw(
-                            call.Texture,
-                            call.Position,
-                            src,
-                            call.Color,
-                            call.Rotation,
-                            call.Origin,
-                            call.Scale,
-                            call.Effects,
-                            call.LayerDepth
-                        );
-                    }
+                    _spriteBatch.End();
                 }
 
-                _spriteBatch.End();
+                // 2. Draw screen-space sprites (no camera)
+                if (screenCalls.Count > 0)
+                {
+                    _spriteBatch.Begin(
+                        SpriteSortMode.BackToFront,
+                        BlendState.AlphaBlend,
+                        SamplerState.PointClamp,
+                        transformMatrix: Matrix.Identity
+                    );
+
+                    foreach (var call in screenCalls)
+                        DrawInternal(call);
+
+                    _spriteBatch.End();
+                }
+
                 queue.Clear();
             }
         }
+
+        private void DrawInternal(DrawCall call)
+        {
+            Rectangle src = call.SourceRectangle ??
+                            new Rectangle(0, 0, call.Texture.Width, call.Texture.Height);
+
+            if (call.LoopX)
+                src.X = ((int)call.Offset.X) % call.Texture.Width;
+            if (call.LoopY)
+                src.Y = ((int)call.Offset.Y) % call.Texture.Height;
+
+            _spriteBatch.Draw(
+                call.Texture,
+                call.Position,
+                src,
+                call.Color,
+                call.Rotation,
+                call.Origin,
+                call.Scale,
+                call.Effects,
+                call.LayerDepth
+            );
+        }
+
     }
 }

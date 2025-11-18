@@ -24,7 +24,7 @@ namespace ConstructEngine.Managers
             Rectangle? sourceRect = null
         )
         {
-            Queue(new DrawCall
+            Queue(new DrawCall(true)
             {
                 Texture = texture,
                 Position = position,
@@ -40,7 +40,7 @@ namespace ConstructEngine.Managers
         }
         public void Draw(Sprite sprite, DrawLayer layer = DrawLayer.Middleground)
         {
-            Queue(new DrawCall
+            Queue(new DrawCall(true)
             {
                 Texture = sprite.Region.Texture,
                 Position = sprite.Position,
@@ -68,7 +68,7 @@ namespace ConstructEngine.Managers
             Effect effect = null
         )
         {
-            Queue(new DrawCall
+            Queue(new DrawCall(true)
             {
                 Texture = region.Texture,
                 Position = position,
@@ -108,7 +108,7 @@ namespace ConstructEngine.Managers
             {
                 for (int y = 0; y < tilesY; y++)
                 {
-                    Queue(new DrawCall
+                    Queue(new DrawCall(true)
                     {
                         Texture = sprite.Region.Texture,
                         Position = new Vector2(x * (int)sprite.Width - offsetX + position.X, y * (int)sprite.Height - offsetY + position.Y),
@@ -139,7 +139,7 @@ namespace ConstructEngine.Managers
             {
                 for (int y = 0; y < tilesY; y++)
                 {
-                    Queue(new DrawCall
+                    Queue(new DrawCall(true)
                     {
                         Texture = texture,
                         Position = new Vector2(x * (int)texture.Width - offsetX + position.X, y * texture.Height - offsetY + position.Y),
@@ -148,6 +148,7 @@ namespace ConstructEngine.Managers
                         LayerDepth = layerDepth,
                         LoopX = true,
                         LoopY = true,
+                        UseCamera = false,
                         Offset = offset
                     }, layer);
                 }

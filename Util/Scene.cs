@@ -17,7 +17,6 @@ namespace ConstructEngine.Util
 {
     public interface IScene
     {
-        public SceneConfig Config {get; set;}
         public void Initialize();
         public void Load();
         public void Unload();
@@ -33,7 +32,12 @@ namespace ConstructEngine.Util
             Config = config;
         }
         public virtual void Initialize() {}
-        public virtual void Load() {}
+        public virtual void Load()
+        {
+            if (Config.DataPath != null)
+                OgmoParser.FromFile(Config.DataPath, Config.TilemapTexturePath, Config.TilemapRegion);
+
+        }
         public virtual void Unload() {}
         public virtual void Update(GameTime gameTime) {}
         public virtual void Draw(SpriteBatch spriteBatch) {}

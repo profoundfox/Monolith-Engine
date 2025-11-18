@@ -110,8 +110,8 @@ namespace ConstructEngine.Directory
             var root = LoadJson(filename);
 
             foreach (var entity in root.layers
-                                    .Where(l => l.entities != null)
-                                    .SelectMany(l => l.entities))
+                .Where(l => l.entities != null)
+                .SelectMany(l => l.entities))
             {
                 Dictionary<string, object> normalDict = entity.values != null 
                     ? ParseValues(entity.values) 
@@ -143,13 +143,7 @@ namespace ConstructEngine.Directory
                     Console.WriteLine($"Type '{entity.name}' not found or not a subclass of CObject.");
                 }
             }
-
-            CTObject.LoadObjects();
         }
-
-
-
-
 
         /// <summary>
         /// Creates a tilemap from the level's data list, uses the texture region system to make it work with atlases. 
@@ -159,7 +153,6 @@ namespace ConstructEngine.Directory
         /// <param name="textureName"></param>
         /// <param name="region"></param>
         /// <exception cref="Exception"></exception>
-
         public static void LoadTilemap(ContentManager content, string filename, string textureName, string region)
         {
             var root = LoadJson(filename);
