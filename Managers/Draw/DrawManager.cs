@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 namespace ConstructEngine.Managers
 {
+    /// <summary>
+    /// An enum representing four different layers, back to front.
+    /// </summary>
     public enum DrawLayer
     {
         Background,
@@ -14,6 +17,15 @@ namespace ConstructEngine.Managers
         UI
     }
 
+    /// <summary>
+    /// Represents a single batched sprite draw call containing all rendering
+    /// parameters needed to draw a texture using SpriteBatch.
+    /// </summary>
+    /// <remarks>
+    /// This struct stores texture reference, draw positioning, source region,
+    /// tint color, rotation, origin pivot, scaling, sprite effects, depth layering,
+    /// and optional shader effects.
+    /// </remarks>
     public struct DrawCall
     {
         public Texture2D Texture;
@@ -28,14 +40,25 @@ namespace ConstructEngine.Managers
         public Effect Effect;
     }
 
-    public class DrawManager
+    /// <summary>
+    /// The manager responsible for batching, organizing, and drawing queued sprites
+    /// across multiple draw layers in the correct order.
+    /// </summary>
+    public partial class DrawManager
     {
         private readonly SpriteBatch _spriteBatch;
         private readonly Dictionary<DrawLayer, List<DrawCall>> _drawQueues;
         private Matrix _cameraTransform = Matrix.Identity;
 
+        /// <summary>
+        /// A list of tilemaps that will be drawn alongside queued draw calls.
+        /// </summary>
         public List<Tilemap> Tilemaps = new List<Tilemap>();
 
+        /// <summary>
+        /// Creates a new DrawManager using the provided SpriteBatch.
+        /// </summary>
+        /// <param name="spriteBatch">The SpriteBatch used for rendering.</param>
         public DrawManager(SpriteBatch spriteBatch)
         {
             _spriteBatch = spriteBatch;
@@ -45,94 +68,36 @@ namespace ConstructEngine.Managers
                 _drawQueues[layer] = new List<DrawCall>();
         }
 
+        /// <summary>
+        /// Sets the camera transformation matrix applied to non-UI draw layers.
+        /// </summary>
+        /// <param name="transform">A Matrix representing the camera transform.</param>
         public void SetCamera(Matrix transform)
         {
             _cameraTransform = transform;
         }
+
+        /// <summary>
+        /// Adds a sprite draw call to the specified draw layer’s queue.
+        /// </summary>
+        /// <param name="drawCall">The draw call to enqueue.</param>
+        /// <param name="layer">The draw layer to queue it in. Defaults to Middleground.</param>
         public void Queue(DrawCall drawCall, DrawLayer layer = DrawLayer.Middleground)
         {
             _drawQueues[layer].Add(drawCall);
         }
 
-        public void Draw(
-            Texture2D texture,
-            Vector2 position,
-            Color color,
-            DrawLayer layer = DrawLayer.Middleground,
-            float rotation = 0f,
-            Vector2? origin = null,
-            Vector2? scale = null,
-            SpriteEffects effects = SpriteEffects.None,
-            float layerDepth = 0f,
-            Effect effect = null,
-            Rectangle? sourceRect = null
-        )
-        {
-            Queue(new DrawCall
-            {
-                Texture = texture,
-                Position = position,
-                Color = color,
-                Rotation = rotation,
-                Origin = origin ?? Vector2.Zero,
-                Scale = scale ?? Vector2.One,
-                Effects = effects,
-                LayerDepth = layerDepth,
-                Effect = effect,
-                SourceRectangle = sourceRect
-            }, layer);
-        }
-        public void Draw(Sprite sprite, DrawLayer layer = DrawLayer.Middleground)
-        {
-            Queue(new DrawCall
-            {
-                Texture = sprite.Region.Texture,
-                Position = sprite.Position,
-                SourceRectangle = sprite.Region.SourceRectangle,
-                Color = sprite.Color,
-                Rotation = sprite.Rotation,
-                Origin = sprite.Origin,
-                Scale = sprite.Scale,
-                Effects = sprite.Effects,
-                LayerDepth = sprite.LayerDepth,
-                Effect = null
-            }, layer);
-        }
-
-        public void Draw(
-            TextureRegion region,
-            Vector2 position,
-            Color color,
-            DrawLayer layer = DrawLayer.Middleground,
-            float rotation = 0f,
-            Vector2? origin = null,
-            Vector2? scale = null,
-            SpriteEffects effects = SpriteEffects.None,
-            float layerDepth = 0f,
-            Effect effect = null
-        )
-        {
-            Queue(new DrawCall
-            {
-                Texture = region.Texture,
-                Position = position,
-                Color = color,
-                Rotation = rotation,
-                Origin = origin ?? Vector2.Zero,
-                Scale = scale ?? Vector2.One,
-                Effects = effects,
-                LayerDepth = layerDepth,
-                Effect = effect,
-                SourceRectangle = region.SourceRectangle
-            }, layer);
-        }
-
-
+        /// <summary>
+        /// Draws all queued sprites to the screen, grouped by layer and then cleared.
+        /// </summary>
+        /// <remarks>
+        /// Layers are drawn from back to front, and SpriteBatch is begun and ended
+        /// once per layer. UI layer is drawn without camera transform.
+        /// </remarks>
         public void Flush()
         {
             foreach (DrawLayer layer in Enum.GetValues(typeof(DrawLayer)))
             {
-                
                 var queue = _drawQueues[(DrawLayer)layer];
                 if (queue.Count == 0) continue;
 
@@ -143,12 +108,10 @@ namespace ConstructEngine.Managers
                     transformMatrix: layer == DrawLayer.UI ? Matrix.Identity : _cameraTransform
                 );
 
-
                 foreach (var call in queue)
                 {
-
                     if (call.Texture != null)
-                    {   
+                    {
                         _spriteBatch.Draw(
                             call.Texture,
                             call.Position,
@@ -165,14 +128,6 @@ namespace ConstructEngine.Managers
 
                 _spriteBatch.End();
                 queue.Clear();
-            }
-        }
-
-        public void DrawTilemaps(SpriteBatch spriteBatch)
-        {
-            foreach (Tilemap tilemap in Tilemaps)
-            {
-                tilemap.Draw(spriteBatch, tilemap.LayerDepth);
             }
         }
     }
