@@ -1,7 +1,7 @@
 using ConstructEngine.Area;
 using Microsoft.Xna.Framework;
 using System;
-using ConstructEngine.Util.Tween;
+using ConstructEngine.Util;
 
 namespace ConstructEngine.Graphics
 {

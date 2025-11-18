@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using System;
 using ConstructEngine.Components;
 using ConstructEngine.Helpers;
-using ConstructEngine.Util.Tween;
+using ConstructEngine.Util;
 
 namespace ConstructEngine.Graphics
 {

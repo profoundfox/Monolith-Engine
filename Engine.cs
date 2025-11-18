@@ -11,7 +11,6 @@ using MonoGameGum;
 using ConstructEngine.UI;
 using ConstructEngine.Components;
 using ConstructEngine.Util;
-using ConstructEngine.Util.Tween;
 using ConstructEngine.Managers;
 using ConstructEngine.Graphics;
 using ConstructEngine.Objects;
