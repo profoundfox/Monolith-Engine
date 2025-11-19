@@ -3,9 +3,9 @@ using Microsoft.Xna.Framework;
 
 namespace ConstructEngine.Area
 {
-    public class CircleShape : IRegionShape2D, IEquatable<CircleShape>
+    public class CircleShape2D : IRegionShape2D, IEquatable<CircleShape2D>
     {
-        private static readonly CircleShape s_empty = new CircleShape(0, 0, 0);
+        private static readonly CircleShape2D s_empty = new CircleShape2D(0, 0, 0);
 
         public int X { get; set; }
         public int Y { get; set; }
@@ -22,7 +22,7 @@ namespace ConstructEngine.Area
             }
         }
 
-        public static CircleShape Empty => s_empty;
+        public static CircleShape2D Empty => s_empty;
         public bool IsEmpty => X == 0 && Y == 0 && Radius == 0;
 
         public int Top => Y - Radius;
@@ -30,7 +30,7 @@ namespace ConstructEngine.Area
         public int Left => X - Radius;
         public int Right => X + Radius;
 
-        public CircleShape(int x, int y, int radius, bool enabled = true)
+        public CircleShape2D(int x, int y, int radius, bool enabled = true)
         {
             Enabled = enabled;
             X = x;
@@ -38,7 +38,7 @@ namespace ConstructEngine.Area
             Radius = radius;
         }
 
-        public CircleShape(Point location, int radius, bool enabled = true)
+        public CircleShape2D(Point location, int radius, bool enabled = true)
         {
             Enabled = enabled;
             X = location.X;
@@ -57,13 +57,13 @@ namespace ConstructEngine.Area
         {
             return other switch
             {
-                CircleShape c    => Intersects(c),
-                RectangleShape r => IntersectsRectangle(r.Rect),
+                CircleShape2D c    => Intersects(c),
+                RectangleShape2D r => IntersectsRectangle(r.Rect),
                 _           => false
             };
         }
 
-        public bool Intersects(CircleShape other)
+        public bool Intersects(CircleShape2D other)
         {
             int radiiSquared = (Radius + other.Radius) * (Radius + other.Radius);
             float distanceSquared = Vector2.DistanceSquared(
@@ -85,9 +85,9 @@ namespace ConstructEngine.Area
         }
 
         public override bool Equals(object obj) =>
-            obj is CircleShape other && Equals(other);
+            obj is CircleShape2D other && Equals(other);
 
-        public bool Equals(CircleShape other)
+        public bool Equals(CircleShape2D other)
         {
             if (other is null) return false;
 
@@ -99,14 +99,14 @@ namespace ConstructEngine.Area
         public override int GetHashCode() =>
             HashCode.Combine(X, Y, Radius);
 
-        public static bool operator ==(CircleShape lhs, CircleShape rhs)
+        public static bool operator ==(CircleShape2D lhs, CircleShape2D rhs)
         {
             if (ReferenceEquals(lhs, rhs)) return true;
             if (lhs is null || rhs is null) return false;
             return lhs.Equals(rhs);
         }
 
-        public static bool operator !=(CircleShape lhs, CircleShape rhs) =>
+        public static bool operator !=(CircleShape2D lhs, CircleShape2D rhs) =>
             !(lhs == rhs);
     }
 }

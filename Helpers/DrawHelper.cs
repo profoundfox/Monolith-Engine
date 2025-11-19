@@ -50,7 +50,7 @@ namespace ConstructEngine.Helpers
             return texture;
         }
 
-        public static void DrawCircle(CircleShape circ, Color color, int thickness = 1, float layerDepth = 0.1f, DrawLayer layer = DrawLayer.Middleground)
+        public static void DrawCircle(CircleShape2D circ, Color color, int thickness = 1, float layerDepth = 0.1f, DrawLayer layer = DrawLayer.Middleground)
         {
             if (circ == null) return;
 
