@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 
@@ -10,8 +11,9 @@ namespace ConstructEngine.Area
     }
 
     public class RegionShape2D
-    {
+    {           
         public IRegionShape2D Shape { get; set; }
+        public bool Disbaled {get; set;} = false;
 
         public RegionShape2D(IRegionShape2D shape)
         {
