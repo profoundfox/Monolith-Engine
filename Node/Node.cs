@@ -15,7 +15,10 @@ namespace ConstructEngine.Nodes
         private static Dictionary<string, Node> allInstancesDetailed = new Dictionary<string, Node>();
 
         public static IReadOnlyList<Node> AllInstances => allInstances.AsReadOnly();
-        public static IReadOnlyDictionary<string, Node> AllInstancesDetailed => new ReadOnlyDictionary<string, Node>(allInstancesDetailed);        
+        public static IReadOnlyDictionary<string, Node> AllInstancesDetailed => new ReadOnlyDictionary<string, Node>(allInstancesDetailed);
+        
+        public Object Root {get; set;}
+        public Type RootType {get; set;}
         public IRegionShape2D Shape {get; set;}
         public string Name { get; set; }
         public Dictionary<string, object> Values { get; set; }

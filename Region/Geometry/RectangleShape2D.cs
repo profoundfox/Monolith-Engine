@@ -61,6 +61,45 @@ namespace ConstructEngine.Region
             };
         }
 
+        public bool RayIntersect(Vector2 rayOrigin, Vector2 rayDir, float maxLength, out Vector2 hitPoint, out float distance)
+        {
+            hitPoint = Vector2.Zero;
+            distance = float.MaxValue;
+
+            Vector2 rayEnd = rayOrigin + rayDir * maxLength;
+
+            Vector2[] corners =
+            {
+                new Vector2(BoundingBox.Left,  BoundingBox.Top),
+                new Vector2(BoundingBox.Right, BoundingBox.Top),
+                new Vector2(BoundingBox.Right, BoundingBox.Bottom),
+                new Vector2(BoundingBox.Left,  BoundingBox.Bottom)
+            };
+
+            bool hit = false;
+
+            for (int i = 0; i < 4; i++)
+            {
+                Vector2 p1 = corners[i];
+                Vector2 p2 = corners[(i + 1) % 4];
+
+                if (RayCast2D.LineIntersects(rayOrigin, rayEnd, p1, p2, out Vector2 pt))
+                {
+                    float d = Vector2.Distance(rayOrigin, pt);
+
+                    if (d < distance)
+                    {
+                        distance = d;
+                        hitPoint = pt;
+                        hit = true;
+                    }
+                }
+            }
+
+            return hit;
+        }
+
+
         public IRegionShape2D Clone() => new RectangleShape2D(Rect);
 
         // --- Equality --- //

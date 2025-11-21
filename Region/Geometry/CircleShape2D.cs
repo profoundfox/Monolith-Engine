@@ -84,6 +84,39 @@ namespace ConstructEngine.Region
             };
         }
 
+        public bool RayIntersect(Vector2 rayOrigin, Vector2 rayDir, float maxLength, out Vector2 hitPoint, out float distance)
+        {
+            float t = Vector2.Dot(Location.ToVector2() - rayOrigin, rayDir);
+
+            Vector2 closest = rayOrigin + rayDir * t;
+            float distToCenter = Vector2.Distance(closest, Location.ToVector2());
+
+            if (distToCenter > Radius)
+            {
+                hitPoint = Vector2.Zero;
+                distance = float.MaxValue;
+                return false;
+            }
+
+            float dt = (float)Math.Sqrt(Radius * Radius - distToCenter * distToCenter);
+            float t0 = t - dt;
+            float t1 = t + dt;
+
+            float hitT = (t0 >= 0) ? t0 : t1;
+
+            if (hitT < 0 || hitT > maxLength)
+            {
+                hitPoint = Vector2.Zero;
+                distance = float.MaxValue;
+                return false;
+            }
+
+            distance = hitT;
+            hitPoint = rayOrigin + rayDir * hitT;
+            return true;
+        }
+
+
         private bool IntersectsCircle(CircleShape2D other)
         {
             int sum = Radius + other.Radius;
