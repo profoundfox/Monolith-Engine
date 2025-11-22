@@ -6,8 +6,8 @@ namespace ConstructEngine.Region
 {
     public interface IRegionShape2D
     {
-        int X { get; set; }
-        int Y { get; set; }
+        int Width { get; set; }
+        int Height { get; set; }
         
         Point Location { get; set; }
         void Offset(int x, int y);

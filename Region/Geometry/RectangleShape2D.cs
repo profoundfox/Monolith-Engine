@@ -17,22 +17,34 @@ namespace ConstructEngine.Region
             Rect = rect;
         }
 
-        public int X
-        {
-            get => Rect.X;
-            set => Rect.X = value;
-        }
-
-        public int Y
-        {
-            get => Rect.Y;
-            set => Rect.Y = value;
-        }
-
         public Point Location
         {
             get => Rect.Location;
             set => Rect.Location = value;
+        }
+
+        public int X
+        {
+            get => Location.X;
+            set => Location = new Point(value, Y);
+        }
+
+        public int Y
+        {
+            get => Location.Y;
+            set => Location = new Point(X, value);
+        }
+
+        public int Width
+        {
+            get => Rect.Width;
+            set => Rect.Width = value;
+        }
+
+        public int Height
+        {
+            get => Rect.Height;
+            set => Rect.Height = value;
         }
 
         public void Offset(int x, int y) => Rect.Offset(x, y);
@@ -99,14 +111,10 @@ namespace ConstructEngine.Region
             return hit;
         }
 
-
         public IRegionShape2D Clone() => new RectangleShape2D(Rect);
 
-        // --- Equality --- //
         public bool Equals(RectangleShape2D other) => other != null && Rect.Equals(other.Rect);
-
         public override bool Equals(object obj) => obj is RectangleShape2D r && Equals(r);
-
         public override int GetHashCode() => Rect.GetHashCode();
     }
 }

@@ -8,32 +8,21 @@ namespace ConstructEngine.Components
 {
     public class KinematicBody2D : Node
     {
-        public IRegionShape2D Collider;
         public Vector2 Velocity;
 
         private float remainderX = 0;
         private float remainderY = 0;
-
         public bool Locked;
-
-        public Vector2 Position
-        {
-            get => new Vector2(Collider.X, Collider.Y);
-            set
-            {
-                Collider.X = (int)value.X;
-                Collider.Y = (int)value.Y;
-            }
-        }
 
         public KinematicBody2D() {}
 
-        public void UpdateCollider(GameTime gameTime)
+
+
+        public void UpdateKinematicBody()
         {
             if (!Locked)
             {
-                float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                Move(Velocity.X * dt, Velocity.Y * dt);
+                Move(Velocity.X * Engine.DeltaTime, Velocity.Y * Engine.DeltaTime);
             }
             else
             {
@@ -61,12 +50,12 @@ namespace ConstructEngine.Components
 
             while (amount != 0)
             {
-                var test = Collider.Clone();
+                var test = Shape.Clone();
                 test.Offset(sign, 0);
 
                 if (!IsColliding(test))
                 {
-                    Collider.Offset(sign, 0);
+                    Shape.Offset(sign, 0);
                 }
                 else
                 {
@@ -85,12 +74,12 @@ namespace ConstructEngine.Components
 
             while (amount != 0)
             {
-                var test = Collider.Clone();
+                var test = Shape.Clone();
                 test.Offset(0, sign);
 
                 if (!IsColliding(test))
                 {
-                    Collider.Offset(0, sign);
+                    Shape.Offset(0, sign);
                 }
                 else
                 {
@@ -104,7 +93,7 @@ namespace ConstructEngine.Components
 
         public bool IsOnGround()
         {
-            var test = Collider.Clone();
+            var test = Shape.Clone();
             test.Offset(0, 1);
             return IsColliding(test);
         }
@@ -112,10 +101,10 @@ namespace ConstructEngine.Components
 
         public bool IsOnWall()
         {
-            var left = Collider.Clone();
+            var left = Shape.Clone();
             left.Offset(-1, 0);
 
-            var right = Collider.Clone();
+            var right = Shape.Clone();
             right.Offset(1, 0);
 
             foreach (var body in Node.AllInstances.OfType<StaticBody2D>())

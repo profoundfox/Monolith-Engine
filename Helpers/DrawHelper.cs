@@ -78,7 +78,7 @@ namespace ConstructEngine.Helpers
 
             Engine.DrawManager.Draw(
                 texture,
-                new Vector2(circ.X, circ.Y),
+                new Vector2(circ.Location.X, circ.Location.Y),
                 color,
                 layer,
                 0f,
@@ -141,7 +141,7 @@ namespace ConstructEngine.Helpers
 
             Texture2D pixel = GetPixel(Engine.GraphicsDevice);
 
-            Vector2 center = new Vector2(circle.X, circle.Y);
+            Vector2 center = new Vector2(circle.Location.X, circle.Location.Y);
             float radius = circle.Radius;
 
             const int segments = 64; // same as your rectangle: no extra parameter clutter

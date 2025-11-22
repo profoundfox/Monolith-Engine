@@ -31,11 +31,11 @@ namespace ConstructEngine.Helpers
             
         public static bool CircleIntersectsRectangle(CircleShape2D circle, Rectangle rect)
         {
-            int closestX = Math.Clamp(circle.X, rect.Left, rect.Right);
-            int closestY = Math.Clamp(circle.Y, rect.Top, rect.Bottom);
+            int closestX = Math.Clamp(circle.Location.X, rect.Left, rect.Right);
+            int closestY = Math.Clamp(circle.Location.Y, rect.Top, rect.Bottom);
 
-            int deltaX = circle.X - closestX;
-            int deltaY = circle.Y - closestY;
+            int deltaX = circle.Location.X - closestX;
+            int deltaY = circle.Location.Y - closestY;
 
             return (deltaX * deltaX + deltaY * deltaY) <= (circle.Radius * circle.Radius);
         }

@@ -65,7 +65,7 @@ namespace ConstructEngine.Graphics
                     if (targetNode is KinematicBody2D body2D)
                     {
                         body2D.Locked = true;
-                        body2D.Collider.X -= 10;
+                        body2D.Shape.Offset(-10, 0);
                     }
 
                     cameraXTween = new Tween(
@@ -92,7 +92,7 @@ namespace ConstructEngine.Graphics
                     if (targetNode is KinematicBody2D body2D)
                     {
                         body2D.Locked = true;
-                        body2D.Collider.X += 10;
+                        body2D.Shape.Offset(10, 0);
                     }
 
                     cameraXTween = new Tween(

@@ -5,48 +5,42 @@ namespace ConstructEngine.Region
 {
     public class CircleShape2D : IRegionShape2D, IEquatable<CircleShape2D>
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+        public Point Location { get; set; }
         public int Radius { get; set; }
 
         public CircleShape2D(int x, int y, int radius)
         {
-            X = x;
-            Y = y;
+            Location = new Point(x, y);
             Radius = radius;
         }
 
         public CircleShape2D(Point location, int radius)
         {
-            X = location.X;
-            Y = location.Y;
+            Location = location;
             Radius = radius;
         }
 
-        // --- IRegionShape2D Implementation --- //
-        public Point Location
+        public int Width
         {
-            get => new Point(X, Y);
-            set
-            {
-                X = value.X;
-                Y = value.Y;
-            }
+            get => Radius * 2;
+            set => Radius = value / 2;
         }
 
-        public void Offset(int x, int y)
+        public int Height
         {
-            X += x;
-            Y += y;
+            get => Radius * 2;
+            set => Radius = value / 2;
         }
+
+        public void Offset(int x, int y) => Location = new Point(Location.X + x, Location.Y + y);
 
         public Rectangle BoundingBox =>
-            new Rectangle(X - Radius, Y - Radius, Radius * 2, Radius * 2);
+            new Rectangle(Location.X - Radius, Location.Y - Radius, Radius * 2, Radius * 2);
 
         public bool Contains(Point p)
         {
-            int dx = p.X - X;
-            int dy = p.Y - Y;
+            int dx = p.X - Location.X;
+            int dy = p.Y - Location.Y;
             return dx * dx + dy * dy <= Radius * Radius;
         }
 
@@ -55,14 +49,14 @@ namespace ConstructEngine.Region
             return other switch
             {
                 CircleShape2D c    => ContainsCircle(c),
-                RectangleShape2D r => ContainsRect(r.Rect),
+                RectangleShape2D r => ContainsRect(r.BoundingBox),
                 _                  => false
             };
         }
 
         private bool ContainsCircle(CircleShape2D other)
         {
-            float dist = Vector2.Distance(new Vector2(X, Y), new Vector2(other.X, other.Y));
+            float dist = Vector2.Distance(Location.ToVector2(), other.Location.ToVector2());
             return dist + other.Radius <= Radius;
         }
 
@@ -79,9 +73,25 @@ namespace ConstructEngine.Region
             return other switch
             {
                 CircleShape2D c    => IntersectsCircle(c),
-                RectangleShape2D r => IntersectsRectangle(r.Rect),
+                RectangleShape2D r => IntersectsRectangle(r.BoundingBox),
                 _                  => false
             };
+        }
+
+        private bool IntersectsCircle(CircleShape2D other)
+        {
+            int sum = Radius + other.Radius;
+            float distSq = Vector2.DistanceSquared(Location.ToVector2(), other.Location.ToVector2());
+            return distSq <= sum * sum;
+        }
+
+        private bool IntersectsRectangle(Rectangle r)
+        {
+            int closestX = Math.Clamp(Location.X, r.Left, r.Right);
+            int closestY = Math.Clamp(Location.Y, r.Top, r.Bottom);
+            int dx = Location.X - closestX;
+            int dy = Location.Y - closestY;
+            return dx * dx + dy * dy <= Radius * Radius;
         }
 
         public bool RayIntersect(Vector2 rayOrigin, Vector2 rayDir, float maxLength, out Vector2 hitPoint, out float distance)
@@ -116,31 +126,12 @@ namespace ConstructEngine.Region
             return true;
         }
 
+        public IRegionShape2D Clone() => new CircleShape2D(Location, Radius);
 
-        private bool IntersectsCircle(CircleShape2D other)
-        {
-            int sum = Radius + other.Radius;
-            float distSq = Vector2.DistanceSquared(new Vector2(X, Y), new Vector2(other.X, other.Y));
-            return distSq <= sum * sum;
-        }
-
-        private bool IntersectsRectangle(Rectangle r)
-        {
-            int closestX = Math.Clamp(X, r.Left, r.Right);
-            int closestY = Math.Clamp(Y, r.Top, r.Bottom);
-            int dx = X - closestX;
-            int dy = Y - closestY;
-            return dx * dx + dy * dy <= Radius * Radius;
-        }
-
-        public IRegionShape2D Clone() => new CircleShape2D(X, Y, Radius);
-
-        // --- Equality --- //
         public bool Equals(CircleShape2D other) =>
-            other != null && X == other.X && Y == other.Y && Radius == other.Radius;
+            other != null && Location.Equals(other.Location) && Radius == other.Radius;
 
         public override bool Equals(object obj) => obj is CircleShape2D c && Equals(c);
-
-        public override int GetHashCode() => HashCode.Combine(X, Y, Radius);
+        public override int GetHashCode() => HashCode.Combine(Location, Radius);
     }
 }

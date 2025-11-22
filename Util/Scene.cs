@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ConstructEngine.Directory;
+using ConstructEngine.Nodes;
 
 
 namespace ConstructEngine.Util
@@ -26,6 +27,8 @@ namespace ConstructEngine.Util
         {
             if (Config.DataPath != null)
                 OgmoParser.FromFile(Config.DataPath, Config.TilemapTexturePath, Config.TilemapRegion);
+
+            Node.LoadObjects();
 
         }
         public virtual void Unload() {}
