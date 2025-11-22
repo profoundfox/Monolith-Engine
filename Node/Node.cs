@@ -51,19 +51,15 @@ namespace ConstructEngine.Nodes
         public Dictionary<string, object> Values { get; internal set; } = new();
 
         /// <summary>
-        /// Creates a new Node with itself as the root object.
+        /// Creates a new Node using a NodeConfig.
         /// </summary>
-        public Node()
+        public Node(NodeConfig config)
         {
-            QueueAdd(this);
-        }
+            Root = config.Root;
+            Shape = config.Shape;
+            Name = config.Name;
+            Values = config.Values;
 
-        /// <summary>
-        /// Creates a new Node using the specified root object.
-        /// </summary>
-        public Node(object root)
-        {
-            Root = root;
             QueueAdd(this);
         }
 

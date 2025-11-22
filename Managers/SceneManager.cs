@@ -38,6 +38,8 @@ namespace ConstructEngine.Managers
             scene.Initialize();
             scene.Load();
 
+            Node.LoadObjects();
+
             GetAndSetPlayer();
 
             Scenes.Push(scene);
@@ -183,6 +185,7 @@ namespace ConstructEngine.Managers
             if (!IsStackEmpty() && !_sceneFrozen)
             {
                 Engine.TweenManager.Update();
+                Node.UpdateObjects(gameTime);
                 GetCurrentScene()?.Update(gameTime);
             }
 

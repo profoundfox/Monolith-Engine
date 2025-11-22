@@ -5,7 +5,7 @@ namespace ConstructEngine.Nodes
 {
     public abstract class RegionNode : Node
     {
-        public RegionNode()
+        public RegionNode(NodeConfig config) : base(config)
         {
             
         }

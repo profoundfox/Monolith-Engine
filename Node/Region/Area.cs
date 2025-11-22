@@ -12,12 +12,7 @@ namespace ConstructEngine.Nodes
     public class Area2D : RegionNode
     {
         private bool wasInArea2D = false;
-
-        public Area2D() {}
-        public Area2D(IRegionShape2D shape)
-        {
-            Shape = shape;
-        }
+        public Area2D(NodeConfig config) : base(config) {}
 
         public bool AreaEntered(out Area2D overlapping)
         {

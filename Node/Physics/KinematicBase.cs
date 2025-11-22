@@ -14,10 +14,8 @@ namespace ConstructEngine.Components
         private float remainderY = 0;
         public bool Locked;
 
-        public KinematicBody2D() {}
-
-
-
+        public KinematicBody2D(NodeConfig config) : base(config) {}
+        
         public void UpdateKinematicBody()
         {
             if (!Locked)

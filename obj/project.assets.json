@@ -624,19 +624,19 @@
     ]
   },
   "packageFolders": {
-    "/home/nils/.nuget/packages/": {}
+    "/Users/nilslauvstad/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/nils/Documents/Project/Libraries/Construct-Engine/Construct.csproj",
+      "projectUniqueName": "/Users/nilslauvstad/Documents/Project/Libraries/Construct-Engine/Construct.csproj",
       "projectName": "Construct",
-      "projectPath": "/home/nils/Documents/Project/Libraries/Construct-Engine/Construct.csproj",
-      "packagesPath": "/home/nils/.nuget/packages/",
-      "outputPath": "/home/nils/Documents/Project/Libraries/Construct-Engine/obj/",
+      "projectPath": "/Users/nilslauvstad/Documents/Project/Libraries/Construct-Engine/Construct.csproj",
+      "packagesPath": "/Users/nilslauvstad/.nuget/packages/",
+      "outputPath": "/Users/nilslauvstad/Documents/Project/Libraries/Construct-Engine/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/nils/.nuget/NuGet/NuGet.Config"
+        "/Users/nilslauvstad/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -660,7 +660,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.100"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0": {
@@ -690,7 +690,11 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.20, 8.0.20]"
+            "version": "[8.0.21, 8.0.21]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[8.0.21, 8.0.21]"
           }
         ],
         "frameworkReferences": {
@@ -698,7 +702,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.110/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.306/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -133,12 +133,13 @@ namespace ConstructEngine.Directory
 
                 if (type != null)
                 {
-                    var obj = (Node)Activator.CreateInstance(type);
-                    obj.Root = Engine.SceneManager.GetCurrentScene();
-                    obj.Shape = new RectangleShape2D(entity.x, entity.y, entity.width, entity.height);
-                    obj.Location = new(entity.x, entity.y);
-                    obj.Name = entity.name;
-                    obj.Values = normalDict;
+                    var obj = (Node)Activator.CreateInstance(type, new NodeConfig
+                    {
+                        Root = Engine.SceneManager.GetCurrentScene(),
+                        Shape = new RectangleShape2D(entity.x, entity.y, entity.width, entity.height),
+                        Name = entity.name,
+                        Values = normalDict
+                    });
                 }
                 else
                 {

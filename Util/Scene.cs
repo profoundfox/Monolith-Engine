@@ -28,8 +28,6 @@ namespace ConstructEngine.Util
             if (Config.DataPath != null)
                 OgmoParser.FromFile(Config.DataPath, Config.TilemapTexturePath, Config.TilemapRegion);
 
-            Node.LoadObjects();
-
         }
         public virtual void Unload() {}
         public virtual void Update(GameTime gameTime) {}
