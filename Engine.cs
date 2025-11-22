@@ -12,6 +12,7 @@ using ConstructEngine.UI;
 using ConstructEngine.Components;
 using ConstructEngine.Managers;
 using ConstructEngine.Graphics;
+using ConstructEngine.Nodes;
 
 namespace ConstructEngine
 {
@@ -84,7 +85,7 @@ namespace ConstructEngine
         /// <summary>
         /// The main player character or kinematic entity in the scene.
         /// </summary>
-        public static KinematicEntity MainCharacter { get; set; }
+        public static Node MainCharacter { get; set; }
 
         /// <summary>
         /// Manager responsible for scene handling and switching between scenes.

@@ -3,6 +3,7 @@ using System;
 using ConstructEngine.Components;
 using ConstructEngine.Helpers;
 using ConstructEngine.Util;
+using ConstructEngine.Nodes;
 
 namespace ConstructEngine.Graphics
 {
@@ -47,12 +48,12 @@ namespace ConstructEngine.Graphics
         }
         
         
-        public void Follow(KinematicEntity targetEntity)
+        public void Follow(Node targetNode)
         {
             var cfg = Engine.Instance.Config;
-            if (targetEntity == null) return;
+            if (targetNode == null) return;
 
-            var side = CollisionHelper.GetCameraEdge(targetEntity.KinematicBase.Collider, CameraRectangle);
+            var side = CollisionHelper.GetCameraEdge(targetNode.Shape, CameraRectangle);
 
             if (!Entered)
             {
@@ -61,14 +62,22 @@ namespace ConstructEngine.Graphics
                     cameraTargetPosition.X = CameraRectangle.X - CameraRectangle.Width + CameraRectangle.Width / 2;
                     CameraRectangle.X -= CameraRectangle.Width;
 
-                    targetEntity.KinematicBase.Locked = true;
-                    targetEntity.KinematicBase.Collider.X -= 10;
+                    if (targetNode is KinematicBody2D body2D)
+                    {
+                        body2D.Locked = true;
+                        body2D.Collider.X -= 10;
+                    }
 
                     cameraXTween = new Tween(
                         0.5f,
                         EasingFunctions.Linear,
                         t => cameraPosition.X = MathHelper.Lerp(cameraPosition.X, cameraTargetPosition.X, t),
-                        () => targetEntity.KinematicBase.Locked = false
+                        () =>
+                        {
+                            if (targetNode is KinematicBody2D body2D)
+                                body2D.Locked = false;
+                        }
+
                     );
                     
                     cameraXTween.Start();
@@ -79,15 +88,22 @@ namespace ConstructEngine.Graphics
                 {
                     cameraTargetPosition.X = CameraRectangle.X + CameraRectangle.Width + CameraRectangle.Width / 2;
                     CameraRectangle.X += CameraRectangle.Width;
-
-                    targetEntity.KinematicBase.Locked = true;
-                    targetEntity.KinematicBase.Collider.X += 10;
+                    
+                    if (targetNode is KinematicBody2D body2D)
+                    {
+                        body2D.Locked = true;
+                        body2D.Collider.X += 10;
+                    }
 
                     cameraXTween = new Tween(
                         0.5f,
                         EasingFunctions.Linear,
                         t => cameraPosition.X = MathHelper.Lerp(cameraPosition.X, cameraTargetPosition.X, t),
-                        () => targetEntity.KinematicBase.Locked = false
+                        () =>
+                        {
+                            if (targetNode is KinematicBody2D body2D)
+                                body2D.Locked = false;
+                        }
                     );
                     cameraXTween.Start();
                     Engine.TweenManager.AddTween(cameraXTween);

@@ -236,10 +236,9 @@ namespace ConstructEngine.Managers
 
         private void GetAndSetPlayer()
         {
-            KinematicEntity mainCharacter =
+            Node mainCharacter =
             Node.AllInstances
-                .FirstOrDefault(e => e.GetType() == Engine.Instance.Config.MainCharacterType)
-                as KinematicEntity;
+                .FirstOrDefault(e => e.GetType() == Engine.Instance.Config.MainCharacterType);
 
             if (mainCharacter != null)
                 Engine.MainCharacter = mainCharacter;
@@ -251,7 +250,6 @@ namespace ConstructEngine.Managers
         public static void ClearSceneData()
         {
             Engine.DrawManager.Tilemaps.Clear();
-            KinematicEntity.EntityList.Clear();
             Engine.SpriteManager.Empty();
             Node.DumpAllInstances();
             //RayCast2D.RayList.Clear();
