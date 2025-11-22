@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ConstructEngine.Managers;
 using ConstructEngine.Region;
 using ConstructEngine.Util;
@@ -70,25 +71,6 @@ namespace ConstructEngine.Helpers
                 DrawCircleHollow(circle, color, thickness, layerDepth, layer);
         }
 
-        public static void DrawCircle(CircleShape2D circ, Color color, float layerDepth = 0.1f, DrawLayer layer = DrawLayer.Middleground)
-        {
-            if (circ == null) return;
-
-            Texture2D texture = GetCircleTexture(Engine.GraphicsDevice, circ.Radius);
-
-            Engine.DrawManager.Draw(
-                texture,
-                new Vector2(circ.Location.X, circ.Location.Y),
-                color,
-                layer,
-                0f,
-                new Vector2(texture.Width / 2f, texture.Height / 2f),
-                Vector2.One,
-                SpriteEffects.None,
-                layerDepth
-            );
-        }
-
         public static void DrawRectangle(RectangleShape2D rect, Color color, float layerDepth = 0.1f, DrawLayer layer = DrawLayer.Middleground)
         {
             var pixel = GetPixel(Engine.GraphicsDevice);
@@ -128,6 +110,25 @@ namespace ConstructEngine.Helpers
                 color, layer, 0f, Vector2.Zero,
                 new Vector2(thickness, rect.BoundingBox.Height),
                 SpriteEffects.None, layerDepth);
+        }
+
+        public static void DrawCircle(CircleShape2D circ, Color color, float layerDepth = 0.1f, DrawLayer layer = DrawLayer.Middleground)
+        {
+            if (circ == null) return;
+
+            Texture2D texture = GetCircleTexture(Engine.GraphicsDevice, circ.Radius);
+
+            Engine.DrawManager.Draw(
+                texture,
+                new Vector2(circ.Location.X, circ.Location.Y),
+                color,
+                layer,
+                0f,
+                new Vector2(texture.Width / 2f, texture.Height / 2f),
+                Vector2.One,
+                SpriteEffects.None,
+                layerDepth
+            );
         }
 
         public static void DrawCircleHollow(

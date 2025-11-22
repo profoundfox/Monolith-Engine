@@ -19,7 +19,7 @@ namespace ConstructEngine.Managers
         public readonly Stack<IScene> Scenes = new();
         private bool _sceneFrozen;
         private bool _pendingFreeze;
-
+        
         public bool SceneFrozen => _sceneFrozen;
 
         public SceneManager() { }
@@ -37,7 +37,7 @@ namespace ConstructEngine.Managers
 
             scene.Initialize();
             scene.Load();
-
+            
             Node.LoadObjects();
 
             GetAndSetPlayer();
