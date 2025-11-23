@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ConstructEngine.Graphics
+namespace Monolith.Graphics
 {
     public class Animation
     {

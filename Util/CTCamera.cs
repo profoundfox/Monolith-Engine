@@ -4,7 +4,7 @@ using Gum.DataTypes.Variables;
 using Microsoft.Xna.Framework;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
-namespace ConstructEngine.Graphics
+namespace Monolith.Graphics
 {
     public class CTCamera
     {

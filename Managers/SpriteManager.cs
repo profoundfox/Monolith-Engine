@@ -1,9 +1,9 @@
 
 using System.Collections.Generic;
-using ConstructEngine.Graphics;
+using Monolith.Graphics;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ConstructEngine.Managers
+namespace Monolith.Managers
 {
     public class SpriteManager
     {

@@ -1,8 +1,8 @@
-using ConstructEngine.Graphics;
+using Monolith.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ConstructEngine.Managers
+namespace Monolith.Managers
 {
     /// <summary>
     /// The manager responsible for batching, organizing, and drawing queued sprites

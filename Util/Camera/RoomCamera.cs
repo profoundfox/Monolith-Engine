@@ -1,11 +1,11 @@
 using Microsoft.Xna.Framework;
 using System;
 
-using ConstructEngine.Helpers;
-using ConstructEngine.Util;
-using ConstructEngine.Nodes;
+using Monolith.Helpers;
+using Monolith.Util;
+using Monolith.Nodes;
 
-namespace ConstructEngine.Graphics
+namespace Monolith.Graphics
 {
     public class RoomCamera : CTCamera
     {

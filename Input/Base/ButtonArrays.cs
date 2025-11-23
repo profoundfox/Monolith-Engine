@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework.Input;
 
-namespace ConstructEngine.Input
+namespace Monolith.Input
 {
     public class ButtonArrays
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Input;
 
-namespace ConstructEngine.Input
+namespace Monolith.Input
 {
     public class KeyboardInfo
     {

@@ -1,9 +1,9 @@
 using System;
 using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
-using ConstructEngine.Helpers;
+using Monolith.Helpers;
 
-namespace ConstructEngine.Util
+namespace Monolith.Util
 {
     public class Tween
     {

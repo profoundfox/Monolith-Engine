@@ -1,7 +1,7 @@
-using ConstructEngine.Input;
+using Monolith.Input;
 using Microsoft.Xna.Framework.Input;
 
-namespace ConstructEngine.Input
+namespace Monolith.Input
 {
     public enum InputType
     {

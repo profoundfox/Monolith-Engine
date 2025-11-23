@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Dynamic;
-using ConstructEngine.UI;
+using Monolith.UI;
 using Microsoft.Xna.Framework;
 
-namespace ConstructEngine.UI
+namespace Monolith.UI
 {
     public static class GumManager
     {

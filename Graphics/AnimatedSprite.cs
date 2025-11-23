@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
-namespace ConstructEngine.Graphics
+namespace Monolith.Graphics
 {
     public class AnimatedSprite : Sprite
     {

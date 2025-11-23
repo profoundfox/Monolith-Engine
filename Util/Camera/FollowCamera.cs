@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using System;
 
-namespace ConstructEngine.Graphics
+namespace Monolith.Graphics
 {
     public class FollowCamera : CTCamera
     {

@@ -8,12 +8,12 @@ using Gum.Wireframe;
 using RenderingLibrary;
 using MonoGameGum;
 
-using ConstructEngine.UI;
-using ConstructEngine.Managers;
-using ConstructEngine.Graphics;
-using ConstructEngine.Nodes;
+using Monolith.UI;
+using Monolith.Managers;
+using Monolith.Graphics;
+using Monolith.Nodes;
 
-namespace ConstructEngine
+namespace Monolith
 {
     /// <summary>
     /// The core game engine class that manages the main game loop, rendering, input, scenes, and UI.

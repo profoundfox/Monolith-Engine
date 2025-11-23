@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.Json;
 using System.Linq;
 
-namespace ConstructEngine.IO
+namespace Monolith.IO
 {
     public class OgmoFileInfo
     {

@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography;
-using ConstructEngine.Helpers;
-using ConstructEngine.Managers;
-using ConstructEngine.Region;
-using ConstructEngine.Util;
+using Monolith.Helpers;
+using Monolith.Managers;
+using Monolith.Region;
+using Monolith.Util;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ConstructEngine.Nodes
+namespace Monolith.Nodes
 {
     public abstract class Node
     {

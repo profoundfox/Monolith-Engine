@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ConstructEngine.Helpers
+namespace Monolith.Helpers
 {
     public class DictionaryHelper
     {

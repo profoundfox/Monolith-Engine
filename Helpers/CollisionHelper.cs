@@ -2,9 +2,9 @@ using System;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using ConstructEngine.Region;
+using Monolith.Region;
 
-namespace ConstructEngine.Helpers
+namespace Monolith.Helpers
 {
     public enum CollisionSide
     {

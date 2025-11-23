@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Microsoft.Xna.Framework;
 
-namespace ConstructEngine.UI
+namespace Monolith.UI
 {
     public interface IGumUpdatable
     {

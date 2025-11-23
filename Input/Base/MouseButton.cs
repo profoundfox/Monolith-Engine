@@ -1,4 +1,4 @@
-namespace ConstructEngine.Input
+namespace Monolith.Input
 {
     public enum MouseButton
     {

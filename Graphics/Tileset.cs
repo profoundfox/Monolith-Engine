@@ -1,4 +1,4 @@
-namespace ConstructEngine.Graphics
+namespace Monolith.Graphics
 {
     public class Tileset
     {

@@ -1,7 +1,7 @@
 
 using Microsoft.Xna.Framework;
 
-namespace ConstructEngine.Helpers
+namespace Monolith.Helpers
 {
     public class ColorHelper
     {

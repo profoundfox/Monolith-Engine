@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.Xna.Framework;
 
-namespace ConstructEngine.Util
+namespace Monolith.Util
 {
     public class StateController
     {

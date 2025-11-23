@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using Microsoft.Xna.Framework;
 
-namespace ConstructEngine.IO
+namespace Monolith.IO
 {
     /// <summary>
     /// Filetype enum.

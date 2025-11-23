@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ConstructEngine.Helpers;
-using ConstructEngine.Input;
+using Monolith.Helpers;
+using Monolith.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace ConstructEngine.Managers
+namespace Monolith.Managers
 {
     public partial class InputManager
     {

@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 
-namespace ConstructEngine.Util
+namespace Monolith.Util
 {
     public interface IState
     {

@@ -629,9 +629,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/nilslauvstad/Documents/Project/Libraries/Construct-Engine/Construct.csproj",
-      "projectName": "Construct",
-      "projectPath": "/Users/nilslauvstad/Documents/Project/Libraries/Construct-Engine/Construct.csproj",
+      "projectUniqueName": "/Users/nilslauvstad/Documents/Project/Libraries/Construct-Engine/Monolith.csproj",
+      "projectName": "Monolith",
+      "projectPath": "/Users/nilslauvstad/Documents/Project/Libraries/Construct-Engine/Monolith.csproj",
       "packagesPath": "/Users/nilslauvstad/.nuget/packages/",
       "outputPath": "/Users/nilslauvstad/Documents/Project/Libraries/Construct-Engine/obj/",
       "projectStyle": "PackageReference",

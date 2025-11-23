@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 
-namespace ConstructEngine.Region
+namespace Monolith.Region
 {
     public interface IRegionShape2D
     {

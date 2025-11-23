@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ConstructEngine.Graphics
+namespace Monolith.Graphics
 {
     /// <summary>
     /// Represents a rectangular region within a texture.

@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace ConstructEngine.Region
+namespace Monolith.Region
 {
     public class RectangleShape2D : IRegionShape2D, IEquatable<RectangleShape2D>
     {
