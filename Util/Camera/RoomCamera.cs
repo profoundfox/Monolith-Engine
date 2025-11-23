@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 using System;
-using ConstructEngine.Components;
+
 using ConstructEngine.Helpers;
 using ConstructEngine.Util;
 using ConstructEngine.Nodes;

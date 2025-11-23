@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection.Metadata;
-using ConstructEngine.Components;
+
 using ConstructEngine.Input;
 using ConstructEngine.Region;
 using Gum.Forms.Controls;
@@ -128,23 +128,24 @@ namespace ConstructEngine
         /// <summary>
         /// The object that the node is instantiated within.
         /// </summary>
-        public object Root { get; init; }
+        public required object Root { get; init; }
 
         /// <summary>
         /// The shape that the object has.
         /// </summary>
-        public IRegionShape2D Shape { get; init; }
+        public required IRegionShape2D Shape { get; init; }
 
         /// <summary>
-        /// The name of the node, defaults to the class name of the node.
+        /// The name of the node.
         /// </summary>
-        public string Name { get; init; }
+        public required string Name { get; init; }
 
         /// <summary>
-        /// Values that come from the ogmo level dictionary, can be ignored if user is not using ogmo.
+        /// Values that come from the ogmo level dictionary.
         /// </summary>
-        public Dictionary<string, object> Values { get; init; } = new();
+        public Dictionary<string, object> Values { get; init; }
     }
+
 
     public static class DefaultInput
     {

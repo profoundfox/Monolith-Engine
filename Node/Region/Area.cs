@@ -1,64 +1,122 @@
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using ConstructEngine.Helpers;
 using System;
 using System.Linq;
-using System.Runtime.InteropServices;
-using ConstructEngine.Components;
-using ConstructEngine.Region;
+using ConstructEngine;
+using ConstructEngine.Nodes;
 
-namespace ConstructEngine.Nodes
+public class Area2D : RegionNode
 {
-    public class Area2D : RegionNode
+    private bool wasInArea2D = false;
+
+    private static readonly Type[] AcceptedAreaType = 
     {
-        private bool wasInArea2D = false;
+        typeof(Area2D),
+        typeof(KinematicBody2D),
+    };
 
-        private static readonly Type[] AcceptedTypes = 
-        {
-            typeof(Area2D),
-            typeof(KinematicBody2D),
-        };
+    public Area2D(NodeConfig config) : base(config) {}
 
-        public Area2D(NodeConfig config) : base(config) {}
+    private Node GetOverlappingArea()
+    {
+        return AllInstances
+            .Where(a => a != this && AcceptedAreaType.Any(t => t.IsAssignableFrom(a.GetType())))
+            .Cast<Node>()
+            .FirstOrDefault(a => Shape.Intersects(a.Shape));
+    }
 
-        private Area2D GetOverlapping()
-        {
-            return AllInstances
-                .Where(a => a != this && AcceptedTypes.Contains(a.GetType()))
-                .Cast<Area2D>()
-                .FirstOrDefault(a => Shape.Intersects(a.Shape));
-        }
+    private KinematicBody2D GetOverlappingBody()
+    {
+        return AllInstances
+            .Where(a => a != this && typeof(KinematicBody2D).IsAssignableFrom(a.GetType()))
+            .Cast<KinematicBody2D>()
+            .FirstOrDefault(a => Shape.Intersects(a.Shape));
+    }
+
+
         
-        public bool AreaEntered(out Area2D overlapping)
-        {
-            overlapping = GetOverlapping();
+    public bool AreaEntered(out Node overlapping)
+    {
+        overlapping = GetOverlappingArea();
 
-            bool isInArea2D = overlapping != null;
-            bool entered = !wasInArea2D && isInArea2D;
+        bool isInArea2D = overlapping != null;
+        bool entered = !wasInArea2D && isInArea2D;
 
-            wasInArea2D = isInArea2D;
-            return entered;
-        }
+        wasInArea2D = isInArea2D;
+        return entered;
+    }
 
-        public bool AreaEntered()
-        {
-            return AreaEntered(out _);
-        }
+    public bool AreaEntered()
+    {
+        return AreaEntered(out _);
+    }
         
-        public bool AreaExited(out Area2D overlapping)
-        {
-            overlapping = GetOverlapping();
+    public bool AreaExited(out Node overlapping)
+    {
+        overlapping = GetOverlappingArea();
 
-            bool isInArea2D = overlapping != null;
-            bool exited = wasInArea2D && !isInArea2D;
+        bool isInArea2D = overlapping != null;
+        bool exited = wasInArea2D && !isInArea2D;
 
-            wasInArea2D = isInArea2D;
-            return exited;
-        }
+        wasInArea2D = isInArea2D;
+        return exited;
+    }
 
-        public bool AreaExited()
-        {
-            return AreaExited(out _);
-        }
+    public bool AreaExited()
+    {
+        return AreaExited(out _);
+    }
+
+
+    public bool AreaInside(out Node overlapping)
+    {
+        overlapping = GetOverlappingArea();
+        return overlapping != null;
+    }
+
+    public bool AreaInside()
+    {
+        return AreaInside(out _);
+    }
+
+    public bool BodyEntered(out KinematicBody2D overlapping)
+    {
+        overlapping = GetOverlappingBody();
+
+        bool isInBody2D = overlapping != null;
+        bool entered = !wasInArea2D && isInBody2D;
+
+        wasInArea2D = isInBody2D;
+        return entered;
+    }
+
+    public bool BodyEntered()
+    {
+        return BodyEntered(out _);
+    }
+
+    public bool BodyExited(out KinematicBody2D overlapping)
+    {
+        overlapping = GetOverlappingBody();
+
+        bool isInBody2D = overlapping != null;
+        bool exited = wasInArea2D && !isInBody2D;
+
+        wasInArea2D = isInBody2D;
+        return exited;
+    }
+
+    public bool BodyExited()
+    {
+        return BodyExited(out _);
+    }
+
+    public bool BodyInside(out KinematicBody2D overlapping)
+    {
+        overlapping = GetOverlappingBody();
+        return overlapping != null;
+    }
+
+    public bool BodyInside()
+    {
+        return BodyInside(out _);
     }
 }

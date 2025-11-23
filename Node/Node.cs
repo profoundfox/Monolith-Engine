@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography;
-using ConstructEngine.Components;
+using ConstructEngine.Helpers;
+using ConstructEngine.Managers;
 using ConstructEngine.Region;
 using ConstructEngine.Util;
 using Microsoft.Xna.Framework;
@@ -69,28 +70,86 @@ namespace ConstructEngine.Nodes
         private static void QueueAdd(Node node) => pendingAdds.Add(node);
 
         /// <summary>
-        /// Queues a node for removal from the main instance list.
+        /// Queues a node for removal from the main instance list and clears its data.
         /// </summary>
-        public void QueeFree() => pendingRemovals.Add(this);
+        public void QueeFree() 
+        {
+            ClearNodeData();
+            pendingRemovals.Add(this);
+        }
 
         /// <summary>
-        /// Applies queued additions and removals before or after each lifecycle step.
+        /// Clears the node's data to help with memory management.
+        /// </summary>
+        private void ClearNodeData()
+        {
+            Root = null;
+            Shape = null;
+            Name = null;
+            Values?.Clear();
+            Values = null;
+        }
+
+        /// <summary>
+        /// Applies queued changes.
         /// </summary>
         private static void ApplyPendingChanges()
         {
-            if (pendingAdds.Count > 0)
+            ApplyPendingAdds();
+            ApplyPendingRemovals();
+        }
+
+        /// <summary>
+        /// Applies pending additions.
+        /// </summary>
+        private static void ApplyPendingAdds()
+        {
+            if (pendingAdds.Count == 0) return;
+
+            foreach (var node in pendingAdds)
             {
-                allInstances.AddRange(pendingAdds);
-                pendingAdds.Clear();
+                allInstances.Add(node);
+                if (!string.IsNullOrEmpty(node.Name) && !allInstancesDetailed.ContainsKey(node.Name))
+                    allInstancesDetailed[node.Name] = node;
             }
 
-            if (pendingRemovals.Count > 0)
+            pendingAdds.Clear();
+        }
+
+        /// <summary>
+        /// Applies pending removals.
+        /// </summary>
+        private static void ApplyPendingRemovals()
+        {
+            if (pendingRemovals.Count == 0) return;
+
+            var toRemove = new List<Node>(pendingRemovals);
+
+            foreach (var node in toRemove)
             {
-                foreach (var n in pendingRemovals)
-                    allInstances.Remove(n);
-                pendingRemovals.Clear();
+                RemoveNode(node);
+            }
+
+            pendingRemovals.Clear();
+        }
+
+        /// <summary>
+        /// Removes the node.
+        /// </summary>
+        /// <param name="node"></param>
+        private static void RemoveNode(Node node)
+        {
+            allInstances.Remove(node);
+            if (!string.IsNullOrEmpty(node.Name))
+                allInstancesDetailed.Remove(node.Name);
+
+            var childNodes = allInstances.Where(n => n.Root == node).ToList();
+            foreach (var child in childNodes)
+            {
+                child.QueeFree();
             }
         }
+
 
         public virtual void Load() { }
         public virtual void Unload() { }
@@ -148,12 +207,35 @@ namespace ConstructEngine.Nodes
             {
                 allInstances[i].Draw(spriteBatch);
             }
+        }  
+
+        /// <summary>
+        /// Draws the shape with a filled texture.
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="layerDepth"></param>
+        /// <param name="layer"></param>
+        public void DrawShape(Color color, float layerDepth = 0.1f, DrawLayer layer = DrawLayer.Middleground)
+        {
+            DrawHelper.DrawRegionShape(Shape, color, layerDepth, layer);
         }
+
+        /// <summary>
+        /// Draws the shape with a hollow texture.
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="thickness"></param>
+        /// <param name="layerDepth"></param>
+        /// <param name="layer"></param>
+        public void DrawShapeHollow(Color color, int thickness = 2, float layerDepth = 0.1f, DrawLayer layer = DrawLayer.Middleground)
+        {
+            DrawHelper.DrawRegionShapeHollow(Shape, color, thickness, layerDepth, layer);
+        }
+
 
         /// <summary>
         /// Removes all node instances.
         /// </summary>
-
         public static void DumpAllInstances()
         {
             UnloadObjects();

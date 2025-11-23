@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
 
-namespace ConstructEngine.Components
+namespace ConstructEngine.Nodes
 {
     public class KinematicBody2D : Node
     {

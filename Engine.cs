@@ -9,7 +9,6 @@ using RenderingLibrary;
 using MonoGameGum;
 
 using ConstructEngine.UI;
-using ConstructEngine.Components;
 using ConstructEngine.Managers;
 using ConstructEngine.Graphics;
 using ConstructEngine.Nodes;
