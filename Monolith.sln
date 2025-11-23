@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Construct", "Construct\Construct.csproj", "{194808EA-60DB-40A9-85D5-8E4E4F6B5879}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monolith", "Monolith\Monolith.csproj", "{194808EA-60DB-40A9-85D5-8E4E4F6B5879}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

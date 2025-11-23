@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/nilslauvstad/Documents/Project/Libraries/Construct-Engine/Monolith.csproj": {}
+    "/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Monolith.csproj": {}
   },
   "projects": {
-    "/Users/nilslauvstad/Documents/Project/Libraries/Construct-Engine/Monolith.csproj": {
+    "/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Monolith.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/nilslauvstad/Documents/Project/Libraries/Construct-Engine/Monolith.csproj",
+        "projectUniqueName": "/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Monolith.csproj",
         "projectName": "Monolith",
-        "projectPath": "/Users/nilslauvstad/Documents/Project/Libraries/Construct-Engine/Monolith.csproj",
+        "projectPath": "/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Monolith.csproj",
         "packagesPath": "/Users/nilslauvstad/.nuget/packages/",
-        "outputPath": "/Users/nilslauvstad/Documents/Project/Libraries/Construct-Engine/obj/",
+        "outputPath": "/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/nilslauvstad/.nuget/NuGet/NuGet.Config"

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "hiRVqywEvUk=",
+  "dgSpecHash": "NWTgR+GoSWI=",
   "success": true,
-  "projectFilePath": "/Users/nilslauvstad/Documents/Project/Libraries/Construct-Engine/Monolith.csproj",
+  "projectFilePath": "/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Monolith.csproj",
   "expectedPackageFiles": [
     "/Users/nilslauvstad/.nuget/packages/flatredball.gumcommon/2025.9.27.1/flatredball.gumcommon.2025.9.27.1.nupkg.sha512",
     "/Users/nilslauvstad/.nuget/packages/flatredball.interpolationcore/2025.4.22.1/flatredball.interpolationcore.2025.4.22.1.nupkg.sha512",
