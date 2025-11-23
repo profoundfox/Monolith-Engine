@@ -15,7 +15,7 @@ namespace ConstructEngine.Nodes
     public abstract class Node
     {
         private static readonly List<Node> allInstances = new();
-        private static readonly Dictionary<string, Node> allInstancesDetailed = new();
+        private static readonly Dictionary<string, List<Node>> allInstancesDetailed = new();
 
         private static readonly List<Node> pendingAdds = new();
         private static readonly List<Node> pendingRemovals = new();
@@ -109,12 +109,16 @@ namespace ConstructEngine.Nodes
             foreach (var node in pendingAdds)
             {
                 allInstances.Add(node);
-                if (!string.IsNullOrEmpty(node.Name) && !allInstancesDetailed.ContainsKey(node.Name))
-                    allInstancesDetailed[node.Name] = node;
+
+                if (!allInstancesDetailed.ContainsKey(node.Name))
+                    allInstancesDetailed[node.Name] = new List<Node>();
+
+                allInstancesDetailed[node.Name].Add(node);
             }
 
             pendingAdds.Clear();
         }
+
 
         /// <summary>
         /// Applies pending removals.
@@ -140,15 +144,20 @@ namespace ConstructEngine.Nodes
         private static void RemoveNode(Node node)
         {
             allInstances.Remove(node);
-            if (!string.IsNullOrEmpty(node.Name))
-                allInstancesDetailed.Remove(node.Name);
+
+            if (!string.IsNullOrEmpty(node.Name) && allInstancesDetailed.ContainsKey(node.Name))
+            {
+                allInstancesDetailed[node.Name].Remove(node);
+
+                if (allInstancesDetailed[node.Name].Count == 0)
+                    allInstancesDetailed.Remove(node.Name);
+            }
 
             var childNodes = allInstances.Where(n => n.Root == node).ToList();
             foreach (var child in childNodes)
-            {
                 child.QueeFree();
-            }
         }
+
 
 
         public virtual void Load() { }
@@ -250,7 +259,11 @@ namespace ConstructEngine.Nodes
         /// <summary>
         /// A dictionary of all of the instances as well as the name of said instance to make searching easier.
         /// </summary>
-        public static IReadOnlyDictionary<string, Node> AllInstancesDetailed 
-            => new ReadOnlyDictionary<string, Node>(allInstancesDetailed);
+        public static IReadOnlyDictionary<string, IReadOnlyList<Node>> AllInstancesDetailed
+        => allInstancesDetailed.ToDictionary(
+            kvp => kvp.Key,
+            kvp => (IReadOnlyList<Node>)kvp.Value.AsReadOnly()
+        );
+
     }
 }

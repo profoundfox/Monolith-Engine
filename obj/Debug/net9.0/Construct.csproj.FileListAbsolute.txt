@@ -1,0 +1,13 @@
+/home/nils/Documents/Project/Libraries/Construct-Engine/bin/Debug/net9.0/Construct.deps.json
+/home/nils/Documents/Project/Libraries/Construct-Engine/bin/Debug/net9.0/Construct.dll
+/home/nils/Documents/Project/Libraries/Construct-Engine/bin/Debug/net9.0/Construct.pdb
+/home/nils/Documents/Project/Libraries/Construct-Engine/obj/Debug/net9.0/Construct.csproj.AssemblyReference.cache
+/home/nils/Documents/Project/Libraries/Construct-Engine/obj/Debug/net9.0/Construct.GeneratedMSBuildEditorConfig.editorconfig
+/home/nils/Documents/Project/Libraries/Construct-Engine/obj/Debug/net9.0/Construct.AssemblyInfoInputs.cache
+/home/nils/Documents/Project/Libraries/Construct-Engine/obj/Debug/net9.0/Construct.AssemblyInfo.cs
+/home/nils/Documents/Project/Libraries/Construct-Engine/obj/Debug/net9.0/Construct.csproj.CoreCompileInputs.cache
+/home/nils/Documents/Project/Libraries/Construct-Engine/obj/Debug/net9.0/Construct.sourcelink.json
+/home/nils/Documents/Project/Libraries/Construct-Engine/obj/Debug/net9.0/Construct.dll
+/home/nils/Documents/Project/Libraries/Construct-Engine/obj/Debug/net9.0/refint/Construct.dll
+/home/nils/Documents/Project/Libraries/Construct-Engine/obj/Debug/net9.0/Construct.pdb
+/home/nils/Documents/Project/Libraries/Construct-Engine/obj/Debug/net9.0/ref/Construct.dll

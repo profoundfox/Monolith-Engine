@@ -76,8 +76,6 @@ namespace ConstructEngine.Graphics
 
                 Vector2 position = new Vector2(x * TileWidth, y * TileHeight);
 
-                //tile.Draw(spriteBatch, position, Color.White, layerDepth);
-
                 Engine.DrawManager.Draw(
                     tile,
                     position,
