@@ -18,23 +18,22 @@ public static class Debug
     {
         if (!showDebugScreen)
             return;
-
-        var leftLines = new List<string>
+        Dictionary<string, Color> leftLines = new Dictionary<string, Color>
         {
-            $"Total Nodes: {Node.AllInstances.Count}",
-            $"Node Types: {Node.AllInstancesDetailed.Count}"
+            {$"Total Nodes: {Node.AllInstances.Count}", Color.Lime},
+            {$"Node Types: {Node.AllInstancesDetailed.Count}", Color.Aqua}
         };
 
-        var rightLines = new List<string>
+        Dictionary<string, Color> rightLines = new Dictionary<string, Color>
         {
-            "T: Draw regions, R: Reload scene, U: Show overlay"
+            {"T: Draw regions, R: Reload scene, U: Show overlay", Color.Yellow}
         };
 
         DrawOnScreen(leftLines, rightLines);
 
     }
 
-    public static void DrawOnScreen(List<string> leftLines, List<string> rightLines)
+    public static void DrawOnScreen(Dictionary<string, Color> leftLines, Dictionary<string, Color>  rightLines)
     {
         if (!showDebugScreen)
             return;
@@ -43,16 +42,16 @@ public static class Debug
         Vector2 leftPos = edges.TopLeft + padding;
         foreach (var line in leftLines)
         {
-            DrawHelper.DrawString(line, Color.Yellow, leftPos);
+            DrawHelper.DrawString(line.Key, line.Value, leftPos);
             leftPos.Y += lineHeight;
         }
 
         Vector2 rightPos = edges.TopRight + new Vector2(-padding.X, padding.Y);
         foreach (var line in rightLines)
         {
-            Vector2 textSize = Engine.Font.MeasureString(line);
-            Vector2 drawPos = new Vector2(rightPos.X - textSize.X, rightPos.Y); // align to right edge
-            DrawHelper.DrawString(line, Color.LightGreen, drawPos);
+            Vector2 textSize = Engine.Font.MeasureString(line.Key);
+            Vector2 drawPos = new Vector2(rightPos.X - textSize.X, rightPos.Y);
+            DrawHelper.DrawString(line.Key, line.Value, drawPos);
             rightPos.Y += lineHeight;
         }
     }
