@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Monolith.Nodes;
 using Microsoft.Xna.Framework;
+using Monolith.Managers;
 
 namespace Monolith.Region
 {
@@ -123,7 +124,7 @@ namespace Monolith.Region
         /// <returns></returns>
         public bool CheckIntersectionAny()
         {
-            return CheckIntersections(Node.AllInstances.OfType<RegionNode>());
+            return CheckIntersections(NodeManager.AllInstances.OfType<RegionNode>());
         }
 
         /// <summary>

@@ -3,6 +3,7 @@ using Monolith.Region;
 using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
+using Monolith.Managers;
 
 namespace Monolith.Nodes
 {
@@ -105,7 +106,7 @@ namespace Monolith.Nodes
             var right = Shape.Clone();
             right.Offset(1, 0);
 
-            foreach (var body in Node.AllInstances.OfType<StaticBody2D>())
+            foreach (var body in NodeManager.AllInstances.OfType<StaticBody2D>())
             {
                 var shape = body.Shape;
 
@@ -119,7 +120,7 @@ namespace Monolith.Nodes
 
         public bool IsColliding(IRegionShape2D shape)
         {
-            foreach (var body in Node.AllInstances.OfType<StaticBody2D>())
+            foreach (var body in NodeManager.AllInstances.OfType<StaticBody2D>())
             {
                 if (shape.Intersects(body.Shape))
                     return true;

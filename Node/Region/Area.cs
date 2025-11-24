@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Monolith;
+using Monolith.Managers;
 using Monolith.Nodes;
 
 public class Area2D : RegionNode
@@ -17,7 +18,7 @@ public class Area2D : RegionNode
 
     private Node GetOverlappingArea()
     {
-        return AllInstances
+        return NodeManager.AllInstances
             .Where(a => a != this && AcceptedAreaType.Any(t => t.IsAssignableFrom(a.GetType())))
             .Cast<Node>()
             .FirstOrDefault(a => Shape.Intersects(a.Shape));
@@ -25,7 +26,7 @@ public class Area2D : RegionNode
 
     private KinematicBody2D GetOverlappingBody()
     {
-        return AllInstances
+        return NodeManager.AllInstances
             .Where(a => a != this && typeof(KinematicBody2D).IsAssignableFrom(a.GetType()))
             .Cast<KinematicBody2D>()
             .FirstOrDefault(a => Shape.Intersects(a.Shape));

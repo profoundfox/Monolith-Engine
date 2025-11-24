@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Monolith;
 using Monolith.Debugger;
+using Monolith.Managers;
 using Monolith.Nodes;
 
 public class DebugSetup
@@ -16,17 +18,18 @@ public class DebugSetup
             Color fpsColor = FPS >= 60 ? Color.LimeGreen :
                              FPS >= 30 ? Color.Yellow :
                                          Color.Red;
+            Node Player = NodeManager.GetNodeByName("Player");
 
             yield return ($"Current FPS: {FPS}", fpsColor);
-            yield return ($"Total Nodes: {Node.AllInstances.Count}", Color.Green);
-            yield return ($"Node Types: {Node.AllInstancesDetailed.Count}", Color.Aqua);
+            yield return ($"Total Nodes: {NodeManager.AllInstances.Count}", Color.Green);
+            yield return ($"Node Types: {NodeManager.AllInstancesDetailed.Count}", Color.Aqua);
             yield return ($"Current Scene: {Engine.SceneManager.GetCurrentScene()}", Color.LightBlue);
             yield return ("", Color.White);
-            yield return ($"Player Position: {Engine.MainCharacter?.Location}", Color.LimeGreen);
-
-            yield return ("U: Toggle Debug", Color.Yellow);
-            yield return ("R: Reload Scene", Color.Yellow);
-            yield return ("T: Toggle Regions", Color.Yellow);
+            
+            yield return (Player != null
+                ? $"Player Position: {Player.Location}"
+                : "Player not found",
+                Player != null ? Color.LimeGreen : Color.Red);
         }
     }
 
@@ -38,8 +41,18 @@ public class DebugSetup
         {
             if (!Enabled) yield break;
 
-            foreach (var n in Node.AllInstances)
+            foreach (var n in NodeManager.AllInstances)
                 yield return ("Region", Color.Red);
+        }
+    }
+
+    public class KeybindPanel : IDebugPanel
+    {
+        public IEnumerable<(string text, Color color)> GetLines()
+        {
+            yield return ("U: Toggle Debug", Color.Yellow);
+            yield return ("R: Reload Scene", Color.Yellow);
+            yield return ("T: Toggle Regions", Color.Yellow);
         }
     }
 }

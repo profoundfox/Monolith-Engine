@@ -15,6 +15,7 @@ using Monolith.Nodes;
 using Monolith.Helpers;
 using Monolith.Util;
 using Monolith.Debugger;
+using System.Diagnostics;
 
 namespace Monolith
 {
@@ -119,6 +120,7 @@ namespace Monolith
         private float currentScale;
         private bool quit;
         private int _fpsFrames;
+        private bool drawRegions;
         private double _fpsTimer;
 
 
@@ -194,12 +196,13 @@ namespace Monolith
             if (!string.IsNullOrEmpty(Config.GumProject))
                 InitializeGum(Config.GumProject);
             
-            if (Config.DebugMode)
-            {
-                DebugManager.AddPanel(new DebugSetup.NodePanel(), DebugManager.AnchorPoint.TopLeft);
-                DebugManager.AddPanel(new DebugSetup.RegionPanel(), DebugManager.AnchorPoint.BottomLeft);
-            }
 
+            DebugManager.AddPanel(new DebugSetup.NodePanel(), DebugManager.AnchorPoint.TopLeft);
+            DebugManager.AddPanel(new DebugSetup.RegionPanel(), DebugManager.AnchorPoint.BottomLeft);
+            DebugManager.AddPanel(new DebugSetup.KeybindPanel(), DebugManager.AnchorPoint.TopRight);
+            DebugManager.AddCommand(Keys.T, () => drawRegions = !drawRegions);
+            DebugManager.AddCommand(Keys.R, () => SceneManager.ReloadCurrentScene());
+            DebugManager.AddCommand(Keys.U, () => DebugManager.PanelsVisible = !DebugManager.PanelsVisible);
 
             LoadRenderTarget();
             UpdateRenderTargetTransform();
@@ -256,6 +259,9 @@ namespace Monolith
 
             if(Config.DebugMode)
                 DebugManager.Draw();
+            
+            if (drawRegions)
+                foreach(var node in NodeManager.AllInstances) node.DrawShapeHollow(Color.Red);
 
             DrawManager.Flush();
 

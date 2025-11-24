@@ -39,7 +39,7 @@ namespace Monolith.Managers
             scene.Initialize();
             scene.Load();
             
-            Node.LoadObjects();
+            NodeManager.LoadObjects();
 
             GetAndSetPlayer();
 
@@ -186,7 +186,7 @@ namespace Monolith.Managers
             if (!IsStackEmpty() && !_sceneFrozen)
             {
                 Engine.TweenManager.Update();
-                Node.UpdateObjects(gameTime);
+                NodeManager.UpdateObjects(gameTime);
                 GetCurrentScene()?.Update(gameTime);
             }
 
@@ -206,7 +206,7 @@ namespace Monolith.Managers
             {
                 Engine.SpriteManager.DrawAllSprites(spriteBatch);
                 Engine.DrawManager.DrawTilemaps(spriteBatch);
-                Node.DrawObjects(spriteBatch);
+                NodeManager.DrawObjects(spriteBatch);
                 GetCurrentScene()?.Draw(spriteBatch);
             }
 
@@ -238,7 +238,7 @@ namespace Monolith.Managers
         private void GetAndSetPlayer()
         {
             Node mainCharacter =
-            Node.AllInstances
+            NodeManager.AllInstances
                 .FirstOrDefault(e => e.GetType() == Engine.Instance.Config.MainCharacterType);
 
             if (mainCharacter != null)
@@ -252,7 +252,7 @@ namespace Monolith.Managers
         {
             Engine.DrawManager.Tilemaps.Clear();
             Engine.SpriteManager.Empty();
-            Node.DumpAllInstances();
+            NodeManager.DumpAllInstances();
             //RayCast2D.RayList.Clear();
         }
     }
