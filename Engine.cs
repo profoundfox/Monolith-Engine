@@ -14,6 +14,8 @@ using Monolith.Graphics;
 using Monolith.Nodes;
 using Monolith.Helpers;
 using Monolith.Util;
+using Monolith.Debugger;
+using static Monolith.Debugger.Debug;
 
 namespace Monolith
 {
@@ -89,6 +91,11 @@ namespace Monolith
         public static Node MainCharacter { get; set; }
 
         /// <summary>
+        /// Current FPS.
+        /// </summary>
+        public static float FPS { get; private set; }
+
+        /// <summary>
         /// Manager responsible for scene handling and switching between scenes.
         /// </summary>
         public static SceneManager SceneManager { get; private set; }
@@ -97,6 +104,11 @@ namespace Monolith
         /// Manager handling input from keyboard, mouse, and other devices.
         /// </summary>
         public static InputManager Input { get; private set; }
+
+        /// <summary>
+        /// Configuration for debug overlay and commands.
+        /// </summary>
+        public static DebugConfig DebugConfig { get; set; }
 
         /// <summary>
         /// Gum UI service for managing user interfaces built with Gum.
@@ -111,9 +123,10 @@ namespace Monolith
         private int finalWidth, finalHeight;
         private int offsetX, offsetY;
         private float currentScale;
-        private bool drawRegions;
-        private bool showDebugScreen;
         private bool quit;
+        private int _fpsFrames;
+        private double _fpsTimer;
+
 
         /// <summary>
         /// Initializes a new instance of the Engine class with the specified configuration.
@@ -151,6 +164,11 @@ namespace Monolith
             Window.Position = new Point(0, 0);
         }
 
+        private void InitializeDebug()
+        {
+            
+        }
+
         /// <summary>
         /// Initializes engine components, input, Gum UI, and render targets.
         /// </summary>
@@ -181,6 +199,9 @@ namespace Monolith
 
             if (!string.IsNullOrEmpty(Config.GumProject))
                 InitializeGum(Config.GumProject);
+            
+            if (Config.DebugMode)
+                Debug.Initialize();
 
             LoadRenderTarget();
             UpdateRenderTargetTransform();
@@ -203,8 +224,19 @@ namespace Monolith
             GumManager.UpdateAll(gameTime);
             GumUI?.Update(this, gameTime);
 
+
+            _fpsTimer += gameTime.ElapsedGameTime.TotalSeconds;
+            _fpsFrames++;
+
+            if (_fpsTimer >= 1.0)
+            {
+                FPS = _fpsFrames / (float)_fpsTimer;
+                _fpsFrames = 0;
+                _fpsTimer = 0;
+            }
+
             if (Config.DebugMode)
-                Debug.DebugLogic();
+                Debug.Update();
             
             if (MCamera.CurrentCamera != null)
                 DrawManager.SetCamera(MCamera.CurrentCamera.Transform);
@@ -223,8 +255,9 @@ namespace Monolith
             GraphicsDevice.Clear(Color.DarkSlateGray);
 
             SceneManager.DrawCurrentScene(SpriteBatch);
+
             if(Config.DebugMode)
-                Debug.DrawGeneralNodeInfo();
+                Debug.Draw();
 
             DrawManager.Flush();
 
