@@ -161,8 +161,25 @@ namespace Monolith
 
         private void InitializeDebug()
         {
+            int roundFps = (int)Math.Round(FPS);
+            Color fpsColor = roundFps >= 60 ? Color.LimeGreen : roundFps >= 30 ? Color.Yellow : Color.Red;
+
+            DebugOverlay.AddInfo("FPS", () => $"Current FPS: {roundFps}", fpsColor);
+            DebugOverlay.AddInfo("NodeCount", () => $"Total Nodes: {NodeManager.AllInstances.Count}", Color.Green);
+            DebugOverlay.AddInfo("NodeTypes", () => $"Node Types: {NodeManager.AllInstancesDetailed.Count}", Color.Aqua);
+            DebugOverlay.AddInfo("Scene", () => $"Current Scene: {SceneManager.GetCurrentScene()}", Color.LightBlue);
+
+            DebugOverlay.AddInfo("Spacer", () => "", Color.White);
+
+            DebugOverlay.AddInfo("PlayerPosition", () => NodeManager.GetNodeByName("Player") is var p2 && p2 != null ? $"Player Position: {p2.Location}" : "Player Position: <null>", Color.LimeGreen);
             
+            DebugOverlay.AddInfo("Spacer", () => "", Color.White);
+
+            DebugOverlay.AddInfo("KeybindU", () => "U: Toggle Debug", Color.Yellow, DebugOverlay.Side.Right);
+            DebugOverlay.AddInfo("KeybindR", () => "R: Reload Scene", Color.Yellow, DebugOverlay.Side.Right);
+            DebugOverlay.AddInfo("KeybindT", () => "T: Toggle Regions", Color.Yellow, DebugOverlay.Side.Right);
         }
+
 
         /// <summary>
         /// Initializes engine components, input, Gum UI, and render targets.
@@ -194,7 +211,9 @@ namespace Monolith
 
             if (!string.IsNullOrEmpty(Config.GumProject))
                 InitializeGum(Config.GumProject);
-
+            if (Config.DebugMode)
+                InitializeDebug();
+            
             LoadRenderTarget();
             UpdateRenderTargetTransform();
         }

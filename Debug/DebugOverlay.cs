@@ -2,22 +2,39 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Monolith;
 
 public static class DebugOverlay
-{
-    public static bool IsEnabled = true;
-    private static SpriteFont font;
-
-    private static Dictionary<string, Func<string>> debugInfos = new Dictionary<string, Func<string>>();
-
-    public static void Initialize(SpriteFont debugFont)
+{   
+    public enum Side
     {
-        font = debugFont;
+        Left,
+        Right
+    }
+    public static bool IsEnabled = true;
+    private static Dictionary<string, DebugEntry> debugInfos = new();
+
+    private class DebugEntry
+    {
+        public Func<string> TextFunc;
+        public Color Color;
+        public Side Side;
+
     }
 
-    public static void AddInfo(string key, Func<string> infoFunc)
+    public static void AddInfo(string key, Func<string> infoFunc, Color color, Side side = Side.Left)
     {
-        debugInfos[key] = infoFunc;
+        debugInfos[key] = new DebugEntry
+        {
+            TextFunc = infoFunc,
+            Color = color,
+            Side = side
+        };
+    }
+
+    public static void AddInfo(string key, Func<string> infoFunc, Side side = Side.Left)
+    {
+        AddInfo(key, infoFunc, Color.White, side);
     }
 
     public static void RemoveInfo(string key)
@@ -27,16 +44,44 @@ public static class DebugOverlay
 
     public static void Draw(SpriteBatch spriteBatch)
     {
-        if (!IsEnabled || font == null)
+        if (!IsEnabled || Engine.Font == null)
             return;
 
-        int y = 10;
+        spriteBatch.Begin();
 
-        foreach (var info in debugInfos.Values)
+        int yLeft = 10;
+        int yRight = 10;
+        int screenWidth = Engine.GraphicsDevice.Viewport.Width; // Get screen width
+
+        foreach (var entry in debugInfos.Values)
         {
-            string text = info.Invoke();
-            spriteBatch.DrawString(font, text, new Vector2(10, y), Color.White);
-            y += 20;
+            string text;
+            try
+            {
+                text = entry.TextFunc.Invoke() ?? "";
+            }
+            catch (Exception ex)
+            {
+                text = $"<error: {ex.Message}>";
+            }
+
+            switch (entry.Side)
+            {
+                case Side.Left:
+                    spriteBatch.DrawString(Engine.Font, text, new Vector2(10, yLeft), entry.Color);
+                    yLeft += 20;
+                    break;
+
+                case Side.Right:
+                    Vector2 textSize = Engine.Font.MeasureString(text);
+                    spriteBatch.DrawString(Engine.Font, text, new Vector2(screenWidth - textSize.X - 10, yRight), entry.Color);
+                    yRight += 20;
+                    break;
+            }
         }
+
+        spriteBatch.End();
     }
+
+
 }
