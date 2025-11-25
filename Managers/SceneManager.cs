@@ -36,14 +36,15 @@ namespace Monolith.Managers
 
             SceneIntervention();
 
+            //! Must be called before load to ensure new map is loaded.
+            Scenes.Push(scene);
+            
             scene.Initialize();
             scene.Load();
             
             NodeManager.LoadObjects();
 
             GetAndSetPlayer();
-
-            Scenes.Push(scene);
         }
 
 

@@ -13,12 +13,12 @@ namespace Monolith.Nodes
         /// <summary>
         /// The object that the node is instantiated within.
         /// </summary>
-        public object Root { get; internal set; }
+        public object Parent { get; internal set; }
 
         /// <summary>
-        /// The type of the root object.
+        /// The type of the Parent object.
         /// </summary>
-        public Type RootType => Root?.GetType();
+        public Type ParentType => Parent?.GetType();
 
         /// <summary>
         /// The shape that the object has.
@@ -45,7 +45,7 @@ namespace Monolith.Nodes
         /// </summary>
         public Node(NodeConfig config)
         {
-            Root = config.Root;
+            Parent = config.Parent;
             Shape = config.Shape;
             Name = config.Name;
             Values = config.Values;
@@ -69,13 +69,30 @@ namespace Monolith.Nodes
             NodeManager.RemoveImmediate(this);
         }
 
+        /// <summary>
+        /// Returns a list of all currently know children of this node.
+        /// </summary>
+        /// <returns></returns>
+        public List<Node> GetChildren()
+        {
+            return NodeManager.GetNodeChildren(this);
+        }
+
+        /// <summary>
+        /// Returns the current parrent of this node.
+        /// </summary>
+        /// <returns></returns>
+        public object GetParent()
+        {
+            return NodeManager.GetNodeParent(this);
+        }  
 
         /// <summary>
         /// Clears the node's data to help with memory management.
         /// </summary>
         internal void ClearNodeData()
         {
-            Root = null;
+            Parent = null;
             Shape = null;
             Name = null;
             Values?.Clear();

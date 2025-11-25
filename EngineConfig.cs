@@ -27,7 +27,7 @@ namespace Monolith
         public string Title { get; init; } = "My Game";
 
         /// <summary>
-        /// The root directory of assets.
+        /// The Parent directory of assets.
         /// Default: "Content"
         /// </summary>
         public string RootContentDirectory { get; init; } = "Content";
@@ -137,7 +137,7 @@ namespace Monolith
         /// <summary>
         /// The object that the node is instantiated within.
         /// </summary>
-        public required object Root { get; init; }
+        public required object Parent { get; init; }
 
         /// <summary>
         /// The shape that the object has.

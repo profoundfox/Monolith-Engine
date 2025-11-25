@@ -161,17 +161,14 @@ namespace Monolith
 
         private void InitializeDebug()
         {
-            int roundFps = (int)Math.Round(FPS);
-            Color fpsColor = roundFps >= 60 ? Color.LimeGreen : roundFps >= 30 ? Color.Yellow : Color.Red;
-
-            DebugOverlay.AddInfo("FPS", () => $"Current FPS: {roundFps}", fpsColor);
+            DebugOverlay.AddInfo("FPS", () => $"Current FPS: {Math.Round(FPS)}", Color.LimeGreen);
             DebugOverlay.AddInfo("NodeCount", () => $"Total Nodes: {NodeManager.AllInstances.Count}", Color.Green);
             DebugOverlay.AddInfo("NodeTypes", () => $"Node Types: {NodeManager.AllInstancesDetailed.Count}", Color.Aqua);
             DebugOverlay.AddInfo("Scene", () => $"Current Scene: {SceneManager.GetCurrentScene()}", Color.LightBlue);
 
             DebugOverlay.AddInfo("Spacer", () => "", Color.White);
 
-            DebugOverlay.AddInfo("PlayerPosition", () => NodeManager.GetNodeByName("Player") is var p2 && p2 != null ? $"Player Position: {p2.Location}" : "Player Position: <null>", Color.LimeGreen);
+            DebugOverlay.AddInfo("PlayerPosition", () => NodeManager.GetNodeByName("Player") is var p2 && p2 != null ? $"Player Position: {p2.Location}" : "Player Position: <null>", Color.Aqua);
             
             DebugOverlay.AddInfo("Spacer", () => "", Color.White);
 
@@ -223,7 +220,7 @@ namespace Monolith
         /// </summary>
         /// <param name="gameTime">Time elapsed since last update.</param>
         protected override void Update(GameTime gameTime)
-        {
+        {   
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             Input.Update(gameTime);
 
@@ -241,7 +238,7 @@ namespace Monolith
 
             if (_fpsTimer >= 1.0)
             {
-                FPS = _fpsFrames / (float)_fpsTimer;
+                FPS =_fpsFrames / (float)_fpsTimer;
                 _fpsFrames = 0;
                 _fpsTimer = 0;
             }

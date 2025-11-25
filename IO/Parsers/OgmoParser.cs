@@ -135,11 +135,12 @@ namespace Monolith.IO
                 {
                     var obj = (Node)Activator.CreateInstance(type, new NodeConfig
                     {
-                        Root = Engine.SceneManager.GetCurrentScene(),
+                        Parent = Engine.SceneManager.GetCurrentScene(),
                         Shape = new RectangleShape2D(entity.x, entity.y, entity.width, entity.height),
                         Name = entity.name,
                         Values = normalDict
                     });
+                    Console.WriteLine(Engine.SceneManager.GetCurrentScene());
                 }
                 else
                 {

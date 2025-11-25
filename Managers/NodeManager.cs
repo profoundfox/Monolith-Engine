@@ -70,6 +70,33 @@ namespace Monolith.Managers
         }
 
         /// <summary>
+        /// Returns a list of all currently know children of a specified node.
+        /// </summary>
+        /// <returns></returns>
+        public static List<Node> GetNodeChildren(Node node)
+        {
+            List<Node> nodes = new();
+
+            for (int i = 0; i < allInstances.Count; i++)
+            {
+                Node n = allInstances[i];
+                if (n.Parent is Node)
+                    nodes.Add(n);
+            }
+
+            return nodes;
+        }
+
+        /// <summary>
+        /// Returns the current parrent of this node.
+        /// </summary>
+        /// <returns></returns>
+        public static object GetNodeParent(Node node)
+        {
+            return node.Parent;
+        }
+
+        /// <summary>
         /// Removes the node.
         /// </summary>
         private static void RemoveNode(Node node)
@@ -86,7 +113,7 @@ namespace Monolith.Managers
 
             node.ClearNodeData();
 
-            var childNodes = allInstances.Where(n => n.Root == node).ToList();
+            var childNodes = allInstances.Where(n => n.Parent == node).ToList();
             foreach (var child in childNodes)
                 RemoveNode(child);
         }
