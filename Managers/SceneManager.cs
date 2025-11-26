@@ -43,8 +43,6 @@ namespace Monolith.Managers
             scene.Load();
             
             NodeManager.LoadObjects();
-
-            GetAndSetPlayer();
         }
 
 
@@ -234,16 +232,6 @@ namespace Monolith.Managers
             var currentType = Scenes.Peek().GetType();
             var newScene = (IScene)Activator.CreateInstance(currentType);
             AddScene(newScene);
-        }
-
-        private void GetAndSetPlayer()
-        {
-            Node mainCharacter =
-            NodeManager.AllInstances
-                .FirstOrDefault(e => e.GetType() == Engine.Instance.Config.MainCharacterType);
-
-            if (mainCharacter != null)
-                Engine.MainCharacter = mainCharacter;
         }
         
         /// <summary>

@@ -15,6 +15,7 @@ using Monolith.Nodes;
 using Monolith.Helpers;
 using Monolith.Util;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Monolith
 {
@@ -83,11 +84,6 @@ namespace Monolith
         /// Optional post-processing shader applied when rendering the scene.
         /// </summary>
         public Effect PostProcessingShader { get; set; }
-
-        /// <summary>
-        /// The main player character or kinematic entity in the scene.
-        /// </summary>
-        public static Node MainCharacter { get; set; }
 
         /// <summary>
         /// Current FPS.
