@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Monolith.Managers;
 using Monolith.Region;
 using Monolith.Util;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Monolith.Helpers
 {
     public static class DrawHelper
     {
-
         private static Texture2D _pixel;
         private static Dictionary<int, Texture2D> _circleCache = new();
 
@@ -51,83 +49,128 @@ namespace Monolith.Helpers
             return texture;
         }
 
-        public static void DrawRegionShape(IRegionShape2D regionShape, Color color, float layerDepth = 0.1f, DrawLayer layer = DrawLayer.Middleground)
+        public static void DrawRegionShape(
+            IRegionShape2D regionShape,
+            Color color,
+            float layerDepth = 0.1f,
+            DrawLayer layer = DrawLayer.Middleground)
         {
             if (regionShape == null) return;
 
             if (regionShape is RectangleShape2D rect)
                 DrawRectangle(rect, color, layerDepth, layer);
+
             if (regionShape is CircleShape2D circle)
                 DrawCircle(circle, color, layerDepth, layer);
         }
 
-        public static void DrawRegionShapeHollow(IRegionShape2D regionShape, Color color, int thickness = 2, float layerDepth = 0.1f, DrawLayer layer = DrawLayer.Middleground)
+        public static void DrawRegionShapeHollow(
+            IRegionShape2D regionShape,
+            Color color,
+            int thickness = 2,
+            float layerDepth = 0.1f,
+            DrawLayer layer = DrawLayer.Middleground)
         {
             if (regionShape == null) return;
 
             if (regionShape is RectangleShape2D rect)
                 DrawRectangleHollow(rect, color, thickness, layerDepth, layer);
+
             if (regionShape is CircleShape2D circle)
                 DrawCircleHollow(circle, color, thickness, layerDepth, layer);
         }
 
-        public static void DrawRectangle(RectangleShape2D rect, Color color, float layerDepth = 0.1f, DrawLayer layer = DrawLayer.Middleground)
+        public static void DrawRectangle(
+            RectangleShape2D rect,
+            Color color,
+            float layerDepth = 0.1f,
+            DrawLayer layer = DrawLayer.Middleground)
         {
             var pixel = GetPixel(Engine.GraphicsDevice);
 
-            Engine.DrawManager.Draw(pixel,
-                new Vector2(rect.X, rect.Y),
-                color, layer, 0f, Vector2.Zero,
-                new Vector2(rect.BoundingBox.Width, rect.BoundingBox.Height),
-                SpriteEffects.None, layerDepth);
+            Engine.DrawManager.Draw(
+                new DrawParams(
+                    texture: pixel,
+                    position: new Vector2(rect.X, rect.Y))
+                {
+                    Color = color,
+                    Scale = new Vector2(rect.BoundingBox.Width, rect.BoundingBox.Height),
+                    LayerDepth = layerDepth
+                },
+                layer
+            );
         }
 
-        public static void DrawRectangleHollow(RectangleShape2D rect, Color color, int thickness = 1, float layerDepth = 0.1f, DrawLayer layer = DrawLayer.Middleground)
+        public static void DrawRectangleHollow(
+            RectangleShape2D rect,
+            Color color,
+            int thickness = 1,
+            float layerDepth = 0.1f,
+            DrawLayer layer = DrawLayer.Middleground)
         {
             var pixel = GetPixel(Engine.GraphicsDevice);
 
-            Engine.DrawManager.Draw(pixel,
-                new Vector2(rect.X, rect.Y),
-                color, layer, 0f, Vector2.Zero,
-                new Vector2(rect.BoundingBox.Width, thickness),
-                SpriteEffects.None, layerDepth);
+            Engine.DrawManager.Draw(
+                new DrawParams(pixel, new Vector2(rect.X, rect.Y))
+                {
+                    Color = color,
+                    Scale = new Vector2(rect.BoundingBox.Width, thickness),
+                    LayerDepth = layerDepth
+                },
+                layer
+            );
 
-            Engine.DrawManager.Draw(pixel,
-                new Vector2(rect.X, rect.BoundingBox.Bottom - thickness),
-                color, layer, 0f, Vector2.Zero,
-                new Vector2(rect.BoundingBox.Width, thickness),
-                SpriteEffects.None, layerDepth);
+            Engine.DrawManager.Draw(
+                new DrawParams(pixel, new Vector2(rect.X, rect.BoundingBox.Bottom - thickness))
+                {
+                    Color = color,
+                    Scale = new Vector2(rect.BoundingBox.Width, thickness),
+                    LayerDepth = layerDepth
+                },
+                layer
+            );
 
+            Engine.DrawManager.Draw(
+                new DrawParams(pixel, new Vector2(rect.X, rect.Y))
+                {
+                    Color = color,
+                    Scale = new Vector2(thickness, rect.BoundingBox.Height),
+                    LayerDepth = layerDepth
+                },
+                layer
+            );
 
-            Engine.DrawManager.Draw(pixel,
-                new Vector2(rect.X, rect.Y),
-                color, layer, 0f, Vector2.Zero,
-                new Vector2(thickness, rect.BoundingBox.Height),
-                SpriteEffects.None, layerDepth);
-
-            Engine.DrawManager.Draw(pixel,
-                new Vector2(rect.BoundingBox.Right - thickness, rect.Y),
-                color, layer, 0f, Vector2.Zero,
-                new Vector2(thickness, rect.BoundingBox.Height),
-                SpriteEffects.None, layerDepth);
+            Engine.DrawManager.Draw(
+                new DrawParams(pixel, new Vector2(rect.BoundingBox.Right - thickness, rect.Y))
+                {
+                    Color = color,
+                    Scale = new Vector2(thickness, rect.BoundingBox.Height),
+                    LayerDepth = layerDepth
+                },
+                layer
+            );
         }
 
-        public static void DrawCircle(CircleShape2D circ, Color color, float layerDepth = 0.1f, DrawLayer layer = DrawLayer.Middleground)
+        public static void DrawCircle(
+            CircleShape2D circ,
+            Color color,
+            float layerDepth = 0.1f,
+            DrawLayer layer = DrawLayer.Middleground)
         {
             if (circ == null) return;
 
             Texture2D texture = GetCircleTexture(Engine.GraphicsDevice, circ.Radius);
 
             Engine.DrawManager.Draw(
-                texture,
-                new Vector2(circ.Location.X, circ.Location.Y),
-                color,
-                layer,
-                0f,
-                new Vector2(texture.Width / 2f, texture.Height / 2f),
-                Vector2.One,
-                SpriteEffects.None,
-                layerDepth
+                new DrawParams(
+                    texture: texture,
+                    position: new Vector2(circ.Location.X, circ.Location.Y))
+                {
+                    Color = color,
+                    Origin = new Vector2(texture.Width / 2f, texture.Height / 2f),
+                    LayerDepth = layerDepth
+                },
+                layer
             );
         }
 
@@ -145,7 +188,7 @@ namespace Monolith.Helpers
             Vector2 center = new Vector2(circle.Location.X, circle.Location.Y);
             float radius = circle.Radius;
 
-            const int segments = 64; // same as your rectangle: no extra parameter clutter
+            const int segments = 64;
             float increment = MathF.Tau / segments;
             float angle = 0f;
 
@@ -161,21 +204,26 @@ namespace Monolith.Helpers
                 float rotation = MathF.Atan2(edge.Y, edge.X);
 
                 Engine.DrawManager.Draw(
-                    pixel,
-                    prev,
-                    color,
-                    layer,
-                    rotation,
-                    Vector2.Zero,
-                    new Vector2(length, thickness),
-                    SpriteEffects.None,
-                    layerDepth);
+                    new DrawParams(pixel, prev)
+                    {
+                        Color = color,
+                        Rotation = rotation,
+                        Scale = new Vector2(length, thickness),
+                        LayerDepth = layerDepth
+                    },
+                    layer
+                );
 
                 prev = next;
             }
         }
 
-        public static void DrawRay(RayCast2D ray, Color color, float thickness = 1f, float layerDepth = 0.1f, DrawLayer layer = DrawLayer.Middleground)
+        public static void DrawRay(
+            RayCast2D ray,
+            Color color,
+            float thickness = 1f,
+            float layerDepth = 0.1f,
+            DrawLayer layer = DrawLayer.Middleground)
         {
             var pixel = GetPixel(Engine.GraphicsDevice);
 
@@ -188,18 +236,16 @@ namespace Monolith.Helpers
             float angle = (float)Math.Atan2(edge.Y, edge.X);
 
             Engine.DrawManager.Draw(
-                pixel,
-                ray.Position,
-                drawColor,
-                layer,
-                angle,
-                Vector2.Zero,
-                new Vector2(edge.Length(), thickness),
-                SpriteEffects.None,
-                layerDepth
+                new DrawParams(pixel, ray.Position)
+                {
+                    Color = drawColor,
+                    Rotation = angle,
+                    Scale = new Vector2(edge.Length(), thickness),
+                    LayerDepth = layerDepth
+                },
+                layer
             );
         }
-
 
         public static void DrawString(string input, Color color, Vector2 pos, float layerDepth = 0.9f)
         {

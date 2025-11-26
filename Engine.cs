@@ -260,9 +260,9 @@ namespace Monolith
 
             GraphicsDevice.Clear(Color.DarkSlateGray);
 
-            SceneManager.DrawCurrentScene(SpriteBatch);
-
             DebugOverlay.Draw(SpriteBatch);
+            
+            SceneManager.DrawCurrentScene(SpriteBatch);
             
             if (drawRegions)
                 foreach(var node in NodeManager.AllInstances) node.DrawShapeHollow(Color.Red);

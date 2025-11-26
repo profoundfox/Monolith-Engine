@@ -3,12 +3,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Monolith.Managers
 {
-    /// <summary>
-    /// An enum representing four different layers, back to front.
-    /// </summary>
     public enum DrawLayer
     {
         Background,
@@ -18,15 +16,55 @@ namespace Monolith.Managers
     }
 
     /// <summary>
-    /// Represents a single batched sprite draw call containing all rendering
-    /// parameters needed to draw a texture using SpriteBatch.
+    /// Lightweight container used by callers to describe what to draw.
+    /// Provides sensible defaults and keeps Draw() call-sites compact.
     /// </summary>
-    /// <remarks>
-    /// This struct stores texture reference, draw positioning, source region,
-    /// tint color, rotation, origin pivot, scaling, sprite effects, depth layering,
-    /// and optional shader effects.
-    /// </remarks>
-    public struct DrawCall
+    public readonly struct DrawParams
+    {
+        public Texture2D Texture { get; init; }
+        public Vector2 Position { get; init; }
+        public Rectangle? SourceRectangle { get; init; }
+        public Color Color { get; init; }
+        public float Rotation { get; init; }
+        public Vector2 Origin { get; init; }
+        public Vector2 Scale { get; init; }
+        public SpriteEffects Effects { get; init; }
+        public float LayerDepth { get; init; }
+        public Effect Effect { get; init; }
+        public bool UseCamera { get; init; }
+
+        public DrawParams(
+            Texture2D texture,
+            Vector2 position,
+            Color? color = null,
+            float rotation = 0f,
+            Vector2? origin = null,
+            Vector2? scale = null,
+            Rectangle? source = null,
+            SpriteEffects effects = SpriteEffects.None,
+            float layerDepth = 0f,
+            Effect effect = null,
+            bool useCamera = true)
+        {
+            Texture = texture ?? throw new ArgumentNullException(nameof(texture));
+            Position = position;
+            SourceRectangle = source;
+            Color = color ?? Color.White;
+            Rotation = rotation;
+            Origin = origin ?? Vector2.Zero;
+            Scale = scale ?? Vector2.One;
+            Effects = effects;
+            LayerDepth = layerDepth;
+            Effect = effect;
+            UseCamera = useCamera;
+        }
+    }
+
+    /// <summary>
+    /// Internal structure representing a queued draw call. Kept separate so DrawParams
+    /// remains small and focused on user input.
+    /// </summary>
+    internal struct DrawCall
     {
         public Texture2D Texture;
         public Vector2 Position;
@@ -39,123 +77,184 @@ namespace Monolith.Managers
         public float LayerDepth;
         public Effect Effect;
         public bool UseCamera;
+
+        // Tiling helpers (used by DrawLooping)
         public bool LoopX;
         public bool LoopY;
         public Vector2 Offset;
 
-        public DrawCall(bool initializeDefaults)
+        public DrawCall(in DrawParams p)
         {
-            Texture = null;
-            Position = Vector2.Zero;
-            SourceRectangle = null;
-            Color = Color.White;
-            Rotation = 0f;
-            Origin = Vector2.Zero;
-            Scale = Vector2.One;
-            Effects = SpriteEffects.None;
-            LayerDepth = 0f;
-            Effect = null;
+            Texture = p.Texture;
+            Position = p.Position;
+            SourceRectangle = p.SourceRectangle;
+            Color = p.Color;
+            Rotation = p.Rotation;
+            Origin = p.Origin;
+            Scale = p.Scale;
+            Effects = p.Effects;
+            LayerDepth = p.LayerDepth;
+            Effect = p.Effect;
+            UseCamera = p.UseCamera;
+
             LoopX = false;
             LoopY = false;
             Offset = Vector2.Zero;
-            UseCamera = true;
         }
     }
 
     /// <summary>
-    /// The manager responsible for batching, organizing, and drawing queued sprites
-    /// across multiple draw layers in the correct order.
+    /// Responsible for queueing draw calls and flushing them to a SpriteBatch.
+    /// Features:
+    /// - Single Draw(DrawParams) entry point
+    /// - Unified DrawLooping implementation
+    /// - Batch Begin/End by: layer -> camera usage -> Effect (so switching effects is handled safely)
     /// </summary>
-    public partial class DrawManager
+    public sealed partial class DrawManager
     {
         private readonly SpriteBatch _spriteBatch;
-        private readonly Dictionary<DrawLayer, List<DrawCall>> _drawQueues;
-        private Matrix _cameraTransform = Matrix.Identity;
+        private readonly Dictionary<DrawLayer, List<DrawCall>> _queues;
+        private Matrix _camera = Matrix.Identity;
 
-        /// <summary>
-        /// Creates a new DrawManager using the provided SpriteBatch.
-        /// </summary>
-        /// <param name="spriteBatch">The SpriteBatch used for rendering.</param>
         public DrawManager(SpriteBatch spriteBatch)
         {
-            _spriteBatch = spriteBatch;
-            _drawQueues = new Dictionary<DrawLayer, List<DrawCall>>();
+            _spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
+            _queues = new Dictionary<DrawLayer, List<DrawCall>>();
 
-            foreach (DrawLayer layer in Enum.GetValues(typeof(DrawLayer)))
-                _drawQueues[layer] = new List<DrawCall>();
+            foreach (DrawLayer l in Enum.GetValues(typeof(DrawLayer)))
+                _queues[l] = new List<DrawCall>();
         }
 
         /// <summary>
-        /// Sets the camera transformation matrix applied to non-UI draw layers.
+        /// Update the camera transform used for non-UI layers.
         /// </summary>
-        /// <param name="transform">A Matrix representing the camera transform.</param>
-        public void SetCamera(Matrix transform)
+        public void SetCamera(Matrix transform) => _camera = transform;
+
+        /// <summary>
+        /// Queue a draw using a compact DrawParams structure.
+        /// </summary>
+        public void Draw(in DrawParams p, DrawLayer layer = DrawLayer.Middleground)
         {
-            _cameraTransform = transform;
+            var call = new DrawCall(p);
+            _queues[layer].Add(call);
         }
 
         /// <summary>
-        /// Adds a sprite draw call to the specified draw layer’s queue.
+        /// Queue a Sprite.
         /// </summary>
-        /// <param name="drawCall">The draw call to enqueue.</param>
-        /// <param name="layer">The draw layer to queue it in. Defaults to Middleground.</param>
-        public void Queue(DrawCall drawCall, DrawLayer layer = DrawLayer.Middleground)
+        public void Draw(in Sprite sprite, DrawLayer layer = DrawLayer.Middleground)
         {
-            _drawQueues[layer].Add(drawCall);
+            var p = new DrawParams(
+                sprite.Region.Texture,
+                sprite.Position,
+                sprite.Color,
+                sprite.Rotation,
+                sprite.Origin,
+                sprite.Scale,
+                sprite.Region.SourceRectangle,
+                sprite.Effects,
+                sprite.LayerDepth,
+                effect: null,
+                useCamera: true);
+
+            Draw(p, layer);
         }
 
-    
+        /// <summary>
+        /// Queue a tiled background.
+        /// </summary>
+        private void EnqueueLooping(Texture2D texture, Rectangle source, Vector2 position, Vector2 offset,
+            DrawLayer layer, Color color, float layerDepth, bool useCamera)
+        {
+            int screenW = _spriteBatch.GraphicsDevice.Viewport.Width;
+            int screenH = _spriteBatch.GraphicsDevice.Viewport.Height;
+
+            int tileW = source.Width;
+            int tileH = source.Height;
+
+            int tilesX = screenW / tileW + 2;
+            int tilesY = screenH / tileH + 2;
+
+            float offsetX = offset.X % tileW;
+            float offsetY = offset.Y % tileH;
+
+            for (int x = 0; x < tilesX; x++)
+            {
+                for (int y = 0; y < tilesY; y++)
+                {
+                    var call = new DrawCall(new DrawParams(
+                        texture,
+                        new Vector2(x * tileW - offsetX + position.X, y * tileH - offsetY + position.Y),
+                        color,
+                        0f,
+                        Vector2.Zero,
+                        Vector2.One,
+                        source,
+                        SpriteEffects.None,
+                        layerDepth,
+                        effect: null,
+                        useCamera: useCamera));
+
+                    call.LoopX = true;
+                    call.LoopY = true;
+                    call.Offset = offset;
+
+                    _queues[layer].Add(call);
+                }
+            }
+        }
+
+        public void DrawLooping(in Sprite sprite, Vector2 position, Vector2 offset,
+            DrawLayer layer = DrawLayer.Middleground, Color? color = null, float layerDepth = 0f)
+        {
+            EnqueueLooping(sprite.Region.Texture, sprite.Region.SourceRectangle, position, offset, layer, color ?? Color.White, layerDepth, useCamera: true);
+        }
+
+        public void DrawLooping(Texture2D texture, Vector2 position, Vector2 offset,
+            DrawLayer layer = DrawLayer.Middleground, Color? color = null, float layerDepth = 0f)
+        {
+            var full = new Rectangle(0, 0, texture.Width, texture.Height);
+            EnqueueLooping(texture, full, position, offset, layer, color ?? Color.White, layerDepth, useCamera: false);
+        }
 
         /// <summary>
-        /// Draws all queued sprites to the screen, grouped by layer and then cleared.
+        /// Flush all queued draws to the SpriteBatch. The flush order is:
+        /// for each DrawLayer (back to front): group by UseCamera -> Effect and draw.
+        /// This keeps Begin/End calls minimal but safe when switching shader effects.
         /// </summary>
-        /// <remarks>
-        /// Layers are drawn from back to front, and SpriteBatch is begun and ended
-        /// once per layer. UI layer is drawn without camera transform.
-        /// </remarks>
-        
         public void Flush()
         {
             foreach (DrawLayer layer in Enum.GetValues(typeof(DrawLayer)))
             {
-                if (layer == DrawLayer.UI) continue;
-
-                var queue = _drawQueues[layer];
+                var queue = _queues[layer];
                 if (queue.Count == 0) continue;
 
-                _spriteBatch.Begin(
-                    SpriteSortMode.BackToFront,
-                    BlendState.AlphaBlend,
-                    SamplerState.PointClamp,
-                    transformMatrix: _cameraTransform
-                );
+                // Draw UI with identity camera regardless of UseCamera flag.
+                var groups = queue
+                    .GroupBy(c => (layer == DrawLayer.UI) ? (UseCamera: false, Effect: c.Effect) : (UseCamera: c.UseCamera, Effect: c.Effect));
 
-                foreach (var call in queue)
-                    DrawInternal(call);
+                foreach (var group in groups)
+                {
+                    Matrix transform = group.Key.UseCamera ? _camera : Matrix.Identity;
 
-                _spriteBatch.End();
+                    _spriteBatch.Begin(
+                        SpriteSortMode.BackToFront,
+                        BlendState.AlphaBlend,
+                        SamplerState.PointClamp,
+                        transformMatrix: transform,
+                        effect: group.Key.Effect);
+
+                    foreach (var call in group)
+                        DrawInternal(call);
+
+                    _spriteBatch.End();
+                }
+
                 queue.Clear();
-            }
-
-            var uiQueue = _drawQueues[DrawLayer.UI];
-            if (uiQueue.Count > 0)
-            {
-                _spriteBatch.Begin(
-                    SpriteSortMode.BackToFront,
-                    BlendState.AlphaBlend,
-                    SamplerState.PointClamp,
-                    transformMatrix: Matrix.Identity
-                );
-
-                foreach (var call in uiQueue)
-                    DrawInternal(call);
-
-                _spriteBatch.End();
-                uiQueue.Clear();
             }
         }
 
-        private void DrawInternal(DrawCall call)
+        private void DrawInternal(in DrawCall call)
         {
             if (call.Texture == null) return;
 
@@ -163,18 +262,19 @@ namespace Monolith.Managers
 
             if (call.LoopX || call.LoopY)
             {
-                int tileWidth = src.Width;
-                int tileHeight = src.Height;
+                // Compute tiling ranges based on the provided Offset and screen size.
+                int tileW = src.Width;
+                int tileH = src.Height;
 
-                int startX = call.LoopX ? (int)(-call.Offset.X % tileWidth) : 0;
-                int startY = call.LoopY ? (int)(-call.Offset.Y % tileHeight) : 0;
+                int screenW = _spriteBatch.GraphicsDevice.Viewport.Width;
+                int screenH = _spriteBatch.GraphicsDevice.Viewport.Height;
 
-                int screenWidth = (int)_spriteBatch.GraphicsDevice.Viewport.Width;
-                int screenHeight = (int)_spriteBatch.GraphicsDevice.Viewport.Height;
+                int startX = call.LoopX ? (int)(-call.Offset.X % tileW) - tileW : 0 - tileW;
+                int startY = call.LoopY ? (int)(-call.Offset.Y % tileH) - tileH : 0 - tileH;
 
-                for (int x = startX; x < screenWidth; x += tileWidth)
+                for (int x = startX; x < screenW + tileW; x += tileW)
                 {
-                    for (int y = startY; y < screenHeight; y += tileHeight)
+                    for (int y = startY; y < screenH + tileH; y += tileH)
                     {
                         _spriteBatch.Draw(
                             call.Texture,
@@ -185,16 +285,12 @@ namespace Monolith.Managers
                             call.Origin,
                             call.Scale,
                             call.Effects,
-                            call.LayerDepth
-                        );
+                            call.LayerDepth);
                     }
                 }
 
                 return;
             }
-
-            if (call.Effect != null)
-                _spriteBatch.Begin(effect: call.Effect);
 
             _spriteBatch.Draw(
                 call.Texture,
@@ -205,11 +301,7 @@ namespace Monolith.Managers
                 call.Origin,
                 call.Scale,
                 call.Effects,
-                call.LayerDepth
-            );
-
-            if (call.Effect != null)
-                _spriteBatch.End();
+                call.LayerDepth);
         }
     }
 }

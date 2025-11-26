@@ -19,7 +19,7 @@ namespace Monolith.Managers
         {
             foreach (Tilemap tilemap in Tilemaps)
             {
-                tilemap.Draw(spriteBatch, tilemap.LayerDepth);
+                tilemap.Draw();
             }
         }
     }

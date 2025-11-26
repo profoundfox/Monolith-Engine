@@ -1,17 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text.Json;
-using System.Xml;
-using System.Xml.Linq;
-using Monolith.Util;
-using Monolith;
-using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Monolith.Managers;
 
 namespace Monolith.Graphics
 {
@@ -23,11 +13,10 @@ namespace Monolith.Graphics
         public int Rows { get; }
         public int Columns { get; }
         public int Count { get; }
-        
+
         public float LayerDepth { get; set; }
         public float TileWidth => _tileset.TileWidth;
         public float TileHeight => _tileset.TileHeight;
-
 
         public Tilemap(Tileset tileset, int columns, int rows, float layerDepth)
         {
@@ -41,7 +30,6 @@ namespace Monolith.Graphics
             Engine.DrawManager.Tilemaps.Add(this);
         }
 
-        
         public void SetTile(int index, int tilesetID)
         {
             _tiles[index] = tilesetID;
@@ -49,8 +37,7 @@ namespace Monolith.Graphics
 
         public void SetTile(int column, int row, int tilesetID)
         {
-            int index = row * Columns + column;
-            SetTile(index, tilesetID);
+            SetTile(row * Columns + column, tilesetID);
         }
 
         public TextureRegion GetTile(int index)
@@ -60,11 +47,10 @@ namespace Monolith.Graphics
 
         public TextureRegion GetTile(int column, int row)
         {
-            int index = row * Columns + column;
-            return GetTile(index);
+            return GetTile(row * Columns + column);
         }
-    
-        public void Draw(SpriteBatch spriteBatch, float layerDepth)
+
+        public void Draw()
         {
             for (int i = 0; i < Count; i++)
             {
@@ -74,16 +60,21 @@ namespace Monolith.Graphics
                 int x = i % Columns;
                 int y = i / Columns;
 
-                Vector2 position = new Vector2(x * TileWidth, y * TileHeight);
+                Vector2 position = new Vector2(
+                    x * TileWidth,
+                    y * TileHeight
+                );
 
                 Engine.DrawManager.Draw(
-                    tile,
-                    position,
-                    Color.White,
-                    layerDepth: layerDepth
+                    new DrawParams(tile.Texture, position)
+                    {
+                        SourceRectangle = tile.SourceRectangle,
+                        Color = Color.White,
+                        LayerDepth = LayerDepth
+                    },
+                    DrawLayer.Background
                 );
             }
         }
-        
     }
 }

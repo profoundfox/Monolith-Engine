@@ -51,7 +51,7 @@ public static class DebugOverlay
 
         int yLeft = 10;
         int yRight = 10;
-        int screenWidth = Engine.GraphicsDevice.Viewport.Width; // Get screen width
+        int screenWidth = Engine.GraphicsDevice.Viewport.Width;
 
         foreach (var entry in debugInfos.Values)
         {
