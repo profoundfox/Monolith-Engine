@@ -170,7 +170,7 @@ namespace Monolith.IO
             foreach (var layer in root.layers.Where(l => l.tileset != null))
             {
                 string contPath = textureName;
-                Texture2D texture = content.Load<Texture2D>(contPath);
+                Texture2D texture = Engine.ContentProvider.LoadTexture(contPath);
                 var textureRegion = new TextureRegion(texture, x, y, width, height);
                 var tileset = new Tileset(textureRegion, layer.gridCellWidth, layer.gridCellHeight);
 

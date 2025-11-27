@@ -99,8 +99,10 @@ namespace Monolith.Graphics
         /// <param name="content">The content manager used to load the texture for the atlas.</param>
         /// <param name="fileName">The path to the xml file, relative to the content root directory..</param>
         /// <returns>The texture atlas created by this method.</returns>
-        public static TextureAtlas FromFile(ContentManager content, string fileName, string texPath)
+        public static TextureAtlas FromFile(string fileName, string texPath)
         {
+            var content = Engine.Content;
+            
             TextureAtlas atlas = new TextureAtlas();
 
             string filePath = Path.Combine(content.RootDirectory, fileName);
@@ -112,24 +114,9 @@ namespace Monolith.Graphics
                     XDocument doc = XDocument.Load(reader);
                     XElement root = doc.Root;
 
-                    // The <Texture> element contains the content path for the Texture2D to load.
-                    // So we will retrieve that value then use the content manager to load the texture.
                     string texturePath = texPath;
-                    //atlas.Texture = content.Load<Texture2D>(texturePath);
+                    atlas.Texture = Engine.ContentProvider.LoadTexture(texturePath);
 
-                    atlas.Texture = Engine.AssetLoader.LoadTexture(texturePath);
-
-                    // The <Regions> element contains individual <Region> elements, each one describing
-                    // a different texture region within the atlas.  
-                    //
-                    // Example:
-                    // <Regions>
-                    //      <Region name="spriteOne" x="0" y="0" width="32" height="32" />
-                    //      <Region name="spriteTwo" x="32" y="0" width="32" height="32" />
-                    // </Regions>
-                    //
-                    // So we retrieve all of the <Region> elements then loop through each one
-                    // and generate a new TextureRegion instance from it and add it to this atlas.
                     var regions = root.Element("Regions")?.Elements("Region");
 
                     if (regions != null)
@@ -149,19 +136,6 @@ namespace Monolith.Graphics
                         }
                     }
 
-                    // The <Animations> element contains individual <Animation> elements, each one describing
-                    // a different animation within the atlas.
-                    //
-                    // Example:
-                    // <Animations>
-                    //      <Animation name="animation" delay="100">
-                    //          <Frame region="spriteOne" />
-                    //          <Frame region="spriteTwo" />
-                    //      </Animation>
-                    // </Animations>
-                    //
-                    // So we retrieve all of the <Animation> elements then loop through each one
-                    // and generate a new Animation instance from it and add it to this atlas.
                     var animationElements = root.Element("Animations").Elements("Animation");
 
                     if (animationElements != null)
@@ -251,11 +225,5 @@ namespace Monolith.Graphics
             Animation animation = GetAnimation(animationName);
             return new AnimatedSprite(animation);
         }
-
-        
-
-
-
-
     }
-    }
+}

@@ -16,6 +16,7 @@ using Monolith.Helpers;
 using Monolith.Util;
 using System.Diagnostics;
 using System.Linq;
+using Monolith.IO;
 
 namespace Monolith
 {
@@ -34,6 +35,11 @@ namespace Monolith
         /// Configuration for the engine, such as screen size, fullscreen mode, and content directories.
         /// </summary>
         public EngineConfig Config { get; }
+
+        /// <summary>
+        /// Variable for showing if it is at the start or end of the draw call.
+        /// </summary>
+        public DrawStageType CurrentDrawStage { get; private set; } = DrawStageType.None;
 
         /// <summary>
         /// Manages the graphics device and display settings.
@@ -71,36 +77,9 @@ namespace Monolith
         public static new ContentManager Content { get; private set; }
 
         /// <summary>
-        /// Enum of asset loaders.
+        /// Current content loader.
         /// </summary>
-        public enum LoaderType
-        {
-            Runtime,
-            ContentPipeline
-        }
-
-        /// <summary>
-        /// Switcher for asset loader types.
-        /// </summary>
-        public static LoaderType AssetLoaderType
-        {
-            get => _loaderType;
-            set
-            {
-                _loaderType = value;
-                _currentLoader = value switch
-                {
-                    LoaderType.Runtime => new RuntimeAssetLoader(GraphicsDevice),
-                    LoaderType.ContentPipeline => new ContentPipelineAssetLoader(Content),
-                    _ => throw new ArgumentOutOfRangeException()
-                };
-            }
-        }
-
-        /// <summary>
-        /// Current asset loader.
-        /// </summary>
-        public static IAssetLoader AssetLoader => _currentLoader;
+        public static IContentProvider ContentProvider { get; set; }
 
         /// <summary>
         /// The main SpriteBatch used for drawing sprites.
@@ -150,9 +129,6 @@ namespace Monolith
         private bool drawRegions;
         private double _fpsTimer;
 
-        private static IAssetLoader _currentLoader;
-        private static LoaderType _loaderType;
-
         /// <summary>
         /// Initializes a new instance of the Engine class with the specified configuration.
         /// </summary>
@@ -173,7 +149,7 @@ namespace Monolith
             Content = base.Content;
             Content.RootDirectory = Config.RootContentDirectory;
 
-            AssetLoaderType = Config.AssetLoaderType;
+            ContentProvider = Config.ContentProvider;
 
             Window.AllowUserResizing = Config.AllowUserResizing;
             Window.IsBorderless = Config.IsBorderless;
@@ -292,19 +268,24 @@ namespace Monolith
         /// <param name="gameTime">Time elapsed since last draw.</param>
         protected override void Draw(GameTime gameTime)
         {
-            SetRenderTarget();
+            CurrentDrawStage = DrawStageType.Start;
 
+            SetRenderTarget();
             GraphicsDevice.Clear(Color.DarkSlateGray);
 
-            DebugOverlay.Draw(SpriteBatch);
+            CurrentDrawStage = DrawStageType.Scene;
             
+            if (Config.DebugMode)
+                DebugOverlay.Draw(SpriteBatch);
             SceneManager.DrawCurrentScene(SpriteBatch);
 
+            CurrentDrawStage = DrawStageType.DrawManager;
             DrawManager.Flush();
 
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.Black);
 
+            CurrentDrawStage = DrawStageType.PostProcessing;
             SpriteBatch.Begin(
                 SpriteSortMode.Immediate,
                 BlendState.AlphaBlend,
@@ -318,10 +299,16 @@ namespace Monolith
 
             SpriteBatch.End();
 
+            CurrentDrawStage = DrawStageType.UI;
             GumUI?.Draw();
 
+            CurrentDrawStage = DrawStageType.End;
+
             base.Draw(gameTime);
+
+            CurrentDrawStage = DrawStageType.None;
         }
+
 
         /// <summary>
         /// Sets the current render target to the engine's RenderTarget2D.

@@ -10,6 +10,8 @@ using Microsoft.Xna.Framework.Input;
 using System.Diagnostics;
 using Monolith.Nodes;
 using Microsoft.Xna.Framework;
+using Monolith.Graphics;
+using Monolith.IO;
 
 
 
@@ -116,11 +118,10 @@ namespace Monolith
         public string GumProject { get; init; } = null;
 
         /// <summary>
-        /// Path to the assets folder.
+        /// Given content provider.
+        /// Default: ContentPipelineLoader
         /// </summary>
-        public string AssetsFolder { get; init; } = "Content";
-
-        public Engine.LoaderType AssetLoaderType {get; init; } = Engine.LoaderType.ContentPipeline;
+        public IContentProvider ContentProvider { get; init; } = new ContentPipelineLoader();
 
         /// <summary>
         /// The main character type.

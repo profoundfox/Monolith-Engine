@@ -31,9 +31,6 @@ namespace Monolith.Graphics
 
         public AnimatedSprite() { }
 
-        
-        
-
         public AnimatedSprite(Animation animation)
         {
             Animation = animation;

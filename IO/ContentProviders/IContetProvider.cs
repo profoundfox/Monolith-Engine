@@ -7,10 +7,9 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
 
-namespace Monolith.Graphics
+namespace Monolith.IO
 {
-
-    public interface IAssetLoader
+    public interface IContentProvider
     {
         Texture2D LoadTexture(string path);
         SpriteFont LoadFont(string path);
@@ -18,7 +17,6 @@ namespace Monolith.Graphics
         SoundEffect LoadSound(string path);
         Song LoadMusic(string path);
 
-        // Data
         string LoadText(string path);
         T LoadJson<T>(string path);
 
@@ -27,6 +25,7 @@ namespace Monolith.Graphics
 
         void Unload(string path);
         void ClearCache();
+        void ReloadAll();
     }
 
 }
