@@ -91,7 +91,6 @@ namespace Monolith.IO
 
                     var sprite = atlas.CreateSprite(textureName);
                     sprite.CenterOrigin();
-                    sprite.Name = textureName;
                     sprite.Position = new Vector2(decal.x, decal.y);
 
                     Engine.SpriteManager.AddSprite(sprite);

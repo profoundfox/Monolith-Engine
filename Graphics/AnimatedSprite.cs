@@ -37,6 +37,7 @@ namespace Monolith.Graphics
         }
 
 
+
         public bool IsAnimationPlaying()
         {
             return !finished;

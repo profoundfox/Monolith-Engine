@@ -59,6 +59,19 @@ namespace Monolith.Graphics
             _regions.Add(name, region);
         }
 
+        public void AddHorizontallyIncreasingRegions(string name, int x, int y, int width, int height, int frames)
+        {
+            for (int i = 1; i <= frames; i++)
+            {
+                int frameX = x + ((i - 1) * width);
+
+                AddRegion($"{name}_{i}", frameX, y, width, height);
+            }
+        }
+
+
+    
+
         /// <summary>
         /// Gets the region from this texture atlas with the specified name.
         /// </summary>

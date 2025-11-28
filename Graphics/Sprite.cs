@@ -1,16 +1,12 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Monolith.Managers;
 
 namespace Monolith.Graphics
 {
     public class Sprite
     {
-        /// <summary>
-        /// The optional name of the sprite.
-        /// </summary>
-        public String Name {get; set;}
-
         /// <summary>
         /// Gets or Sets the source texture region represented by this sprite.
         /// </summary>
@@ -88,29 +84,22 @@ namespace Monolith.Graphics
         private static int _spriteCounter = 0;
 
         /// <summary>
-        /// Creates a sprite with an optional parameter for a name.
+        /// Creates a sprite.
         /// </summary>
-        public Sprite(string name = null)
+        public Sprite()
         {
-            Name = name ?? GenerateRandomName();
+            Engine.SpriteManager.AddSprite(this);
         }
 
         /// <summary>
-        /// Creates a new sprite using the specified source texture region and with an optional parameter for a name.
+        /// Creates a new sprite using the specified source texture region.
         /// </summary>
         /// <param name="region">The texture region to use as the source texture region for this sprite.</param>
-        public Sprite(TextureRegion region, string name = null)
+        public Sprite(TextureRegion region)
         {
-            Name = name ?? GenerateRandomName();
             Region = region;
+            Engine.SpriteManager.AddSprite(this);
         }
-
-        private static string GenerateRandomName()
-        {
-            _spriteCounter++; // increment counter for uniqueness
-            return $"Sprite_{_spriteCounter}_{Guid.NewGuid().ToString("N").Substring(0, 6)}";
-        }
-
 
         /// <summary>
         /// Sets the origin of this sprite to the center.
@@ -124,9 +113,9 @@ namespace Monolith.Graphics
         /// Submit this sprite for drawing to the current batch.
         /// </summary>
         /// <param name="spriteBatch">The SpriteBatch instance used for batching draw calls.</param>
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw()
         {
-            Region.Draw(spriteBatch, Position, Color, Rotation, Origin, Scale, Effects, LayerDepth);
+            Region.Draw(Position, Color, Rotation, Origin, Scale, Effects, LayerDepth);
         }
 
          /// <summary>
@@ -137,7 +126,7 @@ namespace Monolith.Graphics
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
             Position = position;
-            Region.Draw(spriteBatch, Position, Color, Rotation, Origin, Scale, Effects, LayerDepth);
+            Region.Draw(Position, Color, Rotation, Origin, Scale, Effects, LayerDepth);
         }
         
 

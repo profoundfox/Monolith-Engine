@@ -5,113 +5,82 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Monolith.Graphics
 {
     /// <summary>
-    /// Represents a rectangular region within a texture.
+    /// Represents a texture or a rectangular region within a texture.
+    /// Can be used for full textures or subregions (sprites) of a texture.
     /// </summary>
-    public class TextureRegion
+    public class TextureWrapper
     {
         /// <summary>
-        /// Gets or Sets the source texture this texture region is part of.
+        /// The source texture.
         /// </summary>
-        public Texture2D Texture { get; set; }
+        public Texture2D Texture { get; private set; }
 
         /// <summary>
-        /// Gets or Sets the source rectangle boundary of this texture region within the source texture.
+        /// The rectangular region within the texture. If null, the full texture is used.
         /// </summary>
-        public Rectangle SourceRectangle { get; set; }
+        public Rectangle? SourceRectangle { get; private set; }
 
         /// <summary>
-        /// Gets the width, in pixels, of this texture region.
+        /// Width of the texture region or full texture.
         /// </summary>
-        public int Width => SourceRectangle.Width;
+        public int Width => SourceRectangle?.Width ?? Texture.Width;
 
         /// <summary>
-        /// Gets the height, in pixels, of this texture region.
+        /// Height of the texture region or full texture.
         /// </summary>
-        public int Height => SourceRectangle.Height;
+        public int Height => SourceRectangle?.Height ?? Texture.Height;
 
         /// <summary>
-        /// Creates a new texture region.
+        /// Creates a wrapper for a full texture.
         /// </summary>
-        public TextureRegion() { }
-
-        /// <summary>
-        /// Creates a new texture region using the specified source texture.
-        /// </summary>
-        /// <param name="texture">The texture to use as the source texture for this texture region.</param>
-        /// <param name="x">The x-coordinate position of the upper-left corner of this texture region relative to the upper-left corner of the source texture.</param>
-        /// <param name="y">The y-coordinate position of the upper-left corner of this texture region relative to the upper-left corner of the source texture.</param>
-        /// <param name="width">The width, in pixels, of this texture region.</param>
-        /// <param name="height">The height, in pixels, of this texture region.</param>
-        public TextureRegion(Texture2D texture, int x, int y, int width, int height)
+        public TextureWrapper(Texture2D texture)
         {
-            Texture = texture;
-            SourceRectangle = new Rectangle(x, y, width, height);
-        }
-
-
-        
-        /// <summary>
-        /// Submit this texture region for drawing in the current batch.
-        /// </summary>
-        /// <param name="spriteBatch">The spritebatch instance used for batching draw calls.</param>
-        /// <param name="position">The xy-coordinate location to draw this texture region on the screen.</param>
-        /// <param name="color">The color mask to apply when drawing this texture region on screen.</param>
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color, float layerDepth)
-        {
-            
-            Draw(spriteBatch, position, color, 0.0f, Vector2.Zero, Vector2.One, SpriteEffects.None, layerDepth);
-        }
-
-
-        /// <summary>
-        /// Submit this texture region for drawing in the current batch.
-        /// </summary>
-        /// <param name="spriteBatch">The spritebatch instance used for batching draw calls.</param>
-        /// <param name="position">The xy-coordinate location to draw this texture region on the screen.</param>
-        /// <param name="color">The color mask to apply when drawing this texture region on screen.</param>
-        /// <param name="rotation">The amount of rotation, in radians, to apply when drawing this texture region on screen.</param>
-        /// <param name="origin">The center of rotation, scaling, and position when drawing this texture region on screen.</param>
-        /// <param name="scale">The scale factor to apply when drawing this texture region on screen.</param>
-        /// <param name="effects">Specifies if this texture region should be flipped horizontally, vertically, or both when drawing on screen.</param>
-        /// <param name="layerDepth">The depth of the layer to use when drawing this texture region on screen.</param>
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
-        {
-            Draw(
-                spriteBatch,
-                position,
-                color,
-                rotation,
-                origin,
-                new Vector2(scale, scale),
-                effects,
-                layerDepth
-            );
+            Texture = texture ?? throw new ArgumentNullException(nameof(texture));
+            SourceRectangle = null; // Full texture by default
         }
 
         /// <summary>
-        /// Submit this texture region for drawing in the current batch.
+        /// Creates a wrapper for a specific region within a texture.
         /// </summary>
-        /// <param name="spriteBatch">The spritebatch instance used for batching draw calls.</param>
-        /// <param name="position">The xy-coordinate location to draw this texture region on the screen.</param>
-        /// <param name="color">The color mask to apply when drawing this texture region on screen.</param>
-        /// <param name="rotation">The amount of rotation, in radians, to apply when drawing this texture region on screen.</param>
-        /// <param name="origin">The center of rotation, scaling, and position when drawing this texture region on screen.</param>
-        /// <param name="scale">The amount of scaling to apply to the x- and y-axes when drawing this texture region on screen.</param>
-        /// <param name="effects">Specifies if this texture region should be flipped horizontally, vertically, or both when drawing on screen.</param>
-        /// <param name="layerDepth">The depth of the layer to use when drawing this texture region on screen.</param>
-        public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
+        public TextureWrapper(Texture2D texture, Rectangle region)
         {
-            spriteBatch.Draw(
-                Texture,
-                position,
-                SourceRectangle,
-                color,
-                rotation,
-                origin,
-                scale,
-                effects,
-                layerDepth
-            );
+            Texture = texture ?? throw new ArgumentNullException(nameof(texture));
+            SourceRectangle = region;
+        }
+
+        /// <summary>
+        /// Convenience constructor using x, y, width, height.
+        /// </summary>
+        public TextureWrapper(Texture2D texture, int x, int y, int width, int height)
+            : this(texture, new Rectangle(x, y, width, height)) { }
+
+        /// <summary>
+        /// Draws the texture at the specified position.
+        /// </summary>
+        public void Draw(Vector2 position, Color color, float layerDepth = 0f)
+        {
+            Draw(position, color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, layerDepth);
+        }
+
+        public void Draw(Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
+        {
+            Draw(position, color, rotation, origin, new Vector2(scale, scale), effects, layerDepth);
+        }
+
+        public void Draw(Vector2 position, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
+        {
+            Engine.DrawManager.Draw(new Managers.DrawParams
+            (
+                texture: Texture,
+                position: position,
+                source: SourceRectangle,
+                color: color,
+                rotation: rotation,
+                origin: origin,
+                scale: scale,
+                effects: effects,
+                layerDepth: layerDepth
+            ));
         }
     }
 }

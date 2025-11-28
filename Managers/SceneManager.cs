@@ -203,7 +203,7 @@ namespace Monolith.Managers
         {
             if (!IsStackEmpty())
             {
-                Engine.SpriteManager.DrawAllSprites(spriteBatch);
+                Engine.SpriteManager.DrawAllSprites();
                 Engine.DrawManager.DrawTilemaps(spriteBatch);
                 NodeManager.DrawObjects(spriteBatch);
                 GetCurrentScene()?.Draw(spriteBatch);

@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using Monolith.Graphics;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace Monolith.Managers
 {
     public class SpriteManager
     {
         public List<Sprite> Sprites = new();
-        public Dictionary<string, Sprite> SpriteMap = new Dictionary<string, Sprite>();
+        public Dictionary<string, List<Sprite>> SpriteMap = new();
         
         /// <summary>
         /// Creates a SpriteManager.
@@ -22,8 +23,19 @@ namespace Monolith.Managers
         public void AddSprite(Sprite sprite)
         {
             Sprites.Add(sprite);
-            SpriteMap.Add(sprite.Name, sprite);
+
+            string key = sprite.Region.Texture.Name;
+
+            if (!SpriteMap.TryGetValue(key, out var list))
+            {
+                list = new List<Sprite>();
+                SpriteMap[key] = list;
+            }
+
+            list.Add(sprite);
         }
+
+
 
         /// <summary>
         /// Adds multiple sprites from a list.
@@ -51,11 +63,11 @@ namespace Monolith.Managers
         /// </summary>
         /// <param name="spriteBatch"></param>
 
-        public void DrawAllSprites(SpriteBatch spriteBatch)
+        public void DrawAllSprites()
         {
             foreach (var s in Sprites) 
             {
-                Engine.DrawManager.Draw(s);
+                s.Draw();
             }
         }
 
