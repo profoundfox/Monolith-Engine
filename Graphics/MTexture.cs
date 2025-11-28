@@ -8,7 +8,7 @@ namespace Monolith.Graphics
     /// Represents a texture or a rectangular region within a texture.
     /// Can be used for full textures or subregions (sprites) of a texture.
     /// </summary>
-    public class TextureWrapper
+    public class MTexture
     {
         /// <summary>
         /// The source texture.
@@ -33,7 +33,7 @@ namespace Monolith.Graphics
         /// <summary>
         /// Creates a wrapper for a full texture.
         /// </summary>
-        public TextureWrapper(Texture2D texture)
+        public MTexture(Texture2D texture)
         {
             Texture = texture ?? throw new ArgumentNullException(nameof(texture));
             SourceRectangle = null; // Full texture by default
@@ -42,7 +42,7 @@ namespace Monolith.Graphics
         /// <summary>
         /// Creates a wrapper for a specific region within a texture.
         /// </summary>
-        public TextureWrapper(Texture2D texture, Rectangle region)
+        public MTexture(Texture2D texture, Rectangle region)
         {
             Texture = texture ?? throw new ArgumentNullException(nameof(texture));
             SourceRectangle = region;
@@ -51,7 +51,7 @@ namespace Monolith.Graphics
         /// <summary>
         /// Convenience constructor using x, y, width, height.
         /// </summary>
-        public TextureWrapper(Texture2D texture, int x, int y, int width, int height)
+        public MTexture(Texture2D texture, int x, int y, int width, int height)
             : this(texture, new Rectangle(x, y, width, height)) { }
 
         /// <summary>

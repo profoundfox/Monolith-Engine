@@ -25,7 +25,7 @@ namespace Monolith.Graphics
             set
             {
                 _animation = value;
-                Region = _animation.Frames[0];
+                Texture = _animation.Frames[0];
             }
         }
 
@@ -89,7 +89,7 @@ namespace Monolith.Graphics
                     }
                 }
 
-                Region = _animation.Frames[_currentFrame];
+                Texture = _animation.Frames[_currentFrame];
             }
         }
 
@@ -104,7 +104,7 @@ namespace Monolith.Graphics
                 _elapsed = TimeSpan.Zero;
                 IsLooping = isLooping;
                 Animation = animation;
-                Region = _animation.Frames[_currentFrame];
+                Texture = _animation.Frames[_currentFrame];
             }
         }
 
@@ -113,7 +113,7 @@ namespace Monolith.Graphics
             finished = false;
             _currentFrame = 0;
             _elapsed = TimeSpan.Zero;
-            Region = _animation.Frames[_currentFrame];
+            Texture = _animation.Frames[_currentFrame];
         }
 
         public void StopAnimation()
@@ -132,7 +132,7 @@ namespace Monolith.Graphics
             if (frameIndex >= 0 && frameIndex < _animation.Frames.Count)
             {
                 _currentFrame = frameIndex;
-                Region = _animation.Frames[_currentFrame];
+                Texture = _animation.Frames[_currentFrame];
             }
         }
 

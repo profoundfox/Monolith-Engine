@@ -1,5 +1,5 @@
 
-namespace Monolith
+namespace Monolith.Util
 {
     public enum DrawStageType
     {

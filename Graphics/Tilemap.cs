@@ -40,12 +40,12 @@ namespace Monolith.Graphics
             SetTile(row * Columns + column, tilesetID);
         }
 
-        public TextureRegion GetTile(int index)
+        public MTexture GetTile(int index)
         {
             return _tileset.GetTile(_tiles[index]);
         }
 
-        public TextureRegion GetTile(int column, int row)
+        public MTexture GetTile(int column, int row)
         {
             return GetTile(row * Columns + column);
         }
@@ -55,7 +55,7 @@ namespace Monolith.Graphics
             for (int i = 0; i < Count; i++)
             {
                 int tileSetIndex = _tiles[i];
-                TextureRegion tile = _tileset.GetTile(tileSetIndex);
+                MTexture tile = _tileset.GetTile(tileSetIndex);
 
                 int x = i % Columns;
                 int y = i / Columns;

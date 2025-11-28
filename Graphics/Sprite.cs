@@ -8,9 +8,9 @@ namespace Monolith.Graphics
     public class Sprite
     {
         /// <summary>
-        /// Gets or Sets the source texture region represented by this sprite.
+        /// Gets or Sets the source texture Texture represented by this sprite.
         /// </summary>
-        public TextureRegion Region { get; set; }
+        public MTexture Texture { get; set; }
 
         /// <summary>
         /// Gets or Sets the color mask to apply when rendering this sprite.
@@ -68,18 +68,18 @@ namespace Monolith.Graphics
         /// Gets the width, in pixels, of this sprite. 
         /// </summary>
         /// <remarks>
-        /// Width is calculated by multiplying the width of the source texture region by the x-axis scale factor.
+        /// Width is calculated by multiplying the width of the source texture Texture by the x-axis scale factor.
         /// </remarks>
-        public float Width => Region.Width * Scale.X;
+        public float Width => Texture.Width * Scale.X;
 
         
         /// <summary>
         /// Gets the height, in pixels, of this sprite.
         /// </summary>
         /// <remarks>
-        /// Height is calculated by multiplying the height of the source texture region by the y-axis scale factor.
+        /// Height is calculated by multiplying the height of the source texture Texture by the y-axis scale factor.
         /// </remarks>
-        public float Height => Region.Height * Scale.Y;
+        public float Height => Texture.Height * Scale.Y;
 
         private static int _spriteCounter = 0;
 
@@ -92,12 +92,12 @@ namespace Monolith.Graphics
         }
 
         /// <summary>
-        /// Creates a new sprite using the specified source texture region.
+        /// Creates a new sprite using the specified source texture Texture.
         /// </summary>
-        /// <param name="region">The texture region to use as the source texture region for this sprite.</param>
-        public Sprite(TextureRegion region)
+        /// <param name="Texture">The texture Texture to use as the source texture Texture for this sprite.</param>
+        public Sprite(MTexture texture)
         {
-            Region = region;
+            Texture = texture;
             Engine.SpriteManager.AddSprite(this);
         }
 
@@ -106,7 +106,7 @@ namespace Monolith.Graphics
         /// </summary>
         public void CenterOrigin()
         {
-            Origin = new Vector2(Region.Width, Region.Height) * 0.5f;
+            Origin = new Vector2(Texture.Width, Texture.Height) * 0.5f;
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Monolith.Graphics
         /// <param name="spriteBatch">The SpriteBatch instance used for batching draw calls.</param>
         public void Draw()
         {
-            Region.Draw(Position, Color, Rotation, Origin, Scale, Effects, LayerDepth);
+            Texture.Draw(Position, Color, Rotation, Origin, Scale, Effects, LayerDepth);
         }
 
          /// <summary>
@@ -126,7 +126,7 @@ namespace Monolith.Graphics
         public void Draw(SpriteBatch spriteBatch, Vector2 position)
         {
             Position = position;
-            Region.Draw(Position, Color, Rotation, Origin, Scale, Effects, LayerDepth);
+            Texture.Draw(Position, Color, Rotation, Origin, Scale, Effects, LayerDepth);
         }
         
 
