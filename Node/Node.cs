@@ -48,7 +48,7 @@ namespace Monolith.Nodes
             Parent = config.Parent;
             Shape = config.Shape;
             Name = config.Name;
-            Values = config.Values;
+            Values = config.ValuesDictionary;
 
             NodeManager.QueueAdd(this);
         }
@@ -85,7 +85,19 @@ namespace Monolith.Nodes
         public object GetParent()
         {
             return NodeManager.GetNodeParent(this);
-        }  
+        }
+
+        /// <summary>
+        /// Safely retrieves the strongly-typed Values object.
+        /// Throws an exception if the type does not match.
+        /// </summary>
+        protected T GetValues<T>() where T : class
+        {
+            if (Values is T typedValues)
+                return typedValues;
+
+            throw new InvalidOperationException($"Node {Name} requires Values of type {typeof(T).Name}.");
+        }
 
         /// <summary>
         /// Clears the node's data to help with memory management.

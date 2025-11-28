@@ -62,11 +62,6 @@ namespace Monolith
         public static TweenManager TweenManager { get; private set; }
 
         /// <summary>
-        /// Manager responsible for handling sprite rendering.
-        /// </summary>
-        public static SpriteManager SpriteManager { get; private set; }
-
-        /// <summary>
         /// Manager responsible for draw logic.
         /// </summary>
         public static DrawManager DrawManager {get; private set; }
@@ -193,7 +188,6 @@ namespace Monolith
         {
             TweenManager = new TweenManager();
             SceneManager = new SceneManager();
-            SpriteManager = new SpriteManager();
 
             Input = new InputManager();
             Input.InitializeBinds(DefaultInput.Binds);

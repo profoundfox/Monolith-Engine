@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Monolith.Graphics;
 using Monolith.Managers;
 using Monolith.Region;
 using Monolith.Util;
@@ -86,7 +87,7 @@ namespace Monolith.Helpers
             float layerDepth = 0.1f,
             DrawLayer layer = DrawLayer.Middleground)
         {
-            var pixel = GetPixel(Engine.GraphicsDevice);
+            var pixel = new MTexture(GetPixel(Engine.GraphicsDevice));
 
             Engine.DrawManager.Draw(
                 new DrawParams(
@@ -108,7 +109,7 @@ namespace Monolith.Helpers
             float layerDepth = 0.1f,
             DrawLayer layer = DrawLayer.Middleground)
         {
-            var pixel = GetPixel(Engine.GraphicsDevice);
+            var pixel = new MTexture(GetPixel(Engine.GraphicsDevice));
 
             Engine.DrawManager.Draw(
                 new DrawParams(pixel, new Vector2(rect.X, rect.Y))
@@ -159,7 +160,7 @@ namespace Monolith.Helpers
         {
             if (circ == null) return;
 
-            Texture2D texture = GetCircleTexture(Engine.GraphicsDevice, circ.Radius);
+            MTexture texture = new MTexture(GetCircleTexture(Engine.GraphicsDevice, circ.Radius));
 
             Engine.DrawManager.Draw(
                 new DrawParams(
@@ -183,7 +184,7 @@ namespace Monolith.Helpers
         {
             if (circle == null) return;
 
-            Texture2D pixel = GetPixel(Engine.GraphicsDevice);
+            MTexture pixel = new MTexture(GetPixel(Engine.GraphicsDevice));
 
             Vector2 center = new Vector2(circle.Location.X, circle.Location.Y);
             float radius = circle.Radius;
@@ -225,7 +226,7 @@ namespace Monolith.Helpers
             float layerDepth = 0.1f,
             DrawLayer layer = DrawLayer.Middleground)
         {
-            var pixel = GetPixel(Engine.GraphicsDevice);
+            var pixel = new MTexture(GetPixel(Engine.GraphicsDevice));
 
             Color drawColor = ray.HasHit
                 ? ColorHelper.GetOppositeColor(color)

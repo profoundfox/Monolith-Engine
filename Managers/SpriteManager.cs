@@ -24,7 +24,7 @@ namespace Monolith.Managers
         {
             Sprites.Add(sprite);
 
-            string key = sprite.Texture.Name;
+            string key = ""; //= sprite.Texture.Name;
 
             if (!SpriteMap.TryGetValue(key, out var list))
             {

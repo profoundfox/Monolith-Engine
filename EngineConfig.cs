@@ -12,6 +12,7 @@ using Monolith.Nodes;
 using Microsoft.Xna.Framework;
 using Monolith.Graphics;
 using Monolith.IO;
+using Monolith.Helpers;
 
 
 
@@ -157,10 +158,27 @@ namespace Monolith
         /// </summary>
         public required string Name { get; init; }
 
-        /// <summary>
-        /// Values that come from the ogmo level dictionary.
-        /// </summary>
-        public Dictionary<string, object> Values { get; init; }
+        private Dictionary<string, object> _values = new();
+        public object Values
+        {
+            get => _values;
+            init
+            {
+                if (_values == null)
+                {
+                    _values = new Dictionary<string, object>();
+                }
+                else if(_values is Dictionary<string, object> dict)
+                {
+                    _values = dict;
+                }
+                else
+                {
+                    _values = ValueHelper.ToDictionary(_values);
+                }
+            }
+        }
+        public Dictionary<string, object> ValuesDictionary => _values;
     }
 
     public static class DefaultInput

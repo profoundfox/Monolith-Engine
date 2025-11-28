@@ -85,15 +85,12 @@ namespace Monolith.IO
                         Path.GetFileNameWithoutExtension(decal.texture)
                     );
 
-                    Texture2D texture = Engine.Content.Load<Texture2D>(texturePathWithoutExtension);
-                    var atlas = new TextureAtlas(texture);
-                    atlas.AddRegion(textureName, 0, 0, texture.Width, texture.Height);
 
-                    var sprite = atlas.CreateSprite(textureName);
+                    MTexture texture = new(texturePathWithoutExtension);
+                    Sprite sprite = new Sprite(texture.CreateSubTexture(new Rectangle(0, 0, texture.Width, texture.Height)));
+
                     sprite.CenterOrigin();
                     sprite.Position = new Vector2(decal.x, decal.y);
-
-                    Engine.SpriteManager.AddSprite(sprite);
                 }
             }
         }
@@ -169,8 +166,9 @@ namespace Monolith.IO
             foreach (var layer in root.layers.Where(l => l.tileset != null))
             {
                 string contPath = textureName;
-                Texture2D texture = Engine.ContentProvider.LoadTexture(contPath);
-                var textureRegion = new TextureRegion(texture, x, y, width, height);
+                MTexture texture = new(contPath);
+
+                var textureRegion = texture.CreateSubTexture(new Rectangle(x, y, width, height));
                 var tileset = new Tileset(textureRegion, layer.gridCellWidth, layer.gridCellHeight);
 
                 var tilemap = new Tilemap(tileset, layer.gridCellsX, layer.gridCellsY, 0.1f);

@@ -66,7 +66,7 @@ namespace Monolith.Graphics
                 );
 
                 Engine.DrawManager.Draw(
-                    new DrawParams(tile.Texture, position)
+                    new DrawParams(tile, position)
                     {
                         SourceRectangle = tile.SourceRectangle,
                         Color = Color.White,

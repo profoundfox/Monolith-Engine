@@ -34,7 +34,7 @@ namespace Monolith.Managers
         public bool UseCamera { get; init; }
 
         public DrawParams(
-            Texture2D texture,
+            MTexture texture,
             Vector2 position,
             Color? color = null,
             float rotation = 0f,
@@ -46,7 +46,7 @@ namespace Monolith.Managers
             Effect effect = null,
             bool useCamera = true)
         {
-            Texture = texture ?? throw new ArgumentNullException(nameof(texture));
+            Texture = texture.Texture ?? throw new ArgumentNullException(nameof(texture));
             Position = position;
             SourceRectangle = source;
             Color = color ?? Color.White;
@@ -145,13 +145,13 @@ namespace Monolith.Managers
         public void Draw(in Sprite sprite, DrawLayer layer = DrawLayer.Middleground)
         {
             var p = new DrawParams(
-                sprite.Region.Texture,
+                sprite.Texture,
                 sprite.Position,
                 sprite.Color,
                 sprite.Rotation,
                 sprite.Origin,
                 sprite.Scale,
-                sprite.Region.SourceRectangle,
+                sprite.Texture.SourceRectangle,
                 sprite.Effects,
                 sprite.LayerDepth,
                 effect: null,
@@ -163,7 +163,7 @@ namespace Monolith.Managers
         /// <summary>
         /// Queue a tiled background.
         /// </summary>
-        private void EnqueueLooping(Texture2D texture, Rectangle source, Vector2 position, Vector2 offset,
+        private void EnqueueLooping(MTexture texture, Rectangle source, Vector2 position, Vector2 offset,
             DrawLayer layer, Color color, float layerDepth, bool useCamera)
         {
             int screenW = _spriteBatch.GraphicsDevice.Viewport.Width;
@@ -207,50 +207,15 @@ namespace Monolith.Managers
         public void DrawLooping(in Sprite sprite, Vector2 position, Vector2 offset,
             DrawLayer layer = DrawLayer.Middleground, Color? color = null, float layerDepth = 0f)
         {
-            EnqueueLooping(sprite.Region.Texture, sprite.Region.SourceRectangle, position, offset, layer, color ?? Color.White, layerDepth, useCamera: true);
+            Rectangle source = sprite.SourceRectangle;
+            EnqueueLooping(sprite.Texture, source, position, offset, layer, color ?? Color.White, layerDepth, useCamera: true);
         }
 
-        public void DrawLooping(Texture2D texture, Vector2 position, Vector2 offset,
+        public void DrawLooping(MTexture texture, Vector2 position, Vector2 offset,
             DrawLayer layer = DrawLayer.Middleground, Color? color = null, float layerDepth = 0f)
         {
-            var full = new Rectangle(0, 0, texture.Width, texture.Height);
-            EnqueueLooping(texture, full, position, offset, layer, color ?? Color.White, layerDepth, useCamera: false);
-        }
-
-        /// <summary>
-        /// Flush all queued draws to the SpriteBatch. The flush order is:
-        /// for each DrawLayer (back to front): group by UseCamera -> Effect and draw.
-        /// This keeps Begin/End calls minimal but safe when switching shader effects.
-        /// </summary>
-        public void Flush()
-        {
-            foreach (DrawLayer layer in Enum.GetValues(typeof(DrawLayer)))
-            {
-                var queue = _queues[layer];
-                if (queue.Count == 0) continue;
-
-                var groups = queue
-                    .GroupBy(c => (layer == DrawLayer.UI) ? (UseCamera: false, Effect: c.Effect) : (UseCamera: c.UseCamera, Effect: c.Effect));
-
-                foreach (var group in groups)
-                {
-                    Matrix transform = group.Key.UseCamera ? _camera : Matrix.Identity;
-
-                    _spriteBatch.Begin(
-                        SpriteSortMode.BackToFront,
-                        BlendState.AlphaBlend,
-                        SamplerState.PointClamp,
-                        transformMatrix: transform,
-                        effect: group.Key.Effect);
-
-                    foreach (var call in group)
-                        DrawInternal(call);
-
-                    _spriteBatch.End();
-                }
-
-                queue.Clear();
-            }
+            Rectangle source = texture.SourceRectangle ?? new Rectangle(0, 0, texture.Width, texture.Height);
+            EnqueueLooping(texture, source, position, offset, layer, color ?? Color.White, layerDepth, useCamera: false);
         }
 
         private void DrawInternal(in DrawCall call)
@@ -300,6 +265,43 @@ namespace Monolith.Managers
                 call.Scale,
                 call.Effects,
                 call.LayerDepth);
+        }
+
+
+        /// <summary>
+        /// Flush all queued draws to the SpriteBatch. The flush order is:
+        /// for each DrawLayer (back to front): group by UseCamera -> Effect and draw.
+        /// This keeps Begin/End calls minimal but safe when switching shader effects.
+        /// </summary>
+        public void Flush()
+        {
+            foreach (DrawLayer layer in Enum.GetValues(typeof(DrawLayer)))
+            {
+                var queue = _queues[layer];
+                if (queue.Count == 0) continue;
+
+                var groups = queue
+                    .GroupBy(c => (layer == DrawLayer.UI) ? (UseCamera: false, Effect: c.Effect) : (UseCamera: c.UseCamera, Effect: c.Effect));
+
+                foreach (var group in groups)
+                {
+                    Matrix transform = group.Key.UseCamera ? _camera : Matrix.Identity;
+
+                    _spriteBatch.Begin(
+                        SpriteSortMode.BackToFront,
+                        BlendState.AlphaBlend,
+                        SamplerState.PointClamp,
+                        transformMatrix: transform,
+                        effect: group.Key.Effect);
+
+                    foreach (var call in group)
+                        DrawInternal(call);
+
+                    _spriteBatch.End();
+                }
+
+                queue.Clear();
+            }
         }
     }
 }

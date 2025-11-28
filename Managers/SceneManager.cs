@@ -203,7 +203,6 @@ namespace Monolith.Managers
         {
             if (!IsStackEmpty())
             {
-                Engine.SpriteManager.DrawAllSprites();
                 Engine.DrawManager.DrawTilemaps(spriteBatch);
                 NodeManager.DrawObjects(spriteBatch);
                 GetCurrentScene()?.Draw(spriteBatch);
@@ -240,7 +239,6 @@ namespace Monolith.Managers
         public static void ClearSceneData()
         {
             Engine.DrawManager.Tilemaps.Clear();
-            Engine.SpriteManager.Empty();
             NodeManager.DumpAllInstances();
             //RayCast2D.RayList.Clear();
         }

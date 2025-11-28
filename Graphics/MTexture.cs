@@ -5,82 +5,130 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Monolith.Graphics
 {
     /// <summary>
-    /// Represents a texture or a rectangular region within a texture.
-    /// Can be used for full textures or subregions (sprites) of a texture.
+    /// Represents a texture or a rectangular region (sprite) of a texture.
+    /// Can be created from scratch or as a subregion of an existing texture.
     /// </summary>
-    public class MTexture
+    public class MTexture : IDisposable
     {
         /// <summary>
-        /// The source texture.
+        /// Internal Texture2D.
         /// </summary>
         public Texture2D Texture { get; private set; }
 
         /// <summary>
-        /// The rectangular region within the texture. If null, the full texture is used.
+        /// Optional sub-region of the texture.
         /// </summary>
         public Rectangle? SourceRectangle { get; private set; }
 
-        /// <summary>
-        /// Width of the texture region or full texture.
-        /// </summary>
         public int Width => SourceRectangle?.Width ?? Texture.Width;
-
-        /// <summary>
-        /// Height of the texture region or full texture.
-        /// </summary>
         public int Height => SourceRectangle?.Height ?? Texture.Height;
+        public Point Size => new(Width, Height);
+        public Vector2 Center => new(Width / 2f, Height / 2f);
 
         /// <summary>
-        /// Creates a wrapper for a full texture.
+        /// Creates a blank texture.
         /// </summary>
-        public MTexture(Texture2D texture)
+        public MTexture(int width, int height, bool mipMap = false, SurfaceFormat format = SurfaceFormat.Color)
         {
-            Texture = texture ?? throw new ArgumentNullException(nameof(texture));
-            SourceRectangle = null; // Full texture by default
+            Texture = new Texture2D(Engine.GraphicsDevice, width, height, mipMap, format);
+            SourceRectangle = null;
         }
 
         /// <summary>
-        /// Creates a wrapper for a specific region within a texture.
+        /// Creates a texture from a color array.
         /// </summary>
-        public MTexture(Texture2D texture, Rectangle region)
+        public MTexture(int width, int height, Color[] data, bool mipMap = false, SurfaceFormat format = SurfaceFormat.Color)
+        {
+            if (data.Length != width * height)
+                throw new ArgumentException("Color array length does not match width*height");
+
+            Texture = new Texture2D(Engine.GraphicsDevice, width, height, mipMap, format);
+            Texture.SetData(data);
+            SourceRectangle = null;
+        }
+
+        /// <summary>
+        /// Creates an MTexture from an existing Texture2D.
+        /// </summary>
+        public MTexture(Texture2D texture, Rectangle? region = null)
         {
             Texture = texture ?? throw new ArgumentNullException(nameof(texture));
             SourceRectangle = region;
         }
 
         /// <summary>
-        /// Convenience constructor using x, y, width, height.
+        /// Creates an MTexture from a file.
         /// </summary>
-        public MTexture(Texture2D texture, int x, int y, int width, int height)
-            : this(texture, new Rectangle(x, y, width, height)) { }
+        /// <param name="texturePath"></param>
+        /// <param name="region"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+
+        public MTexture(string texturePath, Rectangle? region = null)
+        {
+            Texture2D texture = Engine.ContentProvider.LoadTexture(texturePath);
+            Texture = texture ?? throw new ArgumentNullException(nameof(texture));
+            SourceRectangle = region;
+        }
 
         /// <summary>
-        /// Draws the texture at the specified position.
+        /// Creates a subtexture of this MTexture.
         /// </summary>
-        public void Draw(Vector2 position, Color color, float layerDepth = 0f)
+        public MTexture CreateSubTexture(Rectangle region)
         {
-            Draw(position, color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, layerDepth);
+            if (SourceRectangle.HasValue)
+            {
+                Rectangle parent = SourceRectangle.Value;
+                region.Offset(parent.X, parent.Y);
+            }
+            return new MTexture(Texture, region);
         }
 
-        public void Draw(Vector2 position, Color color, float rotation, Vector2 origin, float scale, SpriteEffects effects, float layerDepth)
-        {
-            Draw(position, color, rotation, origin, new Vector2(scale, scale), effects, layerDepth);
-        }
-
-        public void Draw(Vector2 position, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
+        /// <summary>
+        /// Draws the texture at the given position.
+        /// </summary>
+        public void Draw(Vector2 position, Color color, float rotation = 0f, Vector2 origin = default, Vector2? scale = null, SpriteEffects effects = SpriteEffects.None, float layerDepth = 0f)
         {
             Engine.DrawManager.Draw(new Managers.DrawParams
             (
-                texture: Texture,
+                texture: this,
                 position: position,
                 source: SourceRectangle,
                 color: color,
                 rotation: rotation,
                 origin: origin,
-                scale: scale,
+                scale: scale ?? Vector2.One,
                 effects: effects,
                 layerDepth: layerDepth
             ));
+        }
+
+        /// <summary>
+        /// Sets the pixel data of the texture.
+        /// </summary>
+        public void SetData(Color[] data)
+        {
+            if (data.Length != Texture.Width * Texture.Height)
+                throw new ArgumentException("Data length does not match texture size");
+            Texture.SetData(data);
+        }
+
+        /// <summary>
+        /// Gets the pixel data of the texture.
+        /// </summary>
+        public Color[] GetData()
+        {
+            Color[] data = new Color[Texture.Width * Texture.Height];
+            Texture.GetData(data);
+            return data;
+        }
+
+        /// <summary>
+        /// Dispose the underlying Texture2D.
+        /// </summary>
+        public void Dispose()
+        {
+            Texture?.Dispose();
+            Texture = null;
         }
     }
 }

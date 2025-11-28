@@ -21,5 +21,7 @@ namespace Monolith.Graphics
             Frames = frames;
             Delay = delay;
         }
+
+        
     }
 }

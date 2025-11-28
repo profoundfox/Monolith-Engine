@@ -59,12 +59,14 @@ namespace Monolith.Graphics
                 int x = i % Columns * tileWidth;
                 int y = i / Columns * tileHeight;
 
-                _tiles[i] = new MTexture(
-                    texture.Texture,
-                    baseRect.X + x,
-                    baseRect.Y + y,
-                    tileWidth,
-                    tileHeight
+                _tiles[i] = texture.CreateSubTexture(
+                    new Rectangle
+                    (
+                        baseRect.X + x,
+                        baseRect.Y + y,
+                        tileWidth,
+                        tileHeight
+                    )
                 );
             }
         }

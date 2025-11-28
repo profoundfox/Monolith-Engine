@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Monolith.csproj": {}
+    "/home/nils/Documents/Project/Libraries/Monolith-Engine/Monolith.csproj": {}
   },
   "projects": {
-    "/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Monolith.csproj": {
+    "/home/nils/Documents/Project/Libraries/Monolith-Engine/Monolith.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Monolith.csproj",
+        "projectUniqueName": "/home/nils/Documents/Project/Libraries/Monolith-Engine/Monolith.csproj",
         "projectName": "Monolith",
-        "projectPath": "/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Monolith.csproj",
-        "packagesPath": "/Users/nilslauvstad/.nuget/packages/",
-        "outputPath": "/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/obj/",
+        "projectPath": "/home/nils/Documents/Project/Libraries/Monolith-Engine/Monolith.csproj",
+        "packagesPath": "/home/nils/.nuget/packages/",
+        "outputPath": "/home/nils/Documents/Project/Libraries/Monolith-Engine/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/nilslauvstad/.nuget/NuGet/NuGet.Config"
+          "/home/nils/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -38,7 +38,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net9.0": {
@@ -65,12 +65,18 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[9.0.9, 9.0.9]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.110/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
