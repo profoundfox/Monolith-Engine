@@ -14,13 +14,13 @@ public class Area2D : RegionNode
         typeof(KinematicBody2D),
     };
 
-    public Area2D(NodeConfig config) : base(config) {}
+    public Area2D(Node2DConfig config) : base(config) {}
 
-    private Node GetOverlappingArea()
+    private Node2D GetOverlappingArea()
     {
         return NodeManager.AllInstances
             .Where(a => a != this && AcceptedAreaType.Any(t => t.IsAssignableFrom(a.GetType())))
-            .Cast<Node>()
+            .Cast<Node2D>()
             .FirstOrDefault(a => Shape.Intersects(a.Shape));
     }
 
@@ -34,7 +34,7 @@ public class Area2D : RegionNode
 
 
         
-    public bool AreaEntered(out Node overlapping)
+    public bool AreaEntered(out Node2D overlapping)
     {
         overlapping = GetOverlappingArea();
 
@@ -50,7 +50,7 @@ public class Area2D : RegionNode
         return AreaEntered(out _);
     }
         
-    public bool AreaExited(out Node overlapping)
+    public bool AreaExited(out Node2D overlapping)
     {
         overlapping = GetOverlappingArea();
 
@@ -67,7 +67,7 @@ public class Area2D : RegionNode
     }
 
 
-    public bool AreaInside(out Node overlapping)
+    public bool AreaInside(out Node2D overlapping)
     {
         overlapping = GetOverlappingArea();
         return overlapping != null;

@@ -141,6 +141,8 @@ namespace Monolith
         public string TilemapTexturePath {get; init; } = null;
     }
 
+    
+
     public class NodeConfig
     {
         /// <summary>
@@ -152,7 +154,10 @@ namespace Monolith
         /// Optional name. Defaults to the node class name.
         /// </summary>
         public required string Name { get; set; }
+    }
 
+    public class Node2DConfig : NodeConfig
+    {
         /// <summary>
         /// Optional shape for the node.
         /// </summary>

@@ -6,14 +6,14 @@ using Monolith;
 
 namespace Monolith.Nodes
 {   
-    public class Sprite2D : Node
+    public class Sprite2D : Node2D
     {
         public MTexture Texture { get; set; }
         public Color Modulate { get; set; } = Color.White;
         public Vector2 Scale { get; set; } = Vector2.One;
         public float Rotation { get; set; } = 0f;
 
-        public Sprite2D(NodeConfig config) : base(config) { }
+        public Sprite2D(Node2DConfig config) : base(config) { }
 
         public override void Draw(SpriteBatch spriteBatch)
         {

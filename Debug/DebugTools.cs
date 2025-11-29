@@ -21,7 +21,7 @@ namespace Monolith
         public static void DrawRegions()
         {
             if (drawRegions)
-                foreach(Node node in NodeManager.AllInstances) node.DrawShapeHollow(Color.Red);
+                foreach(Node2D node in NodeManager.AllInstances) node.DrawShapeHollow(Color.Red);
         }
 
         public static void ToggleRegions()

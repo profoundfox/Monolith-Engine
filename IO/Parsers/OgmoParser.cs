@@ -65,7 +65,7 @@ namespace Monolith.IO
                     MTexture texture = new(texturePathWithoutExtension);
                     Sprite sprite = new Sprite(texture.CreateSubTexture(new Microsoft.Xna.Framework.Rectangle(0, 0, texture.Width, texture.Height)));
 
-                    Sprite2D sprite2D = new Sprite2D(new NodeConfig
+                    Sprite2D sprite2D = new Sprite2D(new Node2DConfig
                     {
                         Parent = null,
                         Name = $"Decal: {texturePathWithoutExtension}",
@@ -94,7 +94,7 @@ namespace Monolith.IO
                         try { return a.GetTypes(); }
                         catch (ReflectionTypeLoadException ex) { return ex.Types.Where(t => t != null); }
                     })
-                    .FirstOrDefault(t => t.IsSubclassOf(typeof(Node)) && t.Name == entity.name);
+                    .FirstOrDefault(t => t.IsSubclassOf(typeof(Node2D)) && t.Name == entity.name);
 
                 if (nodeType == null)
                 {
@@ -102,7 +102,7 @@ namespace Monolith.IO
                     continue;
                 }
 
-                Node node = (Node)Activator.CreateInstance(nodeType, new NodeConfig
+                Node2D node = (Node2D)Activator.CreateInstance(nodeType, new Node2DConfig
                 {
                     Parent = null,
                     Shape = new RectangleShape2D(entity.x, entity.y, entity.width, entity.height),

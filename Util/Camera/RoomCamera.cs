@@ -48,7 +48,7 @@ namespace Monolith.Util
         }
         
         
-        public void Follow(Node targetNode)
+        public void Follow(Node2D targetNode)
         {
             var cfg = Engine.Instance.Config;
             if (targetNode == null) return;

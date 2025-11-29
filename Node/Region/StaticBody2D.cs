@@ -7,7 +7,7 @@ namespace Monolith.Nodes
 {
     public class StaticBody2D : RegionNode
     {
-        public StaticBody2D(NodeConfig config) : base(config) {}
+        public StaticBody2D(Node2DConfig config) : base(config) {}
         
     }
 }

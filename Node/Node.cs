@@ -12,17 +12,10 @@ namespace Monolith.Nodes
     {
         private readonly List<Node> children = new();
 
-        private Vector2 _position;
-
         /// <summary>
         /// The parent node in the hierarchy, required to be set, can be null
         /// </summary>
         public Node Parent { get; private set; }
-
-        /// <summary>
-        /// The shape that the object has.
-        /// </summary>
-        public IRegionShape2D Shape { get; set; }
 
         /// <summary>
         /// The name of the node, required to be set.
@@ -30,39 +23,11 @@ namespace Monolith.Nodes
         public string Name { get; set; }
 
         /// <summary>
-        /// The current position of the node, linked with the shape's location.
-        /// Propagates delta to all children.
-        /// </summary>
-        public Vector2 Position
-        {
-            get => _position;
-            set
-            {
-                var delta = value - _position;
-                _position = value;
-
-                if (Shape != null)
-                    Shape.Location = new Point((int)MathF.Round(_position.X), (int)MathF.Round(_position.Y));
-
-                foreach (var child in children)
-                    child.Position += delta;
-            }
-        }
-
-        /// <summary>
         /// Creates a new Node using a NodeConfig.
         /// </summary>
         public Node(NodeConfig config)
         {
-            Shape = config.Shape;
             Name = config.Name ?? GetType().Name;
-
-            _position = Shape != null
-                ? new Vector2(Shape.Location.X, Shape.Location.Y)
-                : (config.Position ?? Vector2.Zero);
-
-            if (Shape != null)
-                Shape.Location = new Point((int)MathF.Round(_position.X), (int)MathF.Round(_position.Y));
 
             if (config.Parent != null)
                 SetParent(config.Parent);
@@ -88,7 +53,6 @@ namespace Monolith.Nodes
         public void AddChild(Node child)
         {
             if (child == null || children.Contains(child)) return;
-
             child.SetParent(this);
         }
 
@@ -98,7 +62,6 @@ namespace Monolith.Nodes
         public void RemoveChild(Node child)
         {
             if (child == null || !children.Contains(child)) return;
-
             child.SetParent(null);
         }
 
@@ -125,7 +88,6 @@ namespace Monolith.Nodes
         {
             Parent = null;
             children.Clear();
-            Shape = null;
             Name = null;
         }
 
@@ -135,23 +97,8 @@ namespace Monolith.Nodes
         public virtual void Draw(SpriteBatch spriteBatch) { }
 
         /// <summary>
-        /// Draws the shape with a filled texture.
+        /// All children of this node.
         /// </summary>
-        public void DrawShape(Color color, float layerDepth = 0.1f, DrawLayer layer = DrawLayer.Middleground)
-        {
-            if (Shape != null)
-                DrawHelper.DrawRegionShape(Shape, color, layerDepth, layer);
-        }
-
-        /// <summary>
-        /// Draws the shape with a hollow texture.
-        /// </summary>
-        public void DrawShapeHollow(Color color, int thickness = 2, float layerDepth = 0.1f, DrawLayer layer = DrawLayer.Middleground)
-        {
-            if (Shape != null)
-                DrawHelper.DrawRegionShapeHollow(Shape, color, thickness, layerDepth, layer);
-        }
-
-         public IReadOnlyList<Node> Children => children.AsReadOnly();
+        public IReadOnlyList<Node> Children => children.AsReadOnly();
     }
 }

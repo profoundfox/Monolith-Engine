@@ -7,7 +7,7 @@ using Monolith.Managers;
 
 namespace Monolith.Nodes
 {
-    public class KinematicBody2D : Node
+    public class KinematicBody2D : Node2D
     {
         public Vector2 Velocity;
 
@@ -15,7 +15,7 @@ namespace Monolith.Nodes
         private float remainderY = 0;
         public bool Locked;
 
-        public KinematicBody2D(NodeConfig config) : base(config) {}
+        public KinematicBody2D(Node2DConfig config) : base(config) {}
         
         public void UpdateKinematicBody()
         {
@@ -122,7 +122,7 @@ namespace Monolith.Nodes
         {
             foreach (var body in NodeManager.AllInstances.OfType<StaticBody2D>())
             {
-                if (shape.Intersects(body.Shape) && body.Collidable)
+                if (shape.Intersects(body.Shape))
                     return true;
             }
 
