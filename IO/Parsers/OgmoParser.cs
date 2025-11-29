@@ -11,65 +11,43 @@ using Monolith.Nodes;
 using Monolith.Region;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Monolith.IO
 {
+    [AttributeUsage(AttributeTargets.Property)]
+    public class OgmoAttribute : Attribute
+    {
+        public string Key { get; }
+        public OgmoAttribute(string key) => Key = key;
+    }
+
     public static class OgmoParser
     {
-        /// <summary>
-        /// Loads a json file and extracts the OgmoFile information from it.
-        /// </summary>
-        /// <param name="filename"></param>
-        /// <returns></returns>
         private static OgmoFileInfo.Root LoadJson(string filename)
         {
             string json = File.ReadAllText(filename);
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            return JsonSerializer.Deserialize<OgmoFileInfo.Root>(json, options);
-        }
-        /// <summary>
-        /// Takes in a string and finds a type that shares a name with it, returns that type.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="className"></param>
-        /// <returns></returns>
-
-        private static Type GetTypeByName<T>(string className)
-        {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes())
-                .FirstOrDefault(t => t.Name == className && typeof(T).IsAssignableFrom(t));
+            return JsonSerializer.Deserialize<OgmoFileInfo.Root>(json, options)!;
         }
 
-        /// <summary>
-        /// Parses values from a dictionary with a JsonElement as its key, turns it into a regular object.
-        /// </summary>
-        /// <param name="values"></param>
-        /// <returns></returns>
         private static Dictionary<string, object> ParseValues(Dictionary<string, JsonElement> values)
         {
             return values.ToDictionary(
                 kvp => kvp.Key,
                 kvp => kvp.Value.ValueKind switch
                 {
-                    JsonValueKind.String => (object)kvp.Value.GetString(),
+                    JsonValueKind.String => (object)kvp.Value.GetString()!,
                     JsonValueKind.Number => kvp.Value.TryGetInt64(out long l) ? l : kvp.Value.GetDouble(),
                     JsonValueKind.True => true,
                     JsonValueKind.False => false,
                     JsonValueKind.Null => null!,
-                    JsonValueKind.Object => JsonSerializer.Deserialize<Dictionary<string, object>>(kvp.Value.GetRawText()),
-                    JsonValueKind.Array => JsonSerializer.Deserialize<List<object>>(kvp.Value.GetRawText()),
+                    JsonValueKind.Object => JsonSerializer.Deserialize<Dictionary<string, object>>(kvp.Value.GetRawText())!,
+                    JsonValueKind.Array => JsonSerializer.Deserialize<List<object>>(kvp.Value.GetRawText())!,
                     _ => kvp.Value.GetRawText()
                 }
             );
         }
 
-        /// <summary>
-        /// Searches for images within the level file.
-        /// WIP
-        /// </summary>
-        /// <param name="filename"></param>
         public static void SearchForDecals(string filename)
         {
             var root = LoadJson(filename);
@@ -78,29 +56,30 @@ namespace Monolith.IO
             {
                 foreach (var decal in layer.decals)
                 {
-                    
                     string textureName = Path.GetFileNameWithoutExtension(decal.texture);
                     string texturePathWithoutExtension = Path.Combine(
                         Path.GetDirectoryName(decal.texture) ?? string.Empty,
                         Path.GetFileNameWithoutExtension(decal.texture)
                     );
 
-
                     MTexture texture = new(texturePathWithoutExtension);
-                    Sprite sprite = new Sprite(texture.CreateSubTexture(new Rectangle(0, 0, texture.Width, texture.Height)));
+                    Sprite sprite = new Sprite(texture.CreateSubTexture(new Microsoft.Xna.Framework.Rectangle(0, 0, texture.Width, texture.Height)));
 
-                    sprite.CenterOrigin();
-                    sprite.Position = new Vector2(decal.x, decal.y);
+                    Sprite2D sprite2D = new Sprite2D(new NodeConfig
+                    {
+                        Parent = null,
+                        Name = $"Decal: {texturePathWithoutExtension}",
+                        Position = new Microsoft.Xna.Framework.Vector2(decal.x, decal.y)
+                    });
+
+                    sprite2D.Texture = new MTexture(texturePathWithoutExtension);
                 }
             }
         }
 
         /// <summary>
-        /// Searches for Nodes within the enties layer in the level file, sets the object's values from the file.
+        /// Updated SearchForObjects supporting direct property mapping and [Ogmo] attributes
         /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="Player"></param>
-
         public static void SearchForObjects(string filename)
         {
             var root = LoadJson(filename);
@@ -125,26 +104,23 @@ namespace Monolith.IO
 
                 Node node = (Node)Activator.CreateInstance(nodeType, new NodeConfig
                 {
-                    Parent = Engine.SceneManager.GetCurrentScene(),
+                    Parent = null,
                     Shape = new RectangleShape2D(entity.x, entity.y, entity.width, entity.height),
-                    //Position = new Vector2(entity.x, entity.y),
                     Name = entity.name
-                });
+                })!;
 
                 if (entity.values != null)
                 {
                     var dict = ParseValues(entity.values);
 
-                    foreach (var kv in dict)
+                    foreach (var prop in nodeType.GetProperties().Where(p => p.CanWrite))
                     {
-                        var prop = nodeType.GetProperty(kv.Key);
+                        var attr = prop.GetCustomAttribute<OgmoAttribute>();
+                        string key = attr?.Key ?? prop.Name;
 
-                        if (prop != null && prop.CanWrite)
+                        if (dict.TryGetValue(key, out var raw))
                         {
-                            object val = kv.Value;
-
-                            val = Convert.ChangeType(val, prop.PropertyType);
-
+                            object val = Convert.ChangeType(raw, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
                             prop.SetValue(node, val);
                         }
                     }
@@ -152,19 +128,10 @@ namespace Monolith.IO
             }
         }
 
-
-        /// <summary>
-        /// Creates a tilemap from the level's data list, uses the texture region system to make it work with atlases. 
-        /// </summary>
-        /// <param name="content"></param>
-        /// <param name="filename"></param>
-        /// <param name="textureName"></param>
-        /// <param name="region"></param>
-        /// <exception cref="Exception"></exception>
         public static void LoadTilemap(ContentManager content, string filename, string textureName, string region)
         {
             var root = LoadJson(filename);
-            
+
             var tileLayer = root.layers.FirstOrDefault(l => l.data != null && l.tileset != null)
                 ?? throw new Exception("No tile layer found in JSON.");
 
@@ -176,7 +143,7 @@ namespace Monolith.IO
                 string contPath = textureName;
                 MTexture texture = new(contPath);
 
-                var textureRegion = texture.CreateSubTexture(new Rectangle(x, y, width, height));
+                var textureRegion = texture.CreateSubTexture(new Microsoft.Xna.Framework.Rectangle(x, y, width, height));
                 var tileset = new Tileset(textureRegion, layer.gridCellWidth, layer.gridCellHeight);
 
                 var tilemap = new Tilemap(tileset, layer.gridCellsX, layer.gridCellsY, 0.1f);
@@ -194,47 +161,15 @@ namespace Monolith.IO
             }
         }
 
-        public static object ApplyValuesToTarget(List<object> values, Type targetType)
-        {
-            object target = Activator.CreateInstance(targetType);
-
-            foreach (var valueObj in values)
-            {
-                if (valueObj == null) continue;
-
-                var srcProps = valueObj.GetType().GetProperties();
-                
-                foreach (var srcProp in srcProps)
-                {
-                    var destProp = targetType.GetProperty(srcProp.Name);
-                    if (destProp != null &&
-                        destProp.CanWrite &&
-                        destProp.PropertyType.IsAssignableFrom(srcProp.PropertyType))
-                    {
-                        destProp.SetValue(target, srcProp.GetValue(valueObj));
-                    }
-                }
-            }
-
-            return target;
-        }
-        
         /// <summary>
-        /// Instanitates all the entites, loads all the objects, decals and tilemaps if the required paramteres are present.
+        /// Instantiates all entities, decals, and tilemaps if parameters are provided
         /// </summary>
-        /// <param name="filename"></param>
-        /// <param name="Player"></param>
-        /// <param name="content"></param>
-        /// <param name="defaultTileTexture"></param>
-        /// <param name="defaultTileRegion"></param>
         public static void FromFile(
-            string filename, 
-            string defaultTileTexture = null, 
+            string filename,
+            string defaultTileTexture = null,
             string defaultTileRegion = null)
         {
-
             SearchForObjects(filename);
-
             SearchForDecals(filename);
 
             if (!string.IsNullOrEmpty(defaultTileTexture) && !string.IsNullOrEmpty(defaultTileRegion))
@@ -242,7 +177,5 @@ namespace Monolith.IO
                 LoadTilemap(Engine.Content, filename, defaultTileTexture, defaultTileRegion);
             }
         }
-
     }
-
 }

@@ -146,17 +146,17 @@ namespace Monolith
         /// <summary>
         /// Optional parent object.
         /// </summary>
-        public object Parent { get; set; }
+        public required Node Parent { get; set; }
+
+        /// <summary>
+        /// Optional name. Defaults to the node class name.
+        /// </summary>
+        public required string Name { get; set; }
 
         /// <summary>
         /// Optional shape for the node.
         /// </summary>
         public IRegionShape2D Shape { get; set; }
-
-        /// <summary>
-        /// Optional name. Defaults to the node class name.
-        /// </summary>
-        public string Name { get; set; }
 
         /// <summary>
         /// Optional position for the node. Defaults to Vector2.Zero.

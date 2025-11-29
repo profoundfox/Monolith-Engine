@@ -15,28 +15,15 @@ namespace Monolith.Managers
         private static readonly List<Node> pendingAdds = new();
         private static readonly List<Node> pendingRemovals = new();
 
-        /// <summary>
-        /// Queues a node for addition to the main instance list.
-        /// </summary>
         internal static void QueueAdd(Node node) => pendingAdds.Add(node);
-
-        /// <summary>
-        /// Queues a node for removal from the main instance list.
-        /// </summary>
         internal static void QueueRemove(Node node) => pendingRemovals.Add(node);
 
-        /// <summary>
-        /// Applies queued changes.
-        /// </summary>
         private static void ApplyPendingChanges()
         {
             ApplyPendingAdds();
             ApplyPendingRemovals();
         }
 
-        /// <summary>
-        /// Applies pending additions.
-        /// </summary>
         private static void ApplyPendingAdds()
         {
             if (pendingAdds.Count == 0) return;
@@ -54,15 +41,11 @@ namespace Monolith.Managers
             pendingAdds.Clear();
         }
 
-        /// <summary>
-        /// Applies pending removals.
-        /// </summary>
         private static void ApplyPendingRemovals()
         {
             if (pendingRemovals.Count == 0) return;
 
             var toRemove = new List<Node>(pendingRemovals);
-
             foreach (var node in toRemove)
                 RemoveNode(node);
 
@@ -70,37 +53,15 @@ namespace Monolith.Managers
         }
 
         /// <summary>
-        /// Returns a list of all currently know children of a specified node.
+        /// Returns the children of a node.
         /// </summary>
-        /// <returns></returns>
-        public static List<Node> GetNodeChildren(Node node)
-        {
-            List<Node> nodes = new();
-
-            for (int i = 0; i < allInstances.Count; i++)
-            {
-                Node n = allInstances[i];
-
-                if (n.Parent == node)
-                    nodes.Add(n);
-            }
-
-            return nodes;
-        }
-
+        public static List<Node> GetNodeChildren(Node node) => node.Children.ToList();
 
         /// <summary>
-        /// Returns the current parrent of this node.
+        /// Returns the parent of a node.
         /// </summary>
-        /// <returns></returns>
-        public static object GetNodeParent(Node node)
-        {
-            return node.Parent;
-        }
+        public static Node GetNodeParent(Node node) => node.Parent;
 
-        /// <summary>
-        /// Removes the node.
-        /// </summary>
         private static void RemoveNode(Node node)
         {
             allInstances.Remove(node);
@@ -108,83 +69,58 @@ namespace Monolith.Managers
             if (!string.IsNullOrEmpty(node.Name) && allInstancesDetailed.ContainsKey(node.Name))
             {
                 allInstancesDetailed[node.Name].Remove(node);
-
                 if (allInstancesDetailed[node.Name].Count == 0)
                     allInstancesDetailed.Remove(node.Name);
             }
 
-            node.ClearNodeData();
+            // Detach from parent
+            node.Parent?.RemoveChild(node);
 
-            var childNodes = allInstances.Where(n => n.Parent == node).ToList();
-            foreach (var child in childNodes)
+            // Recursively remove children
+            foreach (var child in node.Children.ToList())
                 RemoveNode(child);
+
+            node.ClearNodeData();
         }
 
-        /// <summary>
-        /// Removes a node immediately.
-        /// </summary>
-        /// <param name="node"></param>
-        internal static void RemoveImmediate(Node node)
-        {
-            RemoveNode(node);
-        }
+        internal static void RemoveImmediate(Node node) => RemoveNode(node);
 
-
-
-        /// <summary>
-        /// Invokes load on all tracked nodes.
-        /// </summary>
         public static void LoadObjects()
         {
             ApplyPendingChanges();
-
-            for (int i = 0; i < allInstances.Count; i++)
+            foreach (var node in allInstances.ToList())
             {
-                allInstances[i].Load();
+                node.Load();
                 ApplyPendingChanges();
             }
         }
 
-        /// <summary>
-        /// Invokes unload on all tracked nodes.
-        /// </summary>
         public static void UnloadObjects()
         {
             ApplyPendingChanges();
-
-            for (int i = 0; i < allInstances.Count; i++)
+            foreach (var node in allInstances.ToList())
             {
-                allInstances[i].Unload();
+                node.Unload();
                 ApplyPendingChanges();
             }
         }
 
-        /// <summary>
-        /// Updates all nodes using a shared GameTime object.
-        /// </summary>
         public static void UpdateObjects(GameTime gameTime)
         {
             ApplyPendingChanges();
-
-            for (int i = 0; i < allInstances.Count; i++)
+            foreach (var node in allInstances.ToList())
             {
-                allInstances[i].Update(gameTime);
+                node.Update(gameTime);
                 ApplyPendingChanges();
             }
         }
 
-        /// <summary>
-        /// Draws all nodes.
-        /// </summary>
         public static void DrawObjects(SpriteBatch spriteBatch)
         {
-            for (int i = 0; i < allInstances.Count; i++)
-                allInstances[i].Draw(spriteBatch);
+            foreach (var node in allInstances)
+                node.Draw(spriteBatch);
         }
 
-        /// <summary>
-        /// Removes all node instances.
-        /// </summary>
         public static void DumpAllInstances()
         {
             UnloadObjects();
@@ -192,34 +128,16 @@ namespace Monolith.Managers
             allInstancesDetailed.Clear();
         }
 
-        /// <summary>
-        /// Gets the first node with the given name, or null if none exists.
-        /// </summary>
         public static Node GetNodeByName(string name)
         {
             if (string.IsNullOrEmpty(name)) return null;
-
-            if (allInstancesDetailed.TryGetValue(name, out var nodes))
-            {
-                return nodes.FirstOrDefault();
-            }
-
-            return null;
+            return allInstancesDetailed.TryGetValue(name, out var nodes) ? nodes.FirstOrDefault() : null;
         }
 
-        /// <summary>
-        /// Gets all nodes with the given name, returns an empty list if none exist.
-        /// </summary>
         public static IReadOnlyList<Node> GetNodesByName(string name)
         {
             if (string.IsNullOrEmpty(name)) return Array.Empty<Node>();
-
-            if (allInstancesDetailed.TryGetValue(name, out var nodes))
-            {
-                return nodes;
-            }
-
-            return Array.Empty<Node>();
+            return allInstancesDetailed.TryGetValue(name, out var nodes) ? nodes : Array.Empty<Node>();
         }
 
         public static IReadOnlyList<Node> AllInstances => allInstances.AsReadOnly();

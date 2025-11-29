@@ -122,7 +122,7 @@ namespace Monolith.Nodes
         {
             foreach (var body in NodeManager.AllInstances.OfType<StaticBody2D>())
             {
-                if (shape.Intersects(body.Shape))
+                if (shape.Intersects(body.Shape) && body.Collidable)
                     return true;
             }
 
