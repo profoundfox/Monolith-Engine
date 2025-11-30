@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace Monolith.Region
+namespace Monolith.Geometry
 {
     public class CircleShape2D : IRegionShape2D, IEquatable<CircleShape2D>
     {

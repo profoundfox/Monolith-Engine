@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using Monolith.Region;
+using Monolith.Geometry;
 
 namespace Monolith.Helpers
 {

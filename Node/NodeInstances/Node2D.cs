@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Monolith.Region;
+using Monolith.Geometry;
 using Monolith.Helpers;
 using Monolith.Managers;
 

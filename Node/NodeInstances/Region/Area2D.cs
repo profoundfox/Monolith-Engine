@@ -4,9 +4,17 @@ using Monolith;
 using Monolith.Managers;
 using Monolith.Nodes;
 
-public class Area2D : RegionNode
+public record class Area2DConfig : Node2DConfig
+{
+    public bool MonitorAreas { get; set; }
+    public bool MonitorBodies { get; set; }
+}
+
+public class Area2D : Node2D
 {
     private bool wasInArea2D = false;
+
+    private readonly Area2DConfig cfg;
 
     private static readonly Type[] AcceptedAreaType = 
     {
@@ -14,7 +22,10 @@ public class Area2D : RegionNode
         typeof(KinematicBody2D),
     };
 
-    public Area2D(Node2DConfig config) : base(config) {}
+    public Area2D(Area2DConfig config) : base(config)
+    {
+        cfg = config;
+    }
 
     private Node2D GetOverlappingArea()
     {

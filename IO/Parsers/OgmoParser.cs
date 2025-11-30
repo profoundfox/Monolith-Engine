@@ -8,7 +8,7 @@ using System.Text.Json;
 using Monolith.Graphics;
 using Monolith.Managers;
 using Monolith.Nodes;
-using Monolith.Region;
+using Monolith.Geometry;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 
@@ -63,24 +63,22 @@ namespace Monolith.IO
                     );
 
                     MTexture texture = new(texturePathWithoutExtension);
-                    Sprite sprite = new Sprite(texture.CreateSubTexture(new Microsoft.Xna.Framework.Rectangle(0, 0, texture.Width, texture.Height)));
 
-                    Sprite2D sprite2D = new Sprite2D(new Node2DConfig
+                    Sprite2D sprite2D = new Sprite2D(new Sprite2DConfig
                     {
                         Parent = null,
                         Name = $"Decal: {texturePathWithoutExtension}",
-                        Position = new Microsoft.Xna.Framework.Vector2(decal.x, decal.y)
+                        Position = new Vector2(decal.x, decal.y),
+                        Texture = new MTexture(texturePathWithoutExtension)
                     });
-
-                    sprite2D.Texture = new MTexture(texturePathWithoutExtension);
                 }
             }
         }
 
         /// <summary>
-        /// Updated SearchForObjects supporting direct property mapping and [Ogmo] attributes
+        /// Searches through Ogmo's entites and assigns values to nodes.
         /// </summary>
-        public static void SearchForObjects(string filename)
+        public static void SearchForNodes(string filename)
         {
             var root = LoadJson(filename);
 
@@ -92,42 +90,56 @@ namespace Monolith.IO
                     .SelectMany(a =>
                     {
                         try { return a.GetTypes(); }
-                        catch (ReflectionTypeLoadException ex) { return ex.Types.Where(t => t != null); }
+                        catch (ReflectionTypeLoadException ex) 
+                        { 
+                            return ex.Types.Where(t => t != null); 
+                        }
                     })
-                    .FirstOrDefault(t => t.IsSubclassOf(typeof(Node2D)) && t.Name == entity.name);
+                    .FirstOrDefault(t => t.IsSubclassOf(typeof(Node2D)) &&
+                                        t.Name == entity.name);
 
                 if (nodeType == null)
                 {
-                    Console.WriteLine($"Type '{entity.name}' not found or not a subclass of Node.");
+                    Console.WriteLine($"Type '{entity.name}' not found or not a subclass of Node2D.");
                     continue;
                 }
 
-                Node2D node = (Node2D)Activator.CreateInstance(nodeType, new Node2DConfig
-                {
-                    Parent = null,
-                    Shape = new RectangleShape2D(entity.x, entity.y, entity.width, entity.height),
-                    Name = entity.name
-                })!;
+                var ctor = nodeType.GetConstructors().First();
+                var configType = ctor.GetParameters().First().ParameterType;
+
+                var config = Activator.CreateInstance(configType)!;
+
+                configType.GetProperty("Parent")?.SetValue(config, null);
+                configType.GetProperty("Name")?.SetValue(config, entity.name);
+                configType.GetProperty("Shape")?.SetValue(config,
+                    new RectangleShape2D(entity.x, entity.y, entity.width, entity.height)
+                );
 
                 if (entity.values != null)
                 {
                     var dict = ParseValues(entity.values);
 
-                    foreach (var prop in nodeType.GetProperties().Where(p => p.CanWrite))
+                    foreach (var prop in configType.GetProperties().Where(p => p.CanWrite))
                     {
                         var attr = prop.GetCustomAttribute<OgmoAttribute>();
-                        string key = attr?.Key ?? prop.Name;
+                        var key = attr?.Key ?? prop.Name;
 
                         if (dict.TryGetValue(key, out var raw))
                         {
-                            object val = Convert.ChangeType(raw, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
-                            prop.SetValue(node, val);
+                            object val = Convert.ChangeType(
+                                raw,
+                                Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType
+                            );
+                            prop.SetValue(config, val);
                         }
                     }
                 }
+
+                Node2D node = (Node2D)Activator.CreateInstance(nodeType, config)!;
             }
         }
 
+        
         public static void LoadTilemap(ContentManager content, string filename, string textureName, string region)
         {
             var root = LoadJson(filename);
@@ -169,7 +181,7 @@ namespace Monolith.IO
             string defaultTileTexture = null,
             string defaultTileRegion = null)
         {
-            SearchForObjects(filename);
+            SearchForNodes(filename);
             SearchForDecals(filename);
 
             if (!string.IsNullOrEmpty(defaultTileTexture) && !string.IsNullOrEmpty(defaultTileRegion))

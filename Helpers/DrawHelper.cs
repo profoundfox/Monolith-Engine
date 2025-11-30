@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Graphics;
 using Monolith.Managers;
-using Monolith.Region;
+using Monolith.Geometry;
 using Monolith.Util;
 
 namespace Monolith.Helpers

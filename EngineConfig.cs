@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection.Metadata;
 
 using Monolith.Input;
-using Monolith.Region;
+using Monolith.Geometry;
 using Gum.Forms.Controls;
 using Microsoft.Xna.Framework.Input;
 
@@ -143,7 +143,7 @@ namespace Monolith
 
     
 
-    public class NodeConfig
+    public record class NodeConfig
     {
         /// <summary>
         /// Optional parent object.
@@ -156,7 +156,7 @@ namespace Monolith
         public required string Name { get; set; }
     }
 
-    public class Node2DConfig : NodeConfig
+    public record class Node2DConfig : NodeConfig
     {
         /// <summary>
         /// Optional shape for the node.

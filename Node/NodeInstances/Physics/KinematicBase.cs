@@ -1,5 +1,5 @@
 using Monolith.Nodes;
-using Monolith.Region;
+using Monolith.Geometry;
 using Microsoft.Xna.Framework;
 using System;
 using System.Linq;
@@ -7,6 +7,11 @@ using Monolith.Managers;
 
 namespace Monolith.Nodes
 {
+    public record class KinematicBody2DConfig : Node2DConfig
+    {
+        
+    }
+
     public class KinematicBody2D : Node2D
     {
         public Vector2 Velocity;
@@ -15,7 +20,7 @@ namespace Monolith.Nodes
         private float remainderY = 0;
         public bool Locked;
 
-        public KinematicBody2D(Node2DConfig config) : base(config) {}
+        public KinematicBody2D(KinematicBody2DConfig config) : base(config) {}
         
         public void UpdateKinematicBody()
         {
