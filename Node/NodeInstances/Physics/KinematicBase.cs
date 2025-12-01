@@ -7,7 +7,7 @@ using Monolith.Managers;
 
 namespace Monolith.Nodes
 {
-    public record class KinematicBody2DConfig : Node2DConfig
+    public record class KinematicBody2DConfig : SpatialNodeConfig
     {
         
     }
@@ -54,7 +54,7 @@ namespace Monolith.Nodes
 
             while (amount != 0)
             {
-                var test = Shape.Clone();
+                var test = Region.Clone();
                 test.Offset(sign, 0);
 
                 if (!IsColliding(test))
@@ -78,7 +78,7 @@ namespace Monolith.Nodes
 
             while (amount != 0)
             {
-                var test = Shape.Clone();
+                var test = Region.Clone();
                 test.Offset(0, sign);
 
                 if (!IsColliding(test))
@@ -97,7 +97,7 @@ namespace Monolith.Nodes
 
         public bool IsOnGround()
         {
-            var test = Shape.Clone();
+            var test = Region.Clone();
             test.Offset(0, 1);
             return IsColliding(test);
         }
@@ -105,17 +105,17 @@ namespace Monolith.Nodes
 
         public bool IsOnWall()
         {
-            var left = Shape.Clone();
+            var left = Region.Clone();
             left.Offset(-1, 0);
 
-            var right = Shape.Clone();
+            var right = Region.Clone();
             right.Offset(1, 0);
 
             foreach (var body in NodeManager.AllInstances.OfType<StaticBody2D>())
             {
-                var shape = body.Shape;
+                var Region = body.Region;
 
-                if (left.Intersects(shape) || right.Intersects(shape))
+                if (left.Intersects(Region) || right.Intersects(Region))
                     return true;
             }
 
@@ -123,11 +123,11 @@ namespace Monolith.Nodes
         }
 
 
-        public bool IsColliding(IRegionShape2D shape)
+        public bool IsColliding(IRegionShape2D Region)
         {
             foreach (var body in NodeManager.AllInstances.OfType<StaticBody2D>())
             {
-                if (shape.Intersects(body.Shape))
+                if (Region.Intersects(body.Region))
                     return true;
             }
 

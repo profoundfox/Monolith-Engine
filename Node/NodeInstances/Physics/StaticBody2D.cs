@@ -5,8 +5,7 @@ using Monolith.Geometry;
 
 namespace Monolith.Nodes
 {
-    
-    public record class StaticBody2DConfig : Node2DConfig {}
+    public record class StaticBody2DConfig : SpatialNodeConfig {}
     public class StaticBody2D : Node2D
     {
         public StaticBody2D(StaticBody2DConfig config) : base(config) {}

@@ -4,13 +4,17 @@ using Monolith;
 using Monolith.Geometry;
 using Monolith.Nodes;
 
+
 namespace Monolith.Nodes
 {
-    public record class RegionNodeConfig : Node2DConfig
+    public record class RegionNodeConfig : SpatialNodeConfig
     {
         public IRegionShape2D Region { get; set; }
     }
 
+    /// <summary>
+    /// A sort of collision shape 2D, should not be used!
+    /// </summary>
     public class RegionNode2D : Node2D, IRegionShape2D
     {
         public IRegionShape2D Region;

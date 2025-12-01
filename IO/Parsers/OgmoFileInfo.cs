@@ -72,8 +72,17 @@ namespace Monolith.IO
             public int y { get; set; }
             public int width { get; set; } = 0;
             public int height { get; set; } = 0;
+
             public Dictionary<string, JsonElement> values { get; set; }
+
+            public List<Node> nodes { get; set; }
             
+        }
+
+        public class Node
+        {
+            public int x { get; set; }
+            public int y { get; set;}
         }
 
 

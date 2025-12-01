@@ -53,7 +53,7 @@ namespace Monolith.Util
             var cfg = Engine.Instance.Config;
             if (targetNode == null) return;
 
-            var side = CollisionHelper.GetCameraEdge(targetNode.Shape, CameraRectangle);
+            var side = CollisionHelper.GetCameraEdge(targetNode.Region, CameraRectangle);
 
             if (!Entered)
             {
@@ -65,7 +65,7 @@ namespace Monolith.Util
                     if (targetNode is KinematicBody2D body2D)
                     {
                         body2D.Locked = true;
-                        body2D.Shape.Offset(-10, 0);
+                        body2D.Region.Offset(-10, 0);
                     }
 
                     cameraXTween = new Tween(
@@ -92,7 +92,7 @@ namespace Monolith.Util
                     if (targetNode is KinematicBody2D body2D)
                     {
                         body2D.Locked = true;
-                        body2D.Shape.Offset(10, 0);
+                        body2D.Region.Offset(10, 0);
                     }
 
                     cameraXTween = new Tween(

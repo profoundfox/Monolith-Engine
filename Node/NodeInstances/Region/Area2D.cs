@@ -4,7 +4,7 @@ using Monolith;
 using Monolith.Managers;
 using Monolith.Nodes;
 
-public record class Area2DConfig : Node2DConfig
+public record class Area2DConfig : SpatialNodeConfig
 {
     public bool MonitorAreas { get; set; }
     public bool MonitorBodies { get; set; }
@@ -32,7 +32,7 @@ public class Area2D : Node2D
         return NodeManager.AllInstances
             .Where(a => a != this && AcceptedAreaType.Any(t => t.IsAssignableFrom(a.GetType())))
             .Cast<Node2D>()
-            .FirstOrDefault(a => Shape.Intersects(a.Shape));
+            .FirstOrDefault(a => Region.Intersects(a.Region));
     }
 
     private KinematicBody2D GetOverlappingBody()
@@ -40,7 +40,7 @@ public class Area2D : Node2D
         return NodeManager.AllInstances
             .Where(a => a != this && typeof(KinematicBody2D).IsAssignableFrom(a.GetType()))
             .Cast<KinematicBody2D>()
-            .FirstOrDefault(a => Shape.Intersects(a.Shape));
+            .FirstOrDefault(a => Region.Intersects(a.Region));
     }
 
 

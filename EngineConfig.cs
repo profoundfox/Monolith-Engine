@@ -156,21 +156,6 @@ namespace Monolith
         public required string Name { get; set; }
     }
 
-    public record class Node2DConfig : NodeConfig
-    {
-        /// <summary>
-        /// Optional shape for the node.
-        /// </summary>
-        public IRegionShape2D Shape { get; set; }
-
-        /// <summary>
-        /// Optional position for the node. Defaults to Vector2.Zero.
-        /// </summary>
-        public Vector2? Position { get; set; }
-    }
-
-
-
     public static class DefaultInput
     {
         public static Dictionary<string, List<InputAction>> Binds = new()

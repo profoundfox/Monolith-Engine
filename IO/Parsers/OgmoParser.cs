@@ -64,7 +64,7 @@ namespace Monolith.IO
 
                     MTexture texture = new(texturePathWithoutExtension);
 
-                    Sprite2D sprite2D = new Sprite2D(new Sprite2DConfig
+                    Sprite2D sprite2D = new Sprite2D(new SpriteConfig
                     {
                         Parent = null,
                         Name = $"Decal: {texturePathWithoutExtension}",
@@ -116,7 +116,7 @@ namespace Monolith.IO
                 configType.GetProperty("Parent")?.SetValue(config, null);
                 configType.GetProperty("Name")?.SetValue(config, entity.name);
 
-                configType.GetProperty("Shape")?.SetValue(config,
+                configType.GetProperty("Region")?.SetValue(config,
                     new RectangleShape2D(entity.x, entity.y, entity.width, entity.height));
 
                 foreach (var prop in configType.GetProperties().Where(p => p.CanWrite))
@@ -138,6 +138,16 @@ namespace Monolith.IO
 
                         prop.SetValue(config, val);
                     }
+                }
+
+                List<OgmoFileInfo.Node> entityNodes = new();
+
+                if (entity.nodes != null)
+                    entityNodes = entity.nodes;
+                
+                foreach (var n in entityNodes)
+                {
+                    Console.WriteLine(n.x);
                 }
 
                 Node2D node = (Node2D)Activator.CreateInstance(nodeType, config)!;
@@ -185,13 +195,6 @@ namespace Monolith.IO
             var configType = ctor.GetParameters().First().ParameterType;
 
             var nestedCfg = Activator.CreateInstance(configType)!;
-
-            var shapeProp = configType.GetProperty("Region");
-            if (shapeProp != null)
-            {
-                shapeProp.SetValue(nestedCfg, 
-                    new RectangleShape2D(entity.x, entity.y, entity.width, entity.height));
-            }
 
             return (Node2D)Activator.CreateInstance(nestedNodeType, nestedCfg)!;
         }

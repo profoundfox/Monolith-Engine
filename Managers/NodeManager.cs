@@ -73,10 +73,8 @@ namespace Monolith.Managers
                     allInstancesDetailed.Remove(node.Name);
             }
 
-            // Detach from parent
             node.Parent?.RemoveChild(node);
 
-            // Recursively remove children
             foreach (var child in node.Children.ToList())
                 RemoveNode(child);
 

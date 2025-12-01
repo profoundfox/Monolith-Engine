@@ -6,7 +6,7 @@ using Monolith;
 
 namespace Monolith.Nodes
 {   
-    public record class Sprite2DConfig : Node2DConfig
+    public record class SpriteConfig : SpatialNodeConfig
     {
         public MTexture Texture { get; set; }
         public Color Modulate { get; set; } = Color.White;
@@ -21,7 +21,7 @@ namespace Monolith.Nodes
         public Vector2 Scale { get; set; } = Vector2.One;
         public float Rotation { get; set; } = 0f;
 
-        public Sprite2D(Sprite2DConfig cfg) : base(cfg)
+        public Sprite2D(SpriteConfig cfg) : base(cfg)
         {
             Texture = cfg.Texture;
             Modulate = cfg.Modulate;
