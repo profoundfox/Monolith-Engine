@@ -90,9 +90,9 @@ namespace Monolith.IO
                     .SelectMany(a =>
                     {
                         try { return a.GetTypes(); }
-                        catch (ReflectionTypeLoadException ex) 
-                        { 
-                            return ex.Types.Where(t => t != null); 
+                        catch (ReflectionTypeLoadException ex)
+                        {
+                            return ex.Types.Where(t => t != null);
                         }
                     })
                     .FirstOrDefault(t => t.IsSubclassOf(typeof(Node2D)) &&
@@ -109,35 +109,41 @@ namespace Monolith.IO
 
                 var config = Activator.CreateInstance(configType)!;
 
+                Dictionary<string, object> dict =
+                    entity.values != null ? ParseValues(entity.values)
+                                        : new Dictionary<string, object>();
+
                 configType.GetProperty("Parent")?.SetValue(config, null);
                 configType.GetProperty("Name")?.SetValue(config, entity.name);
+
                 configType.GetProperty("Shape")?.SetValue(config,
-                    new RectangleShape2D(entity.x, entity.y, entity.width, entity.height)
-                );
+                    new RectangleShape2D(entity.x, entity.y, entity.width, entity.height));
 
-                if (entity.values != null)
+                foreach (var prop in configType.GetProperties().Where(p => p.CanWrite))
                 {
-                    var dict = ParseValues(entity.values);
+                    var attr = prop.GetCustomAttribute<OgmoAttribute>();
+                    var key = attr?.Key ?? prop.Name;
 
-                    foreach (var prop in configType.GetProperties().Where(p => p.CanWrite))
+                    if (typeof(Node2D).IsAssignableFrom(prop.PropertyType))
                     {
-                        var attr = prop.GetCustomAttribute<OgmoAttribute>();
-                        var key = attr?.Key ?? prop.Name;
+                        var nestedNode = CreateNestedNode(prop.PropertyType, entity);
+                        prop.SetValue(config, nestedNode);
+                        continue;
+                    }
 
-                        if (dict.TryGetValue(key, out var raw))
-                        {
-                            object val = Convert.ChangeType(
-                                raw,
-                                Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType
-                            );
-                            prop.SetValue(config, val);
-                        }
+                    if (dict.TryGetValue(key, out var raw))
+                    {
+                        object val = Convert.ChangeType(raw,
+                            Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType);
+
+                        prop.SetValue(config, val);
                     }
                 }
 
                 Node2D node = (Node2D)Activator.CreateInstance(nodeType, config)!;
             }
         }
+
 
         
         public static void LoadTilemap(ContentManager content, string filename, string textureName, string region)
@@ -172,6 +178,24 @@ namespace Monolith.IO
                 tilemap.LayerDepth = float.Parse(layer.name, CultureInfo.InvariantCulture);
             }
         }
+
+        private static Node2D CreateNestedNode(Type nestedNodeType, OgmoFileInfo.Entity entity)
+        {
+            var ctor = nestedNodeType.GetConstructors().First();
+            var configType = ctor.GetParameters().First().ParameterType;
+
+            var nestedCfg = Activator.CreateInstance(configType)!;
+
+            var shapeProp = configType.GetProperty("Region");
+            if (shapeProp != null)
+            {
+                shapeProp.SetValue(nestedCfg, 
+                    new RectangleShape2D(entity.x, entity.y, entity.width, entity.height));
+            }
+
+            return (Node2D)Activator.CreateInstance(nestedNodeType, nestedCfg)!;
+        }
+
 
         /// <summary>
         /// Instantiates all entities, decals, and tilemaps if parameters are provided

@@ -8,14 +8,15 @@ using Gum.Wireframe;
 using RenderingLibrary;
 using MonoGameGum;
 
+using System.Diagnostics;
+using System.Linq;
+
 using Monolith.UI;
 using Monolith.Managers;
 using Monolith.Graphics;
 using Monolith.Nodes;
 using Monolith.Helpers;
 using Monolith.Util;
-using System.Diagnostics;
-using System.Linq;
 using Monolith.IO;
 
 namespace Monolith

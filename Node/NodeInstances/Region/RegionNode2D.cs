@@ -4,51 +4,40 @@ using Monolith;
 using Monolith.Geometry;
 using Monolith.Nodes;
 
-public record class RegionNodeConfig : Node2DConfig
+namespace Monolith.Nodes
 {
-    public IRegionShape2D Shape { get; set; }
-}
-
-public class RegionNode2D : Node2D
-{
-    public IRegionShape2D Shape;
-
-    public int Width { get => Shape.Width; set => Shape.Width = value; }
-    public int Height { get => Shape.Height; set => Shape.Height = value; }
-    
-    public Point Location { get => Shape.Location; set => Shape.Location = value; }
-
-    public RegionNode2D(RegionNodeConfig cfg) : base(cfg)
+    public record class RegionNodeConfig : Node2DConfig
     {
-        Shape = cfg.Shape;
+        public IRegionShape2D Region { get; set; }
     }
 
-    public void Offset(int x, int y)
+    public class RegionNode2D : Node2D, IRegionShape2D
     {
-        Shape.Offset(x, y);
+        public IRegionShape2D Region;
+
+        public int Width { get => Region.Width; set => Region.Width = value; }
+        public int Height { get => Region.Height; set => Region.Height = value; }
+        
+        public Point Location { get => Region.Location; set => Region.Location = value; }
+
+        public Rectangle BoundingBox => Region.BoundingBox;
+
+        public RegionNode2D(RegionNodeConfig cfg) : base(cfg)
+        {
+            Region = cfg.Region;
+        }
+
+        public void Offset(int x, int y) => Region.Offset(x, y);
+        public bool Contains(Point p) => Region.Contains(p);
+        public bool Contains(IRegionShape2D other) => Region.Contains(other);
+        public bool Intersects(IRegionShape2D other) => Region.Intersects(other);
+
+        public bool RayIntersect(Vector2 rayOrigin, Vector2 rayDir,
+                                float maxLength, out Vector2 hitPoint,
+                                out float distance)
+            => Region.RayIntersect(rayOrigin, rayDir, maxLength, out hitPoint, out distance);
+
+        public IRegionShape2D Clone() => Region.Clone();
     }
-
-    public bool Contains(Point p)
-    {
-        return Shape.Contains(p);
-    }
-
-    public bool Contains(IRegionShape2D other)
-    {
-        return Shape.Contains(other);
-    }
-    
-    public bool Intersects(IRegionShape2D other)
-    {
-        return Shape.Intersects(other);
-    }
-
-    public bool RayIntersect(Vector2 rayOrigin, Vector2 rayDir, float maxLength, out Vector2 hitPoint, out float distance)
-    {
-        return Shape.RayIntersect(rayOrigin, rayDir, maxLength, out hitPoint, out distance);
-    }
-
-
-
 
 }
