@@ -42,7 +42,7 @@ namespace Monolith.Managers
             scene.Initialize();
             scene.Load();
             
-            NodeManager.LoadObjects();
+            NodeManager.LoadNodes();
         }
 
 
@@ -185,7 +185,7 @@ namespace Monolith.Managers
             if (!IsStackEmpty() && !_sceneFrozen)
             {
                 Engine.TweenManager.Update();
-                NodeManager.UpdateObjects(gameTime);
+                NodeManager.UpdateNodes(gameTime);
                 GetCurrentScene()?.Update(gameTime);
             }
 
@@ -204,7 +204,7 @@ namespace Monolith.Managers
             if (!IsStackEmpty())
             {
                 Engine.DrawManager.DrawTilemaps(spriteBatch);
-                NodeManager.DrawObjects(spriteBatch);
+                NodeManager.DrawNodes(spriteBatch);
                 GetCurrentScene()?.Draw(spriteBatch);
             }
 

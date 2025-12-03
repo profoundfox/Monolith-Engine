@@ -7,13 +7,13 @@ namespace Monolith.Nodes
 {
     public record class StaticBodyConfig : SpatialNodeConfig
     {
-        public bool Collidable { get; set; }
+        public bool Collidable { get; set; } = true;
         public bool OneWay { get; set; }
     }
-    public class StaticBody2D : Node2D
+    public class StaticBody2D : Node2D, ICollidable2D
     {
-        public bool Collidable;
-        public bool OneWay;
+        public bool Collidable { get; set; }
+        public bool OneWay { get; set; }
 
         public StaticBody2D(StaticBodyConfig cfg) : base(cfg)
         {
@@ -21,4 +21,5 @@ namespace Monolith.Nodes
             OneWay = cfg.OneWay;
         }
     }
+
 }

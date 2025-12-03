@@ -3,7 +3,7 @@ using System.Dynamic;
 using Monolith.UI;
 using Microsoft.Xna.Framework;
 
-namespace Monolith.UI
+namespace Monolith.UI.GUM
 {
     public static class GumManager
     {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Geometry;
@@ -55,6 +56,27 @@ namespace Monolith.Nodes
             if (child == null || children.Contains(child)) return;
             child.SetParent(this);
         }
+
+        /// <summary>
+        /// Gets the first found child of a specified type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public Node GetFirstChildByT<T>()
+        {
+            return GetChildrenByType<T>().FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Gets all children of a specified type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public IReadOnlyList<Node> GetChildrenByType<T>()
+        {
+            return children.OfType<T>().Cast<Node>().ToList();
+        }
+
 
         /// <summary>
         /// Removes a child from this node.

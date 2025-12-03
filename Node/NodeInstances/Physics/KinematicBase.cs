@@ -16,6 +16,8 @@ namespace Monolith.Nodes
     {
         public Vector2 Velocity;
 
+        internal Vector2 PriorityVelocity;
+
         private float remainderX = 0;
         private float remainderY = 0;
         public bool Locked;
@@ -26,13 +28,18 @@ namespace Monolith.Nodes
         {
             if (!Locked)
             {
-                Move(Velocity.X * Engine.DeltaTime, Velocity.Y * Engine.DeltaTime);
+                if (PriorityVelocity != Vector2.Zero)
+                    Move(PriorityVelocity.X * Engine.DeltaTime, PriorityVelocity.Y * Engine.DeltaTime);
+                else
+                    Move(Velocity.X * Engine.DeltaTime, Velocity.Y * Engine.DeltaTime);
             }
             else
             {
+                PriorityVelocity = Vector2.Zero;
                 Velocity = Vector2.Zero;
             }
         }
+
 
         public void Move(float moveX, float moveY)
         {
@@ -136,6 +143,12 @@ namespace Monolith.Nodes
             }
 
             return false;
+        }
+
+        public float MoveToward(float current, float target, float maxDelta)
+        {
+            if (MathF.Abs(target - current) <= maxDelta) return target;
+            return current + MathF.Sign(target - current) * maxDelta;
         }
     }
 }

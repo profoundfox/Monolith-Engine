@@ -62,6 +62,10 @@ namespace Monolith.Managers
         /// </summary>
         public static Node GetNodeParent(Node node) => node.Parent;
 
+        /// <summary>
+        /// Removes a specified node.
+        /// </summary>
+        /// <param name="node"></param>
         private static void RemoveNode(Node node)
         {
             allInstances.Remove(node);
@@ -83,7 +87,10 @@ namespace Monolith.Managers
 
         internal static void RemoveImmediate(Node node) => RemoveNode(node);
 
-        public static void LoadObjects()
+        /// <summary>
+        /// Loads all the nodes.
+        /// </summary>
+        public static void LoadNodes()
         {
             ApplyPendingChanges();
             foreach (var node in allInstances.ToList())
@@ -93,7 +100,10 @@ namespace Monolith.Managers
             }
         }
 
-        public static void UnloadObjects()
+        /// <summary>
+        /// Unloads all the nodes
+        /// </summary>
+        public static void UnloadNodes()
         {
             ApplyPendingChanges();
             foreach (var node in allInstances.ToList())
@@ -103,7 +113,7 @@ namespace Monolith.Managers
             }
         }
 
-        public static void UpdateObjects(GameTime gameTime)
+        public static void UpdateNodes(GameTime gameTime)
         {
             ApplyPendingChanges();
             foreach (var node in allInstances.ToList())
@@ -113,7 +123,7 @@ namespace Monolith.Managers
             }
         }
 
-        public static void DrawObjects(SpriteBatch spriteBatch)
+        public static void DrawNodes(SpriteBatch spriteBatch)
         {
             foreach (var node in allInstances)
                 node.Draw(spriteBatch);
@@ -121,15 +131,14 @@ namespace Monolith.Managers
 
         public static void DumpAllInstances()
         {
-            UnloadObjects();
+            UnloadNodes();
             allInstances.Clear();
             allInstancesDetailed.Clear();
         }
 
         public static Node GetNodeByName(string name)
         {
-            if (string.IsNullOrEmpty(name)) return null;
-            return allInstancesDetailed.TryGetValue(name, out var nodes) ? nodes.FirstOrDefault() : null;
+            return GetNodesByName(name).FirstOrDefault();
         }
 
         public static IReadOnlyList<Node> GetNodesByName(string name)
@@ -140,10 +149,7 @@ namespace Monolith.Managers
 
         public static T GetNodeByType<T>() where T : Node
         {
-            return allInstancesDetailed
-                .SelectMany(kvp => kvp.Value)
-                .OfType<T>()
-                .FirstOrDefault();
+            return GetNodesByType<T>().FirstOrDefault();
         }
 
         public static IReadOnlyList<T> GetNodesByType<T>() where T : Node
