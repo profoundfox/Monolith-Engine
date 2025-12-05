@@ -11,11 +11,6 @@ namespace Monolith.Nodes
     public record class SpatialNodeConfig : NodeConfig
     {
         /// <summary>
-        /// Optional shape for the node.
-        /// </summary>
-        public IRegionShape2D Region { get; set; }
-
-        /// <summary>
         /// Optional position for the node. Defaults to Vector2.Zero.
         /// </summary>
         public Vector2? Position { get; set; }
@@ -26,10 +21,6 @@ namespace Monolith.Nodes
     {
         private Vector2 _position;
 
-        /// <summary>
-        /// The shape that the object has.
-        /// </summary>
-        public IRegionShape2D Region { get; set; }
 
         public event Action<Vector2> PositionChanged;
 
@@ -44,9 +35,6 @@ namespace Monolith.Nodes
             {
                 var delta = value - _position;
                 _position = value;
-
-                if (Region != null)
-                    Region.Location = new Point((int)MathF.Round(_position.X), (int)MathF.Round(_position.Y));
 
                 foreach (var child in Children)
                 {
@@ -63,32 +51,7 @@ namespace Monolith.Nodes
         /// </summary>
         public Node2D(SpatialNodeConfig config) : base(config)
         {
-            Region = config.Region;
-
-            _position = Region != null
-                ? new Vector2(Region.Location.X, Region.Location.Y)
-                : (config.Position ?? Vector2.Zero);
-
-            if (Region != null)
-                Region.Location = new Point((int)MathF.Round(_position.X), (int)MathF.Round(_position.Y));
-        }
-
-        /// <summary>
-        /// Draws the shape with a filled texture.
-        /// </summary>
-        public void DrawShape(Color color, float layerDepth = 0.1f, DrawLayer layer = DrawLayer.Middleground)
-        {
-            if (Region != null)
-                DrawHelper.DrawRegionShape(Region, color, layerDepth, layer);
-        }
-
-        /// <summary>
-        /// Draws the shape with a hollow texture.
-        /// </summary>
-        public void DrawShapeHollow(Color color, int thickness = 2, float layerDepth = 0.1f, DrawLayer layer = DrawLayer.Middleground)
-        {
-            if (Region != null)
-                DrawHelper.DrawRegionShapeHollow(Region, color, thickness, layerDepth, layer);
+            _position = config.Position ?? Vector2.Zero;
         }
     }
 }

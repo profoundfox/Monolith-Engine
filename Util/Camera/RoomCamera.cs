@@ -63,7 +63,7 @@ namespace Monolith.Util
                     CameraRectangle.X -= CameraRectangle.Width;
 
                     body2D.Locked = true;
-                    body2D.Region.Offset(-10, 0);
+                    body2D.Position += new Vector2(-10, 0);
                     
 
                     cameraXTween = new Tween(
@@ -87,7 +87,7 @@ namespace Monolith.Util
                     CameraRectangle.X += CameraRectangle.Width;
            
                     body2D.Locked = true;
-                    body2D.Region.Offset(10, 0);
+                    body2D.Position += new Vector2(-10, 0);
                     
 
                     cameraXTween = new Tween(

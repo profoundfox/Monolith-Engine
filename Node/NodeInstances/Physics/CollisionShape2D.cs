@@ -52,8 +52,6 @@ namespace Monlith.Nodes
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-
-            DrawHelper.DrawRectangleHollow((RectangleShape2D)Shape, Color.Green);
         }
     }
 }

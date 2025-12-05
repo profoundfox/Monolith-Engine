@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Monlith.Nodes;
+using Monolith.Helpers;
 using Monolith.Managers;
 using Monolith.Nodes;
 
@@ -21,7 +23,10 @@ namespace Monolith
         public static void DrawRegions()
         {
             if (drawRegions)
-                foreach(Node2D node in NodeManager.AllInstances) node.DrawShapeHollow(Color.Red);
+            {
+                foreach(CollisionShape2D node in NodeManager.GetNodesByType<CollisionShape2D>()) 
+                    DrawHelper.DrawRegionShapeHollow(node.Shape, Color.Red, 2);
+            }
         }
 
         public static void ToggleRegions()

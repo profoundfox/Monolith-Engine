@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Monlith.Nodes;
 using Monolith.Nodes;
 
 namespace Monolith.Managers
@@ -75,12 +76,12 @@ namespace Monolith.Managers
             if (config == null)
                 return;
 
+
             var properties = config.GetType().GetProperties();
 
             foreach (var prop in properties)
             {
                 var value = prop.GetValue(config);
-
                 if (value is Node child)
                 {
                     child.SetParent(parent);

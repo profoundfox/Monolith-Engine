@@ -49,7 +49,7 @@ public class Area2D : Node2D
         return NodeManager.AllInstances
             .Where(a => a != this && typeof(KinematicBody2D).IsAssignableFrom(a.GetType()))
             .Cast<KinematicBody2D>()
-            .FirstOrDefault(a => Region.Intersects(a.Region));
+            .FirstOrDefault(a => CollisionShape2D.Shape.Intersects(a.CollisionShape2D.Shape));
     }
 
 
