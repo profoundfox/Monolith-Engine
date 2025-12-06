@@ -124,13 +124,11 @@ namespace Monolith.IO
             ContentManager content,
             string filename,
             string texturePath,
-            string region)
+            Rectangle region)
         {
             var root = LoadJson(filename);
 
-            var split = region.Split(" ", StringSplitOptions.RemoveEmptyEntries)
-                            .Select(int.Parse).ToArray();
-            var rect = new Rectangle(split[0], split[1], split[2], split[3]);
+            var rect = region;
 
             var layer = root.layers.FirstOrDefault(l => l.data != null && l.tileset != null)
                 ?? throw new Exception("No tile layer found in JSON.");
@@ -148,19 +146,19 @@ namespace Monolith.IO
                 layerDepth: layerDepth
             );
         }
-
+        
         /// <summary>
         /// Instantiates all entities, decals, and tilemaps if parameters are provided
         /// </summary>
         public static void FromFile(
             string filename,
             string defaultTileTexture = null,
-            string defaultTileRegion = null)
+            Rectangle defaultTileRegion = default)
         {
             LoadNodes(filename);
             SearchForDecals(filename);
 
-            if (!string.IsNullOrEmpty(defaultTileTexture) && !string.IsNullOrEmpty(defaultTileRegion))
+            if (!string.IsNullOrEmpty(defaultTileTexture) && defaultTileRegion != default)
             {
                 LoadTilemapFromJson(Engine.Content, filename, defaultTileTexture, defaultTileRegion);
             }

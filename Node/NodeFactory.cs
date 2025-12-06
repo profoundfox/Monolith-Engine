@@ -111,8 +111,6 @@ public static class NodeFactory
 
         Node2D node = constructor.Invoke(new object[] { configInstance }) as Node2D;
 
-        Console.WriteLine($"Created node: {node}, Node information: {node.Config}");
-
         return node;
     }
 }

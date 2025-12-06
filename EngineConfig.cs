@@ -143,7 +143,7 @@ namespace Monolith
     public record class SceneConfig
     {
         public string DataPath {get; init; } = null;
-        public string TilemapRegion {get; init; } = null;
+        public Rectangle TilemapRegion {get; init; } = default;
         public string TilemapTexturePath {get; init; } = null;
     }
 
