@@ -86,17 +86,7 @@ namespace Monolith.IO
                 
                 foreach (var e in l.entities)
                 {
-                    var staticbody = new StaticBody2D(new StaticBodyConfig
-                    {
-                        Parent = null,
-                        Name = e.name,
-                        CollisionShape2D = new CollisionShape2D(new CollisionShapeConfig
-                        {
-                            Parent = null,
-                            Shape = new RectangleShape2D(e.x, e.y, e.width, e.height),
-                            Name = "CollisionShape2D"
-                        })
-                    });
+                    NodeFactory.CreateNode(e.name, new RectangleShape2D(e.x , e.y, e.width, e.height));
                 }
             }
         }

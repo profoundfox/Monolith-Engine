@@ -17,12 +17,26 @@ namespace Monlith.Nodes
         public bool Disabled { get; set; }
         public IRegionShape2D Shape { get; set; }
 
+        public int Width
+        {
+            get => Shape.Width;
+            set => Shape.Width = value;
+        }
+
+        public int Height
+        {
+            get => Shape.Height;
+            set => Shape.Height = value;
+        }
+
         public CollisionShape2D(CollisionShapeConfig cfg) : base(cfg)
         {
             Shape = cfg.Shape;
 
             if (Shape.Location != Point.Zero)
+            {
                 Position = new Vector2(Shape.Location.X, Shape.Location.Y);
+            }
 
             Shape.Location = Position.ToPoint();
 

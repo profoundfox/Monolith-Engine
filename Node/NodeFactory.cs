@@ -1,32 +1,62 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
-using Microsoft.Xna.Framework;
 using Monolith.Geometry;
 using Monolith.Nodes;
 
 public static class NodeFactory
 {
+    private static readonly Dictionary<string, Type> TypeCache = new();
+
+    /// <summary>
+    /// Resolves a type by simple name or full name, with caching and conflict detection.
+    /// </summary>
+    private static Type ResolveNodeType(string name)
+    {
+        if (TypeCache.TryGetValue(name, out var cached))
+            return cached;
+
+        var allTypes = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(a =>
+            {
+                try { return a.GetTypes(); }
+                catch (ReflectionTypeLoadException e) { return e.Types.Where(t => t != null); }
+            });
+
+        var matches = allTypes
+            .Where(t => t.Name == name || t.FullName == name)
+            .ToList();
+
+        if (matches.Count == 0)
+            throw new Exception($"Node type '{name}' not found.");
+
+        if (matches.Count > 1)
+            throw new Exception(
+                $"Ambiguous node type '{name}'. Found:\n" +
+                string.Join("\n", matches.Select(t => t.FullName))
+            );
+
+        TypeCache[name] = matches[0];
+        return matches[0];
+    }
+
     /// <summary>
     /// Creates a Node dynamically by type name, sets the IRegionShape2D in the config,
     /// and applies any extra config properties (node-specific).
     /// </summary>
     public static Node2D CreateNode(
-        SpatialNodeConfig nodeConfig,
+        string name,
         IRegionShape2D shape,
-        System.Collections.Generic.Dictionary<string, object> extraConfigProperties = null)
+        Dictionary<string, object> extraConfigProperties = null)
     {
-        Type nodeType = AppDomain.CurrentDomain.GetAssemblies()
-            .SelectMany(a => a.GetTypes())
-            .FirstOrDefault(t => t.FullName == nodeConfig.Name);
-
-        if (nodeType == null)
-            throw new Exception($"Node type '{nodeConfig.Name}' not found.");
+        Type nodeType = ResolveNodeType(name);
 
         ConstructorInfo constructor = nodeType.GetConstructors().FirstOrDefault();
+
         if (constructor == null)
-            throw new Exception($"Node type '{nodeConfig.Name}' has no public constructors.");
+            throw new Exception($"Node type '{name}' has no public constructors.");
 
         Type configType = constructor.GetParameters()[0].ParameterType;
 
@@ -40,20 +70,22 @@ public static class NodeFactory
 
         PropertyInfo nameProp = configType.GetProperty("Name");
         if (nameProp != null && nameProp.CanWrite)
-            nameProp.SetValue(configInstance, nodeType.Name);
-        
-        
-        
+            nameProp.SetValue(configInstance, nodeType.FullName);
+
+        PropertyInfo posProp = configType.GetProperty("Position");
+        if (posProp != null && posProp.CanWrite)
+            posProp.SetValue(configInstance, shape.Location.ToVector2());
+
         PropertyInfo[] nodeProps = configType
             .GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
             .Where(p => typeof(Node2D).IsAssignableFrom(p.PropertyType))
             .ToArray();
-        
+
         foreach (var n in nodeProps)
         {
             if (!n.CanWrite)
                 continue;
-            
+
             Type nodePropType = n.PropertyType;
 
             Node2D childNode = CreateNode(nodePropType.FullName, shape);
@@ -61,12 +93,11 @@ public static class NodeFactory
             n.SetValue(configInstance, childNode);
         }
 
-
         if (extraConfigProperties != null)
         {
             foreach (var kvp in extraConfigProperties)
             {
-                PropertyInfo prop = configType.GetProperty(kvp.Key);
+                PropertyInfo prop = configType.GetProperty(kvp.Key); 
                 if (prop != null && prop.CanWrite)
                 {
                     prop.SetValue(configInstance, kvp.Value);
