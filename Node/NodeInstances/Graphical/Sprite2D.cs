@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Monolith.Nodes;
 using Monolith.Graphics;
 using Monolith;
+using System;
 
 namespace Monolith.Nodes
 {   
@@ -28,7 +29,7 @@ namespace Monolith.Nodes
             Scale = cfg.Scale;
             Rotation = cfg.Rotation;
         }
-
+        
         public override void Draw(SpriteBatch spriteBatch)
         {
             Texture.Draw(

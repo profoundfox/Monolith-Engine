@@ -123,7 +123,6 @@ namespace Monolith
         private float _currentScale;
         private bool _quit;
         private int _fpsFrames;
-        private bool drawRegions;
         private double _fpsTimer;
 
         /// <summary>
@@ -233,7 +232,7 @@ namespace Monolith
             if ((Config.ExitOnEscape && Input.Keyboard.IsKeyDown(Keys.Escape)) || _quit)
                 Exit();
 
-            
+
             SceneManager.UpdateCurrentScene(gameTime);
             GumManager.UpdateAll(gameTime);
             GumUI?.Update(this, gameTime);

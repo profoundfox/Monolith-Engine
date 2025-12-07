@@ -11,20 +11,15 @@ public class SpriteSlicer
     /// <param name="frameWidth"></param>
     /// <param name="frameHeight"></param>
     /// <returns></returns>
-    public static List<MTexture> Slice(
-        MTexture source,
-        int frameWidth,
-        int frameHeight,
-        int startCol,
-        int endCol,
-        int startRow,
-        int endRow)
+    public static List<MTexture> SliceGrid(MTexture source, int frameWidth, int frameHeight)
     {
         List<MTexture> frames = new();
+        int cols = source.Width / frameWidth;
+        int rows = source.Height / frameHeight;
 
-        for (int y = startRow; y <= endRow; y++)
+        for (int y = 0; y < rows; y++)
         {
-            for (int x = startCol; x <= endCol; x++)
+            for (int x = 0; x < cols; x++)
             {
                 Rectangle region = new(
                     x * frameWidth,
@@ -38,5 +33,17 @@ public class SpriteSlicer
 
         return frames;
     }
+
+    public static List<MTexture> PickFrames(List<MTexture> frames, params int[] indexes)
+    {
+        List<MTexture> result = new();
+
+        foreach (int i in indexes)
+            result.Add(frames[i]);
+
+        return result;
+    }
+
+
 
 }
