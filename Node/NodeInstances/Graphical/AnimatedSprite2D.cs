@@ -8,7 +8,7 @@ namespace Monolith.Nodes
 {
     public record class AnimatedSpriteConfig : SpriteConfig
     {
-        public Animation Animation { get; set; }
+        public Dictionary<string, Animation> Atlas { get; set; } = new Dictionary<string, Animation>();
         public bool IsLooping { get; set; } = false;
     }
 
@@ -18,10 +18,11 @@ namespace Monolith.Nodes
         private TimeSpan _elapsed = TimeSpan.Zero;
         private bool _finished = false;
 
-        public Animation Animation { get; private set; }
+        public Dictionary<string, Animation> Atlas { get; set; }
+        public Animation CurrentAnimation { get; private set; }
         public bool IsLooping { get; private set; } = false;
 
-        public MTexture CurrentFrame => Animation?.Frames[_currentFrame];
+        public MTexture CurrentFrame => CurrentAnimation?.Frames[_currentFrame];
 
         public Color Modulate { get; set; } = Color.White;
         public Vector2 Scale { get; set; } = Vector2.One;
@@ -35,18 +36,32 @@ namespace Monolith.Nodes
 
         public AnimatedSprite2D(AnimatedSpriteConfig cfg) : base(cfg)
         {
-            Animation = cfg.Animation;
+            Atlas = cfg.Atlas;
             IsLooping = cfg.IsLooping;
             Modulate = cfg.Modulate;
             Scale = cfg.Scale;
             Rotation = cfg.Rotation;
         }
 
+        public void PlayAnimation(string name, bool isLooping = false)
+        {
+            Animation target = Atlas[name];
+
+            if (CurrentAnimation != target || _finished)
+            {
+                CurrentAnimation = target;
+                _currentFrame = 0;
+                _elapsed = TimeSpan.Zero;
+                _finished = false;
+                IsLooping = isLooping;
+            }
+        }
+
         public void PlayAnimation(Animation animation, bool isLooping = false)
         {
-            if (Animation != animation || _finished)
+            if (CurrentAnimation != animation || _finished)
             {
-                Animation = animation;
+                CurrentAnimation = animation;
                 _currentFrame = 0;
                 _elapsed = TimeSpan.Zero;
                 _finished = false;
@@ -68,16 +83,16 @@ namespace Monolith.Nodes
 
         public override void Update(GameTime gameTime)
         {
-            if (_finished || Animation == null) return;
+            if (_finished || CurrentAnimation == null) return;
 
             _elapsed += gameTime.ElapsedGameTime;
 
-            if (_elapsed >= Animation.Delay)
+            if (_elapsed >= CurrentAnimation.Delay)
             {
-                _elapsed -= Animation.Delay;
+                _elapsed -= CurrentAnimation.Delay;
                 _currentFrame++;
 
-                if (_currentFrame >= Animation.Frames.Count)
+                if (_currentFrame >= CurrentAnimation.Frames.Count)
                 {
                     if (IsLooping)
                     {
@@ -85,7 +100,7 @@ namespace Monolith.Nodes
                     }
                     else
                     {
-                        _currentFrame = Animation.Frames.Count - 1;
+                        _currentFrame = CurrentAnimation.Frames.Count - 1;
                         _finished = true;
                     }
                 }
@@ -94,7 +109,7 @@ namespace Monolith.Nodes
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            if (Animation == null) return;
+            if (CurrentAnimation == null) return;
 
             CurrentFrame.Draw(
                 position: Position,

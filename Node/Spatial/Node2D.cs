@@ -21,7 +21,6 @@ namespace Monolith.Nodes
     {
         private Vector2 _position;
 
-
         public event Action<Vector2> PositionChanged;
 
         /// <summary>
@@ -52,6 +51,47 @@ namespace Monolith.Nodes
         public Node2D(SpatialNodeConfig config) : base(config)
         {
             _position = config.Position ?? Vector2.Zero;
+        }
+
+        /// <summary>
+        /// An offset function for adding onto the node's position with a Vector2.
+        /// Acts the same as +=.
+        /// </summary>
+        /// <param name="delta"></param>
+        public void Offset(Vector2 delta)
+        {
+            Position = _position + delta;
+        }
+
+        /// <summary>
+        /// An offset function for adding onto the node's position.
+        /// Acts the same as +=.
+        /// </summary>
+        /// <param name="delta"></param>
+        public void Offset(float x, float y)
+        {
+            Offset(new Vector2(x, y));
+        }
+
+
+        public override void Load()
+        {
+            base.Load();
+        }
+
+        public override void Unload()
+        {
+            base.Unload();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
         }
     }
 }

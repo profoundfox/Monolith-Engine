@@ -119,6 +119,9 @@ namespace Monolith.Nodes
 
         public bool IsOnWall()
         {
+            if (CollisionShape2D.Disabled)
+                return false;
+            
             var left = CollisionShape2D.Shape.Clone();
             left.Offset(-1, 0);
 
@@ -127,11 +130,9 @@ namespace Monolith.Nodes
 
             foreach (var body in NodeManager.AllInstances.OfType<StaticBody2D>())
             {
-                if (body.CollisionShape2D.Disabled == true) continue;
-                
-                var shape = body.CollisionShape2D.Shape;
+                var shape = body.CollisionShape2D;
 
-                if (left.Intersects(shape) || right.Intersects(shape))
+                if (shape.Intersects(left) || shape.Intersects(right))
                     return true;
             }
 
@@ -141,11 +142,12 @@ namespace Monolith.Nodes
 
         public bool IsColliding(IRegionShape2D Region)
         {
+            if (CollisionShape2D.Disabled)
+                return false;
+            
             foreach (var body in NodeManager.AllInstances.OfType<StaticBody2D>())
-            {
-                if (body.CollisionShape2D.Disabled == true) continue;
-                
-                if (Region.Intersects(body.CollisionShape2D.Shape))
+            {                
+                if (body.CollisionShape2D.Intersects(Region))
                     return true;
             }
 

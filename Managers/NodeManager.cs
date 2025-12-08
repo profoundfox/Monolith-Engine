@@ -32,7 +32,10 @@ namespace Monolith.Managers
         {
             if (pendingAdds.Count == 0) return;
 
-            foreach (var node in pendingAdds)
+            var toAdd = pendingAdds.ToList();
+            pendingAdds.Clear();
+
+            foreach (var node in toAdd)
             {
                 allInstances.Add(node);
 
@@ -40,10 +43,16 @@ namespace Monolith.Managers
                     allInstancesDetailed[node.Name] = new List<Node>();
 
                 allInstancesDetailed[node.Name].Add(node);
+
+                AutoAssignChildNodes(node);
+                node.Load();
             }
 
-            pendingAdds.Clear();
+            if (pendingAdds.Count > 0)
+                ApplyPendingAdds();
         }
+
+
 
         private static void ApplyPendingRemovals()
         {
@@ -72,25 +81,29 @@ namespace Monolith.Managers
         /// <param name="parent"></param>
         private static void AutoAssignChildNodes(Node parent)
         {
-            var config = parent.Config;
-            if (config == null)
-                return;
+            if (parent.Config == null) return;
 
-
-            var properties = config.GetType().GetProperties();
+            var properties = parent.Config.GetType().GetProperties();
 
             foreach (var prop in properties)
             {
-                var value = prop.GetValue(config);
+                var value = prop.GetValue(parent.Config);
+
                 if (value is Node child)
                 {
-                    child.SetParent(parent);
+                    if (child == parent) continue;
+                    if (child.Parent == null && !child.WouldCreateCycle(parent))
+                        child.SetParent(parent);
                 }
 
                 if (value is IEnumerable<Node> list)
                 {
                     foreach (var c in list)
-                        c.SetParent(parent);
+                    {
+                        if (c == parent) continue;
+                        if (c.Parent == null && !c.WouldCreateCycle(parent))
+                            c.SetParent(parent);
+                    }
                 }
             }
         }

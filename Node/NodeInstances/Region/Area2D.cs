@@ -41,7 +41,7 @@ namespace Monolith.Nodes
             return NodeManager.GetNodesByType<CollisionShape2D>()
                 .Where(c => c.Parent != this)
                 .Where(c => AcceptedType.Any(t => t.IsAssignableFrom(c.Parent.GetType())))
-                .FirstOrDefault(c => c.Shape.Intersects(CollisionShape2D.Shape))
+                .FirstOrDefault(c => c.Intersects(CollisionShape2D))
                 ?.Parent as Node2D;
         }
 
@@ -51,7 +51,7 @@ namespace Monolith.Nodes
             return NodeManager.AllInstances
                 .Where(a => a != this && typeof(KinematicBody2D).IsAssignableFrom(a.GetType()))
                 .Cast<KinematicBody2D>()
-                .FirstOrDefault(a => CollisionShape2D.Shape.Intersects(a.CollisionShape2D.Shape));
+                .FirstOrDefault(a => CollisionShape2D.Intersects(a.CollisionShape2D));
         }
 
 

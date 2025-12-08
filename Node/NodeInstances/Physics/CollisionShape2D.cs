@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Monolith.Geometry;
 using Monolith.Helpers;
 using Monolith.Nodes;
+using RenderingLibrary.Math.Geometry;
 
 namespace Monlith.Nodes
 {
@@ -67,5 +68,74 @@ namespace Monlith.Nodes
         {
             base.Draw(spriteBatch);
         }
+
+        public bool Contains(Point p)
+        {
+            if (!Disabled)
+                return Shape.Contains(p);
+            return false;
+        }
+
+        public bool Contains(CollisionShape2D other)
+        {
+            if (!Disabled)
+                return Shape.Contains(other.Shape);
+            return false;
+        }
+
+        public bool Intersects(CollisionShape2D other)
+        {
+            if (!Disabled)
+                return Shape.Intersects(other.Shape);
+            return false;
+        }
+
+        public bool Contains(IRegionShape2D other)
+        {
+            if (!Disabled)
+                return Shape.Contains(other);
+            return false;
+        }
+
+        public bool Intersects(IRegionShape2D other)
+        {
+            if (!Disabled)
+                return Shape.Intersects(other);
+            return false;
+        }
+
+
+        public bool RayIntersect(Vector2 rayOrigin, Vector2 rayDir, float maxLength, out Vector2 hitPoint, out float distance)
+        {
+            hitPoint = Vector2.Zero;
+            distance = float.MaxValue;
+
+            if (!Disabled)
+                return Shape.RayIntersect(rayOrigin, rayDir, maxLength, out hitPoint, out distance);
+            
+            return false;
+        }
+
+        public CollisionShape2D Clone()
+        {
+            var clonedShape = Shape.Clone();
+
+            var cfg = new CollisionShapeConfig
+            {
+                Shape = clonedShape,
+                Position = this.Position,
+                Name = Name,
+                Parent = Parent
+            };
+
+            var clone = new CollisionShape2D(cfg)
+            {
+                Disabled = this.Disabled
+            };
+
+            return clone;
+        }
+
+
     }
 }

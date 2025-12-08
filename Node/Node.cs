@@ -48,12 +48,33 @@ namespace Monolith.Nodes
         /// </summary>
         public void SetParent(Node newParent)
         {
+            if (newParent == this)
+                throw new Exception("Node attempted to become its own parent!");
+
             if (Parent == newParent) return;
 
             Parent?.children.Remove(this);
             Parent = newParent;
             Parent?.children.Add(this);
         }
+
+        /// <summary>
+        /// Checks if a node creates a cycle.
+        /// A - B - A
+        /// </summary>
+        /// <param name="newParent"></param>
+        /// <returns></returns>
+        internal bool WouldCreateCycle(Node newParent)
+        {
+            var p = newParent;
+            while (p != null)
+            {
+                if (p == this) return true;
+                p = p.Parent;
+            }
+            return false;
+        }
+
 
         /// <summary>
         /// Adds a child to this node.

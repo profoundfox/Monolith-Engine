@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,37 +11,52 @@ namespace Monolith.IO
 {
     public static class AsepriteLoader
     {
-        public static Dictionary<string, List<MTexture>> LoadAnimations(
+        public static Dictionary<string, Animation> LoadAnimations(
             MTexture source, string jsonPath)
         {
             string json = File.ReadAllText(jsonPath);
 
             var data = JsonSerializer.Deserialize<AsepriteData>(json);
 
+            // Sort frames by numerical order
             List<AsepriteFrame> frames = data.frames
                 .OrderBy(f =>
                 {
-                        var match = Regex.Match(f.Key, @"(\d+)(?=\.)");
-                        return match.Success ? int.Parse(match.Value) : 0;
+                    var match = Regex.Match(f.Key, @"(\d+)(?=\.)");
+                    return match.Success ? int.Parse(match.Value) : 0;
                 })
                 .Select(f => f.Value)
                 .ToList();
 
-            Dictionary<string, List<MTexture>> animations = new();
+            // NEW: change value type to Animation
+            Dictionary<string, Animation> animations = new();
 
             foreach (var tag in data.meta.frameTags)
             {
-                List<MTexture> anim = new();
+                List<MTexture> animFrames = new();
+                List<int> durations = new();
 
+                // Loop over frames in this tag
                 for (int i = tag.from; i <= tag.to; i++)
                 {
-                    var f = frames[i].frame;
+                    var f = frames[i];
 
-                    Rectangle rect = new Rectangle(f.x, f.y, f.w, f.h);
-                    anim.Add(source.CreateSubTexture(rect));
+                    Rectangle rect = new Rectangle(
+                        f.frame.x, f.frame.y,
+                        f.frame.w, f.frame.h);
+
+                    animFrames.Add(source.CreateSubTexture(rect));
+
+                    durations.Add(f.duration);
                 }
 
-                animations[tag.name] = anim;
+                int speedMs = (int)durations.Average();
+
+                animations[tag.name] = new Animation
+                {
+                    Frames = animFrames,
+                    Delay = TimeSpan.FromMilliseconds(speedMs)
+                };
             }
 
             return animations;
