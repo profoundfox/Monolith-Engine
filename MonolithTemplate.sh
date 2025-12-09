@@ -2,21 +2,21 @@
 set -e
 
 read -p "Enter the project name: " PROJECT_NAME
+read -p "Enter the directory where the project should be created: " TARGET_DIR
 
-PROJECT_DIR="./$PROJECT_NAME"
+PROJECT_DIR="$TARGET_DIR/$PROJECT_NAME"
 
 dotnet new mgdesktopgl -o "$PROJECT_DIR"
 
-mkdir -p "$PROJECT_DIR/RawAssets"
 mkdir -p "$PROJECT_DIR/Nodes"
 mkdir -p "$PROJECT_DIR/Scenes"
 mkdir -p "$PROJECT_DIR/Scripts"
 
-mkdir -p "$PROJECT_DIR/RawContent"
-mkdir -p "$PROJECT_DIR/RawContent/Textures"
-mkdir -p "$PROJECT_DIR/RawContent/Audio"
-mkdir -p "$PROJECT_DIR/RawContent/Raw"
-mkdir -p "$PROJECT_DIR/RawContent/Font"
+mkdir -p "$PROJECT_DIR/Raw"
+mkdir -p "$PROJECT_DIR/Raw/Textures"
+mkdir -p "$PROJECT_DIR/Raw/Audio"
+mkdir -p "$PROJECT_DIR/Raw/Raw"
+mkdir -p "$PROJECT_DIR/Raw/Font"
 
 rm "$PROJECT_DIR/Game1.cs"
 
@@ -33,11 +33,23 @@ namespace $PROJECT_NAME
             }
         }) {}
 
-        protected override void Initialize() => base.Initialize();
-        protected override void Update(GameTime gameTime) => base.Update(gameTime);
-        protected override void Draw(GameTime gameTime) => base.Draw(gameTime);
+        protected override void Initialize()
+        {
+            base.Initialize();
+        }
+
+        protected override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+        }
+
+        protected override void Draw(GameTime gameTime)
+        {
+            base.Draw(gameTime);
+        }
     }
 }
+
 EOF
 
 cat > "$PROJECT_DIR/Nodes/ExampleNode.cs" << EOF
@@ -52,28 +64,64 @@ namespace $PROJECT_NAME
     {
         public ExampleNode(ExampleNodeConfig config) : base(config) {}
 
-        public override void Load() => base.Load();
-        public override void Unload() => base.Unload();
-        public override void Update(GameTime gameTime) => base.Update(gameTime);
-        public override void Draw(SpriteBatch spriteBatch) => base.Draw(spriteBatch);
+        public override void Load()
+        {
+            base.Load();
+        }
+
+        public override void Unload()
+        {
+            base.Unload();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+        }
     }
 }
+
 EOF
 
 cat > "$PROJECT_DIR/Scenes/ExampleScene.cs" << EOF
-namespace $PROJECT_NAME
+namespace $PROJECT_NAME 
 {
     public class ExampleScene : Scene
     {
         public ExampleScene() : base(new SceneConfig { }) {}
 
-        public override void Initialize() => base.Initialize();
-        public override void Load() => base.Load();
-        public override void Unload() => base.Unload();
-        public override void Update(GameTime gameTime) => base.Update(gameTime);
-        public override void Draw(SpriteBatch spriteBatch) => base.Draw(spriteBatch);
+        public override void Initialize()
+        {
+            base.Initialize();
+        }
+
+        public override void Load()
+        {
+            base.Load();
+        }
+
+        public override void Unload()
+        {
+            base.Unload();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+        }
     }
 }
+
 EOF
 
 cat > "$PROJECT_DIR/GlobalUsing.cs" << EOF
@@ -92,6 +140,11 @@ global using System;
 
 global using Microsoft.Xna.Framework;
 global using Microsoft.Xna.Framework.Graphics;
+EOF
+
+cat > "$PROJECT_DIR/Program.cs" << 'EOF'
+using var game = new $PROJECT_NAME.Main();
+game.Run();
 EOF
 
 cat > "$PROJECT_DIR/$PROJECT_NAME.csproj" << 'EOF'
@@ -134,4 +187,10 @@ EOF
 sed -i '' "s/new Game1()/new Main()/" "$PROJECT_DIR/Program.cs" 2>/dev/null || \
 sed -i "s/new Game1()/new Main()/" "$PROJECT_DIR/Program.cs"
 
+cd ..
+
+git clone https://github.com/Turtolo/Monolith-Engine.git
+
 echo "Custom MonoGame DesktopGL template created at: $PROJECT_DIR"
+
+
