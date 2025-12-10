@@ -16,23 +16,14 @@ namespace Monolith.Util
     public abstract class State : IState
     {
         public event Action<IState, string> TransitionRequested;
-        protected State ParentState { get; private set; }
 
         protected void RequestTransition(string newStateName)
         {
             TransitionRequested?.Invoke(this, newStateName);
         }
 
-        public virtual void SetParent(State parent)
-        {
-            ParentState = parent;
-        }
-
         public virtual void OnEnter() { }
-        public virtual void Update(GameTime gameTime)
-        {
-            ParentState?.Update(gameTime);
-        }
+        public virtual void Update(GameTime gameTime) {}
         public virtual void OnExit() { }
     }
 }

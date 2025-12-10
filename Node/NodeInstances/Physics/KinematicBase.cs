@@ -33,61 +33,65 @@ namespace Monolith.Nodes
         
         public void UpdateKinematicBody()
         {
-            if (!Locked)
-            {
-                if (PriorityVelocity != Vector2.Zero)
-                    Move(PriorityVelocity.X * Engine.DeltaTime, PriorityVelocity.Y * Engine.DeltaTime);
-                else
-                    Move(Velocity.X * Engine.DeltaTime, Velocity.Y * Engine.DeltaTime);
-
-                if (IsColliding(CollisionShape2D.Shape))
-                    ResolveOverlap();
-            }
-            else
+            if (Locked)
             {
                 PriorityVelocity = Vector2.Zero;
                 Velocity = Vector2.Zero;
+                return;
             }
+
+            Vector2 motion = PriorityVelocity != Vector2.Zero ? PriorityVelocity : Velocity;
+            Move(motion.X * Engine.DeltaTime, motion.Y * Engine.DeltaTime);
+
+            if (IsColliding(CollisionShape2D.Shape))
+                ResolveOverlap();
         }
+
 
         public void ResolveOverlap()
         {
             if (CollisionShape2D.Disabled)
                 return;
 
-            const int maxIterations = 10; 
-            int iterations = 0;
+            var shape = CollisionShape2D.Shape;
 
-            while (IsColliding(CollisionShape2D.Shape) && iterations < maxIterations)
+            float pushX = 0;
+            float pushY = 0;
+
+            foreach (var body in NodeManager.AllInstances.OfType<StaticBody2D>())
             {
-                Vector2[] directions =
+                var other = body.CollisionShape2D.Shape;
+
+                if (shape.Intersects(other))
                 {
-                    new Vector2(1, 0),
-                    new Vector2(-1, 0),
-                    new Vector2(0, 1),
-                    new Vector2(0, -1)
-                };
-
-                Vector2 bestOffset = Vector2.Zero;
-
-                foreach (var dir in directions)
-                {
-                    var testShape = CollisionShape2D.Shape.Clone();
-                    testShape.Offset(dir.ToPoint());
-
-                    if (!IsColliding(testShape))
+                    float overlapX = 0;
+                    if (shape.BoundingBox.Right > other.BoundingBox.Left && shape.BoundingBox.Left < other.BoundingBox.Right)
                     {
-                        bestOffset = dir;
-                        break;
+                        float leftOverlap = shape.BoundingBox.Right - other.BoundingBox.Left;
+                        float rightOverlap = other.BoundingBox.Right - shape.BoundingBox.Left;
+                        overlapX = (leftOverlap < rightOverlap) ? -leftOverlap : rightOverlap;
                     }
-                }
 
-                Position += bestOffset;
-                iterations++;
+                    float overlapY = 0;
+                    if (shape.BoundingBox.Bottom > other.BoundingBox.Top && shape.BoundingBox.Top < other.BoundingBox.Bottom)
+                    {
+                        float topOverlap = shape.BoundingBox.Bottom - other.BoundingBox.Top;
+                        float bottomOverlap = other.BoundingBox.Bottom - shape.BoundingBox.Top;
+                        overlapY = (topOverlap < bottomOverlap) ? -topOverlap : bottomOverlap;
+                    }
+
+                    if (MathF.Abs(overlapX) < MathF.Abs(overlapY))
+                        pushX += overlapX;
+                    else
+                        pushY += overlapY;
+                }
             }
 
+            Position += new Vector2(pushX, pushY);
             Velocity = Vector2.Zero;
         }
+
+
 
 
 
@@ -107,6 +111,8 @@ namespace Monolith.Nodes
 
         public void MoveX(int amount)
         {
+            
+
             int sign = Math.Sign(amount);
 
             while (amount != 0)
@@ -120,7 +126,9 @@ namespace Monolith.Nodes
                 }
                 else
                 {
-                    Velocity.X = 0;
+                    if (MathF.Sign(Velocity.X) == sign)
+                        Velocity.X = 0;
+
                     break;
                 }
 
@@ -144,7 +152,9 @@ namespace Monolith.Nodes
                 }
                 else
                 {
-                    Velocity.Y = 0;
+                    if (MathF.Sign(Velocity.Y) == sign)
+                        Velocity.Y = 0;
+
                     break;
                 }
 
