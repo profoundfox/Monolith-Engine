@@ -18,7 +18,6 @@ namespace Monolith.IO
 
             var data = JsonSerializer.Deserialize<AsepriteData>(json);
 
-            // Sort frames by numerical order
             List<AsepriteFrame> frames = data.frames
                 .OrderBy(f =>
                 {
@@ -28,7 +27,6 @@ namespace Monolith.IO
                 .Select(f => f.Value)
                 .ToList();
 
-            // NEW: change value type to Animation
             Dictionary<string, Animation> animations = new();
 
             foreach (var tag in data.meta.frameTags)
@@ -36,7 +34,6 @@ namespace Monolith.IO
                 List<MTexture> animFrames = new();
                 List<int> durations = new();
 
-                // Loop over frames in this tag
                 for (int i = tag.from; i <= tag.to; i++)
                 {
                     var f = frames[i];

@@ -124,7 +124,15 @@ namespace $PROJECT_NAME
 
 EOF
 
+cat > "$PROJECT_DIR/Program.cs" << EOF
+
+using var game = new $PROJECT_NAME.Main();
+game.Run;
+
+EOF
+
 cat > "$PROJECT_DIR/GlobalUsing.cs" << EOF
+
 global using Monolith;
 global using Monolith.Geometry;
 global using Monolith.Graphics;
@@ -140,11 +148,7 @@ global using System;
 
 global using Microsoft.Xna.Framework;
 global using Microsoft.Xna.Framework.Graphics;
-EOF
 
-cat > "$PROJECT_DIR/Program.cs" << 'EOF'
-using var game = new $PROJECT_NAME.Main();
-game.Run();
 EOF
 
 cat > "$PROJECT_DIR/$PROJECT_NAME.csproj" << 'EOF'
@@ -178,9 +182,15 @@ cat > "$PROJECT_DIR/$PROJECT_NAME.csproj" << 'EOF'
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.*" />
   </ItemGroup>
   <ItemGroup>
-    <<ProjectReference Include="../Monolith-Engine/Monolith.csproj" />>
+    <ProjectReference Include="../Monolith-Engine/Monolith.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Raw\**\*.*">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
+
 
 EOF
 

@@ -1,119 +1,96 @@
 using Microsoft.Xna.Framework;
 using System;
-
 using Monolith.Helpers;
 using Monolith.Util;
 using Monolith.Nodes;
+using Monolith.Geometry;
 
 namespace Monolith.Util
 {
     public class RoomCamera : MCamera
     {
         private Tween cameraXTween;
-        private Tween cameraYTween;
-        Vector2 cameraTargetPosition = Vector2.Zero;
-
-        public float LerpFactor { get; set; } = 0.1f;
 
         public Rectangle CameraRectangle;
-        
-        private bool Entered = false;
+        public float LerpFactor { get; set; } = 0.1f;
+        public float PosAdd = 10f;
 
-        public RoomCamera(float zoom)
+        private bool entered = false;
+        private Vector2 targetPosition = Vector2.Zero;
+
+        public RoomCamera(float zoom, Vector2 startPos)
         {
-            var cfg = Engine.Instance.Config;
-            
             Zoom = zoom;
 
+            CenterOn(startPos);
 
-            cameraPosition = new Vector2(cfg.RenderWidth / 2, cfg.RenderHeight / 2);
-
-            CameraRectangle = new Rectangle
-            (
-                (int)(cameraPosition.X - (cfg.RenderWidth / (2 * Zoom))),
-                (int)(cameraPosition.Y - (cfg.RenderHeight / (2 * Zoom))),
-                (int)(cfg.RenderWidth / Zoom),
-                (int)(cfg.RenderHeight / Zoom)
-            );
+            UpdateCameraRectangle();
         }
-        
+
+        public void CenterOn(Vector2 pos)
+        {
+            Position = pos;
+        }
+
         private void UpdateCameraRectangle()
         {
             var cfg = Engine.Instance.Config;
 
-            CameraRectangle.X = (int)(cameraPosition.X - (cfg.RenderWidth / (2 * Zoom)));
-            CameraRectangle.Y = (int)(cameraPosition.Y - (cfg.RenderHeight / (2 * Zoom)));
-            CameraRectangle.Width = (int)(cfg.RenderWidth / Zoom);
-            CameraRectangle.Height = (int)(cfg.RenderHeight / Zoom);
+            CameraRectangle = new Rectangle(
+                (int)(Position.X - cfg.RenderWidth * 0.5f / Zoom),
+                (int)(Position.Y - cfg.RenderHeight * 0.5f / Zoom),
+                (int)(cfg.RenderWidth / Zoom),
+                (int)(cfg.RenderHeight / Zoom)
+            );
         }
-        
 
-        public void Follow(KinematicBody2D body2D)
+        public void Follow(KinematicBody2D body)
         {
-            var cfg = Engine.Instance.Config;
-            if (body2D == null) return;
+            if (body == null)
+                return;
 
-            var side = CollisionHelper.GetCameraEdge(body2D.CollisionShape2D.Shape, CameraRectangle);
+            var side = CollisionHelper.GetCameraEdge(
+                body.CollisionShape2D.Shape,
+                CameraRectangle
+            );
 
-            if (!Entered)
+            if (!entered)
             {
-                if (side == CollisionSide.Left)
+                switch (side)
                 {
-                    cameraTargetPosition.X = CameraRectangle.X - CameraRectangle.Width + CameraRectangle.Width / 2;
-                    CameraRectangle.X -= CameraRectangle.Width;
+                    case CollisionSide.Left:
+                        ShiftRoom(body, -1);
+                        break;
 
-                    body2D.Locked = true;
-                    body2D.Position += new Vector2(-10, 0);
-                    
-
-                    cameraXTween = new Tween(
-                        0.5f,
-                        EasingFunctions.Linear,
-                        t => cameraPosition.X = MathHelper.Lerp(cameraPosition.X, cameraTargetPosition.X, t),
-                        () =>
-                        {
-                            body2D.Locked = false;
-                        }
-
-                    );
-                    
-                    cameraXTween.Start();
-                    Engine.TweenManager.AddTween(cameraXTween);
-                }
-
-                if (side == CollisionSide.Right)
-                {
-                    cameraTargetPosition.X = CameraRectangle.X + CameraRectangle.Width + CameraRectangle.Width / 2;
-                    CameraRectangle.X += CameraRectangle.Width;
-           
-                    body2D.Locked = true;
-                    body2D.Position += new Vector2(-10, 0);
-                    
-
-                    cameraXTween = new Tween(
-                        0.5f,
-                        EasingFunctions.Linear,
-                        t => cameraPosition.X = MathHelper.Lerp(cameraPosition.X, cameraTargetPosition.X, t),
-                        () =>
-                        {
-                            body2D.Locked = false;
-                        }
-                    );
-                    cameraXTween.Start();
-                    Engine.TweenManager.AddTween(cameraXTween);
+                    case CollisionSide.Right:
+                        ShiftRoom(body, +1);
+                        break;
                 }
             }
 
-            Entered = side != CollisionSide.None;
+            entered = side != CollisionSide.None;
 
             UpdateCameraRectangle();
-
-            var position = Matrix.CreateTranslation(-cameraPosition.X, -cameraPosition.Y, 0f);
-            var offset = Matrix.CreateTranslation(cfg.RenderWidth / 2f, cfg.RenderHeight / 2f, 0f);
-            var scale = Matrix.CreateScale(Zoom, Zoom, 1f);
-
-            Transform = position * scale * offset;
         }
 
+        private void ShiftRoom(KinematicBody2D body, int dir)
+        {
+            CameraRectangle.X += dir * CameraRectangle.Width;
+            targetPosition.X = CameraRectangle.X + CameraRectangle.Width / 2f;
+
+            body.Locked = true;
+            body.Position += new Vector2(PosAdd * dir, 0);
+
+            cameraXTween = new Tween(
+                0.5f,
+                EasingFunctions.Linear,
+                t => Position.X = MathHelper.Lerp(Position.X, targetPosition.X, t),
+                () => body.Locked = false
+            );
+
+            cameraXTween.Start();
+            Engine.TweenManager.AddTween(cameraXTween);
+        }
     }
+
 }

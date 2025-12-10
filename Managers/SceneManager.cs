@@ -41,8 +41,6 @@ namespace Monolith.Managers
             
             scene.Initialize();
             scene.Load();
-            
-            NodeManager.LoadNodes();
         }
 
 

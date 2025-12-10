@@ -11,6 +11,7 @@ namespace Monolith.Geometry
         
         Point Location { get; set; }
         void Offset(int x, int y);
+        void Offset(Point point);
 
         Rectangle BoundingBox { get; }
 

@@ -39,6 +39,9 @@ namespace Monolith.Nodes
                     Move(PriorityVelocity.X * Engine.DeltaTime, PriorityVelocity.Y * Engine.DeltaTime);
                 else
                     Move(Velocity.X * Engine.DeltaTime, Velocity.Y * Engine.DeltaTime);
+
+                if (IsColliding(CollisionShape2D.Shape))
+                    ResolveOverlap();
             }
             else
             {
@@ -46,6 +49,46 @@ namespace Monolith.Nodes
                 Velocity = Vector2.Zero;
             }
         }
+
+        public void ResolveOverlap()
+        {
+            if (CollisionShape2D.Disabled)
+                return;
+
+            const int maxIterations = 10; 
+            int iterations = 0;
+
+            while (IsColliding(CollisionShape2D.Shape) && iterations < maxIterations)
+            {
+                Vector2[] directions =
+                {
+                    new Vector2(1, 0),
+                    new Vector2(-1, 0),
+                    new Vector2(0, 1),
+                    new Vector2(0, -1)
+                };
+
+                Vector2 bestOffset = Vector2.Zero;
+
+                foreach (var dir in directions)
+                {
+                    var testShape = CollisionShape2D.Shape.Clone();
+                    testShape.Offset(dir.ToPoint());
+
+                    if (!IsColliding(testShape))
+                    {
+                        bestOffset = dir;
+                        break;
+                    }
+                }
+
+                Position += bestOffset;
+                iterations++;
+            }
+
+            Velocity = Vector2.Zero;
+        }
+
 
 
         public void Move(float moveX, float moveY)

@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.IO;
+using Monolith.Managers;
 using Monolith.Nodes;
 
 
@@ -27,6 +28,8 @@ namespace Monolith.Util
         {
             if (Config.DataPath != null)
                 OgmoParser.FromFile(Config.DataPath, Config.TilemapTexturePath, Config.TilemapRegion);
+            
+            NodeManager.LoadNodes();
         }
         public virtual void Unload() {}
         public virtual void Update(GameTime gameTime) {}

@@ -54,6 +54,8 @@ namespace Monolith.Geometry
         }
 
         public void Offset(int x, int y) => Rect.Offset(x, y);
+            public void Offset(Point point) => Rect.Offset(point.ToVector2());
+
 
         public Rectangle BoundingBox => Rect;
 

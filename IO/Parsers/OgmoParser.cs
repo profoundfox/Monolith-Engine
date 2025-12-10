@@ -86,7 +86,12 @@ namespace Monolith.IO
                 
                 foreach (var e in l.entities)
                 {
-                    NodeFactory.CreateNode(e.name, new RectangleShape2D(e.x , e.y, e.width, e.height));
+                    Dictionary<string, object> values = new Dictionary<string, object>();
+
+                    if (e.values != null)
+                        values = ParseValues(e.values);
+                    
+                    NodeFactory.CreateNode(e.name, new RectangleShape2D(e.x , e.y, e.width, e.height), values);
                 }
             }
         }

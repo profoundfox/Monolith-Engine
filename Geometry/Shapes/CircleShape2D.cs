@@ -40,6 +40,8 @@ namespace Monolith.Geometry
         }
 
         public void Offset(int x, int y) => Location = new Point(Location.X + x, Location.Y + y);
+        public void Offset(Point point) => Location = new Point(Location.X + point.X, Location.Y + point.Y);
+
 
         public Rectangle BoundingBox =>
             new Rectangle(Location.X - Radius, Location.Y - Radius, Radius * 2, Radius * 2);

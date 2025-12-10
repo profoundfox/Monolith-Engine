@@ -135,6 +135,11 @@ namespace Monolith
         /// Has no effect on loading actions since it is being loaded at the start of the game.
         /// </summary>
         public Dictionary<string, List<InputAction>> Actions { get; set; } = DefaultInput.Binds;
+
+        /// <summary>
+        /// The color of the background.
+        /// </summary>
+        public Color BackgroundColor { get; set; } = Color.DarkSlateGray;
     }
 
     /// <summary>

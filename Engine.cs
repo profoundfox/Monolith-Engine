@@ -191,7 +191,7 @@ namespace Monolith
             SceneManager = new SceneManager();
 
             Input = new InputManager();
-            Input.InitializeBinds(DefaultInput.Binds);
+            Input.InitializeBinds(Config.Actions);
 
             base.Initialize();
 
@@ -251,8 +251,8 @@ namespace Monolith
             }
 
             
-            if (MCamera.CurrentCamera != null)
-                DrawManager.SetCamera(MCamera.CurrentCamera.Transform);
+            if (MCamera.CurrentCameraInstance != null)
+                DrawManager.SetCamera(MCamera.CurrentCameraInstance.Transform);
 
             base.Update(gameTime);
         }
@@ -266,7 +266,7 @@ namespace Monolith
             CurrentDrawStage = DrawStageType.Start;
 
             SetRenderTarget();
-            GraphicsDevice.Clear(Color.DarkSlateGray);
+            GraphicsDevice.Clear(Config.BackgroundColor);
 
             CurrentDrawStage = DrawStageType.Scene;
             

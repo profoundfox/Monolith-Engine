@@ -1,36 +1,32 @@
-using System.Numerics;
-using System.Runtime.Intrinsics.X86;
-using Gum.DataTypes.Variables;
 using Microsoft.Xna.Framework;
-using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace Monolith.Util
 {
     public class MCamera
     {
-        public Vector2 cameraPosition = Vector2.Zero;
-        public float Zoom;
-        public static MCamera CurrentCamera;
-        public Matrix Transform;
-        
+        public Vector2 Position;
+        public float Zoom { get; set; } = 1f;
+        public static MCamera CurrentCameraInstance { get; set; }
+
+        public Matrix Transform
+        {
+            get
+            {
+                var cfg = Engine.Instance.Config;
+
+                return
+                    Matrix.CreateTranslation(new Vector3(-Position.X, -Position.Y, 0f)) *
+                    Matrix.CreateScale(Zoom) *
+                    Matrix.CreateTranslation(new Vector3(cfg.RenderWidth * 0.5f, cfg.RenderHeight * 0.5f, 0f));
+            }
+        }
+
+
+        public Matrix GetTransform() => Transform;
+
         public MCamera()
         {
-            CurrentCamera = this;
+            CurrentCameraInstance = this;
         }
-
-        public (Vector2 TopLeft, Vector2 TopRight, Vector2 BottomLeft, Vector2 BottomRight) GetScreenEdges()
-        {
-            var cfg = Engine.Instance.Config;
-            float halfWidth = cfg.RenderWidth / 2f / Zoom;
-            float halfHeight = cfg.RenderHeight / 2f / Zoom;
-
-            Vector2 topLeft = new Vector2(cameraPosition.X - halfWidth, cameraPosition.Y - halfHeight);
-            Vector2 topRight = new Vector2(cameraPosition.X + halfWidth, cameraPosition.Y - halfHeight);
-            Vector2 bottomLeft = new Vector2(cameraPosition.X - halfWidth, cameraPosition.Y + halfHeight);
-            Vector2 bottomRight = new Vector2(cameraPosition.X + halfWidth, cameraPosition.Y + halfHeight);
-
-            return (topLeft, topRight, bottomLeft, bottomRight);
-        }
-        
     }
 }

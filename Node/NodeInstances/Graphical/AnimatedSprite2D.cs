@@ -45,7 +45,8 @@ namespace Monolith.Nodes
 
         public void PlayAnimation(string name, bool isLooping = false)
         {
-            Animation target = Atlas[name];
+            if (!Atlas.TryGetValue(name, out Animation target))
+                return;
 
             if (CurrentAnimation != target || _finished)
             {
@@ -59,6 +60,9 @@ namespace Monolith.Nodes
 
         public void PlayAnimation(Animation animation, bool isLooping = false)
         {
+            if (animation == null)
+                return;
+            
             if (CurrentAnimation != animation || _finished)
             {
                 CurrentAnimation = animation;
