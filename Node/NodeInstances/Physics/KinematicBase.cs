@@ -169,12 +169,26 @@ namespace Monolith.Nodes
             return IsColliding(test);
         }
 
+        public bool IsOnRoof()
+        {
+            var test = CollisionShape2D.Shape.Clone();
+            test.Offset(0, -1);
+            return IsColliding(test);
+        }
 
         public bool IsOnWall()
         {
+            return IsOnWall(out _);
+        }
+
+        public bool IsOnWall(out int wallDir)
+        {
             if (CollisionShape2D.Disabled)
+            {
+                wallDir = default;
                 return false;
-            
+            }
+
             var left = CollisionShape2D.Shape.Clone();
             left.Offset(-1, 0);
 
@@ -185,10 +199,20 @@ namespace Monolith.Nodes
             {
                 var shape = body.CollisionShape2D;
 
-                if (shape.Intersects(left) || shape.Intersects(right))
+                if (shape.Intersects(left))
+                {
+                    wallDir = -1;
                     return true;
+                }
+
+                if (shape.Intersects(right))
+                {
+                    wallDir = 1;
+                    return true;
+                }
             }
 
+            wallDir = default;
             return false;
         }
 

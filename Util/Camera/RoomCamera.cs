@@ -22,14 +22,19 @@ namespace Monolith.Util
         {
             Zoom = zoom;
 
-            CenterOn(startPos);
-
+            Position = startPos;
+            
             UpdateCameraRectangle();
         }
 
-        public void CenterOn(Vector2 pos)
+                
+        public RoomCamera(float zoom)
         {
-            Position = pos;
+            Zoom = zoom;
+
+            Position = Vector2.Zero;
+
+            UpdateCameraRectangle();
         }
 
         private void UpdateCameraRectangle()

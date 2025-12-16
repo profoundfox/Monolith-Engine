@@ -97,26 +97,25 @@ namespace Monolith.IO
         }
 
         public static void LoadTilemap(
-            string texturePath,
+            MTexture texture,
             Rectangle region,
-            int gridCellsX,
-            int gridCellsY,
-            int cellWidth,
-            int cellHeight,
+            Rectangle gridRegion,
             IReadOnlyList<int> tileData,
             float layerDepth)
         {
-            MTexture texture = new(texturePath);
-            var textureRegion = texture.CreateSubTexture(region);
+            MTexture textureRegion = texture;
 
-            var tileset = new Tileset(textureRegion, cellWidth, cellHeight);
-            var tilemap = new Tilemap(tileset, gridCellsX, gridCellsY, 0.1f);
+            if (region != default)
+                textureRegion = texture.CreateSubTexture(region);
 
-            for (int row = 0; row < gridCellsY; row++)
+            var tileset = new Tileset(textureRegion, gridRegion.Width, gridRegion.Height);
+            var tilemap = new Tilemap(tileset, gridRegion.X, gridRegion.Y, 0.1f);
+
+            for (int row = 0; row < gridRegion.Y; row++)
             {
-                for (int col = 0; col < gridCellsX; col++)
+                for (int col = 0; col < gridRegion.X; col++)
                 {
-                    int index = row * gridCellsX + col;
+                    int index = row * gridRegion.X + col;
                     int tile = (index >= 0 && index < tileData.Count) ? tileData[index] : 0;
                     tilemap.SetTile(col, row, tile);
                 }
@@ -141,12 +140,9 @@ namespace Monolith.IO
             float layerDepth = float.Parse(layer.name, CultureInfo.InvariantCulture);
 
             LoadTilemap(
-                texturePath: texturePath,
+                texture: new MTexture(texturePath),
                 region: rect,
-                gridCellsX: layer.gridCellsX,
-                gridCellsY: layer.gridCellsY,
-                cellWidth: layer.gridCellWidth,
-                cellHeight: layer.gridCellHeight,
+                gridRegion: new Rectangle(layer.gridCellsX, layer.gridCellsY, layer.gridCellWidth, layer.gridCellHeight),
                 tileData: layer.data,
                 layerDepth: layerDepth
             );
@@ -163,9 +159,9 @@ namespace Monolith.IO
             LoadNodes(filename);
             SearchForDecals(filename);
 
-            if (!string.IsNullOrEmpty(defaultTileTexture) && defaultTileRegion != default)
+            if (!string.IsNullOrEmpty(defaultTileTexture))
             {
-                LoadTilemapFromJson(Engine.Content, filename, defaultTileTexture, defaultTileRegion);
+                LoadTilemapFromJson(Engine.ContentManager, filename, defaultTileTexture, defaultTileRegion);
             }
         }
     }

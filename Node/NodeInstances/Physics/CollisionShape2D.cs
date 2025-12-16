@@ -1,8 +1,10 @@
 using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Geometry;
 using Monolith.Helpers;
+using Monolith.Managers;
 using Monolith.Nodes;
 using RenderingLibrary.Math.Geometry;
 
@@ -16,6 +18,7 @@ namespace Monlith.Nodes
     public class CollisionShape2D : Node2D
     {
         public bool Disabled { get; set; }
+        public bool OneWay { get; set; }
         public IRegionShape2D Shape { get; set; }
 
         public int Width
@@ -135,7 +138,5 @@ namespace Monlith.Nodes
 
             return clone;
         }
-
-
     }
 }

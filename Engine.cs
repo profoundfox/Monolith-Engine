@@ -71,22 +71,22 @@ namespace Monolith
         /// <summary>
         /// Content manager used for loading assets such as textures, fonts, and effects.
         /// </summary>
-        public static new ContentManager Content { get; private set; }
+        public static ContentManager ContentManager { get; private set; }
 
         /// <summary>
         /// Current content loader.
         /// </summary>
-        public static IContentProvider ContentProvider { get; set; }
+        public IContentProvider ContentProvider { get; set; }
 
         /// <summary>
         /// The main SpriteBatch used for drawing sprites.
         /// </summary>
-        public static SpriteBatch SpriteBatch { get; private set; }
+        public SpriteBatch SpriteBatch { get; private set; }
 
         /// <summary>
         /// Default font loaded for the engine.
         /// </summary>
-        public static SpriteFont Font { get; private set; }
+        public SpriteFont Font { get; private set; }
 
         /// <summary>
         /// Optional post-processing shader applied when rendering the scene.
@@ -96,7 +96,7 @@ namespace Monolith
         /// <summary>
         /// Current FPS.
         /// </summary>
-        public static float FPS { get; private set; }
+        public float FPS { get; private set; }
 
         /// <summary>
         /// Manager responsible for scene handling and switching between scenes.
@@ -142,7 +142,7 @@ namespace Monolith
                 IsFullScreen = Config.Fullscreen,
             };
 
-            Content = base.Content;
+            ContentManager = base.Content;
             Content.RootDirectory = Config.RootContentDirectory;
 
             ContentProvider = Config.ContentProvider;

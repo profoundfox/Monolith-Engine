@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Monlith.Nodes;
 using Monolith.Geometry;
+using Monolith.Managers;
 
 
 namespace Monolith.Nodes
@@ -23,6 +25,15 @@ namespace Monolith.Nodes
             Collidable = cfg.Collidable;
             OneWay = cfg.OneWay;
             CollisionShape2D = cfg.CollisionShape2D;
+
+            CollisionShape2D.OneWay = OneWay;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            var kinBodies = NodeManager.GetNodesByType<KinematicBody2D>();
         }
     }
 

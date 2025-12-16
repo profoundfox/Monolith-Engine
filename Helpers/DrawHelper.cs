@@ -250,9 +250,9 @@ namespace Monolith.Helpers
 
         public static void DrawString(string input, Color color, Vector2 pos, float layerDepth = 0.9f)
         {
-            Engine.SpriteBatch.Begin();
-            Engine.SpriteBatch.DrawString(Engine.Font, input, pos, color);
-            Engine.SpriteBatch.End();
+            Engine.Instance.SpriteBatch.Begin();
+            Engine.Instance.SpriteBatch.DrawString(Engine.Instance.Font, input, pos, color);
+            Engine.Instance.SpriteBatch.End();
         }
     }
 }

@@ -49,7 +49,7 @@ public static class DebugOverlay
 
     public static void Draw(SpriteBatch spriteBatch)
     {
-        if (!IsEnabled || Engine.Font == null)
+        if (!IsEnabled || Engine.Instance.Font == null)
             return;
 
         spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
@@ -74,7 +74,7 @@ public static class DebugOverlay
             {
                 case Side.Left:
                     spriteBatch.DrawString(
-                        Engine.Font,
+                        Engine.Instance.Font,
                         text,
                         new Vector2(10, yLeft),
                         entry.Color,
@@ -88,9 +88,9 @@ public static class DebugOverlay
                     break;
 
                 case Side.Right:
-                    Vector2 textSize = Engine.Font.MeasureString(text);
+                    Vector2 textSize = Engine.Instance.Font.MeasureString(text);
                     spriteBatch.DrawString(
-                        Engine.Font,
+                        Engine.Instance.Font,
                         text,
                         new Vector2(screenWidth - textSize.X - 10, yRight),
                         entry.Color,
