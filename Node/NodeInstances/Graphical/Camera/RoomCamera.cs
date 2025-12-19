@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monlith.Nodes;
 using Monolith.Attributes;
+using Monolith.Geometry;
 using Monolith.Helpers;
 using Monolith.Util;
 
@@ -27,7 +28,12 @@ namespace Monolith.Nodes
         public List<Action> TransitionStarted { get; set; }
         public List<Action> TransitionEnded { get; set; }
 
-        public Rectangle CameraRectangle;
+        public RectangleShape2D CameraRectangle;
+
+        public Area2D TopArea { get; set; }
+        public Area2D BottomArea { get; set; }
+        public Area2D RightArea { get; set; }
+        public Area2D LeftArea { get; set; }
 
 
         public RoomCamera(RoomCameraConfig cfg) : base(cfg)
@@ -47,8 +53,47 @@ namespace Monolith.Nodes
                 TransitionEnded.Add(UnlockBody);
             }
 
-            UpdateCameraRectangle();
+            TopArea = new Area2D(new AreaConfig
+            {
+                Position = new Vector2(GlobalPosition.X, GlobalPosition.Y - 55),
+                CollisionShape2D = new CollisionShape2D(new CollisionShapeConfig
+                {
+                    Shape = new RectangleShape2D(100, 10),
+                    Position = Vector2.Zero
+                })
+            });
+
+            BottomArea = new Area2D(new AreaConfig
+            {
+                Position = new Vector2(GlobalPosition.X, GlobalPosition.Y + 55),
+                CollisionShape2D = new CollisionShape2D(new CollisionShapeConfig
+                {
+                    Shape = new RectangleShape2D(100, 10),
+                    Position = Vector2.Zero
+                })
+            });
+
+            LeftArea = new Area2D(new AreaConfig
+            {
+                Position = new Vector2(GlobalPosition.X - 55, GlobalPosition.Y),
+                CollisionShape2D = new CollisionShape2D(new CollisionShapeConfig
+                {
+                    Shape = new RectangleShape2D(10, 100),
+                    Position = Vector2.Zero
+                })
+            });
+
+            RightArea = new Area2D(new AreaConfig
+            {
+                Position = new Vector2(GlobalPosition.X + 55, GlobalPosition.Y),
+                CollisionShape2D = new CollisionShape2D(new CollisionShapeConfig
+                {
+                    Shape = new RectangleShape2D(10, 100),
+                    Position = Vector2.Zero
+                })
+            });
         }
+
 
         public override void Unload()
         {
@@ -64,13 +109,14 @@ namespace Monolith.Nodes
 
             CollisionShape2D targetShape;
 
+        
             targetShape = (CollisionShape2D)TargetNode.GetFirstChildByT<CollisionShape2D>();
-
 
             var side = CollisionHelper.GetCameraEdge(
                 targetShape.Shape,
                 CameraRectangle
             );
+
 
             if (!_entered)
             {
@@ -94,15 +140,20 @@ namespace Monolith.Nodes
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
+
+            DrawHelper.DrawRegionShapeHollow(TopArea.CollisionShape2D.Shape, Color.Green, 2);
+            DrawHelper.DrawRegionShapeHollow(BottomArea.CollisionShape2D.Shape, Color.Green, 2);
+            DrawHelper.DrawRegionShapeHollow(RightArea.CollisionShape2D.Shape, Color.Green, 2);
+            DrawHelper.DrawRegionShapeHollow(LeftArea.CollisionShape2D.Shape, Color.Green, 2);
         }
 
         private void UpdateCameraRectangle()
         {
             var cfg = Engine.Instance.Config;
 
-            CameraRectangle = new Rectangle(
-                (int)(Position.X - cfg.RenderWidth * 0.5f / Zoom),
-                (int)(Position.Y - cfg.RenderHeight * 0.5f / Zoom),
+            CameraRectangle = new RectangleShape2D(
+                (int)(GlobalPosition.X - cfg.RenderWidth * 0.5f / Zoom),
+                (int)(GlobalPosition.Y - cfg.RenderHeight * 0.5f / Zoom),
                 (int)(cfg.RenderWidth / Zoom),
                 (int)(cfg.RenderHeight / Zoom)
             );
@@ -111,31 +162,28 @@ namespace Monolith.Nodes
         private void ShiftRoom(int dir)
         {
             _dir = dir;
-            CameraRectangle.X += dir * CameraRectangle.Width;
-            Vector2 targetPos = new Vector2(CameraRectangle.X + CameraRectangle.Width / 2f, 0);
+            
+            float startX = Position.X;
+            float targetX = startX + dir * CameraRectangle.Width;
 
             foreach (var action in TransitionStarted)
-            {
                 action?.Invoke();
-            }
-            
 
             var cameraXTween = new Tween(
                 0.5f,
                 EasingFunctions.Linear,
-                t => Position = new Vector2(MathHelper.Lerp(Position.X, targetPos.X, t), Position.Y),
+                t => Position = new Vector2(MathHelper.Lerp(startX, targetX, t), Position.Y),
                 () =>
                 {
                     foreach (var action in TransitionEnded)
-                    {
                         action?.Invoke();
-                    }
                 }
             );
 
             cameraXTween.Start();
             Engine.TweenManager.AddTween(cameraXTween);
         }
+
 
         private void LockBody()
         {

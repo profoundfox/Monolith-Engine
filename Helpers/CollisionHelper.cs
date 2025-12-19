@@ -40,25 +40,25 @@ namespace Monolith.Helpers
             return (deltaX * deltaX + deltaY * deltaY) <= (circle.Radius * circle.Radius);
         }
 
-        public static CollisionSide GetCameraEdge(IRegionShape2D target, Rectangle camera)
+        public static CollisionSide GetCameraEdge(IRegionShape2D target, IRegionShape2D camera)
         {
 
-            if (target.BoundingBox.Right > camera.Right)
+            if (target.BoundingBox.Right > camera.BoundingBox.Right)
             {
                 return CollisionSide.Right;
             }
 
-            if (target.BoundingBox.Left < camera.Left)
+            if (target.BoundingBox.Left < camera.BoundingBox.Left)
             {
                 return CollisionSide.Left;
             }
 
-            if (target.BoundingBox.Top < camera.Top)
+            if (target.BoundingBox.Top < camera.BoundingBox.Top)
             {
                 return CollisionSide.Top;
             }
 
-            if (target.BoundingBox.Bottom > camera.Bottom)
+            if (target.BoundingBox.Bottom > camera.BoundingBox.Bottom)
             {
                 return CollisionSide.Bottom;
             }

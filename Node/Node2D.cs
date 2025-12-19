@@ -42,6 +42,14 @@ namespace Monolith.Nodes
         public Transform2D GlobalTransform { get; private set; }
 
         /// <summary>
+        /// The global position of the node.
+        /// </summary>
+        public Vector2 GlobalPosition
+        {
+            get => GlobalTransform.Position;
+        }
+
+        /// <summary>
         /// The local position of the node, relative to its parent.
         /// </summary>
         public Vector2 Position
