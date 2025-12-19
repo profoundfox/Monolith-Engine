@@ -19,8 +19,6 @@ namespace Monolith.Nodes
     {
         public MTexture Texture { get; set; }
         public Color Modulate { get; set; } = Color.White;
-        public Vector2 Scale { get; set; } = Vector2.One;
-        public float Rotation { get; set; } = 0f;
 
         public Sprite2D(SpriteConfig cfg) : base(cfg)
         {
@@ -33,7 +31,7 @@ namespace Monolith.Nodes
         public override void Draw(SpriteBatch spriteBatch)
         {
             Texture.Draw(
-                position: Position,
+                position: GlobalTransform.Position,
                 color: Modulate,
                 rotation: Rotation,
                 origin: Texture.Center,

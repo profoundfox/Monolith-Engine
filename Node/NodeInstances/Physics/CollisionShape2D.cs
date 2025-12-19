@@ -1,12 +1,8 @@
 using System;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Geometry;
-using Monolith.Helpers;
-using Monolith.Managers;
 using Monolith.Nodes;
-using RenderingLibrary.Math.Geometry;
 
 namespace Monlith.Nodes
 {
@@ -17,7 +13,7 @@ namespace Monlith.Nodes
 
     public class CollisionShape2D : Node2D
     {
-        private Action<Vector2> _onPositionChanged;
+        private Action<Transform2D> _onTransformChanged;
 
         public bool Disabled { get; set; }
         public bool OneWay { get; set; }
@@ -41,76 +37,77 @@ namespace Monlith.Nodes
 
             if (Shape.Location != Point.Zero)
             {
-                Position = new Vector2(Shape.Location.X, Shape.Location.Y);
+                Position = Shape.Location.ToVector2();
             }
-
         }
 
         public override void Load()
-    {
-        base.Load();
-
-        Shape.Location = Position.ToPoint();
-
-        _onPositionChanged = (newPos) =>
         {
-            Shape.Location = newPos.ToPoint();
-        };
+            base.Load();
 
-        PositionChanged += _onPositionChanged;
-    }
+            if (Shape != null)
+            {
+                Shape.Location = GlobalTransform.Position.ToPoint();
+            }
 
+            _onTransformChanged = delegate(Transform2D newTransform)
+            {
+                Shape.Location = newTransform.Position.ToPoint();
+            };
+
+            TransformChanged += _onTransformChanged;
+        }
 
         public override void Unload()
         {
             base.Unload();
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-        }
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            base.Draw(spriteBatch);
+            TransformChanged -= _onTransformChanged;
         }
 
         public bool Contains(Point p)
         {
             if (!Disabled)
+            {
                 return Shape.Contains(p);
+            }
             return false;
         }
 
         public bool Contains(CollisionShape2D other)
         {
-            if (!Disabled)
+            if (!Disabled && other != null)
+            {
                 return Shape.Contains(other.Shape);
+            }
             return false;
         }
 
         public bool Intersects(CollisionShape2D other)
         {
-            if (!Disabled)
+            if (!Disabled && other != null)
+            {
                 return Shape.Intersects(other.Shape);
+            }
             return false;
         }
 
         public bool Contains(IRegionShape2D other)
         {
             if (!Disabled)
+            {
                 return Shape.Contains(other);
+            }
             return false;
         }
 
         public bool Intersects(IRegionShape2D other)
         {
             if (!Disabled)
+            {
                 return Shape.Intersects(other);
+            }
             return false;
         }
-
 
         public bool RayIntersect(Vector2 rayOrigin, Vector2 rayDir, float maxLength, out Vector2 hitPoint, out float distance)
         {
@@ -118,14 +115,20 @@ namespace Monlith.Nodes
             distance = float.MaxValue;
 
             if (!Disabled)
+            {
                 return Shape.RayIntersect(rayOrigin, rayDir, maxLength, out hitPoint, out distance);
-            
+            }
+
             return false;
         }
 
         public CollisionShape2D Clone()
         {
-            var clonedShape = Shape.Clone();
+            IRegionShape2D clonedShape = null;
+            if (Shape != null)
+            {
+                clonedShape = Shape.Clone();
+            }
 
             var cfg = new CollisionShapeConfig
             {
@@ -137,10 +140,21 @@ namespace Monlith.Nodes
 
             var clone = new CollisionShape2D(cfg)
             {
-                Disabled = this.Disabled
+                Disabled = this.Disabled,
+                OneWay = this.OneWay
             };
 
             return clone;
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
         }
     }
 }

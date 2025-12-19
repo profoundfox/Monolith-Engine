@@ -116,7 +116,7 @@ namespace Monolith.Nodes
             if (CurrentAnimation == null) return;
 
             CurrentFrame.Draw(
-                position: Position,
+                position: GlobalTransform.Position,
                 color: Modulate,
                 rotation: Rotation,
                 origin: CurrentFrame.Center,
