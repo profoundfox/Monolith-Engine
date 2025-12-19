@@ -3,20 +3,20 @@ using Microsoft.Xna.Framework;
 
 namespace Monolith.Geometry
 {
-    public struct Transform
+    public struct Transform2D
     {
         public Vector2 Position;
-        public float Rotation; // in radians
+        public float Rotation;
         public Vector2 Scale;
 
-        public static readonly Transform Identity = new Transform
+        public static readonly Transform2D Identity = new Transform2D
         {
             Position = Vector2.Zero,
             Rotation = 0f,
             Scale = Vector2.One
         };
 
-        public Transform(Vector2 position, float rotation = 0f, Vector2? scale = null)
+        public Transform2D(Vector2 position, float rotation = 0f, Vector2? scale = null)
         {
             Position = position;
             Rotation = rotation;
@@ -31,7 +31,7 @@ namespace Monolith.Geometry
                 Matrix.CreateTranslation(new Vector3(Position, 0f));
         }
 
-        public static Transform Combine(Transform parent, Transform child)
+        public static Transform2D Combine(Transform2D parent, Transform2D child)
         {
             var m = child.ToMatrix() * parent.ToMatrix();
             var position = m.Translation;
@@ -40,7 +40,7 @@ namespace Monolith.Geometry
                 new Vector2(m.M21, m.M22).Length()
             );
             var rotation = (float)Math.Atan2(m.M21, m.M11);
-            return new Transform(new Vector2(position.X, position.Y), rotation, scale);
+            return new Transform2D(new Vector2(position.X, position.Y), rotation, scale);
         }
     }
 }

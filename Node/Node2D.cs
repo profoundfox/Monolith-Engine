@@ -19,41 +19,85 @@ namespace Monolith.Nodes
 
     public class Node2D : Node
     {
-        private Vector2 _position;
+        private Transform2D _localTransform;
 
-        public event Action<Vector2> PositionChanged;
+        public event Action<Transform2D> TransformChanged;
 
         /// <summary>
-        /// The current position of the node, linked with the shape's location.
-        /// Propagates delta to all children.
+        /// The transform relative to this node's parent.
         /// </summary>
-        public Vector2 Position
+        public Transform2D LocalTransform
         {
-            get => _position;
+            get => _localTransform;
             set
             {
-                if (_position == value)
-                    return;
-
-                var delta = value - _position;
-                _position = value;
-
-                foreach (var child in Children)
-                {
-                    if (child is Node2D c2d)
-                        c2d.Position += delta;
-                }
-
-                PositionChanged?.Invoke(_position);
+                _localTransform = value;
+                UpdateGlobalTransform();
             }
         }
 
         /// <summary>
-        /// Creates a new Node2D using a Node2DConfig.
+        /// The transform relative to global coordinates.
+        /// </summary>
+        public Transform2D GlobalTransform { get; private set; }
+
+        /// <summary>
+        /// The local position of the node, relative to its parent.
+        /// </summary>
+        public Vector2 Position
+        {
+            get => LocalTransform.Position;
+            set => LocalTransform = LocalTransform with { Position = value };
+        }
+
+        /// <summary>
+        /// The local rotation of the node, measured in radians.
+        /// </summary>
+        public float Rotation
+        {
+            get => LocalTransform.Rotation;
+            set => LocalTransform = LocalTransform with { Rotation = value };
+        }
+
+        /// <summary>
+        /// The local scale of the node.
+        /// </summary>
+        public Vector2 Scale
+        {
+            get => LocalTransform.Scale;
+            set => LocalTransform = LocalTransform with { Scale = value };
+        }
+
+        /// <summary>
+        /// Creates a new Node2D using a SpatialNodeConfig.
         /// </summary>
         public Node2D(SpatialNodeConfig config) : base(config)
         {
-            _position = config.Position ?? Vector2.Zero;
+            _localTransform = new Transform2D(config.Position ?? Vector2.Zero);
+            UpdateGlobalTransform();
+        }
+        /// <summary>
+        /// Recompute global transform based on parent.
+        /// Automatically updates children.
+        /// </summary>
+        private void UpdateGlobalTransform()
+        {
+            if (Parent is Node2D parent2D)
+            {
+                GlobalTransform = Transform2D.Combine(parent2D.GlobalTransform, LocalTransform);
+            }
+            else
+            {
+                GlobalTransform = LocalTransform;
+            }
+
+            TransformChanged?.Invoke(GlobalTransform);
+
+            foreach (var child in Children)
+            {
+                if (child is Node2D c2d)
+                    c2d.UpdateGlobalTransform();
+            }
         }
 
         /// <summary>
@@ -63,7 +107,7 @@ namespace Monolith.Nodes
         /// <param name="delta"></param>
         public void Offset(Vector2 delta)
         {
-            Position = _position + delta;
+            Position += delta;
         }
 
         /// <summary>
@@ -74,9 +118,7 @@ namespace Monolith.Nodes
         public void Offset(float x, float y)
         {
             Offset(new Vector2(x, y));
-            
         }
-
 
         public override void Load()
         {
