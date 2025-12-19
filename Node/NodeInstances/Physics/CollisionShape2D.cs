@@ -17,6 +17,8 @@ namespace Monlith.Nodes
 
     public class CollisionShape2D : Node2D
     {
+        private Action<Vector2> _onPositionChanged;
+
         public bool Disabled { get; set; }
         public bool OneWay { get; set; }
         public IRegionShape2D Shape { get; set; }
@@ -42,24 +44,26 @@ namespace Monlith.Nodes
                 Position = new Vector2(Shape.Location.X, Shape.Location.Y);
             }
 
-            Shape.Location = Position.ToPoint();
-
-            PositionChanged += (newPos) =>
-            {
-                Shape.Location = newPos.ToPoint();
-            };
         }
 
         public override void Load()
+    {
+        base.Load();
+
+        Shape.Location = Position.ToPoint();
+
+        _onPositionChanged = (newPos) =>
         {
-            base.Load();
-        }
+            Shape.Location = newPos.ToPoint();
+        };
+
+        PositionChanged += _onPositionChanged;
+    }
+
 
         public override void Unload()
         {
             base.Unload();
-            
-            Shape = null;
         }
 
         public override void Update(GameTime gameTime)

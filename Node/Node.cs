@@ -105,6 +105,11 @@ namespace Monolith.Nodes
             return children.OfType<T>().Cast<Node>().ToList();
         }
 
+        public bool HasChild<T>()
+        {
+            return GetFirstChildByT<T>() != null;
+        }
+
 
         /// <summary>
         /// Removes a child from this node.

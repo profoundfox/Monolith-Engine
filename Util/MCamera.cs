@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Monolith.Managers;
 
 namespace Monolith.Util
 {
@@ -27,6 +28,11 @@ namespace Monolith.Util
         public MCamera()
         {
             CurrentCameraInstance = this;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            Engine.DrawManager.SetCamera(Transform);
         }
     }
 }

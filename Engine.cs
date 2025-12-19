@@ -18,7 +18,6 @@ using Monolith.Nodes;
 using Monolith.Helpers;
 using Monolith.Util;
 using Monolith.IO;
-using Monolith.UI.GUM;
 
 namespace Monolith
 {
@@ -249,10 +248,6 @@ namespace Monolith
                 _fpsFrames = 0;
                 _fpsTimer = 0;
             }
-
-            
-            if (MCamera.CurrentCameraInstance != null)
-                DrawManager.SetCamera(MCamera.CurrentCameraInstance.Transform);
 
             base.Update(gameTime);
         }

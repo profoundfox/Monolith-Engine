@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monlith.Nodes;
+using Monolith.Attributes;
 using Monolith.Nodes;
 
 namespace Monolith.Managers
@@ -87,6 +89,9 @@ namespace Monolith.Managers
 
             foreach (var prop in properties)
             {
+                if (prop.GetCustomAttribute<NodeRefferenceAttribute>() != null)
+                    continue;
+
                 var value = prop.GetValue(parent.Config);
 
                 if (value is Node child)
@@ -151,6 +156,8 @@ namespace Monolith.Managers
                 node.Load();
                 ApplyPendingChanges();
             }
+
+            Console.WriteLine("Nodes Loaded!");
         }
 
 

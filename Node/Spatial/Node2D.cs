@@ -32,6 +32,9 @@ namespace Monolith.Nodes
             get => _position;
             set
             {
+                if (_position == value)
+                    return;
+
                 var delta = value - _position;
                 _position = value;
 
@@ -71,6 +74,7 @@ namespace Monolith.Nodes
         public void Offset(float x, float y)
         {
             Offset(new Vector2(x, y));
+            
         }
 
 

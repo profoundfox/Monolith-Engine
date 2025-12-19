@@ -1,6 +1,6 @@
 using System;
 
-namespace Monolith.UI.GUM
+namespace Monolith.UI
 {
     public class KeyboardRebinder {
 

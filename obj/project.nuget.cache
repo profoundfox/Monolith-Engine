@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Dswcn/F1wrg=",
+  "dgSpecHash": "NWTgR+GoSWI=",
   "success": true,
   "projectFilePath": "/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Monolith.csproj",
   "expectedPackageFiles": [
@@ -17,9 +17,7 @@
     "/Users/nilslauvstad/.nuget/packages/system.memory/4.5.3/system.memory.4.5.3.nupkg.sha512",
     "/Users/nilslauvstad/.nuget/packages/system.numerics.vectors/4.5.0/system.numerics.vectors.4.5.0.nupkg.sha512",
     "/Users/nilslauvstad/.nuget/packages/system.valuetuple/4.5.0/system.valuetuple.4.5.0.nupkg.sha512",
-    "/Users/nilslauvstad/.nuget/packages/textcopy/6.2.1/textcopy.6.2.1.nupkg.sha512",
-    "/Users/nilslauvstad/.nuget/packages/microsoft.netcore.app.runtime.win-x64/9.0.10/microsoft.netcore.app.runtime.win-x64.9.0.10.nupkg.sha512",
-    "/Users/nilslauvstad/.nuget/packages/microsoft.aspnetcore.app.runtime.win-x64/9.0.10/microsoft.aspnetcore.app.runtime.win-x64.9.0.10.nupkg.sha512"
+    "/Users/nilslauvstad/.nuget/packages/textcopy/6.2.1/textcopy.6.2.1.nupkg.sha512"
   ],
   "logs": []
 }

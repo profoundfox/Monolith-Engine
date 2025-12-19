@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 using FlatRedBall;
 using Monolith.Input;
 
-namespace Monolith.UI.GUM
+namespace Monolith.UI
 {
     public class GumHelper
     {
