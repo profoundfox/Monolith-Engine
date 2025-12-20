@@ -92,7 +92,7 @@ namespace Monolith.Nodes
         /// <returns></returns>
         public Node GetFirstChildByT<T>()
         {
-            return GetChildrenByType<T>().FirstOrDefault();
+            return GetChildrenByT<T>().FirstOrDefault();
         }
 
         /// <summary>
@@ -100,12 +100,18 @@ namespace Monolith.Nodes
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IReadOnlyList<Node> GetChildrenByType<T>()
+        public IReadOnlyList<Node> GetChildrenByT<T>()
         {
             return children.OfType<T>().Cast<Node>().ToList();
         }
-
-        public bool HasChild<T>()
+        
+        
+        /// <summary>
+        /// Returns if the node has a node of a specified type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public bool HasChildByT<T>()
         {
             return GetFirstChildByT<T>() != null;
         }

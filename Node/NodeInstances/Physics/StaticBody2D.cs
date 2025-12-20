@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -27,14 +28,38 @@ namespace Monolith.Nodes
             CollisionShape2D = cfg.CollisionShape2D;
 
             CollisionShape2D.OneWay = OneWay;
+            CollisionShape2D.Disabled = !Collidable;
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            var kinBodies = NodeManager.GetNodesByType<KinematicBody2D>();
+            CollisionShape2D.Disabled = !Collidable;
+
+            foreach (KinematicBody2D kb in NodeManager.GetNodesByT<KinematicBody2D>())
+            {
+                if (CollisionShape2D == null)
+                    continue;
+
+                IRegionShape2D platform = CollisionShape2D.Shape;
+                IRegionShape2D body = kb.CollisionShape2D.Shape;
+
+                if (!OneWay)
+                    continue;
+
+                if (kb.Velocity.Y < 0)
+                {
+                    Collidable = false;
+                }
+
+                else if(!platform.Intersects(body))
+                {
+                    Collidable = true;
+                }
+            }
         }
+
     }
 
 }

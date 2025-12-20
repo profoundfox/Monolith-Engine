@@ -54,7 +54,7 @@ namespace Monolith.Nodes
         {
             base.Update(gameTime);
 
-            if (TargetNode == null || !TargetNode.HasChild<CollisionShape2D>())
+            if (TargetNode == null || !TargetNode.HasChildByT<CollisionShape2D>())
                 return;
 
             var targetShape = (CollisionShape2D)TargetNode.GetFirstChildByT<CollisionShape2D>();
@@ -100,7 +100,6 @@ namespace Monolith.Nodes
 
         private void ShiftRoom(int dir)
         {
-            Console.WriteLine(dir);
             _dir = dir;
 
             var camera = InternalCamera.GetWorldViewRectangle();

@@ -38,7 +38,7 @@ namespace Monolith.Nodes
 
         private Node2D GetOverlappingArea()
         {
-            return NodeManager.GetNodesByType<CollisionShape2D>()
+            return NodeManager.GetNodesByT<CollisionShape2D>()
                 .Where(c => c.Parent != this)
                 .Where(c => AcceptedType.Any(t => t.IsAssignableFrom(c.Parent.GetType())))
                 .FirstOrDefault(c => c.Intersects(CollisionShape2D))

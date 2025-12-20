@@ -24,7 +24,7 @@ namespace Monolith
         {
             if (drawRegions)
             {
-                foreach(CollisionShape2D node in NodeManager.GetNodesByType<CollisionShape2D>()) 
+                foreach(CollisionShape2D node in NodeManager.GetNodesByT<CollisionShape2D>()) 
                     DrawHelper.DrawRegionShapeHollow(node.Shape, Color.Red, 2);
             }
         }

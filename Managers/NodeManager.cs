@@ -137,6 +137,10 @@ namespace Monolith.Managers
             node.ClearNodeData();
         }
 
+        /// <summary>
+        /// Removes the node without waiting.
+        /// </summary>
+        /// <param name="node"></param>
         internal static void RemoveImmediate(Node node) => RemoveNode(node);
 
         /// <summary>
@@ -174,6 +178,10 @@ namespace Monolith.Managers
             }
         }
 
+        /// <summary>
+        /// Updates all the nodes.
+        /// </summary>
+        /// <param name="gameTime"></param>
         public static void UpdateNodes(GameTime gameTime)
         {
             ApplyPendingChanges();
@@ -184,12 +192,19 @@ namespace Monolith.Managers
             }
         }
 
+        /// <summary>
+        /// Draws all the nodes.
+        /// </summary>
+        /// <param name="spriteBatch"></param>
         public static void DrawNodes(SpriteBatch spriteBatch)
         {
             foreach (var node in allInstances)
                 node.Draw(spriteBatch);
         }
 
+        /// <summary>
+        /// Dumps all instances of nodes.
+        /// </summary>
         public static void DumpAllInstances()
         {
             UnloadNodes();
@@ -197,23 +212,43 @@ namespace Monolith.Managers
             allInstancesDetailed.Clear();
         }
 
-        public static Node GetNodeByName(string name)
+        /// <summary>
+        /// Gets a node based of the name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static Node GetFirstNodeByName(string name)
         {
             return GetNodesByName(name).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Gets all nodes based of the name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static IReadOnlyList<Node> GetNodesByName(string name)
         {
             if (string.IsNullOrEmpty(name)) return Array.Empty<Node>();
             return allInstancesDetailed.TryGetValue(name, out var nodes) ? nodes : Array.Empty<Node>();
-        }
+        }  
 
-        public static T GetNodeByType<T>() where T : Node
+        /// <summary>
+        /// Gets the first node based of type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T GetFirstNodeByT<T>() where T : Node
         {
-            return GetNodesByType<T>().FirstOrDefault();
+            return GetNodesByT<T>().FirstOrDefault();
         }
 
-        public static IReadOnlyList<T> GetNodesByType<T>() where T : Node
+        /// <summary>
+        /// Gets a list of nodes based of type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static IReadOnlyList<T> GetNodesByT<T>() where T : Node
         {
             return allInstancesDetailed
                 .SelectMany(kvp => kvp.Value)
@@ -221,9 +256,14 @@ namespace Monolith.Managers
                 .ToList();
         }
 
-
+        /// <summary>
+        /// All instances of nodes.
+        /// </summary>
         public static IReadOnlyList<Node> AllInstances => allInstances.AsReadOnly();
 
+        /// <summary>
+        /// Detailed instances of all nodes.
+        /// </summary>
         public static IReadOnlyDictionary<string, IReadOnlyList<Node>> AllInstancesDetailed =>
             allInstancesDetailed.ToDictionary(
                 kvp => kvp.Key,
