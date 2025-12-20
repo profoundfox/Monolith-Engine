@@ -34,5 +34,26 @@ namespace Monolith.Util
         {
             Engine.DrawManager.SetCamera(Transform);
         }
+
+        public Rectangle GetWorldViewRectangle()
+        {
+            var cfg = Engine.Instance.Config;
+
+            Matrix inverse = Matrix.Invert(Transform);
+
+            Vector2 topLeft = Vector2.Transform(Vector2.Zero, inverse);
+            Vector2 bottomRight = Vector2.Transform(
+                new Vector2(cfg.RenderWidth, cfg.RenderHeight),
+                inverse
+            );
+
+            return new Rectangle(
+                (int)topLeft.X,
+                (int)topLeft.Y,
+                (int)(bottomRight.X - topLeft.X),
+                (int)(bottomRight.Y - topLeft.Y)
+            );
+        }
+
     }
 }
