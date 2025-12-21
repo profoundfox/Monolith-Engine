@@ -10,34 +10,28 @@ namespace Monolith.Nodes
     public record class SpriteConfig : SpatialNodeConfig
     {
         public MTexture Texture { get; set; }
-        public Color Modulate { get; set; } = Color.White;
-        public Vector2 Scale { get; set; } = Vector2.One;
-        public float Rotation { get; set; } = 0f;
     }
 
     public class Sprite2D : Node2D
     {
         public MTexture Texture { get; set; }
-        public Color Modulate { get; set; } = Color.White;
 
         public Sprite2D(SpriteConfig cfg) : base(cfg)
         {
             Texture = cfg.Texture;
-            Modulate = cfg.Modulate;
-            Scale = cfg.Scale;
-            Rotation = cfg.Rotation;
         }
         
         public override void Draw(SpriteBatch spriteBatch)
         {
             Texture.Draw(
                 position: GlobalTransform.Position,
-                color: Modulate,
+                color: Visual.Modulate,
                 rotation: Rotation,
                 origin: Texture.Center,
                 scale: Scale,
-                effects: SpriteEffects.None,
-                layerDepth: 0f
+                effects: Visual.SpriteEffects,
+                shader: Visual.Shader,
+                layerDepth: Visual.LayerDepth
             );
         }
     }

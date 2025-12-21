@@ -14,6 +14,16 @@ namespace Monolith.Nodes
         /// Optional position for the node. Defaults to Vector2.Zero.
         /// </summary>
         public Vector2? Position { get; set; }
+
+        /// <summary>
+        /// The rotation of the node measured in radians
+        /// </summary>
+        public float Rotation { get; set; } = 0f;
+
+        /// <summary>
+        /// The scale of the node.
+        /// </summary>
+        public Vector2 Scale { get; set; } = Vector2.Zero;
     }
 
 
@@ -35,6 +45,11 @@ namespace Monolith.Nodes
                 UpdateGlobalTransform();
             }
         }
+
+        /// <summary>
+        /// The visual configuration for the node.
+        /// </summary>
+        public Visual2D Visual { get; set; } = Visual2D.Identity;
 
         /// <summary>
         /// The transform relative to global coordinates.
@@ -77,11 +92,20 @@ namespace Monolith.Nodes
         }
 
         /// <summary>
+        /// The local origin of the node.
+        /// </summary>
+        public Vector2 Origin
+        {
+            get => LocalTransform.Origin;
+            set => LocalTransform = LocalTransform with { Origin = value };
+        }
+
+        /// <summary>
         /// Creates a new Node2D using a SpatialNodeConfig.
         /// </summary>
-        public Node2D(SpatialNodeConfig config) : base(config)
+        public Node2D(SpatialNodeConfig cfg) : base(cfg)
         {
-            _localTransform = new Transform2D(config.Position ?? Vector2.Zero);
+            _localTransform = new Transform2D(cfg.Position ?? Vector2.Zero, rotation: cfg.Rotation, scale: cfg.Scale);
             UpdateGlobalTransform();
         }
         /// <summary>

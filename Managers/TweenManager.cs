@@ -7,7 +7,7 @@ namespace Monolith.Managers
     public class TweenManager
     {
         private readonly List<Tween> _tweens = new();
-        public TweenManager() { }
+        public TweenManager() {}
 
         /// <summary>
         /// Adds a tween.
@@ -24,10 +24,7 @@ namespace Monolith.Managers
         /// <param name="tweens"></param>
         public void AddTweens(Tween[] tweens)
         {
-            foreach(var t in tweens)
-            {
-                AddTween(t);
-            }
+            _tweens.AddRange(tweens);
         }
         
         /// <summary>
@@ -42,5 +39,7 @@ namespace Monolith.Managers
                     _tweens.RemoveAt(i);
             }
         }
+
+        public IReadOnlyList<Tween> Tweens => _tweens;
     }
 }

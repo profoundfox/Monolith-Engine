@@ -126,7 +126,6 @@ namespace Monolith.Nodes
 
 
             cameraXTween.Start();
-            Engine.TweenManager.AddTween(cameraXTween);
         }
 
         private void LockBody()

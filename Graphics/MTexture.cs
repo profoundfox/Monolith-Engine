@@ -11,19 +11,76 @@ namespace Monolith.Graphics
     public class MTexture : IDisposable
     {
         /// <summary>
-        /// Internal Texture2D.
+        /// Internal texture used for rendering.
         /// </summary>
         public Texture2D Texture { get; private set; }
 
         /// <summary>
-        /// Optional sub-region of the texture.
+        /// Optional sub-region of the texture to render.
+        /// If null, the entire texture is used.
         /// </summary>
         public Rectangle? SourceRectangle { get; private set; }
 
+        /// <summary>
+        /// World or screen position where the texture is drawn.
+        /// </summary>
+        public Vector2 Position { get; set; }
+
+        /// <summary>
+        /// Tint color applied to the texture.
+        /// </summary>
+        public Color Color { get; set; }
+
+        /// <summary>
+        /// Optional shader effect used when rendering the texture.
+        /// </summary>
+        public Effect Shader { get; set; }
+
+        /// <summary>
+        /// Sprite flipping effects applied during rendering.
+        /// </summary>
+        public SpriteEffects Effects { get; set; }
+
+        /// <summary>
+        /// Rotation of the texture in radians.
+        /// </summary>
+        public float Rotation { get; set; }
+
+        /// <summary>
+        /// Origin point for rotation and scaling, relative to the texture.
+        /// </summary>
+        public Vector2 Origin { get; set; }
+
+        /// <summary>
+        /// Scale factor applied to the texture.
+        /// </summary>
+        public Vector2 Scale { get; set; }
+
+        /// <summary>
+        /// Depth value used for draw order sorting.
+        /// </summary>
+        public float LayerDepth { get; set; }
+
+        /// <summary>
+        /// Width of the rendered texture or source rectangle.
+        /// </summary>
         public int Width => SourceRectangle?.Width ?? Texture.Width;
+
+        /// <summary>
+        /// Height of the rendered texture or source rectangle.
+        /// </summary>
         public int Height => SourceRectangle?.Height ?? Texture.Height;
+
+        /// <summary>
+        /// Size of the rendered texture in pixels.
+        /// </summary>
         public Point Size => new(Width, Height);
+
+        /// <summary>
+        /// Center point of the rendered texture in local space.
+        /// </summary>
         public Vector2 Center => new(Width / 2f, Height / 2f);
+
 
         /// <summary>
         /// Creates a blank texture.
@@ -83,10 +140,26 @@ namespace Monolith.Graphics
             return new MTexture(Texture, region);
         }
 
+        public void Draw()
+        {
+            Engine.DrawManager.Draw(new Managers.DrawParams(
+                texture: this,
+                position: Position,
+                source: SourceRectangle,
+                color: Color,
+                rotation: Rotation,
+                origin: Origin,
+                scale: Scale,
+                effects: Effects,
+                effect: Shader,
+                layerDepth: LayerDepth
+            ));
+        }
+
         /// <summary>
-        /// Draws the texture at the given position.
+        /// Draws the texture with given parameters.
         /// </summary>
-        public void Draw(Vector2 position, Color color, float rotation = 0f, Vector2 origin = default, Vector2? scale = null, SpriteEffects effects = SpriteEffects.None, float layerDepth = 0f)
+        public void Draw(Vector2 position, Color color, float rotation = 0f, Vector2 origin = default, Vector2? scale = null, SpriteEffects effects = SpriteEffects.None, Effect shader = null, float layerDepth = 0f)
         {
             Engine.DrawManager.Draw(new Managers.DrawParams
             (
@@ -98,6 +171,7 @@ namespace Monolith.Graphics
                 origin: origin,
                 scale: scale ?? Vector2.One,
                 effects: effects,
+                effect: shader,
                 layerDepth: layerDepth
             ));
         }

@@ -60,7 +60,6 @@ namespace Monolith.Graphics
             {
                 int tileSetIndex = _tiles[i];
 
-                // Skip empty tiles
                 if (tileSetIndex < 0)
                     continue;
 
@@ -74,15 +73,7 @@ namespace Monolith.Graphics
                     y * TileHeight
                 );
 
-                Engine.DrawManager.Draw(
-                    new DrawParams(tile, position)
-                    {
-                        SourceRectangle = tile.SourceRectangle,
-                        Color = Color.White,
-                        LayerDepth = LayerDepth
-                    },
-                    DrawLayer.Background
-                );
+                tile.Draw(position, Color.White, layerDepth: LayerDepth);
             }
         }
     }

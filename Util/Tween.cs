@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Monolith.Helpers;
+using Monolith.Managers;
 
 namespace Monolith.Util
 {
@@ -22,6 +23,10 @@ namespace Monolith.Util
             EasingFunction = easingFunction ?? EasingFunctions.Linear;
             OnUpdate = onUpdate;
             OnComplete = onComplete;
+
+            Engine.TweenManager.AddTween(this);
+
+            Start();
         }
 
         public void Start()

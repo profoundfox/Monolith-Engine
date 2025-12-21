@@ -78,7 +78,6 @@ namespace Monolith.Managers
         public Effect Effect;
         public bool UseCamera;
 
-        // Tiling helpers (used by DrawLooping)
         public bool LoopX;
         public bool LoopY;
         public Vector2 Offset;
@@ -105,13 +104,10 @@ namespace Monolith.Managers
 
     /// <summary>
     /// Responsible for queueing draw calls and flushing them to a SpriteBatch.
-    /// Features:
-    /// - Single Draw(DrawParams) entry point
-    /// - Unified DrawLooping implementation
-    /// - Batch Begin/End by: layer -> camera usage -> Effect (so switching effects is handled safely)
     /// </summary>
     public sealed partial class DrawManager
     {
+        private readonly Dictionary<Effect, SpriteBatch> _spriteBatches = new();
         private readonly SpriteBatch _spriteBatch;
         private readonly Dictionary<DrawLayer, List<DrawCall>> _queues;
         private Matrix _camera = Matrix.Identity;
@@ -140,28 +136,7 @@ namespace Monolith.Managers
         }
 
         /// <summary>
-        /// Queue a Sprite.
-        /// </summary>
-        public void Draw(in Sprite sprite, DrawLayer layer = DrawLayer.Middleground)
-        {
-            var p = new DrawParams(
-                sprite.Texture,
-                sprite.Position,
-                sprite.Color,
-                sprite.Rotation,
-                sprite.Origin,
-                sprite.Scale,
-                sprite.Texture.SourceRectangle,
-                sprite.Effects,
-                sprite.LayerDepth,
-                effect: null,
-                useCamera: true);
-
-            Draw(p, layer);
-        }
-
-        /// <summary>
-        /// Queue a tiled background.
+        /// Queues a tiled texture.
         /// </summary>
         private void EnqueueLooping(MTexture texture, Rectangle source, Vector2 position, Vector2 offset,
             DrawLayer layer, Color color, float layerDepth, bool useCamera)
@@ -202,13 +177,6 @@ namespace Monolith.Managers
                     _queues[layer].Add(call);
                 }
             }
-        }
-
-        public void DrawLooping(in Sprite sprite, Vector2 position, Vector2 offset,
-            DrawLayer layer = DrawLayer.Middleground, Color? color = null, float layerDepth = 0f)
-        {
-            Rectangle source = sprite.SourceRectangle;
-            EnqueueLooping(sprite.Texture, source, position, offset, layer, color ?? Color.White, layerDepth, useCamera: true);
         }
 
         public void DrawLooping(MTexture texture, Vector2 position, Vector2 offset,
@@ -280,28 +248,44 @@ namespace Monolith.Managers
                 var queue = _queues[layer];
                 if (queue.Count == 0) continue;
 
-                var groups = queue
-                    .GroupBy(c => (layer == DrawLayer.UI) ? (UseCamera: false, Effect: c.Effect) : (UseCamera: c.UseCamera, Effect: c.Effect));
+                var groups = queue.GroupBy(c => (UseCamera: layer != DrawLayer.UI && c.UseCamera, Effect: c.Effect));
 
                 foreach (var group in groups)
                 {
-                    Matrix transform = group.Key.UseCamera ? _camera : Matrix.Identity;
+                    SpriteBatch sb;
+                    Effect effect = group.Key.Effect;
 
-                    _spriteBatch.Begin(
+                    if (effect == null)
+                    {
+                        sb = _spriteBatch;
+                    }
+                    else
+                    {
+                        if (!_spriteBatches.TryGetValue(effect, out sb))
+                        {
+                            sb = new SpriteBatch(_spriteBatch.GraphicsDevice);
+                            _spriteBatches[effect] = sb;
+                        }
+                    }
+
+                    sb.Begin(
                         SpriteSortMode.BackToFront,
                         BlendState.AlphaBlend,
                         SamplerState.PointClamp,
-                        transformMatrix: transform,
-                        effect: group.Key.Effect);
+                        transformMatrix: group.Key.UseCamera ? _camera : Matrix.Identity,
+                        effect: effect
+                    );
 
                     foreach (var call in group)
                         DrawInternal(call);
 
-                    _spriteBatch.End();
+                    sb.End();
                 }
 
                 queue.Clear();
             }
         }
+
+
     }
 }
