@@ -1,8 +1,10 @@
 using System;
 using System.Linq;
+using Gum.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Geometry;
+using Monolith.Graphics;
 using Monolith.Helpers;
 using Monolith.Managers;
 
@@ -49,7 +51,7 @@ namespace Monolith.Nodes
         /// <summary>
         /// The visual configuration for the node.
         /// </summary>
-        public Visual2D Visual { get; set; } = Visual2D.Identity;
+        public Visual2D Visual { get; set; } = new Visual2D();
 
         /// <summary>
         /// The transform relative to global coordinates.

@@ -174,6 +174,7 @@ namespace Monolith.Graphics
                 effect: shader,
                 layerDepth: layerDepth
             ));
+
         }
 
         /// <summary>

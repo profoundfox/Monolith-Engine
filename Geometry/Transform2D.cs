@@ -4,30 +4,25 @@ using Microsoft.Xna.Framework;
 namespace Monolith.Geometry
 {
     public readonly record struct Transform2D
-    (
-        Vector2 Position,
-        float Rotation,
-        Vector2 Scale,
-        Vector2 Origin
-    )
     {
+        public Vector2 Position { get; init; }
+        public float Rotation { get; init; }
+        public Vector2 Scale { get; init; }
+        public Vector2 Origin { get; init; }
+
         public static readonly Transform2D Identity =
             new(Vector2.Zero, 0f, Vector2.One, Vector2.Zero);
 
-        public Transform2D
-        (
-            Vector2 position,
-            float rotation = 0f,
-            Vector2? scale = null,
-            Vector2? origin = null
-        )
-            : this(
-                position,
-                rotation,
-                scale ?? Vector2.One,
-                origin ?? Vector2.Zero
-            )
-        { }
+        public Transform2D(Vector2 position, float rotation = 0f, Vector2? scale = null, Vector2? origin = null)
+        {
+            Position = position;
+            Rotation = rotation;
+            Scale = scale ?? Vector2.One;
+            if (Scale.X == 0 && Scale.Y == 0)
+                Scale = Vector2.One;
+            Origin = origin ?? Vector2.Zero;
+        }
+
 
         /// <summary>
         /// Converts this transform into a world matrix.

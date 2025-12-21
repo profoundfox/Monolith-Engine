@@ -1,30 +1,61 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-public readonly record struct Visual2D
+namespace Monolith.Graphics
 {
-    public Effect Shader { get; init; }
-    public SpriteEffects SpriteEffects { get; init; }
-
-    public Color Modulate { get; init; }
-
-    public bool FlipH { get; init; }
-    public bool FlipY { get; init; }
-
-    public bool Visible { get; init; }
-    
-    public float LayerDepth { get; init; }
-
-    public static readonly Visual2D Identity = new()
+    public sealed class Visual2D
     {
-        Shader = null,
-        SpriteEffects = SpriteEffects.None,
-        Modulate = Color.White,
-        FlipH = false,
-        FlipY = false,
-        Visible = true,
-        LayerDepth = 0.5f
-    };
+        /// <summary>
+        /// Optional shader/effect override.
+        /// </summary>
+        public Effect Shader { get; set; } = null;
 
+        /// <summary>
+        /// SpriteBatch sprite effects (flip, etc).
+        /// </summary>
+        public SpriteEffects SpriteEffects { get; set; } = SpriteEffects.None;
 
+        /// <summary>
+        /// Color modulation (tint).
+        /// </summary>
+        public Color Modulate { get; set; } = Color.White;
+
+        /// <summary>
+        /// Horizontal flip (convenience).
+        /// </summary>
+        public bool FlipH
+        {
+            get => (SpriteEffects & SpriteEffects.FlipHorizontally) != 0;
+            set
+            {
+                SpriteEffects = value
+                    ? SpriteEffects | SpriteEffects.FlipHorizontally
+                    : SpriteEffects & ~SpriteEffects.FlipHorizontally;
+            }
+        }
+
+        /// <summary>
+        /// Vertical flip (convenience).
+        /// </summary>
+        public bool FlipY
+        {
+            get => (SpriteEffects & SpriteEffects.FlipVertically) != 0;
+            set
+            {
+                SpriteEffects = value
+                    ? SpriteEffects | SpriteEffects.FlipVertically
+                    : SpriteEffects & ~SpriteEffects.FlipVertically;
+            }
+        }
+
+        /// <summary>
+        /// Whether this visual should be drawn.
+        /// </summary>
+        public bool Visible { get; set; } = true;
+
+        /// <summary>
+        /// Layer depth for SpriteBatch.
+        /// </summary>
+        public float LayerDepth { get; set; } = 0f;
+    }
 }

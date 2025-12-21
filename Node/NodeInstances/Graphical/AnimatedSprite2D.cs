@@ -24,11 +24,6 @@ namespace Monolith.Nodes
 
         public MTexture CurrentFrame => CurrentAnimation?.Frames[_currentFrame];
 
-        public Color Modulate { get; set; } = Color.White;
-        public Vector2 Scale { get; set; } = Vector2.One;
-        public float Rotation { get; set; } = 0f;
-        public float LayerDepth { get; set; }
-
         public SpriteEffects Effects { get; set; }
 
         public bool Finished => _finished;
@@ -38,9 +33,6 @@ namespace Monolith.Nodes
         {
             Atlas = cfg.Atlas;
             IsLooping = cfg.IsLooping;
-            Modulate = cfg.Modulate;
-            Scale = cfg.Scale;
-            Rotation = cfg.Rotation;
         }
 
         public void PlayAnimation(string name, bool isLooping = false)
@@ -117,12 +109,13 @@ namespace Monolith.Nodes
 
             CurrentFrame.Draw(
                 position: GlobalTransform.Position,
-                color: Modulate,
+                color: Visual.Modulate,
                 rotation: Rotation,
                 origin: CurrentFrame.Center,
                 scale: Scale,
-                effects: Effects,
-                layerDepth: LayerDepth
+                effects: Visual.SpriteEffects,
+                shader: Visual.Shader,
+                layerDepth: Visual.LayerDepth
             );
         }
     }
