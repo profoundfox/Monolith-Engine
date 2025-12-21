@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Monolith.Graphics
 {
-    public sealed class Visual2D
+    public sealed record Visual2D
     {
         /// <summary>
         /// Optional shader/effect override.

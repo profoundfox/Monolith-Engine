@@ -186,7 +186,7 @@ namespace Monolith.Managers
             EnqueueLooping(texture, source, position, offset, layer, color ?? Color.White, layerDepth, useCamera: false);
         }
 
-        private void DrawInternal(in DrawCall call)
+        private void DrawInternal(SpriteBatch sb, in DrawCall call)
         {
             if (call.Texture == null) return;
 
@@ -207,7 +207,7 @@ namespace Monolith.Managers
                 {
                     for (int y = startY; y < screenH + tileH; y += tileH)
                     {
-                        _spriteBatch.Draw(
+                        sb.Draw(
                             call.Texture,
                             new Vector2(call.Position.X + x, call.Position.Y + y),
                             src,
@@ -223,7 +223,7 @@ namespace Monolith.Managers
                 return;
             }
 
-            _spriteBatch.Draw(
+            sb.Draw(
                 call.Texture,
                 call.Position,
                 src,
@@ -277,7 +277,7 @@ namespace Monolith.Managers
                     );
 
                     foreach (var call in group)
-                        DrawInternal(call);
+                        DrawInternal(sb, call);
 
                     sb.End();
                 }
