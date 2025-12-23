@@ -142,7 +142,7 @@ namespace Monolith.Graphics
 
         public void Draw()
         {
-            Engine.DrawManager.Draw(new Managers.DrawParams(
+            Engine.DrawManager.Draw(new DrawParams(
                 texture: this,
                 position: Position,
                 source: SourceRectangle,
@@ -158,7 +158,7 @@ namespace Monolith.Graphics
 
         public void Draw(Vector2 position)
         {
-            Engine.DrawManager.Draw(new Managers.DrawParams(
+            Engine.DrawManager.Draw(new DrawParams(
                 texture: this,
                 position: position,
                 source: SourceRectangle,
@@ -177,7 +177,7 @@ namespace Monolith.Graphics
         /// </summary>
         public void Draw(Vector2 position, Color color, float rotation = 0f, Vector2 origin = default, Vector2? scale = null, SpriteEffects effects = SpriteEffects.None, Effect shader = null, float layerDepth = 0f)
         {
-            Engine.DrawManager.Draw(new Managers.DrawParams
+            Engine.DrawManager.Draw(new DrawParams
             (
                 texture: this,
                 position: position,
