@@ -27,7 +27,7 @@ namespace Monolith.Nodes
             InternalCamera = new MCamera();
 
             InternalCamera.Zoom = Zoom;
-            InternalCamera.Position = Position;
+            InternalCamera.Position = LocalPosition;
 
             TransformChanged += (trans) =>
             {

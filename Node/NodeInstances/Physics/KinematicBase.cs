@@ -87,7 +87,7 @@ namespace Monolith.Nodes
                 }
             }
 
-            Position += new Vector2(pushX, pushY);
+            LocalPosition += new Vector2(pushX, pushY);
             Velocity = Vector2.Zero;
         }
 
@@ -122,7 +122,7 @@ namespace Monolith.Nodes
 
                 if (!IsColliding(test))
                 {
-                    Position += new Vector2(sign, 0);
+                    LocalPosition += new Vector2(sign, 0);
                 }
                 else
                 {
@@ -148,7 +148,7 @@ namespace Monolith.Nodes
 
                 if (!IsColliding(test))
                 {
-                    Position += new Vector2(0, sign);
+                    LocalPosition += new Vector2(0, sign);
                 }
                 else
                 {

@@ -37,7 +37,7 @@ namespace Monlith.Nodes
 
             if (Shape.Location != Point.Zero)
             {
-                Position = Shape.Location.ToVector2();
+                LocalPosition = Shape.Location.ToVector2();
             }
         }
 
@@ -133,7 +133,7 @@ namespace Monlith.Nodes
             var cfg = new CollisionShapeConfig
             {
                 Shape = clonedShape,
-                Position = this.Position,
+                LocalPosition = this.LocalPosition,
                 Name = Name,
                 Parent = Parent
             };

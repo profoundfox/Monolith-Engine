@@ -99,7 +99,7 @@ public static class NodeFactory
         if (nameProp != null && nameProp.CanWrite)
             nameProp.SetValue(configInstance, nodeType.FullName);
 
-        PropertyInfo posProp = configType.GetProperty("Position");
+        PropertyInfo posProp = configType.GetProperty("LocalPosition");
         if (posProp != null && posProp.CanWrite)
             posProp.SetValue(configInstance, shape.Location.ToVector2());
 

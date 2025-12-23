@@ -15,6 +15,41 @@ namespace Monolith.Managers
         UI
     }
 
+    public readonly struct SpriteBatchConfig
+    {
+        public SpriteSortMode SortMode { get; }
+        public BlendState BlendState { get; }
+        public SamplerState SamplerState { get; }
+        public DepthStencilState DepthStencilState { get; }
+        public RasterizerState RasterizerState { get; }
+        public Effect Effect { get; }
+        public Matrix? TransformMatrix { get; }
+
+        public SpriteBatchConfig(
+            SpriteSortMode sortMode = SpriteSortMode.Deferred,
+            BlendState blendState = null,
+            SamplerState samplerState = null,
+            DepthStencilState depthStencilState = null,
+            RasterizerState rasterizerState = null,
+            Effect effect = null,
+            Matrix? transformMatrix = null)
+        {
+            SortMode = sortMode;
+            BlendState = blendState ?? BlendState.AlphaBlend;
+            SamplerState = samplerState ?? SamplerState.LinearClamp;
+            DepthStencilState = depthStencilState ?? DepthStencilState.None;
+            RasterizerState = rasterizerState ?? RasterizerState.CullCounterClockwise;
+            Effect = effect;
+            TransformMatrix = transformMatrix;
+        }
+
+        /// <summary>
+        /// Common default SpriteBatch configuration.
+        /// </summary>
+        public static SpriteBatchConfig Default => new SpriteBatchConfig();
+    }
+
+
     /// <summary>
     /// Lightweight container used by callers to describe what to draw.
     /// Provides sensible defaults and keeps Draw() call-sites compact.
@@ -286,6 +321,6 @@ namespace Monolith.Managers
             }
         }
 
-
+        
     }
 }

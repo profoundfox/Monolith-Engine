@@ -104,7 +104,7 @@ namespace Monolith.Nodes
 
             var camera = InternalCamera.GetWorldViewRectangle();
 
-            Vector2 targetPos = new Vector2(Position.X + camera.Width * dir, 0);
+            Vector2 targetPos = new Vector2(LocalPosition.X + camera.Width * dir, 0);
 
 
             foreach (var action in TransitionStarted)
@@ -112,11 +112,11 @@ namespace Monolith.Nodes
                 action?.Invoke();
             }
             
-            float startX = Position.X;
+            float startX = LocalPosition.X;
             var cameraXTween = new Tween(
                 0.5f,
                 EasingFunctions.Linear,
-                t => Position = new Vector2(MathHelper.Lerp(startX, targetPos.X, t), Position.Y),
+                t => LocalPosition = new Vector2(MathHelper.Lerp(startX, targetPos.X, t), LocalPosition.Y),
                 () =>
                 {
                     foreach (var action in TransitionEnded)

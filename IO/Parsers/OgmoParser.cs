@@ -69,7 +69,7 @@ namespace Monolith.IO
                     {
                         Parent = null,
                         Name = $"Decal: {texturePathWithoutExtension}",
-                        Position = new Vector2(decal.x, decal.y),
+                        LocalPosition = new Vector2(decal.x, decal.y),
                         Texture = new MTexture(texturePathWithoutExtension)
                     });
                 }

@@ -156,6 +156,22 @@ namespace Monolith.Graphics
             ));
         }
 
+        public void Draw(Vector2 position)
+        {
+            Engine.DrawManager.Draw(new Managers.DrawParams(
+                texture: this,
+                position: position,
+                source: SourceRectangle,
+                color: Color,
+                rotation: Rotation,
+                origin: Origin,
+                scale: Scale,
+                effects: Effects,
+                effect: Shader,
+                layerDepth: LayerDepth
+            ));
+        }
+
         /// <summary>
         /// Draws the texture with given parameters.
         /// </summary>

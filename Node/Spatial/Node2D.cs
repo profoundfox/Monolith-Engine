@@ -13,9 +13,9 @@ namespace Monolith.Nodes
     public record class SpatialNodeConfig : NodeConfig
     {
         /// <summary>
-        /// Optional position for the node. Defaults to Vector2.Zero.
+        /// Optional LocalPosition for the node. Defaults to Vector2.Zero.
         /// </summary>
-        public Vector2? Position { get; set; }
+        public Vector2? LocalPosition { get; set; }
 
         /// <summary>
         /// The rotation of the node measured in radians
@@ -59,7 +59,7 @@ namespace Monolith.Nodes
         public Transform2D GlobalTransform { get; private set; }
 
         /// <summary>
-        /// The global position of the node.
+        /// The global LocalPosition of the node.
         /// </summary>
         public Vector2 GlobalPosition
         {
@@ -67,9 +67,9 @@ namespace Monolith.Nodes
         }
 
         /// <summary>
-        /// The local position of the node, relative to its parent.
+        /// The local LocalPosition of the node, relative to its parent.
         /// </summary>
-        public Vector2 Position
+        public Vector2 LocalPosition
         {
             get => LocalTransform.Position;
             set => LocalTransform = LocalTransform with { Position = value };
@@ -107,7 +107,7 @@ namespace Monolith.Nodes
         /// </summary>
         public Node2D(SpatialNodeConfig cfg) : base(cfg)
         {
-            _localTransform = new Transform2D(cfg.Position ?? Vector2.Zero, rotation: cfg.Rotation, scale: cfg.Scale);
+            _localTransform = new Transform2D(cfg.LocalPosition ?? Vector2.Zero, rotation: cfg.Rotation, scale: cfg.Scale);
             UpdateGlobalTransform();
         }
         /// <summary>
@@ -135,17 +135,17 @@ namespace Monolith.Nodes
         }
 
         /// <summary>
-        /// An offset function for adding onto the node's position with a Vector2.
+        /// An offset function for adding onto the node's LocalPosition with a Vector2.
         /// Acts the same as +=.
         /// </summary>
         /// <param name="delta"></param>
         public void Offset(Vector2 delta)
         {
-            Position += delta;
+            LocalPosition += delta;
         }
 
         /// <summary>
-        /// An offset function for adding onto the node's position.
+        /// An offset function for adding onto the node's LocalPosition.
         /// Acts the same as +=.
         /// </summary>
         /// <param name="delta"></param>
