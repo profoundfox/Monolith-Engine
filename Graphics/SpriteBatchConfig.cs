@@ -19,11 +19,12 @@ public readonly struct SpriteBatchConfig : IEquatable<SpriteBatchConfig>
             Effect effect = null)
         {
             SortMode = sortMode;
-            BlendState = blendState ?? BlendState.AlphaBlend;
-            SamplerState = samplerState ?? SamplerState.LinearClamp;
-            DepthStencilState = depthStencilState ?? DepthStencilState.None;
-            RasterizerState = rasterizerState ?? RasterizerState.CullCounterClockwise;
+            BlendState = blendState;
+            SamplerState = samplerState;
+            DepthStencilState = depthStencilState;
+            RasterizerState = rasterizerState;
             Effect = effect;
+
         }
 
         public bool Equals(SpriteBatchConfig other)
@@ -53,5 +54,11 @@ public readonly struct SpriteBatchConfig : IEquatable<SpriteBatchConfig>
             }
         }
 
-        public static SpriteBatchConfig Default => new SpriteBatchConfig();
+        public static SpriteBatchConfig Default => new SpriteBatchConfig(
+            sortMode: SpriteSortMode.BackToFront,
+            blendState: BlendState.AlphaBlend,
+            samplerState: SamplerState.PointClamp,
+            depthStencilState: DepthStencilState.None,
+            rasterizerState: RasterizerState.CullCounterClockwise
+        );
     }

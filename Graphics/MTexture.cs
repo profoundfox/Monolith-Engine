@@ -83,6 +83,12 @@ namespace Monolith.Graphics
 
 
         /// <summary>
+        /// The config for spritebatch.
+        /// </summary>
+        public SpriteBatchConfig SpriteBatchConfig { get; set;} = SpriteBatchConfig.Default;
+
+
+        /// <summary>
         /// Creates a blank texture.
         /// </summary>
         public MTexture(int width, int height, bool mipMap = false, SurfaceFormat format = SurfaceFormat.Color)
@@ -152,7 +158,8 @@ namespace Monolith.Graphics
                 scale: Scale,
                 effects: Effects,
                 effect: Shader,
-                layerDepth: LayerDepth
+                layerDepth: LayerDepth,
+                spriteBatchConfig: SpriteBatchConfig
             ));
         }
 
@@ -168,13 +175,14 @@ namespace Monolith.Graphics
                 scale: Scale,
                 effects: Effects,
                 effect: Shader,
-                layerDepth: LayerDepth
+                layerDepth: LayerDepth,
+                spriteBatchConfig: SpriteBatchConfig
             ));
         }
 
         /// <summary>
         /// Draws the texture with given parameters.
-        /// </summary>
+        /// </summary>  
         public void Draw(Vector2 position, Color color, float rotation = 0f, Vector2 origin = default, Vector2? scale = null, SpriteEffects effects = SpriteEffects.None, Effect shader = null, float layerDepth = 0f)
         {
             Engine.DrawManager.Draw(new DrawParams
@@ -188,7 +196,30 @@ namespace Monolith.Graphics
                 scale: scale ?? Vector2.One,
                 effects: effects,
                 effect: shader,
-                layerDepth: layerDepth
+                layerDepth: layerDepth,
+                spriteBatchConfig: SpriteBatchConfig
+            ));
+
+        }
+
+        /// <summary>
+        /// Draws the texture with given parameters.
+        /// </summary>  
+        public void Draw(Vector2 position, Color color, float rotation = 0f, Vector2 origin = default, Vector2? scale = null, SpriteEffects effects = SpriteEffects.None, Effect shader = null, float layerDepth = 0f, SpriteBatchConfig spriteBatchConfig = default)
+        {
+            Engine.DrawManager.Draw(new DrawParams
+            (
+                texture: this,
+                position: position,
+                source: SourceRectangle,
+                color: color,
+                rotation: rotation,
+                origin: origin,
+                scale: scale ?? Vector2.One,
+                effects: effects,
+                effect: shader,
+                layerDepth: layerDepth,
+                spriteBatchConfig: spriteBatchConfig
             ));
 
         }

@@ -117,6 +117,11 @@ namespace Monolith
         /// </summary>
         public static float DeltaTime { get; private set; }
 
+        /// <summary>
+        /// The size of the screen, represented as a Point.
+        /// </summary>
+        public Point ScreenSize { get; set; }
+
         private int _finalWidth, _finalHeight;
         private int _offsetX, _offsetY;
         private float _currentScale;
@@ -149,6 +154,8 @@ namespace Monolith
             Window.AllowUserResizing = Config.AllowUserResizing;
             Window.IsBorderless = Config.IsBorderless;
             IsFixedTimeStep = Config.IsFixedTimeStep;
+
+            ScreenSize = new Point(config.RenderWidth, config.RenderHeight);
 
             if (Config.Maximised)
             {

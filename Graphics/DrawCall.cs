@@ -35,7 +35,7 @@ namespace Monolith.Graphics
             float layerDepth = 0f,
             Effect effect = null,
             bool useCamera = true,
-            SpriteBatchConfig spriteBatchConfig = new SpriteBatchConfig()
+            SpriteBatchConfig? spriteBatchConfig = null
             )
         {
             Texture = texture.Texture ?? throw new ArgumentNullException(nameof(texture));
@@ -49,7 +49,7 @@ namespace Monolith.Graphics
             LayerDepth = layerDepth;
             Effect = effect;
             UseCamera = useCamera;
-            SpriteBatchConfig = spriteBatchConfig;
+            SpriteBatchConfig = spriteBatchConfig ?? new SpriteBatchConfig();
         }
     }
 

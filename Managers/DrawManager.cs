@@ -51,7 +51,7 @@ namespace Monolith.Managers
         {
             if (call.Texture == null) return;
 
-            Rectangle src = call.SourceRectangle ?? new Rectangle(0, 0, call.Texture.Width, call.Texture.Height);
+            Rectangle src = call.SourceRectangle ?? new Rectangle(0, 0, call.Texture.Width, call.Texture.Height);            
 
             sb.Draw(
                 call.Texture,
@@ -62,8 +62,12 @@ namespace Monolith.Managers
                 call.Origin,
                 call.Scale,
                 call.Effects,
-                call.LayerDepth);
+                call.LayerDepth
+            );
+
+
         }
+
 
 
         /// <summary>
@@ -102,6 +106,8 @@ namespace Monolith.Managers
                         cfg.Effect,
                         transform
                     );
+
+                    Console.WriteLine(cfg);
 
                     foreach (var call in group)
                         DrawInternal(sb, call);

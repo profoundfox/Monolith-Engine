@@ -73,7 +73,8 @@ namespace Monolith.Graphics
                     y * TileHeight
                 );
 
-                tile.Draw(position, Color.White, layerDepth: LayerDepth);
+                tile.Draw(position, Color.White, 0f, Vector2.Zero, null, SpriteEffects.None, null, LayerDepth);
+
             }
         }
     }
