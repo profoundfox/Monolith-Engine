@@ -202,27 +202,6 @@ namespace Monolith.Graphics
 
         }
 
-        /// <summary>
-        /// Draws the texture with given parameters.
-        /// </summary>  
-        public void Draw(Vector2 position, Color color, float rotation = 0f, Vector2 origin = default, Vector2? scale = null, SpriteEffects effects = SpriteEffects.None, Effect shader = null, float layerDepth = 0f, SpriteBatchConfig spriteBatchConfig = default)
-        {
-            Engine.DrawManager.Draw(new DrawParams
-            (
-                texture: this,
-                position: position,
-                source: SourceRectangle,
-                color: color,
-                rotation: rotation,
-                origin: origin,
-                scale: scale ?? Vector2.One,
-                effects: effects,
-                effect: shader,
-                layerDepth: layerDepth,
-                spriteBatchConfig: spriteBatchConfig
-            ));
-
-        }
 
         /// <summary>
         /// Sets the pixel data of the texture.

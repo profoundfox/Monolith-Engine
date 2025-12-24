@@ -11,6 +11,7 @@ namespace Monolith.Graphics
     {
         public MTexture Texture { get; set; }
         public Vector2 ParallaxFactor { get; set; } = Vector2.One;
+        public int LoopTimes { get; set; } = 1;
     }
     /// <summary>
     /// Represents a single infinite scrolling parallax layer.
@@ -19,6 +20,7 @@ namespace Monolith.Graphics
     {
         public MTexture Texture { get; set; }
         public Vector2 ParallaxFactor { get; set; }
+        public int LoopTimes { get; set; }
 
         private Vector2 offset = Vector2.Zero;
 
@@ -31,6 +33,7 @@ namespace Monolith.Graphics
         {
             Texture = cfg.Texture ?? throw new ArgumentNullException(nameof(cfg.Texture));
             ParallaxFactor = cfg.ParallaxFactor;
+            LoopTimes = cfg.LoopTimes;
         }
 
         /// <summary>
@@ -58,20 +61,30 @@ namespace Monolith.Graphics
         {
             base.Draw(spriteBatch);
 
-            int tilesX = Engine.Instance.ScreenSize.X / Texture.Width + 2;
-            int tilesY = Engine.Instance.ScreenSize.Y / Texture.Height + 2;
+            var camera = MCamera.CurrentCameraInstance;
+            Rectangle view = camera.GetWorldViewRectangle();
 
-            for (int x = 0; x < tilesX; x++)
+            int texW = Texture.Width;
+            int texH = Texture.Height;
+
+            Vector2 parallaxPos = camera.Position * ParallaxFactor;
+
+            int startX = (int)Math.Floor((view.Left + parallaxPos.X) / texW) - 1;
+            int startY = (int)Math.Floor((view.Top + parallaxPos.Y) / texH) - 1;
+
+            int endX = (int)Math.Ceiling((view.Right + parallaxPos.X) / texW) + 1;
+            int endY = (int)Math.Ceiling((view.Bottom + parallaxPos.Y) / texH) + 1;
+
+            for (int y = startY; y < endY; y++)
             {
-                for (int y = 0; y < tilesY; y++)
+                for (int x = startX; x < endX; x++)
                 {
-                    Vector2 drawPos = new Vector2(
-                        x * Texture.Width - offset.X,
-                        y * Texture.Height - offset.Y
+                    Vector2 worldPos = new Vector2(
+                        x * texW - parallaxPos.X,
+                        y * texH - parallaxPos.Y
                     );
-                    
-                    Texture.Draw(drawPos, Color.White, 0f, Vector2.Zero, null, SpriteEffects.None, null, 1.0f);
 
+                    Texture.Draw(worldPos, Color.White, layerDepth: 1f);
                 }
             }
         }
