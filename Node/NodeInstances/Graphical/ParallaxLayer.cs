@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Nodes;
 using Monolith.Util;
+using RenderingLibrary.Graphics;
 
 namespace Monolith.Graphics
 {
@@ -12,6 +13,7 @@ namespace Monolith.Graphics
         public MTexture Texture { get; set; }
         public Vector2 ParallaxFactor { get; set; } = Vector2.One;
         public int LoopTimes { get; set; } = 1;
+        public float LayerDepth { get; set; } = 1f;
     }
     /// <summary>
     /// Represents a single infinite scrolling parallax layer.
@@ -21,6 +23,7 @@ namespace Monolith.Graphics
         public MTexture Texture { get; set; }
         public Vector2 ParallaxFactor { get; set; }
         public int LoopTimes { get; set; }
+        public float LayerDepth { get; set; }
 
         private Vector2 offset = Vector2.Zero;
 
@@ -34,6 +37,7 @@ namespace Monolith.Graphics
             Texture = cfg.Texture ?? throw new ArgumentNullException(nameof(cfg.Texture));
             ParallaxFactor = cfg.ParallaxFactor;
             LoopTimes = cfg.LoopTimes;
+            LayerDepth = cfg.LayerDepth;
         }
 
         /// <summary>
@@ -84,7 +88,7 @@ namespace Monolith.Graphics
                         y * texH - parallaxPos.Y
                     );
 
-                    Texture.Draw(worldPos, Color.White, layerDepth: 1f);
+                    Texture.Draw(worldPos, Color.White, layerDepth: LayerDepth);
                 }
             }
         }

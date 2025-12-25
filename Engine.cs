@@ -18,6 +18,7 @@ using Monolith.Nodes;
 using Monolith.Helpers;
 using Monolith.Util;
 using Monolith.IO;
+using System.IO.Compression;
 
 namespace Monolith
 {
@@ -120,7 +121,7 @@ namespace Monolith
         /// <summary>
         /// The size of the screen, represented as a Point.
         /// </summary>
-        public Point ScreenSize { get; set; }
+        public Point ScreenSize { get => new Point(RenderTarget.Width, RenderTarget.Height); }
 
         private int _finalWidth, _finalHeight;
         private int _offsetX, _offsetY;
@@ -154,8 +155,6 @@ namespace Monolith
             Window.AllowUserResizing = Config.AllowUserResizing;
             Window.IsBorderless = Config.IsBorderless;
             IsFixedTimeStep = Config.IsFixedTimeStep;
-
-            ScreenSize = new Point(config.RenderWidth, config.RenderHeight);
 
             if (Config.Maximised)
             {
