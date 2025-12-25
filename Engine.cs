@@ -123,6 +123,8 @@ namespace Monolith
         /// </summary>
         public Point ScreenSize { get => new Point(RenderTarget.Width, RenderTarget.Height); }
 
+        public static  MTexture Pixel { get; private set; }
+
         private int _finalWidth, _finalHeight;
         private int _offsetX, _offsetY;
         private float _currentScale;
@@ -146,6 +148,7 @@ namespace Monolith
             {
                 IsFullScreen = Config.Fullscreen,
             };
+
 
             ContentManager = base.Content;
             Content.RootDirectory = Config.RootContentDirectory;
@@ -208,6 +211,8 @@ namespace Monolith
 
             GraphicsDevice = base.GraphicsDevice;
             SpriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Pixel = new MTexture(1, 1, new[] { Color.White });
 
             DrawManager = new DrawManager(SpriteBatch);
 

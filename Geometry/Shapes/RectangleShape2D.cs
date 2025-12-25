@@ -128,14 +128,12 @@ namespace Monolith.Geometry
 
         public void Draw()
         {
-            var pixel = new MTexture(1, 1, new[] { Color.White });
-
             Color color = Color.Red;
             float layerDepth = 0f;
             int thickness = 2;
 
             Engine.DrawManager.Draw(
-                new DrawParams(pixel, new Vector2(X, Y))
+                new DrawParams(Engine.Pixel, new Vector2(X, Y))
                 {
                     Color = color,
                     Scale = new Vector2(BoundingBox.Width, thickness),
@@ -145,7 +143,7 @@ namespace Monolith.Geometry
             );
 
             Engine.DrawManager.Draw(
-                new DrawParams(pixel, new Vector2(X, BoundingBox.Bottom - thickness))
+                new DrawParams(Engine.Pixel, new Vector2(X, BoundingBox.Bottom - thickness))
                 {
                     Color = color,
                     Scale = new Vector2(BoundingBox.Width, thickness),
@@ -155,7 +153,7 @@ namespace Monolith.Geometry
             );
 
             Engine.DrawManager.Draw(
-                new DrawParams(pixel, new Vector2(X, Y))
+                new DrawParams(Engine.Pixel, new Vector2(X, Y))
                 {
                     Color = color,
                     Scale = new Vector2(thickness, BoundingBox.Height),
@@ -165,7 +163,7 @@ namespace Monolith.Geometry
             );
 
             Engine.DrawManager.Draw(
-                new DrawParams(pixel, new Vector2(BoundingBox.Right - thickness, Y))
+                new DrawParams(Engine.Pixel, new Vector2(BoundingBox.Right - thickness, Y))
                 {
                     Color = color,
                     Scale = new Vector2(thickness, BoundingBox.Height),
@@ -173,9 +171,6 @@ namespace Monolith.Geometry
                 },
                 Managers.DrawLayer.Middleground
             );
-
-
-            pixel.Dispose();
         }
     }
 }

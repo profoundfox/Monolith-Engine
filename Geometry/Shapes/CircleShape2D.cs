@@ -146,8 +146,6 @@ namespace Monolith.Geometry
 
         public void Draw()
         {
-            var pixel = new MTexture(1, 1, new[] { Color.White });
-
             int segments = 64;
             int thickness = 2;
             Color color = Color.Red;
@@ -171,7 +169,7 @@ namespace Monolith.Geometry
                 float rotation = MathF.Atan2(edge.Y, edge.X);
 
                 Engine.DrawManager.Draw(
-                    new DrawParams(pixel, prev)
+                    new DrawParams(Engine.Pixel, prev)
                     {
                         Color = color,
                         Rotation = rotation,
@@ -184,7 +182,7 @@ namespace Monolith.Geometry
                 prev = next;
             }
 
-            pixel.Dispose();
+            Engine.Pixel.Dispose();
         }
     }
 }

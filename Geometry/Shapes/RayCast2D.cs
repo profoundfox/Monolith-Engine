@@ -94,8 +94,6 @@ namespace Monolith.Geometry
 
         public void Draw()
         {
-            var pixel = new MTexture(1, 1, new[] { Color.White });
-
             Color color = Color.Red;
             float layerDepth = 0f;
             int thickness = 2;
@@ -109,7 +107,7 @@ namespace Monolith.Geometry
             float angle = (float)Math.Atan2(edge.Y, edge.X);
 
             Engine.DrawManager.Draw(
-                new DrawParams(pixel, Position)
+                new DrawParams(Engine.Pixel, Position)
                 {
                     Color = drawColor,
                     Rotation = angle,
