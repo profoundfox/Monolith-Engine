@@ -1,55 +1,76 @@
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Monolith.Util;
+using Monolith.Managers;
 
 namespace Monolith.Nodes
 {
     public record class CameraConfig : SpatialNodeConfig
-    {        
+    {
         public float Zoom { get; set; } = 1f;
     }
-    public class Camera2D : Node2D 
-    {
-        public float Zoom { get; set; }
 
-        public MCamera InternalCamera { get; set; }
+    public class Camera2D : Node2D
+    {
+        public float Zoom { get; set; } = 1f;
+
+        public static Camera2D CurrentCameraInstance { get; private set; }
 
         public Camera2D(CameraConfig cfg) : base(cfg)
         {
             Zoom = cfg.Zoom;
+            CurrentCameraInstance = this;
         }
 
-        public override void Load()
-        {
-            base.Load();
+        /// <summary>
+        /// Returns the camera transform matrix for SpriteBatch.Begin.
+        /// Centers the camera so LocalPosition maps to the screen center.
+        /// </summary>
+        public Matrix GetTransform() 
+        { 
+            var cfg = Engine.Instance.Config; 
 
-            InternalCamera = new MCamera();
+            Vector2 screenCenter = new Vector2(cfg.RenderWidth, cfg.RenderHeight) * 0.5f; 
 
-            InternalCamera.Zoom = Zoom;
-            InternalCamera.Position = LocalPosition;
 
-            TransformChanged += (trans) =>
-            {
-                InternalCamera.Position = trans.Position;
-            };
+            Matrix transform = Matrix.CreateScale(Zoom)
+                * Matrix.CreateRotationZ(GlobalTransform.Rotation)
+                * Matrix.CreateTranslation(new Vector3(-GlobalTransform.Position, 0f))
+                * Matrix.CreateTranslation(new Vector3(screenCenter, 0f)); 
+                
+            return transform; 
         }
 
-        public override void Unload()
+
+
+
+        /// <summary>
+        /// Returns the rectangle of world space currently visible by this camera
+        /// </summary>
+        public Rectangle GetWorldViewRectangle()
         {
-            base.Unload();
+            var cfg = Engine.Instance.Config;
+
+            Matrix inverse = Matrix.Invert(GetTransform());
+
+            Vector2 topLeft = Vector2.Transform(Vector2.Zero, inverse);
+            Vector2 bottomRight = Vector2.Transform(
+                new Vector2(cfg.RenderWidth, cfg.RenderHeight),
+                inverse
+            );
+
+            return new Rectangle(
+                (int)topLeft.X,
+                (int)topLeft.Y,
+                (int)(bottomRight.X - topLeft.X),
+                (int)(bottomRight.Y - topLeft.Y)
+            );
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
 
-            InternalCamera.Update(gameTime);
-        }
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            base.Draw(spriteBatch);
+            Engine.DrawManager.SetCamera(GetTransform());
         }
     }
 }

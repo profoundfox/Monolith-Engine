@@ -38,18 +38,42 @@ namespace Monolith.Graphics
             SpriteBatchConfig? spriteBatchConfig = null
             )
         {
-            Texture = texture.Texture ?? throw new ArgumentNullException(nameof(texture));
+            if (texture == null || texture.Texture == null)
+                throw new ArgumentNullException(nameof(texture));
+            Texture = texture.Texture;
+
             Position = position;
+
             SourceRectangle = source;
-            Color = color ?? Color.White;
+
+            if (color == null)
+                Color = Color.White;
+            else
+                Color = color.Value;
+
             Rotation = rotation;
-            Origin = origin ?? Vector2.Zero;
-            Scale = scale ?? Vector2.One;
+
+            if (origin == null)
+                Origin = Vector2.Zero;
+            else
+                Origin = origin.Value;
+
+            if (scale == null)
+                Scale = Vector2.One;
+            else
+                Scale = scale.Value;
+
             Effects = effects;
             LayerDepth = layerDepth;
+
             Effect = effect;
+
             UseCamera = useCamera;
-            SpriteBatchConfig = spriteBatchConfig ?? new SpriteBatchConfig();
+
+            if (spriteBatchConfig == null)
+                SpriteBatchConfig = new SpriteBatchConfig();
+            else
+                SpriteBatchConfig = spriteBatchConfig.Value;
         }
     }
 

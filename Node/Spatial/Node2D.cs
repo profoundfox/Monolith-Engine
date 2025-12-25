@@ -94,15 +94,6 @@ namespace Monolith.Nodes
         }
 
         /// <summary>
-        /// The local origin of the node.
-        /// </summary>
-        public Vector2 Origin
-        {
-            get => LocalTransform.Origin;
-            set => LocalTransform = LocalTransform with { Origin = value };
-        }
-
-        /// <summary>
         /// Creates a new Node2D using a SpatialNodeConfig.
         /// </summary>
         public Node2D(SpatialNodeConfig cfg) : base(cfg)

@@ -21,6 +21,8 @@ namespace Monolith.Geometry
         bool RayIntersect(Vector2 rayOrigin, Vector2 rayDir, float maxLength, out Vector2 hitPoint, out float distance);
 
         IRegionShape2D Clone();
+
+        void Draw();
     }
 
 

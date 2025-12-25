@@ -92,12 +92,8 @@ namespace Monolith.Helpers
             Engine.DrawManager.Draw(
                 new DrawParams(
                     texture: pixel,
-                    position: new Vector2(rect.X, rect.Y))
-                {
-                    Color = color,
-                    Scale = new Vector2(rect.BoundingBox.Width, rect.BoundingBox.Height),
-                    LayerDepth = layerDepth
-                },
+                    position: new Vector2(rect.X, rect.Y)),
+                    
                 layer
             );
         }

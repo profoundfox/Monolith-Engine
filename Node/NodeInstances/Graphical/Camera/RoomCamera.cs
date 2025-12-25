@@ -62,7 +62,7 @@ namespace Monolith.Nodes
 
             var pos = TargetNode.GlobalPosition;            
 
-            var camera = InternalCamera.GetWorldViewRectangle();
+            var camera = GetWorldViewRectangle();
 
             CollisionSide side = CollisionSide.None;
 
@@ -102,7 +102,7 @@ namespace Monolith.Nodes
         {
             _dir = dir;
 
-            var camera = InternalCamera.GetWorldViewRectangle();
+            var camera = GetWorldViewRectangle();
 
             Vector2 targetPos = new Vector2(LocalPosition.X + camera.Width * dir, 0);
 

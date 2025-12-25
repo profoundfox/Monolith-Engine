@@ -74,7 +74,7 @@ namespace Monolith.Graphics
                 );
 
                 tile.Draw(position, Color.White, 0f, Vector2.Zero, null, SpriteEffects.None, null, LayerDepth);
-
+                
             }
         }
     }

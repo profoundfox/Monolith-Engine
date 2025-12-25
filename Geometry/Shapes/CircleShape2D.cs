@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
+using Monolith.Graphics;
 
 namespace Monolith.Geometry
 {
@@ -142,5 +143,48 @@ namespace Monolith.Geometry
 
         public override bool Equals(object obj) => obj is CircleShape2D c && Equals(c);
         public override int GetHashCode() => HashCode.Combine(Location, Radius);
+
+        public void Draw()
+        {
+            var pixel = new MTexture(1, 1, new[] { Color.White });
+
+            int segments = 64;
+            int thickness = 2;
+            Color color = Color.Red;
+            float layerDepth = 0f;
+
+            Vector2 center = new Vector2(Location.X, Location.Y);
+            float radius = Radius;
+
+            float increment = MathF.Tau / segments;
+            float angle = 0f;
+
+            Vector2 prev = center + new Vector2(MathF.Cos(0f), MathF.Sin(0f)) * radius;
+
+            for (int i = 1; i <= segments; i++)
+            {
+                angle += increment;
+                Vector2 next = center + new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * radius;
+
+                Vector2 edge = next - prev;
+                float length = edge.Length();
+                float rotation = MathF.Atan2(edge.Y, edge.X);
+
+                Engine.DrawManager.Draw(
+                    new DrawParams(pixel, prev)
+                    {
+                        Color = color,
+                        Rotation = rotation,
+                        Scale = new Vector2(length, thickness),
+                        LayerDepth = layerDepth
+                    },
+                    Managers.DrawLayer.Middleground
+                );
+
+                prev = next;
+            }
+
+            pixel.Dispose();
+        }
     }
 }

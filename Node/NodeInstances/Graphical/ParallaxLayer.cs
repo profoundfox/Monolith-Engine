@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Monolith.Managers;
 using Monolith.Nodes;
 using Monolith.Util;
 using RenderingLibrary.Graphics;
@@ -48,7 +49,7 @@ namespace Monolith.Graphics
         {
             base.Update(gameTime);
 
-            offset = MCamera.CurrentCameraInstance.Position * ParallaxFactor;
+            offset = Camera2D.CurrentCameraInstance.GlobalPosition * ParallaxFactor;
 
             offset.X %= Texture.Width;
             offset.Y %= Texture.Height;
@@ -65,13 +66,13 @@ namespace Monolith.Graphics
         {
             base.Draw(spriteBatch);
 
-            var camera = MCamera.CurrentCameraInstance;
+            var camera = Camera2D.CurrentCameraInstance;
             Rectangle view = camera.GetWorldViewRectangle();
 
             int texW = Texture.Width;
             int texH = Texture.Height;
 
-            Vector2 parallaxPos = camera.Position * ParallaxFactor;
+            Vector2 parallaxPos = camera.GlobalPosition * ParallaxFactor;
 
             int startX = (int)Math.Floor((view.Left + parallaxPos.X) / texW) - 1;
             int startY = (int)Math.Floor((view.Top + parallaxPos.Y) / texH) - 1;

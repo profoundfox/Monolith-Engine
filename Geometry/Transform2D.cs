@@ -8,19 +8,17 @@ namespace Monolith.Geometry
         public Vector2 Position { get; init; }
         public float Rotation { get; init; }
         public Vector2 Scale { get; init; }
-        public Vector2 Origin { get; init; }
 
         public static readonly Transform2D Identity =
-            new(Vector2.Zero, 0f, Vector2.One, Vector2.Zero);
+            new(Vector2.Zero, 0f, Vector2.One);
 
-        public Transform2D(Vector2 position, float rotation = 0f, Vector2? scale = null, Vector2? origin = null)
+        public Transform2D(Vector2 position, float rotation = 0f, Vector2? scale = null)
         {
             Position = position;
             Rotation = rotation;
             Scale = scale ?? Vector2.One;
             if (Scale.X == 0 && Scale.Y == 0)
                 Scale = Vector2.One;
-            Origin = origin ?? Vector2.Zero;
         }
 
 
@@ -30,7 +28,6 @@ namespace Monolith.Geometry
         public Matrix ToMatrix()
         {
             return
-                Matrix.CreateTranslation(-Origin.X, -Origin.Y, 0f) *
                 Matrix.CreateScale(new Vector3(Scale, 1f)) *
                 Matrix.CreateRotationZ(Rotation) *
                 Matrix.CreateTranslation(new Vector3(Position, 0f));
@@ -58,8 +55,7 @@ namespace Monolith.Geometry
             return new Transform2D(
                 new Vector2(position.X, position.Y),
                 rotation,
-                scale,
-                child.Origin
+                scale
             );
         }
     }

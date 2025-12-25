@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Monolith.Graphics;
+using Monolith.Helpers;
+using Monolith.Managers;
 
 namespace Monolith.Geometry
 {
@@ -38,9 +41,6 @@ namespace Monolith.Geometry
             Length = length;
         }
 
-        // ------------------------------------------------------
-        // Check a list of IRegionShape2D for intersection
-        // ------------------------------------------------------
         public bool CheckIntersections(IEnumerable<IRegionShape2D> shapes)
         {
             float closestDistance = float.MaxValue;
@@ -73,7 +73,6 @@ namespace Monolith.Geometry
             return CheckIntersections(allShapes);
         }
 
-        // Optional: helper for line intersection
         public static bool LineIntersects(Vector2 p1, Vector2 p2, Vector2 p3, Vector2 p4, out Vector2 intersection)
         {
             intersection = Vector2.Zero;
@@ -91,6 +90,34 @@ namespace Monolith.Geometry
             }
 
             return false;
+        }
+
+        public void Draw()
+        {
+            var pixel = new MTexture(1, 1, new[] { Color.White });
+
+            Color color = Color.Red;
+            float layerDepth = 0f;
+            int thickness = 2;
+
+            Color drawColor = HasHit
+                ? ColorHelper.GetOppositeColor(color)
+                : color;
+
+            Vector2 end = Position + Direction * Length;
+            Vector2 edge = end - Position;
+            float angle = (float)Math.Atan2(edge.Y, edge.X);
+
+            Engine.DrawManager.Draw(
+                new DrawParams(pixel, Position)
+                {
+                    Color = drawColor,
+                    Rotation = angle,
+                    Scale = new Vector2(edge.Length(), thickness),
+                    LayerDepth = layerDepth
+                },
+                DrawLayer.Background
+            );
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
+using Monolith.Graphics;
 
 namespace Monolith.Geometry
 {
@@ -124,5 +125,57 @@ namespace Monolith.Geometry
         public bool Equals(RectangleShape2D other) => other != null && Rect.Equals(other.Rect);
         public override bool Equals(object obj) => obj is RectangleShape2D r && Equals(r);
         public override int GetHashCode() => Rect.GetHashCode();
+
+        public void Draw()
+        {
+            var pixel = new MTexture(1, 1, new[] { Color.White });
+
+            Color color = Color.Red;
+            float layerDepth = 0f;
+            int thickness = 2;
+
+            Engine.DrawManager.Draw(
+                new DrawParams(pixel, new Vector2(X, Y))
+                {
+                    Color = color,
+                    Scale = new Vector2(BoundingBox.Width, thickness),
+                    LayerDepth = layerDepth
+                },
+                Managers.DrawLayer.Middleground
+            );
+
+            Engine.DrawManager.Draw(
+                new DrawParams(pixel, new Vector2(X, BoundingBox.Bottom - thickness))
+                {
+                    Color = color,
+                    Scale = new Vector2(BoundingBox.Width, thickness),
+                    LayerDepth = layerDepth
+                },
+                Managers.DrawLayer.Middleground
+            );
+
+            Engine.DrawManager.Draw(
+                new DrawParams(pixel, new Vector2(X, Y))
+                {
+                    Color = color,
+                    Scale = new Vector2(thickness, BoundingBox.Height),
+                    LayerDepth = layerDepth
+                },
+                Managers.DrawLayer.Middleground
+            );
+
+            Engine.DrawManager.Draw(
+                new DrawParams(pixel, new Vector2(BoundingBox.Right - thickness, Y))
+                {
+                    Color = color,
+                    Scale = new Vector2(thickness, BoundingBox.Height),
+                    LayerDepth = layerDepth
+                },
+                Managers.DrawLayer.Middleground
+            );
+
+
+            pixel.Dispose();
+        }
     }
 }
