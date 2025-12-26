@@ -4,8 +4,6 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Monlith.Nodes;
-using Monolith.Attributes;
 using Monolith.Nodes;
 
 namespace Monolith.Managers

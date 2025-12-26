@@ -6,7 +6,6 @@ using Monlith.Nodes;
 using Monolith.Geometry;
 using Monolith.Managers;
 
-
 namespace Monolith.Nodes
 {
     public record class StaticBodyConfig : SpatialNodeConfig

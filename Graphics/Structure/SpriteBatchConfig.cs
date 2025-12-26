@@ -1,7 +1,9 @@
 using System;
 using Microsoft.Xna.Framework.Graphics;
 
-public readonly struct SpriteBatchConfig : IEquatable<SpriteBatchConfig>
+namespace Monolith.Graphics
+{
+    public readonly struct SpriteBatchConfig : IEquatable<SpriteBatchConfig>
     {
         public SpriteSortMode SortMode { get; }
         public BlendState BlendState { get; }
@@ -62,3 +64,4 @@ public readonly struct SpriteBatchConfig : IEquatable<SpriteBatchConfig>
             rasterizerState: RasterizerState.CullCounterClockwise
         );
     }
+}

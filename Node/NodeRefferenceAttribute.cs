@@ -1,6 +1,6 @@
 using System;
 
-namespace Monolith.Attributes
+namespace Monolith.Nodes
 {
     [AttributeUsage(AttributeTargets.Property, Inherited = true)]
     public sealed class NodeRefferenceAttribute : Attribute {}

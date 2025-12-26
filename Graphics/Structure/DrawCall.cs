@@ -5,8 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Monolith.Graphics
 {
     /// <summary>
-    /// Lightweight container used by callers to describe what to draw.
-    /// Provides sensible defaults and keeps Draw() call-sites compact.
+    /// Lightweight container to describe what to draw.
     /// </summary>
     public readonly struct DrawParams
     {
