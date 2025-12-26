@@ -17,6 +17,16 @@ namespace Monolith.Nodes
         public List<Action> TransitionStarted { get; set; } = new();
         public List<Action> TransitionEnded { get; set; } = new();
     }
+
+    public enum CameraSide
+    {
+        None,
+        Left,
+        Right,
+        Top,
+        Bottom
+    }
+
     public class RoomCamera : Camera2D
     {
         private bool _entered;
@@ -64,31 +74,31 @@ namespace Monolith.Nodes
 
             var camera = GetWorldViewRectangle();
 
-            CollisionSide side = CollisionSide.None;
+            CameraSide side = CameraSide.None;
 
             if (pos.X + shape.Width > camera.Right)
-                side = CollisionSide.Right;
+                side = CameraSide.Right;
             else if (pos.X < camera.Left)
-                side = CollisionSide.Left;
+                side = CameraSide.Left;
             else if (pos.Y < camera.Top)
-                side = CollisionSide.Top;
+                side = CameraSide.Top;
             else if (pos.Y + shape.Height > camera.Bottom)
-                side = CollisionSide.Bottom;
+                side = CameraSide.Bottom;
 
             if (!_entered)
             {
                 switch (side)
                 {
-                    case CollisionSide.Left:
+                    case CameraSide.Left:
                         ShiftRoom(-1);
                         break;
-                    case CollisionSide.Right:
+                    case CameraSide.Right:
                         ShiftRoom(1);
                         break;
                 }
             }
 
-            _entered = side != CollisionSide.None;
+            _entered = side != CameraSide.None;
         }
 
 
