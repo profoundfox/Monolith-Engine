@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Monolith.Managers;
 using Monolith.Nodes;
 using Monolith.Util;
-using RenderingLibrary.Graphics;
 
 namespace Monolith.Graphics
 {

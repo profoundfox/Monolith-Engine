@@ -7,7 +7,6 @@ using Monolith.IO;
 using Monolith.Graphics;
 using Monolith.Nodes;
 using Monolith.Geometry;
-using Monolith.UI;
 using Monolith.Util;
 
 using Microsoft.Xna.Framework;

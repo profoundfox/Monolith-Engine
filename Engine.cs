@@ -4,14 +4,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-using Gum.Wireframe;
-using RenderingLibrary;
-using MonoGameGum;
-
 using System.Diagnostics;
 using System.Linq;
 
-using Monolith.UI;
 using Monolith.Managers;
 using Monolith.Graphics;
 using Monolith.Nodes;
@@ -109,11 +104,6 @@ namespace Monolith
         public static InputManager Input { get; private set; }
 
         /// <summary>
-        /// Gum UI service for managing user interfaces built with Gum.
-        /// </summary>
-        public GumService GumUI { get; private set; }
-
-        /// <summary>
         /// Time elapsed since the last frame, in seconds.
         /// </summary>
         public static float DeltaTime { get; private set; }
@@ -191,7 +181,7 @@ namespace Monolith
 
 
         /// <summary>
-        /// Initializes engine components, input, Gum UI, and render targets.
+        /// Initializes engine components, input and render targets.
         /// </summary>
         protected override void Initialize()
         {
@@ -206,7 +196,6 @@ namespace Monolith
             Window.ClientSizeChanged += (_, _) =>
             {
                 UpdateRenderTargetTransform();
-                UpdateGumCamera();
             };
 
             GraphicsDevice = base.GraphicsDevice;
@@ -218,9 +207,6 @@ namespace Monolith
 
             if (!string.IsNullOrEmpty(Config.FontPath))
                 Font = Content.Load<SpriteFont>(Config.FontPath);
-
-            if (!string.IsNullOrEmpty(Config.GumProject))
-                InitializeGum(Config.GumProject);
             
 
             if (Config.DebugMode)
@@ -244,8 +230,6 @@ namespace Monolith
 
 
             SceneManager.UpdateCurrentScene(gameTime);
-            GumManager.UpdateAll(gameTime);
-            GumUI?.Update(this, gameTime);
 
             if (Config.DebugMode)
                 DebugTools.Update();
@@ -301,8 +285,6 @@ namespace Monolith
             SpriteBatch.End();
 
             CurrentDrawStage = DrawStageType.UI;
-            GumUI?.Draw();
-
             CurrentDrawStage = DrawStageType.End;
 
             base.Draw(gameTime);
@@ -351,35 +333,6 @@ namespace Monolith
 
             _offsetX = (pp.BackBufferWidth - _finalWidth) / 2;
             _offsetY = (pp.BackBufferHeight - _finalHeight) / 2;
-        }
-
-        /// <summary>
-        /// Initializes the Gum UI system using the specified project.
-        /// </summary>
-        /// <param name="gumProject">Path to the Gum project file.</param>
-        public void InitializeGum(string gumProject)
-        {
-            GumUI = GumHelper.GumInitialize(this, gumProject);
-            UpdateRenderTargetTransform();
-            UpdateGumCamera();
-        }  
-
-        /// <summary>
-        /// Updates the Gum UI camera based on current render target scale and offsets.
-        /// </summary>
-        public void UpdateGumCamera()
-        {
-            if (GumUI == null) return;
-
-            var cam = SystemManagers.Default.Renderer.Camera;
-            cam.Zoom = _currentScale;
-            cam.X = -_offsetX / _currentScale;
-            cam.Y = -_offsetY / _currentScale;
-
-            GraphicalUiElement.CanvasWidth = Config.RenderWidth;
-            GraphicalUiElement.CanvasHeight = Config.RenderHeight;
-
-            GumHelper.UpdateScreenLayout();
         }
 
         /// <summary>

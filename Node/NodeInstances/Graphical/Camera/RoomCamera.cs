@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monlith.Nodes;
-using Monolith.Attributes;
 using Monolith.Helpers;
 using Monolith.Util;
 

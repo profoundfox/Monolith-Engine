@@ -4,7 +4,6 @@ using System.Reflection.Metadata;
 
 using Monolith.Input;
 using Monolith.Geometry;
-using Gum.Forms.Controls;
 using Microsoft.Xna.Framework.Input;
 
 using System.Diagnostics;
@@ -112,11 +111,6 @@ namespace Monolith
         /// Path to the default font (optional).
         /// </summary>
         public string FontPath { get; init; } = null;
-
-        /// <summary>
-        /// Path to a Gum UI project (optional).
-        /// </summary>
-        public string GumProject { get; init; } = null;
 
         /// <summary>
         /// Given content provider.
