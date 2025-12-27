@@ -130,7 +130,7 @@ namespace Monolith.Geometry
         public void Draw()
         {
             Color color = Color.Red;
-            float layerDepth = 0f;
+            int depth = 99;
             int thickness = 2;
 
             Engine.DrawManager.Draw(
@@ -138,7 +138,7 @@ namespace Monolith.Geometry
                 {
                     Color = color,
                     Scale = new Vector2(BoundingBox.Width, thickness),
-                    LayerDepth = layerDepth
+                    Depth = depth
                 },
                 Managers.DrawLayer.Middleground
             );
@@ -148,7 +148,7 @@ namespace Monolith.Geometry
                 {
                     Color = color,
                     Scale = new Vector2(BoundingBox.Width, thickness),
-                    LayerDepth = layerDepth
+                    Depth = depth
                 },
                 Managers.DrawLayer.Middleground
             );
@@ -158,7 +158,7 @@ namespace Monolith.Geometry
                 {
                     Color = color,
                     Scale = new Vector2(thickness, BoundingBox.Height),
-                    LayerDepth = layerDepth
+                    Depth = depth
                 },
                 Managers.DrawLayer.Middleground
             );
@@ -168,7 +168,7 @@ namespace Monolith.Geometry
                 {
                     Color = color,
                     Scale = new Vector2(thickness, BoundingBox.Height),
-                    LayerDepth = layerDepth
+                    Depth = depth
                 },
                 Managers.DrawLayer.Middleground
             );

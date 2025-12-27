@@ -11,6 +11,7 @@ public static class DebugOverlay
         Left,
         Right
     }
+    
     public static bool IsEnabled = true;
     private static Dictionary<string, DebugEntry> debugInfos = new();
 
@@ -52,7 +53,7 @@ public static class DebugOverlay
         if (!IsEnabled || Engine.Instance.Font == null)
             return;
 
-        spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.AlphaBlend);
+        spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
 
         int yLeft = 10;
         int yRight = 10;
@@ -73,33 +74,17 @@ public static class DebugOverlay
             switch (entry.Side)
             {
                 case Side.Left:
-                    spriteBatch.DrawString(
-                        Engine.Instance.Font,
-                        text,
-                        new Vector2(10, yLeft),
-                        entry.Color,
-                        0.0f,
-                        Vector2.Zero,
-                        1.0f,
-                        SpriteEffects.None,
-                        0.0f
-                    );
+
+                    Engine.DrawManager.DrawString(text, new Vector2(10, yLeft), entry.Color, depth: 100);
+
                     yLeft += 20;
                     break;
 
                 case Side.Right:
                     Vector2 textSize = Engine.Instance.Font.MeasureString(text);
-                    spriteBatch.DrawString(
-                        Engine.Instance.Font,
-                        text,
-                        new Vector2(screenWidth - textSize.X - 10, yRight),
-                        entry.Color,
-                        0.0f,
-                        Vector2.Zero,
-                        1.0f,
-                        SpriteEffects.None,
-                        0.0f
-                    );
+                    
+                    Engine.DrawManager.DrawString(text, new Vector2(screenWidth - textSize.X - 10, yRight), entry.Color, depth: 100);
+
                     yRight += 20;
                     break;
             }

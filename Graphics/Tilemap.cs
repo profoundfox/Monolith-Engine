@@ -14,13 +14,13 @@ namespace Monolith.Graphics
         public int Columns { get; }
         public int Count { get; }
 
-        public float LayerDepth { get; set; }
+        public int Depth { get; set; }
         public float TileWidth => _tileset.TileWidth;
         public float TileHeight => _tileset.TileHeight;
 
-        public Tilemap(Tileset tileset, int columns, int rows, float layerDepth)
+        public Tilemap(Tileset tileset, int columns, int rows, int depth)
         {
-            LayerDepth = layerDepth;
+            Depth = depth;
             _tileset = tileset;
             Rows = rows;
             Columns = columns;
@@ -73,7 +73,7 @@ namespace Monolith.Graphics
                     y * TileHeight
                 );
 
-                tile.Draw(position, Color.White, 0f, Vector2.Zero, null, SpriteEffects.None, null, LayerDepth);
+                tile.Draw(position, Color.White, 0f, Vector2.Zero, null, SpriteEffects.None, null, Depth);
                 
             }
         }

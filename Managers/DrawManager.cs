@@ -22,6 +22,7 @@ namespace Monolith.Managers
         private readonly Dictionary<SpriteBatchConfig, SpriteBatch> _spriteBatches = new();
         private readonly SpriteBatch _spriteBatch;
         private readonly Dictionary<DrawLayer, List<DrawCall>> _queues;
+        private readonly Dictionary<DrawLayer, List<TextDrawCall>> _textQueues = new();
         private Matrix _camera = Matrix.Identity;
 
         public DrawManager(SpriteBatch spriteBatch)
@@ -30,7 +31,10 @@ namespace Monolith.Managers
             _queues = new Dictionary<DrawLayer, List<DrawCall>>();
 
             foreach (DrawLayer l in Enum.GetValues(typeof(DrawLayer)))
+            {
                 _queues[l] = new List<DrawCall>();
+                _textQueues[l] = new List<TextDrawCall>();
+            }
         }
 
         /// <summary>
@@ -47,12 +51,42 @@ namespace Monolith.Managers
             _queues[layer].Add(call);
         }
 
+        public void DrawString(
+            string text,
+            Vector2 position,
+            Color color,
+            DrawLayer layer = DrawLayer.UI,
+            int depth = 0,
+            SpriteBatchConfig? config = null,
+            bool useCamera = false)
+        {
+            var cfg = config ?? SpriteBatchConfig.Default;
+
+            _textQueues[layer].Add(
+                new TextDrawCall(
+                    Engine.Instance.Font,
+                    text,
+                    position,
+                    color,
+                    depth,
+                    cfg,
+                    useCamera
+                )
+            );
+        }
+
+
 
         private void DrawInternal(SpriteBatch sb, in DrawCall call)
         {
             if (call.Texture == null) return;
 
-            Rectangle src = call.SourceRectangle ?? new Rectangle(0, 0, call.Texture.Width, call.Texture.Height);            
+            Rectangle src = call.SourceRectangle ?? new Rectangle(0, 0, call.Texture.Width, call.Texture.Height);  
+
+            int minDepth = -100;
+            int maxDepth = 100;
+
+            float layerDepth = 1.0f - ((float)(call.Depth - minDepth) / (maxDepth - minDepth));         
 
             sb.Draw(
                 call.Texture,
@@ -63,12 +97,9 @@ namespace Monolith.Managers
                 call.Origin,
                 call.Scale,
                 call.Effects,
-                call.LayerDepth
+                layerDepth
             );
-
         }
-
-
 
         /// <summary>
         /// Flush all queued draws to the SpriteBatch.
@@ -77,23 +108,25 @@ namespace Monolith.Managers
         {
             foreach (DrawLayer layer in Enum.GetValues(typeof(DrawLayer)))
             {
-                var queue = _queues[layer];
-                if (queue.Count == 0) continue;
+                var spriteQueue = _queues[layer];
+                var textQueue = _textQueues[layer];
 
-                var groups = queue.GroupBy(c => c.SpriteBatchConfig);
+                if (spriteQueue.Count == 0 && textQueue.Count == 0)
+                    continue;
 
-                foreach (var group in groups)
+                var combinedGroups = spriteQueue
+                    .Select(s => (IsText: false, Sprite: s, Text: default(TextDrawCall)))
+                    .Concat(textQueue.Select(t => (IsText: true, Sprite: default(DrawCall), Text: t)))
+                    .GroupBy(x => x.IsText ? x.Text.SpriteBatchConfig : x.Sprite.SpriteBatchConfig);
+
+                foreach (var group in combinedGroups)
                 {
                     if (!_spriteBatches.TryGetValue(group.Key, out var sb))
-                    {
-                        sb = new SpriteBatch(_spriteBatch.GraphicsDevice);
-                        _spriteBatches[group.Key] = sb;
-                    }
+                        sb = _spriteBatches[group.Key] = new SpriteBatch(_spriteBatch.GraphicsDevice);
 
-                    Matrix transform =
-                        layer != DrawLayer.UI && group.Any(c => c.UseCamera)
-                            ? _camera
-                            : Matrix.Identity;
+                    Matrix transform = layer != DrawLayer.UI && group.Any(x => x.IsText ? x.Text.UseCamera : x.Sprite.UseCamera)
+                        ? _camera
+                        : Matrix.Identity;
 
                     var cfg = group.Key;
 
@@ -107,16 +140,39 @@ namespace Monolith.Managers
                         transform
                     );
 
-                    Console.WriteLine(cfg);
+                    foreach (var item in group.OrderBy(x => x.IsText ? x.Text.Depth : x.Sprite.Depth))
+                    {
+                        if (item.IsText)
+                        {
+                            int minDepth = -100;
+                            int maxDepth = 100;
+                            float layerDepth = 1.0f - ((item.Text.Depth - minDepth) / (float)(maxDepth - minDepth));
 
-                    foreach (var call in group)
-                        DrawInternal(sb, call);
+                            sb.DrawString(
+                                item.Text.Font,
+                                item.Text.Text,
+                                item.Text.Position,
+                                item.Text.Color,
+                                item.Text.Rotation,
+                                item.Text.Origin,
+                                item.Text.Scale,
+                                item.Text.Effects,
+                                layerDepth
+                            );
+                        }
+                        else
+                        {
+                            DrawInternal(sb, item.Sprite);
+                        }
+                    }
 
                     sb.End();
                 }
 
-                queue.Clear();
+                spriteQueue.Clear();
+                textQueue.Clear();
             }
+
         }
     }
 }

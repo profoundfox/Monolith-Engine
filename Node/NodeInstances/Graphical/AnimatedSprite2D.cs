@@ -116,7 +116,7 @@ namespace Monolith.Nodes
                 scale: Scale,
                 effects: GlobalMaterial.SpriteEffects,
                 shader: GlobalMaterial.Shader,
-                layerDepth: GlobalOrdering.Depth
+                depth: GlobalOrdering.Depth
             );
         }
     }

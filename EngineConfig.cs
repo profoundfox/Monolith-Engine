@@ -119,12 +119,6 @@ namespace Monolith
         public IContentProvider ContentProvider { get; init; } = new ContentPipelineLoader();
 
         /// <summary>
-        /// The main character type.
-        /// Example: typeof(PlayerCharacter)
-        /// </summary>
-        public Type MainCharacterType { get; init; }
-
-        /// <summary>
         /// The actions which will be bound to the map at start.
         /// Has no effect on loading actions since it is being loaded at the start of the game.
         /// </summary>

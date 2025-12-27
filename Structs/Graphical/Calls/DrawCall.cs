@@ -18,7 +18,7 @@ namespace Monolith.Structs
         public Vector2 Origin { get; init; }
         public Vector2 Scale { get; init; }
         public SpriteEffects Effects { get; init; }
-        public float LayerDepth { get; init; }
+        public int Depth { get; init; }
         public Effect Effect { get; init; }
         public bool UseCamera { get; init; }
         public SpriteBatchConfig SpriteBatchConfig { get; init; }
@@ -32,7 +32,7 @@ namespace Monolith.Structs
             Vector2? scale = null,
             Rectangle? source = null,
             SpriteEffects effects = SpriteEffects.None,
-            float layerDepth = 0f,
+            int depth = 0,
             Effect effect = null,
             bool useCamera = true,
             SpriteBatchConfig? spriteBatchConfig = null
@@ -65,7 +65,7 @@ namespace Monolith.Structs
 
             Effects = effects;
             
-            LayerDepth = layerDepth;
+            Depth = depth;
 
             Effect = effect;
 
@@ -92,7 +92,7 @@ namespace Monolith.Structs
         public Vector2 Origin;
         public Vector2 Scale;
         public SpriteEffects Effects;
-        public float LayerDepth;
+        public int Depth;
         public Effect Effect;
         public bool UseCamera;
 
@@ -110,7 +110,7 @@ namespace Monolith.Structs
             Origin = p.Origin;
             Scale = p.Scale;
             Effects = p.Effects;
-            LayerDepth = p.LayerDepth;
+            Depth = p.Depth;
             Effect = p.Effect;
             UseCamera = p.UseCamera;
             SpriteBatchConfig = p.SpriteBatchConfig;

@@ -150,7 +150,7 @@ namespace Monolith.Geometry
             int segments = 64;
             int thickness = 2;
             Color color = Color.Red;
-            float layerDepth = 0f;
+            int depth = 99;
 
             Vector2 center = new Vector2(Location.X, Location.Y);
             float radius = Radius;
@@ -175,7 +175,7 @@ namespace Monolith.Geometry
                         Color = color,
                         Rotation = rotation,
                         Scale = new Vector2(length, thickness),
-                        LayerDepth = layerDepth
+                        Depth = depth
                     },
                     Managers.DrawLayer.Middleground
                 );

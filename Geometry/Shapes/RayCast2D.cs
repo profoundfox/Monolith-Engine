@@ -96,7 +96,7 @@ namespace Monolith.Geometry
         public void Draw()
         {
             Color color = Color.Red;
-            float layerDepth = 0f;
+            int depth = 99;
             int thickness = 2;
 
             Color drawColor = HasHit
@@ -113,7 +113,7 @@ namespace Monolith.Geometry
                     Color = drawColor,
                     Rotation = angle,
                     Scale = new Vector2(edge.Length(), thickness),
-                    LayerDepth = layerDepth
+                    Depth = depth
                 },
                 DrawLayer.Background
             );

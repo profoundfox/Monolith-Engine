@@ -60,7 +60,7 @@ namespace Monolith.Graphics
         /// <summary>
         /// Depth value used for draw order sorting.
         /// </summary>
-        public float LayerDepth { get; set; }
+        public int Depth { get; set; }
 
         /// <summary>
         /// Width of the rendered texture or source rectangle.
@@ -159,7 +159,7 @@ namespace Monolith.Graphics
                 scale: Scale,
                 effects: Effects,
                 effect: Shader,
-                layerDepth: LayerDepth,
+                depth: Depth,
                 spriteBatchConfig: SpriteBatchConfig
             ));
         }
@@ -176,7 +176,7 @@ namespace Monolith.Graphics
                 scale: Scale,
                 effects: Effects,
                 effect: Shader,
-                layerDepth: LayerDepth,
+                depth: Depth,
                 spriteBatchConfig: SpriteBatchConfig
             ));
         }
@@ -184,7 +184,7 @@ namespace Monolith.Graphics
         /// <summary>
         /// Draws the texture with given parameters.
         /// </summary>  
-        public void Draw(Vector2 position, Color color, float rotation = 0f, Vector2 origin = default, Vector2? scale = null, SpriteEffects effects = SpriteEffects.None, Effect shader = null, float layerDepth = 0f)
+        public void Draw(Vector2 position, Color color, float rotation = 0f, Vector2 origin = default, Vector2? scale = null, SpriteEffects effects = SpriteEffects.None, Effect shader = null, int depth = 0)
         {
             Engine.DrawManager.Draw(new DrawParams
             (
@@ -197,7 +197,7 @@ namespace Monolith.Graphics
                 scale: scale ?? Vector2.One,
                 effects: effects,
                 effect: shader,
-                layerDepth: layerDepth,
+                depth: depth,
                 spriteBatchConfig: SpriteBatchConfig
             ));
 

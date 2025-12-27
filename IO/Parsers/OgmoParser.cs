@@ -101,7 +101,7 @@ namespace Monolith.IO
             Rectangle region,
             Rectangle gridRegion,
             IReadOnlyList<int> tileData,
-            float layerDepth)
+            int depth)
         {
             MTexture textureRegion = texture;
 
@@ -109,7 +109,7 @@ namespace Monolith.IO
                 textureRegion = texture.CreateSubTexture(region);
 
             var tileset = new Tileset(textureRegion, gridRegion.Width, gridRegion.Height);
-            var tilemap = new Tilemap(tileset, gridRegion.X, gridRegion.Y, 0.1f);
+            var tilemap = new Tilemap(tileset, gridRegion.X, gridRegion.Y, 0);
 
             for (int row = 0; row < gridRegion.Y; row++)
             {
@@ -121,7 +121,7 @@ namespace Monolith.IO
                 }
             }
 
-            tilemap.LayerDepth = layerDepth;
+            tilemap.Depth = depth;
         }
 
         public static void LoadTilemapFromJson(
@@ -137,14 +137,14 @@ namespace Monolith.IO
             var layer = root.layers.FirstOrDefault(l => l.data != null && l.tileset != null)
                 ?? throw new Exception("No tile layer found in JSON.");
 
-            float layerDepth = float.Parse(layer.name, CultureInfo.InvariantCulture);
+            int depth = int.Parse(layer.name, CultureInfo.InvariantCulture);
 
             LoadTilemap(
                 texture: new MTexture(texturePath),
                 region: rect,
                 gridRegion: new Rectangle(layer.gridCellsX, layer.gridCellsY, layer.gridCellWidth, layer.gridCellHeight),
                 tileData: layer.data,
-                layerDepth: layerDepth
+                depth: depth
             );
         }
         

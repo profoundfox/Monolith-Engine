@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Structs;
@@ -50,7 +51,11 @@ namespace Monolith.Nodes
 
         public CanvasNode(CanvasNodeConfig cfg) : base(cfg)
         {
+            _localVisibility = Visibility.Identity;
+            _localOrdering = Ordering.Identity;
+            _localMaterial = Material.Identity;
             
+            UpdateStructs();
         }
 
         public void UpdateStructs()
