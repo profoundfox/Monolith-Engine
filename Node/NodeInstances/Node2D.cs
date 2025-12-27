@@ -6,10 +6,11 @@ using Monolith.Geometry;
 using Monolith.Graphics;
 using Monolith.Helpers;
 using Monolith.Managers;
+using Monolith.Structs;
 
 namespace Monolith.Nodes
 {
-    public record class SpatialNodeConfig : NodeConfig
+    public record class SpatialNodeConfig : CanvasNodeConfig
     {
         /// <summary>
         /// Optional LocalPosition for the node. Defaults to Vector2.Zero.

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Monolith.Graphics;
 using Monolith.Helpers;
 using Monolith.Managers;
+using Monolith.Structs;
 
 namespace Monolith.Geometry
 {

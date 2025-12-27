@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Monolith.Graphics
+namespace Monolith.Structs
 {
     public readonly struct SpriteBatchConfig : IEquatable<SpriteBatchConfig>
     {

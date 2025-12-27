@@ -1,8 +1,9 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Monolith.Graphics;
 
-namespace Monolith.Graphics
+namespace Monolith.Structs
 {
     /// <summary>
     /// Lightweight container to describe what to draw.

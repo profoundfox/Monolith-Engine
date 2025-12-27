@@ -3,12 +3,6 @@
     <TargetFramework>net9.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Geometry/Structure/Transform2D.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Geometry/Structure/Transform2D.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.*">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>

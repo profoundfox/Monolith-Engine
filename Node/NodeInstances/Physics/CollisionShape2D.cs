@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Geometry;
 using Monolith.Nodes;
+using Monolith.Structs;
 
 namespace Monlith.Nodes
 {

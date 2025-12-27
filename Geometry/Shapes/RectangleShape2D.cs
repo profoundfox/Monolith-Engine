@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Monolith.Graphics;
+using Monolith.Structs;
 
 namespace Monolith.Geometry
 {

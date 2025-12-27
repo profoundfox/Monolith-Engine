@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Monolith.Graphics
+namespace Monolith.Structs
 {
     public sealed record Visual2D
     {
