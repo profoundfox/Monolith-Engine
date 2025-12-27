@@ -4,6 +4,7 @@ using Monolith.Nodes;
 using Monolith.Graphics;
 using Monolith;
 using System;
+using Monolith.Structs;
 
 namespace Monolith.Nodes
 {   
@@ -31,13 +32,13 @@ namespace Monolith.Nodes
         {
             Texture.Draw(
                 position: GlobalTransform.Position,
-                color: Visual.Modulate,
+                color: GlobalVisibility.Modulate,
                 rotation: Rotation,
                 origin: Texture.Center,
                 scale: Scale,
-                effects: Visual.SpriteEffects,
-                shader: Visual.Shader,
-                layerDepth: Visual.LayerDepth
+                effects: GlobalMaterial.SpriteEffects,
+                shader: GlobalMaterial.Shader,
+                layerDepth: GlobalOrdering.Depth
             );
         }
     }

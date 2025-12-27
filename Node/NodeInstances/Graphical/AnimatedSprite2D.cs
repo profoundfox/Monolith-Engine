@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Graphics;
+using Monolith.Structs;
 
 namespace Monolith.Nodes
 {
@@ -109,13 +110,13 @@ namespace Monolith.Nodes
 
             CurrentFrame.Draw(
                 position: GlobalTransform.Position,
-                color: Visual.Modulate,
+                color: GlobalVisibility.Modulate,
                 rotation: Rotation,
                 origin: CurrentFrame.Center,
                 scale: Scale,
-                effects: Visual.SpriteEffects,
-                shader: Visual.Shader,
-                layerDepth: Visual.LayerDepth
+                effects: GlobalMaterial.SpriteEffects,
+                shader: GlobalMaterial.Shader,
+                layerDepth: GlobalOrdering.Depth
             );
         }
     }

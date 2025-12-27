@@ -13,15 +13,9 @@ namespace Monolith.Structs
             RelativeDepth = relativeDepth;
         }
 
-        public static Ordering Combine(
-            in Ordering parent,
-            in Ordering child
-        )
+        public static Ordering Combine(in Ordering parent, in Ordering child)
         {
-            int depth = child.RelativeDepth
-                ? parent.Depth + child.Depth
-                : child.Depth;
-
+            int depth = child.RelativeDepth ? parent.Depth + child.Depth : child.Depth;
             return new Ordering(depth, child.RelativeDepth);
         }
     }

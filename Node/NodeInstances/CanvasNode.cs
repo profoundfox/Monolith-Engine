@@ -12,6 +12,7 @@ namespace Monolith.Nodes
     {
         private Visibility _localVisibility;
         private Ordering _localOrdering;
+        private Material _localMaterial;
 
         public Visibility LocalVisibility
         {
@@ -33,8 +34,19 @@ namespace Monolith.Nodes
             }
         }
 
+        public Material LocalMaterial
+        {
+            get => _localMaterial;
+            set
+            {
+                _localMaterial = value;
+                UpdateStructs();
+            }
+        }
+
         public Visibility GlobalVisibility { get; private set; }
         public Ordering GlobalOrdering { get; private set; }
+        public Material GlobalMaterial { get; private set; }
 
         public CanvasNode(CanvasNodeConfig cfg) : base(cfg)
         {
@@ -47,11 +59,13 @@ namespace Monolith.Nodes
             {
                 GlobalVisibility = Visibility.Combine(parent2D.GlobalVisibility, LocalVisibility);
                 GlobalOrdering = Ordering.Combine(parent2D.GlobalOrdering, LocalOrdering);
+                GlobalMaterial = Material.Combine(parent2D.GlobalMaterial, LocalMaterial);
             }
             else
             {
                 GlobalVisibility = LocalVisibility;
                 GlobalOrdering = LocalOrdering;
+                GlobalMaterial = LocalMaterial;
             }
 
             foreach (var child in Children)

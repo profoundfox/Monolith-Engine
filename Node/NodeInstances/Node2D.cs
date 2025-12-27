@@ -29,14 +29,13 @@ namespace Monolith.Nodes
     }
 
 
-    public class Node2D : Node
+    public class Node2D : CanvasNode
     {
         private Transform2D _localTransform;
 
         public event Action<Transform2D> TransformChanged;
 
         /// <summary>
-        /// The transform relative to this node's parent.
         /// </summary>
         public Transform2D LocalTransform
         {
@@ -47,11 +46,6 @@ namespace Monolith.Nodes
                 UpdateGlobalTransform();
             }
         }
-
-        /// <summary>
-        /// The visual configuration for the node.
-        /// </summary>
-        public Visual2D Visual { get; set; } = new Visual2D();
 
         /// <summary>
         /// The transform relative to global coordinates.

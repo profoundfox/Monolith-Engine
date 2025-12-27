@@ -64,6 +64,7 @@ namespace Monolith.Structs
                 Scale = scale.Value;
 
             Effects = effects;
+            
             LayerDepth = layerDepth;
 
             Effect = effect;

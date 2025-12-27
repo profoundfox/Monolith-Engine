@@ -19,16 +19,14 @@ namespace Monolith.Structs
             SelfModulate = selfModulate;
         }
 
-        public static Visibility Combine(
-            in Visibility parent,
-            in Visibility child
-        )
+        public static Visibility Combine(in Visibility parent, in Visibility child)
         {
-                bool combinedVisible = parent.Visibile && child.Visibile;
-                Color combinedModulate = ColorHelper.Multiply(parent.Modulate, child.Modulate);
-                Color combinedSelfModulate = child.SelfModulate;
-
-                return new Visibility(combinedVisible, combinedModulate, combinedSelfModulate);
+            return new Visibility(
+                parent.Visibile && child.Visibile,
+                ColorHelper.Multiply(parent.Modulate, child.Modulate),
+                child.SelfModulate
+            );
         }
+
     }
 }
