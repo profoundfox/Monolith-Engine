@@ -55,7 +55,7 @@ namespace Monolith.IO
         /// <returns></returns>
         public Texture2D LoadTexture(string path)
         {
-            return Engine.ContentManager.Load<Texture2D>(path);
+            return Engine.Instance.ContentManager.Load<Texture2D>(path);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Monolith.IO
         /// <returns></returns>
         public SoundEffect LoadSound(string path)
         {
-            return Engine.ContentManager.Load<SoundEffect>(path);
+            return Engine.Instance.ContentManager.Load<SoundEffect>(path);
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Monolith.IO
         /// <returns></returns>
         public Song LoadMusic(string path)
         {
-            return Engine.ContentManager.Load<Song>(path);
+            return Engine.Instance.ContentManager.Load<Song>(path);
         }
 
         /// <summary>
@@ -85,7 +85,7 @@ namespace Monolith.IO
         /// <returns></returns>
         public string LoadText(string path)
         {
-            return Engine.ContentManager.Load<string>(path);
+            return Engine.Instance.ContentManager.Load<string>(path);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Monolith.IO
         /// <returns></returns>
         public SpriteFont LoadFont(string path)
         {
-            return Engine.ContentManager.Load<SpriteFont>(path);
+            return Engine.Instance.ContentManager.Load<SpriteFont>(path);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Monolith.IO
         /// <returns></returns>
         public Effect LoadEffect(string path)
         {
-            return Engine.ContentManager.Load<Effect>(path);
+            return Engine.Instance.ContentManager.Load<Effect>(path);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Monolith.IO
         /// <returns></returns>
         public byte[] LoadRaw(string path)
         {
-            return Engine.ContentManager.Load<byte[]>(path);
+            return Engine.Instance.ContentManager.Load<byte[]>(path);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Monolith.IO
         /// </summary>
         public void ClearCache()
         {
-            Engine.ContentManager.Unload();
+            Engine.Instance.ContentManager.Unload();
         }
 
         /// <summary>

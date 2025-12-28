@@ -64,14 +64,14 @@ namespace Monolith
         public static DrawManager DrawManager {get; private set; }
 
         /// <summary>
+        /// Current content loader.
+        /// </summary>
+        public static IContentProvider Resources { get; set; }
+
+        /// <summary>
         /// Content manager used for loading assets such as textures, fonts, and effects.
         /// </summary>
         internal ContentManager ContentManager { get; private set; }
-
-        /// <summary>
-        /// Current content loader.
-        /// </summary>
-        public IContentProvider ContentProvider { get; set; }
 
         /// <summary>
         /// The main SpriteBatch used for drawing sprites.
@@ -143,7 +143,7 @@ namespace Monolith
             ContentManager = base.Content;
             Content.RootDirectory = Config.RootContentDirectory;
 
-            ContentProvider = Config.ContentProvider;
+            Resources = Config.ContentProvider;
 
             Window.AllowUserResizing = Config.AllowUserResizing;
             Window.IsBorderless = Config.IsBorderless;
