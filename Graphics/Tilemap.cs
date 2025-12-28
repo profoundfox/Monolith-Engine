@@ -31,7 +31,7 @@ namespace Monolith.Graphics
             for (int i = 0; i < Count; i++)
                 _tiles[i] = -1;
 
-            Engine.DrawManager.Tilemaps.Add(this);
+            Engine.Screen.Tilemaps.Add(this);
         }
 
         public void SetTile(int index, int tilesetID)

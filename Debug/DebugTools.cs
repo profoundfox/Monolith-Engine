@@ -24,7 +24,7 @@ namespace Monolith
         {
             if (drawRegions)
             {
-                foreach(CollisionShape2D node in NodeManager.GetNodesByT<CollisionShape2D>()) 
+                foreach(CollisionShape2D node in Engine.Node.GetNodesByT<CollisionShape2D>()) 
                     node.Shape.Draw();
             }
         }

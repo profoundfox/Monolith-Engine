@@ -169,7 +169,7 @@ namespace Monolith.Geometry
                 float length = edge.Length();
                 float rotation = MathF.Atan2(edge.Y, edge.X);
 
-                Engine.DrawManager.Draw(
+                Engine.Screen.Draw(
                     new TextureDrawParams(Engine.Pixel, prev)
                     {
                         Color = color,

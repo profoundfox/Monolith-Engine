@@ -116,7 +116,7 @@ namespace Monolith
         /// Given content provider.
         /// Default: ContentPipelineLoader
         /// </summary>
-        public IContentProvider ContentProvider { get; init; } = new ContentPipelineLoader();
+        public IContentProvider Resources { get; init; } = new ContentPipelineLoader();
 
         /// <summary>
         /// The actions which will be bound to the map at start.

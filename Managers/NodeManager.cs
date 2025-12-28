@@ -8,27 +8,27 @@ using Monolith.Nodes;
 
 namespace Monolith.Managers
 {
-    public static class NodeManager
+    public class NodeManager
     {
-        private static readonly List<Node> allInstances = new();
-        private static readonly Dictionary<string, List<Node>> allInstancesDetailed = new();
+        private readonly List<Node> allInstances = new();
+        private readonly Dictionary<string, List<Node>> allInstancesDetailed = new();
 
-        private static readonly List<Node> pendingAdds = new();
-        private static readonly List<Node> pendingRemovals = new();
+        private readonly List<Node> pendingAdds = new();
+        private readonly List<Node> pendingRemovals = new();
 
-        internal static void QueueAdd(Node node)
+        internal void QueueAdd(Node node)
         {
             pendingAdds.Add(node);
         }
-        internal static void QueueRemove(Node node) => pendingRemovals.Add(node);
+        internal void QueueRemove(Node node) => pendingRemovals.Add(node);
 
-        private static void ApplyPendingChanges()
+        private void ApplyPendingChanges()
         {
             ApplyPendingAdds();
             ApplyPendingRemovals();
         }
 
-        private static void ApplyPendingAdds()
+        private void ApplyPendingAdds()
         {
             if (pendingAdds.Count == 0) return;
 
@@ -54,7 +54,7 @@ namespace Monolith.Managers
 
 
 
-        private static void ApplyPendingRemovals()
+        private void ApplyPendingRemovals()
         {
             if (pendingRemovals.Count == 0) return;
 
@@ -68,18 +68,18 @@ namespace Monolith.Managers
         /// <summary>
         /// Returns the children of a node.
         /// </summary>
-        public static List<Node> GetNodeChildren(Node node) => node.Children.ToList();
+        public List<Node> GetNodeChildren(Node node) => node.Children.ToList();
 
         /// <summary>
         /// Returns the parent of a node.
         /// </summary>
-        public static Node GetNodeParent(Node node) => node.Parent;
+        public Node GetNodeParent(Node node) => node.Parent;
 
         /// <summary>
         /// Sets all the nodes in a node's config to be children of that node.
         /// </summary>
         /// <param name="parent"></param>
-        private static void AutoAssignChildNodes(Node parent)
+        private void AutoAssignChildNodes(Node parent)
         {
             if (parent.Config == null) return;
 
@@ -116,7 +116,7 @@ namespace Monolith.Managers
         /// Removes a specified node.
         /// </summary>
         /// <param name="node"></param>
-        private static void RemoveNode(Node node)
+        private void RemoveNode(Node node)
         {
             allInstances.Remove(node);
 
@@ -139,12 +139,12 @@ namespace Monolith.Managers
         /// Removes the node without waiting.
         /// </summary>
         /// <param name="node"></param>
-        internal static void RemoveImmediate(Node node) => RemoveNode(node);
+        internal void RemoveImmediate(Node node) => RemoveNode(node);
 
         /// <summary>
         /// Loads all the nodes.
         /// </summary>
-        public static void LoadNodes()
+        public void LoadNodes()
         {
             ApplyPendingChanges();
 
@@ -166,7 +166,7 @@ namespace Monolith.Managers
         /// <summary>
         /// Unloads all the nodes
         /// </summary>
-        public static void UnloadNodes()
+        public void UnloadNodes()
         {
             ApplyPendingChanges();
             foreach (var node in allInstances.ToList())
@@ -180,7 +180,7 @@ namespace Monolith.Managers
         /// Updates all the nodes.
         /// </summary>
         /// <param name="gameTime"></param>
-        public static void UpdateNodes(GameTime gameTime)
+        public void UpdateNodes(GameTime gameTime)
         {
             ApplyPendingChanges();
             foreach (var node in allInstances.ToList())
@@ -194,7 +194,7 @@ namespace Monolith.Managers
         /// Draws all the nodes.
         /// </summary>
         /// <param name="spriteBatch"></param>
-        public static void DrawNodes(SpriteBatch spriteBatch)
+        public void DrawNodes(SpriteBatch spriteBatch)
         {
             foreach (var node in allInstances)
                 node.Draw(spriteBatch);
@@ -203,7 +203,7 @@ namespace Monolith.Managers
         /// <summary>
         /// Dumps all instances of nodes.
         /// </summary>
-        public static void DumpAllInstances()
+        public void DumpAllInstances()
         {
             UnloadNodes();
             allInstances.Clear();
@@ -215,7 +215,7 @@ namespace Monolith.Managers
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static Node GetFirstNodeByName(string name)
+        public Node GetFirstNodeByName(string name)
         {
             return GetNodesByName(name).FirstOrDefault();
         }
@@ -225,7 +225,7 @@ namespace Monolith.Managers
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static IReadOnlyList<Node> GetNodesByName(string name)
+        public IReadOnlyList<Node> GetNodesByName(string name)
         {
             if (string.IsNullOrEmpty(name)) return Array.Empty<Node>();
             return allInstancesDetailed.TryGetValue(name, out var nodes) ? nodes : Array.Empty<Node>();
@@ -236,7 +236,7 @@ namespace Monolith.Managers
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static T GetFirstNodeByT<T>() where T : Node
+        public T GetFirstNodeByT<T>() where T : Node
         {
             return GetNodesByT<T>().FirstOrDefault();
         }
@@ -246,7 +246,7 @@ namespace Monolith.Managers
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static IReadOnlyList<T> GetNodesByT<T>() where T : Node
+        public IReadOnlyList<T> GetNodesByT<T>() where T : Node
         {
             return allInstancesDetailed
                 .SelectMany(kvp => kvp.Value)
@@ -257,12 +257,12 @@ namespace Monolith.Managers
         /// <summary>
         /// All instances of nodes.
         /// </summary>
-        public static IReadOnlyList<Node> AllInstances => allInstances.AsReadOnly();
+        public IReadOnlyList<Node> AllInstances => allInstances.AsReadOnly();
 
         /// <summary>
         /// Detailed instances of all nodes.
         /// </summary>
-        public static IReadOnlyDictionary<string, IReadOnlyList<Node>> AllInstancesDetailed =>
+        public IReadOnlyDictionary<string, IReadOnlyList<Node>> AllInstancesDetailed =>
             allInstancesDetailed.ToDictionary(
                 kvp => kvp.Key,
                 kvp => (IReadOnlyList<Node>)kvp.Value.AsReadOnly()

@@ -15,6 +15,7 @@ using Monolith.Util;
 using Monolith.IO;
 using System.IO.Compression;
 
+
 namespace Monolith
 {
     /// <summary>
@@ -23,109 +24,62 @@ namespace Monolith
     /// </summary>
     public class Engine : Game
     {
-        /// <summary>
-        /// Singleton instance of the engine.
-        /// </summary>
-        public static Engine Instance { get; private set; }
+        #region Singleton & Config
 
-        /// <summary>
-        /// Configuration for the engine, such as screen size, fullscreen mode, and content directories.
-        /// </summary>
+        public static Engine Instance { get; private set; }
         public EngineConfig Config { get; }
 
-        /// <summary>
-        /// Variable for showing if it is at the start or end of the draw call.
-        /// </summary>
-        public DrawStageType CurrentDrawStage { get; private set; } = DrawStageType.None;
+        #endregion
 
-        /// <summary>
-        /// Manages the graphics device and display settings.
-        /// </summary>
+        #region Graphics
+
         public static GraphicsDeviceManager Graphics { get; private set; }
-
-        /// <summary>
-        /// The main graphics device used for rendering.
-        /// </summary>
         public static new GraphicsDevice GraphicsDevice { get; private set; }
-
-        /// <summary>
-        /// Render target used for rendering the scene before applying post-processing or scaling.
-        /// </summary>
         public static RenderTarget2D RenderTarget { get; private set; }
-
-        /// <summary>
-        /// Manager responsible for handling tweens and animations.
-        /// </summary>
-        public static TweenManager TweenManager { get; private set; }
-
-        /// <summary>
-        /// Manager responsible for draw logic.
-        /// </summary>
-        public static DrawManager DrawManager {get; private set; }
-
-        /// <summary>
-        /// Current content loader.
-        /// </summary>
-        public static IContentProvider Resources { get; set; }
-
-        /// <summary>
-        /// Content manager used for loading assets such as textures, fonts, and effects.
-        /// </summary>
-        internal ContentManager ContentManager { get; private set; }
-
-        /// <summary>
-        /// The main SpriteBatch used for drawing sprites.
-        /// </summary>
         public SpriteBatch SpriteBatch { get; private set; }
-
-        /// <summary>
-        /// Default font loaded for the engine.
-        /// </summary>
         public SpriteFont Font { get; private set; }
-
-        /// <summary>
-        /// Optional post-processing shader applied when rendering the scene.
-        /// </summary>
         public Effect PostProcessingShader { get; set; }
-
-        /// <summary>
-        /// Current FPS.
-        /// </summary>
-        public float FPS { get; private set; }
-
-        /// <summary>
-        /// Manager responsible for scene handling and switching between scenes.
-        /// </summary>
-        public static SceneManager Scene { get; private set; }
-
-        /// <summary>
-        /// Manager handling input from keyboard, mouse, and other devices.
-        /// </summary>
-        public static InputManager Input { get; private set; }
-
-        /// <summary>
-        /// Time elapsed since the last frame, in seconds.
-        /// </summary>
-        public static float DeltaTime { get; private set; }
-
-        /// <summary>
-        /// The size of the screen, represented as a Point.
-        /// </summary>
-        public Point ScreenSize { get => new Point(RenderTarget.Width, RenderTarget.Height); }
-
-        public static  MTexture Pixel { get; private set; }
+        public static MTexture Pixel { get; private set; }
+        public Point ScreenSize => new Point(RenderTarget.Width, RenderTarget.Height);
 
         private int _finalWidth, _finalHeight;
         private int _offsetX, _offsetY;
         private float _currentScale;
-        private bool _quit;
+
+        #endregion
+
+        #region Managers
+
+        public static TweenManager Tween { get; private set; }
+        public static DrawManager Screen { get; private set; }
+        public static SceneManager Scene { get; private set; }
+        public static InputManager Input { get; private set; }
+        public static NodeManager Node { get; private set; }
+
+
+        #endregion
+
+        #region Content
+
+        public static IContentProvider Resources { get; set; }
+        internal ContentManager ContentManager { get; private set; }
+
+        #endregion
+
+        #region Timing & Debug
+
+        public DrawStageType CurrentDrawStage { get; private set; } = DrawStageType.None;
+        public float FPS { get; private set; }
+        public static float DeltaTime { get; private set; }
+
         private int _fpsFrames;
         private double _fpsTimer;
+        private bool _quit;
 
-        /// <summary>
-        /// Initializes a new instance of the Engine class with the specified configuration.
-        /// </summary>
-        /// <param name="config">Engine configuration settings.</param>
+        #endregion
+
+        #region Constructor
+
         public Engine(EngineConfig config)
         {
             if (Instance != null)
@@ -139,11 +93,10 @@ namespace Monolith
                 IsFullScreen = Config.Fullscreen,
             };
 
-
             ContentManager = base.Content;
             Content.RootDirectory = Config.RootContentDirectory;
 
-            Resources = Config.ContentProvider;
+            Resources = Config.Resources;
 
             Window.AllowUserResizing = Config.AllowUserResizing;
             Window.IsBorderless = Config.IsBorderless;
@@ -161,11 +114,15 @@ namespace Monolith
             Window.Position = new Point(0, 0);
         }
 
+        #endregion
+
+        #region Initialization
+
         private void InitializeDebug()
         {
             DebugOverlay.AddInfo("FPS", () => $"Current FPS: {Math.Round(FPS)}", Color.LimeGreen);
-            DebugOverlay.AddInfo("NodeCount", () => $"Total Nodes: {NodeManager.AllInstances.Count}", Color.Green);
-            DebugOverlay.AddInfo("NodeTypes", () => $"Node Types: {NodeManager.AllInstancesDetailed.Count}", Color.Aqua);
+            DebugOverlay.AddInfo("NodeCount", () => $"Total Nodes: {Node.AllInstances.Count}", Color.Green);
+            DebugOverlay.AddInfo("NodeTypes", () => $"Node Types: {Node.AllInstancesDetailed.Count}", Color.Aqua);
             DebugOverlay.AddInfo("Scene", () => $"Current Scene: {Scene.GetCurrentScene()}", Color.LightBlue);
 
             DebugOverlay.AddInfo("Spacer", () => "", Color.White);
@@ -179,55 +136,46 @@ namespace Monolith
             DebugTools.AddShortcut(Keys.T, () => DebugTools.ToggleRegions());
         }
 
-
-        /// <summary>
-        /// Initializes engine components, input and render targets.
-        /// </summary>
         protected override void Initialize()
         {
-            TweenManager = new TweenManager();
+            Tween = new TweenManager();
             Scene = new SceneManager();
-
+            Node = new NodeManager();
             Input = new InputManager();
             Input.InitializeBinds(Config.Actions);
 
             base.Initialize();
 
-            Window.ClientSizeChanged += (_, _) =>
-            {
-                UpdateRenderTargetTransform();
-            };
+            Window.ClientSizeChanged += (_, _) => UpdateRenderTargetTransform();
 
             GraphicsDevice = base.GraphicsDevice;
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             Pixel = new MTexture(1, 1, new[] { Color.White });
 
-            DrawManager = new DrawManager(SpriteBatch);
+            Screen = new DrawManager(SpriteBatch);
 
             if (!string.IsNullOrEmpty(Config.FontPath))
                 Font = Content.Load<SpriteFont>(Config.FontPath);
-            
 
             if (Config.DebugMode)
                 InitializeDebug();
-            
+
             LoadRenderTarget();
             UpdateRenderTargetTransform();
         }
 
-        /// <summary>
-        /// Updates the engine state each frame, including input, tweens, scenes, and UI.
-        /// </summary>
-        /// <param name="gameTime">Time elapsed since last update.</param>
+        #endregion
+
+        #region Update & Draw
+
         protected override void Update(GameTime gameTime)
-        {   
+        {
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             Input.Update(gameTime);
 
             if ((Config.ExitOnEscape && Input.Keyboard.IsKeyDown(Keys.Escape)) || _quit)
                 Exit();
-
 
             Scene.UpdateCurrentScene(gameTime);
 
@@ -239,7 +187,7 @@ namespace Monolith
 
             if (_fpsTimer >= 1.0)
             {
-                FPS =_fpsFrames / (float)_fpsTimer;
+                FPS = _fpsFrames / (float)_fpsTimer;
                 _fpsFrames = 0;
                 _fpsTimer = 0;
             }
@@ -247,10 +195,6 @@ namespace Monolith
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// Draws the current frame, including the scene, render target, post-processing, and UI.
-        /// </summary>
-        /// <param name="gameTime">Time elapsed since last draw.</param>
         protected override void Draw(GameTime gameTime)
         {
             CurrentDrawStage = DrawStageType.Start;
@@ -259,13 +203,13 @@ namespace Monolith
             GraphicsDevice.Clear(Config.BackgroundColor);
 
             CurrentDrawStage = DrawStageType.Scene;
-            
+
             if (Config.DebugMode)
                 DebugOverlay.Draw(SpriteBatch);
             Scene.DrawCurrentScene(SpriteBatch);
 
             CurrentDrawStage = DrawStageType.DrawManager;
-            DrawManager.Flush();
+            Screen.Flush();
 
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.Black);
@@ -292,16 +236,13 @@ namespace Monolith
             CurrentDrawStage = DrawStageType.None;
         }
 
+        #endregion
 
-        /// <summary>
-        /// Sets the current render target to the engine's RenderTarget2D.
-        /// </summary>
+        #region RenderTarget & Scaling
+
         public void SetRenderTarget() =>
             GraphicsDevice.SetRenderTarget(RenderTarget);
 
-        /// <summary>
-        /// Creates a new render target with the configured width and height.
-        /// </summary>
         public void LoadRenderTarget()
         {
             RenderTarget = new RenderTarget2D(
@@ -313,9 +254,6 @@ namespace Monolith
                 DepthFormat.None);
         }
 
-        /// <summary>
-        /// Updates the transform and scaling for rendering to handle different window sizes and integer scaling.
-        /// </summary>
         public void UpdateRenderTargetTransform()
         {
             var pp = GraphicsDevice.PresentationParameters;
@@ -335,18 +273,18 @@ namespace Monolith
             _offsetY = (pp.BackBufferHeight - _finalHeight) / 2;
         }
 
-        /// <summary>
-        /// Toggles fullscreen mode on or off.
-        /// </summary>
+        #endregion
+
+        #region Utilities
+
         public void ToggleFullscreen()
         {
             Graphics.IsFullScreen = !Graphics.IsFullScreen;
             Graphics.ApplyChanges();
         }
 
-        /// <summary>
-        /// Signals the engine to quit on the next update cycle.
-        /// </summary>
         public static void Quit() => Instance._quit = true;
+
+        #endregion
     }
 }

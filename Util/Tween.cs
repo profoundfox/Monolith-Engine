@@ -24,7 +24,7 @@ namespace Monolith.Util
             OnUpdate = onUpdate;
             OnComplete = onComplete;
 
-            Engine.TweenManager.AddTween(this);
+            Engine.Tween.AddTween(this);
 
             Start();
         }

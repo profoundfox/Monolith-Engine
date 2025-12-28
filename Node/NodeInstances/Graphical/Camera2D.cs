@@ -70,7 +70,7 @@ namespace Monolith.Nodes
         {
             base.Update(gameTime);
 
-            Engine.DrawManager.SetCamera(GetTransform());
+            Engine.Screen.SetCamera(GetTransform());
         }
     }
 }

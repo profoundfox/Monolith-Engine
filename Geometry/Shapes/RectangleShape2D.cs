@@ -133,7 +133,7 @@ namespace Monolith.Geometry
             int depth = 99;
             int thickness = 2;
 
-            Engine.DrawManager.Draw(
+            Engine.Screen.Draw(
                 new TextureDrawParams(Engine.Pixel, new Vector2(X, Y))
                 {
                     Color = color,
@@ -143,7 +143,7 @@ namespace Monolith.Geometry
                 Managers.DrawLayer.Middleground
             );
 
-            Engine.DrawManager.Draw(
+            Engine.Screen.Draw(
                 new TextureDrawParams(Engine.Pixel, new Vector2(X, BoundingBox.Bottom - thickness))
                 {
                     Color = color,
@@ -153,7 +153,7 @@ namespace Monolith.Geometry
                 Managers.DrawLayer.Middleground
             );
 
-            Engine.DrawManager.Draw(
+            Engine.Screen.Draw(
                 new TextureDrawParams(Engine.Pixel, new Vector2(X, Y))
                 {
                     Color = color,
@@ -163,7 +163,7 @@ namespace Monolith.Geometry
                 Managers.DrawLayer.Middleground
             );
 
-            Engine.DrawManager.Draw(
+            Engine.Screen.Draw(
                 new TextureDrawParams(Engine.Pixel, new Vector2(BoundingBox.Right - thickness, Y))
                 {
                     Color = color,

@@ -75,7 +75,7 @@ public static class DebugOverlay
             {
                 case Side.Left:
 
-                    Engine.DrawManager.DrawString(text, new Vector2(10, yLeft), entry.Color, depth: 100);
+                    Engine.Screen.DrawString(text, new Vector2(10, yLeft), entry.Color, depth: 100);
 
                     yLeft += 20;
                     break;
@@ -83,7 +83,7 @@ public static class DebugOverlay
                 case Side.Right:
                     Vector2 textSize = Engine.Instance.Font.MeasureString(text);
                     
-                    Engine.DrawManager.DrawString(text, new Vector2(screenWidth - textSize.X - 10, yRight), entry.Color, depth: 100);
+                    Engine.Screen.DrawString(text, new Vector2(screenWidth - textSize.X - 10, yRight), entry.Color, depth: 100);
 
                     yRight += 20;
                     break;

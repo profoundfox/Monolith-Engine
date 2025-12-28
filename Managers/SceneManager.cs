@@ -181,8 +181,8 @@ namespace Monolith.Managers
         {
             if (!IsStackEmpty() && !_sceneFrozen)
             {
-                Engine.TweenManager.Update();
-                NodeManager.UpdateNodes(gameTime);
+                Engine.Tween.Update();
+                Engine.Node.UpdateNodes(gameTime);
                 GetCurrentScene()?.Update(gameTime);
             }
 
@@ -200,8 +200,8 @@ namespace Monolith.Managers
         {
             if (!IsStackEmpty())
             {
-                Engine.DrawManager.DrawTilemaps(spriteBatch);
-                NodeManager.DrawNodes(spriteBatch);
+                Engine.Screen.DrawTilemaps(spriteBatch);
+                Engine.Node.DrawNodes(spriteBatch);
                 GetCurrentScene()?.Draw(spriteBatch);
             }
 
@@ -235,8 +235,8 @@ namespace Monolith.Managers
         /// </summary>
         public static void ClearSceneData()
         {
-            Engine.DrawManager.Tilemaps.Clear();
-            NodeManager.DumpAllInstances();
+            Engine.Screen.Tilemaps.Clear();
+            Engine.Node.DumpAllInstances();
             //RayCast2D.RayList.Clear();
         }
     }

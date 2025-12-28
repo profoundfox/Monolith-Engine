@@ -36,7 +36,7 @@ namespace Monolith.Nodes
 
             CollisionShape2D.Disabled = !Collidable;
 
-            foreach (KinematicBody2D kb in NodeManager.GetNodesByT<KinematicBody2D>())
+            foreach (KinematicBody2D kb in Engine.Node.GetNodesByT<KinematicBody2D>())
             {
                 if (CollisionShape2D == null)
                     continue;

@@ -40,7 +40,7 @@ namespace Monolith.Nodes
             
             Config = config;
 
-            NodeManager.QueueAdd(this);
+            Engine.Node.QueueAdd(this);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Monolith.Nodes
         /// </summary>
         public void QueueFree()
         {
-            NodeManager.QueueRemove(this);
+            Engine.Node.QueueRemove(this);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Monolith.Nodes
         /// </summary>
         public void FreeImmediate()
         {
-            NodeManager.RemoveImmediate(this);
+            Engine.Node.RemoveImmediate(this);
         }
 
         /// <summary>
