@@ -14,6 +14,7 @@ using Monolith.Helpers;
 using Monolith.Util;
 using Monolith.IO;
 using System.IO.Compression;
+using System.Collections.Generic;
 
 
 namespace Monolith
@@ -24,14 +25,8 @@ namespace Monolith
     /// </summary>
     public class Engine : Game
     {
-        #region Singleton & Config
-
         public static Engine Instance { get; private set; }
         public EngineConfig Config { get; }
-
-        #endregion
-
-        #region Graphics
 
         public static GraphicsDeviceManager Graphics { get; private set; }
         public static new GraphicsDevice GraphicsDevice { get; private set; }
@@ -46,27 +41,14 @@ namespace Monolith
         private int _offsetX, _offsetY;
         private float _currentScale;
 
-        #endregion
-
-        #region Managers
-
         public static TweenManager Tween { get; private set; }
-        public static DrawManager Screen { get; private set; }
+        public static ScreenManager Screen { get; private set; }
         public static SceneManager Scene { get; private set; }
         public static InputManager Input { get; private set; }
         public static NodeManager Node { get; private set; }
 
-
-        #endregion
-
-        #region Content
-
         public static IContentProvider Resources { get; set; }
         internal ContentManager ContentManager { get; private set; }
-
-        #endregion
-
-        #region Timing & Debug
 
         public float FPS { get; private set; }
         public static float DeltaTime { get; private set; }
@@ -75,9 +57,6 @@ namespace Monolith
         private double _fpsTimer;
         private bool _quit;
 
-        #endregion
-
-        #region Constructor
 
         public Engine(EngineConfig config)
         {
@@ -112,10 +91,6 @@ namespace Monolith
 
             Window.Position = new Point(0, 0);
         }
-
-        #endregion
-
-        #region Initialization
 
         private void InitializeDebug()
         {
@@ -152,7 +127,7 @@ namespace Monolith
 
             Pixel = new MTexture(1, 1, new[] { Color.White });
 
-            Screen = new DrawManager(SpriteBatch);
+            Screen = new ScreenManager(SpriteBatch);
 
             if (!string.IsNullOrEmpty(Config.FontPath))
                 Font = Content.Load<SpriteFont>(Config.FontPath);
@@ -163,10 +138,6 @@ namespace Monolith
             LoadRenderTarget();
             UpdateRenderTargetTransform();
         }
-
-        #endregion
-
-        #region Update & Draw
 
         protected override void Update(GameTime gameTime)
         {
@@ -225,10 +196,6 @@ namespace Monolith
             base.Draw(gameTime);
         }
 
-        #endregion
-
-        #region RenderTarget & Scaling
-
         public void SetRenderTarget() =>
             GraphicsDevice.SetRenderTarget(RenderTarget);
 
@@ -262,10 +229,6 @@ namespace Monolith
             _offsetY = (pp.BackBufferHeight - _finalHeight) / 2;
         }
 
-        #endregion
-
-        #region Utilities
-
         public void ToggleFullscreen()
         {
             Graphics.IsFullScreen = !Graphics.IsFullScreen;
@@ -273,7 +236,5 @@ namespace Monolith
         }
 
         public static void Quit() => Instance._quit = true;
-
-        #endregion
     }
 }

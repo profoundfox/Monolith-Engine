@@ -17,14 +17,14 @@ namespace Monolith.Managers
         UI
     }
 
-    public sealed partial class DrawManager
+    public sealed partial class ScreenManager
     {
         private readonly Dictionary<SpriteBatchConfig, SpriteBatch> _spriteBatches = new();
         private readonly SpriteBatch _spriteBatch;
         private readonly Dictionary<DrawLayer, List<IDrawCall>> _queues;
         private Matrix _camera = Matrix.Identity;
 
-        public DrawManager(SpriteBatch spriteBatch)
+        public ScreenManager(SpriteBatch spriteBatch)
         {
             _spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
             

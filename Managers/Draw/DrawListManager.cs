@@ -8,7 +8,7 @@ namespace Monolith.Managers
     /// The manager responsible for batching, organizing, and drawing queued sprites
     /// across multiple draw layers in the correct order.
     /// </summary>
-    public partial class DrawManager
+    public partial class ScreenManager
     {
         /// <summary>
         /// A list of tilemaps that will be drawn alongside queued draw calls.
