@@ -125,7 +125,6 @@ namespace Monolith.IO
         }
 
         public static void LoadTilemapFromJson(
-            ContentManager content,
             string filename,
             string texturePath,
             Rectangle region)
@@ -161,7 +160,7 @@ namespace Monolith.IO
 
             if (!string.IsNullOrEmpty(defaultTileTexture))
             {
-                LoadTilemapFromJson(Engine.ContentManager, filename, defaultTileTexture, defaultTileRegion);
+                LoadTilemapFromJson(filename, defaultTileTexture, defaultTileRegion);
             }
         }
     }

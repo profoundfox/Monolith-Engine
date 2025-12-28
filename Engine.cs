@@ -66,7 +66,7 @@ namespace Monolith
         /// <summary>
         /// Content manager used for loading assets such as textures, fonts, and effects.
         /// </summary>
-        public static ContentManager ContentManager { get; private set; }
+        internal ContentManager ContentManager { get; private set; }
 
         /// <summary>
         /// Current content loader.
@@ -96,7 +96,7 @@ namespace Monolith
         /// <summary>
         /// Manager responsible for scene handling and switching between scenes.
         /// </summary>
-        public static SceneManager SceneManager { get; private set; }
+        public static SceneManager Scene { get; private set; }
 
         /// <summary>
         /// Manager handling input from keyboard, mouse, and other devices.
@@ -166,7 +166,7 @@ namespace Monolith
             DebugOverlay.AddInfo("FPS", () => $"Current FPS: {Math.Round(FPS)}", Color.LimeGreen);
             DebugOverlay.AddInfo("NodeCount", () => $"Total Nodes: {NodeManager.AllInstances.Count}", Color.Green);
             DebugOverlay.AddInfo("NodeTypes", () => $"Node Types: {NodeManager.AllInstancesDetailed.Count}", Color.Aqua);
-            DebugOverlay.AddInfo("Scene", () => $"Current Scene: {SceneManager.GetCurrentScene()}", Color.LightBlue);
+            DebugOverlay.AddInfo("Scene", () => $"Current Scene: {Scene.GetCurrentScene()}", Color.LightBlue);
 
             DebugOverlay.AddInfo("Spacer", () => "", Color.White);
 
@@ -175,7 +175,7 @@ namespace Monolith
             DebugOverlay.AddInfo("KeybindT", () => "T: Toggle Regions", Color.Yellow, DebugOverlay.Side.Right);
 
             DebugTools.AddShortcut(Keys.U, () => DebugOverlay.ToggleOverlay());
-            DebugTools.AddShortcut(Keys.R, () => SceneManager.ReloadCurrentScene());
+            DebugTools.AddShortcut(Keys.R, () => Scene.ReloadCurrentScene());
             DebugTools.AddShortcut(Keys.T, () => DebugTools.ToggleRegions());
         }
 
@@ -186,7 +186,7 @@ namespace Monolith
         protected override void Initialize()
         {
             TweenManager = new TweenManager();
-            SceneManager = new SceneManager();
+            Scene = new SceneManager();
 
             Input = new InputManager();
             Input.InitializeBinds(Config.Actions);
@@ -229,7 +229,7 @@ namespace Monolith
                 Exit();
 
 
-            SceneManager.UpdateCurrentScene(gameTime);
+            Scene.UpdateCurrentScene(gameTime);
 
             if (Config.DebugMode)
                 DebugTools.Update();
@@ -262,7 +262,7 @@ namespace Monolith
             
             if (Config.DebugMode)
                 DebugOverlay.Draw(SpriteBatch);
-            SceneManager.DrawCurrentScene(SpriteBatch);
+            Scene.DrawCurrentScene(SpriteBatch);
 
             CurrentDrawStage = DrawStageType.DrawManager;
             DrawManager.Flush();
