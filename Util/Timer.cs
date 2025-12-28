@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Monolith.Util
 {
-    public static class CTimer
+    public static class MTimer
     {
         /// <summary>
         /// Waits for seconds represented as a float, calls an action once the timer runs out.

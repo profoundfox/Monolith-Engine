@@ -170,11 +170,11 @@ namespace Monolith.Managers
         public void QueueFreezeCurrentSceneFor(float duration)
         {
             QueueFreezeCurrentScene();
-            CTimer.Wait(duration, UnfreezeCurrentScene);
+            MTimer.Wait(duration, UnfreezeCurrentScene);
         }
 
         /// <summary>
-        /// Updates the current scene, loops safely through backseat components and updates them. Calls ApplyFreeze at the end to ensure the scene is frozen
+        /// Updates the current scene. Calls ApplyFreeze at the end to ensure the scene is frozen
         /// </summary>
         /// <param name="gameTime"></param>
         public void UpdateCurrentScene(GameTime gameTime)
@@ -186,14 +186,11 @@ namespace Monolith.Managers
                 GetCurrentScene()?.Update(gameTime);
             }
 
-            for (int i = BackseatComponent.BackseatComponentList.Count - 1; i >= 0; i--)
-                BackseatComponent.BackseatComponentList[i].Update(gameTime);
-
             ApplyPendingFreeze();
         }
 
         /// <summary>
-        /// Draws the current scene, loops safely through backseat components and draws them.
+        /// Draws the current scene.
         /// </summary>
         /// <param name="spriteBatch"></param>
         public void DrawCurrentScene(SpriteBatch spriteBatch)
@@ -204,9 +201,6 @@ namespace Monolith.Managers
                 Engine.Node.DrawNodes(spriteBatch);
                 GetCurrentScene()?.Draw(spriteBatch);
             }
-
-            for (int i = BackseatComponent.BackseatComponentList.Count - 1; i >= 0; i--)
-                BackseatComponent.BackseatComponentList[i].Draw(spriteBatch);
         }
 
         /// <summary>
@@ -237,7 +231,6 @@ namespace Monolith.Managers
         {
             Engine.Screen.Tilemaps.Clear();
             Engine.Node.DumpAllInstances();
-            //RayCast2D.RayList.Clear();
         }
     }
 }

@@ -68,7 +68,6 @@ namespace Monolith
 
         #region Timing & Debug
 
-        public DrawStageType CurrentDrawStage { get; private set; } = DrawStageType.None;
         public float FPS { get; private set; }
         public static float DeltaTime { get; private set; }
 
@@ -197,24 +196,18 @@ namespace Monolith
 
         protected override void Draw(GameTime gameTime)
         {
-            CurrentDrawStage = DrawStageType.Start;
-
             SetRenderTarget();
             GraphicsDevice.Clear(Config.BackgroundColor);
-
-            CurrentDrawStage = DrawStageType.Scene;
 
             if (Config.DebugMode)
                 DebugOverlay.Draw(SpriteBatch);
             Scene.DrawCurrentScene(SpriteBatch);
 
-            CurrentDrawStage = DrawStageType.DrawManager;
             Screen.Flush();
 
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.Black);
 
-            CurrentDrawStage = DrawStageType.PostProcessing;
             SpriteBatch.Begin(
                 SpriteSortMode.Immediate,
                 BlendState.AlphaBlend,
@@ -228,12 +221,8 @@ namespace Monolith
 
             SpriteBatch.End();
 
-            CurrentDrawStage = DrawStageType.UI;
-            CurrentDrawStage = DrawStageType.End;
 
             base.Draw(gameTime);
-
-            CurrentDrawStage = DrawStageType.None;
         }
 
         #endregion
