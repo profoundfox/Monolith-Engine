@@ -149,10 +149,10 @@ namespace Monolith.Graphics
 
         public void Draw()
         {
-            Engine.DrawManager.Draw(new DrawParams(
+            Engine.DrawManager.Draw(new TextureDrawParams(
                 texture: this,
                 position: Position,
-                source: SourceRectangle,
+                sourceRectangle: SourceRectangle,
                 color: Color,
                 rotation: Rotation,
                 origin: Origin,
@@ -166,10 +166,10 @@ namespace Monolith.Graphics
 
         public void Draw(Vector2 position)
         {
-            Engine.DrawManager.Draw(new DrawParams(
+            Engine.DrawManager.Draw(new TextureDrawParams(
                 texture: this,
                 position: position,
-                source: SourceRectangle,
+                sourceRectangle: SourceRectangle,
                 color: Color,
                 rotation: Rotation,
                 origin: Origin,
@@ -186,11 +186,11 @@ namespace Monolith.Graphics
         /// </summary>  
         public void Draw(Vector2 position, Color color, float rotation = 0f, Vector2 origin = default, Vector2? scale = null, SpriteEffects effects = SpriteEffects.None, Effect shader = null, int depth = 0)
         {
-            Engine.DrawManager.Draw(new DrawParams
+            Engine.DrawManager.Draw(new TextureDrawParams
             (
                 texture: this,
                 position: position,
-                source: SourceRectangle,
+                sourceRectangle: SourceRectangle,
                 color: color,
                 rotation: rotation,
                 origin: origin,

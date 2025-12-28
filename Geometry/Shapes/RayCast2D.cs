@@ -108,7 +108,7 @@ namespace Monolith.Geometry
             float angle = (float)Math.Atan2(edge.Y, edge.X);
 
             Engine.DrawManager.Draw(
-                new DrawParams(Engine.Pixel, Position)
+                new TextureDrawParams(Engine.Pixel, Position)
                 {
                     Color = drawColor,
                     Rotation = angle,

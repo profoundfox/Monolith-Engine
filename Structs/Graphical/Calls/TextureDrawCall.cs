@@ -1,12 +1,13 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Monolith.Graphics;
 
 namespace Monolith.Structs
 {
     internal sealed class TextureDrawCall : DrawCallBase
     {
-        public Texture2D Texture;
+        public MTexture Texture;
         public Rectangle? SourceRectangle;
 
         public override void Draw(SpriteBatch sb)
@@ -19,7 +20,7 @@ namespace Monolith.Structs
             float layerDepth = 1.0f - ((float)(Depth - minDepth) / (maxDepth - minDepth));
 
             sb.Draw(
-                Texture,
+                Texture.Texture,
                 Position,
                 src,
                 Color,
@@ -34,7 +35,7 @@ namespace Monolith.Structs
 
     public readonly struct TextureDrawParams
     {
-        public Texture2D Texture { get; init; }
+        public MTexture Texture { get; init; }
         public Vector2 Position { get; init; }
         public Rectangle? SourceRectangle { get; init; }
         public Color Color { get; init; }
@@ -48,7 +49,7 @@ namespace Monolith.Structs
         public SpriteBatchConfig SpriteBatchConfig { get; init; }
 
         public TextureDrawParams(
-            Texture2D texture,
+            MTexture texture,
             Vector2 position,
             Color? color = null,
             float rotation = 0f,
@@ -61,7 +62,7 @@ namespace Monolith.Structs
             bool useCamera = true,
             SpriteBatchConfig? spriteBatchConfig = null)
         {
-            if (texture == null)
+            if (texture == null || texture.Texture == null)
                 throw new ArgumentNullException(nameof(texture));
 
             Texture = texture;
