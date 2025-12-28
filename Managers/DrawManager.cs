@@ -21,20 +21,16 @@ namespace Monolith.Managers
     {
         private readonly Dictionary<SpriteBatchConfig, SpriteBatch> _spriteBatches = new();
         private readonly SpriteBatch _spriteBatch;
-        private readonly Dictionary<DrawLayer, List<DrawCall>> _queues;
-        private readonly Dictionary<DrawLayer, List<TextDrawCall>> _textQueues = new();
+        private readonly Dictionary<DrawLayer, List<IDrawCall>> _queues;
         private Matrix _camera = Matrix.Identity;
 
         public DrawManager(SpriteBatch spriteBatch)
         {
             _spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
-            _queues = new Dictionary<DrawLayer, List<DrawCall>>();
-
+            
+            _queues = new Dictionary<DrawLayer, List<IDrawCall>>();
             foreach (DrawLayer l in Enum.GetValues(typeof(DrawLayer)))
-            {
-                _queues[l] = new List<DrawCall>();
-                _textQueues[l] = new List<TextDrawCall>();
-            }
+                _queues[l] = new List<IDrawCall>();
         }
 
         /// <summary>
@@ -45,13 +41,27 @@ namespace Monolith.Managers
         /// <summary>
         /// Queue a draw using DrawParams.
         /// </summary>
-        public void Draw(in DrawParams p, DrawLayer layer = DrawLayer.Middleground)
+        public void Draw(in TextureDrawParams p, DrawLayer layer = DrawLayer.Middleground)
         {
-            var call = new DrawCall(p);
+            var call = new TextureDrawCall
+            {
+                Texture = p.Texture,
+                SourceRectangle = p.SourceRectangle,
+                Position = p.Position,
+                Color = p.Color,
+                Rotation = p.Rotation,
+                Origin = p.Origin,
+                Scale = p.Scale,
+                Effects = p.Effects,
+                Depth = p.Depth,
+                Effect = p.Effect,
+                UseCamera = p.UseCamera,
+                SpriteBatchConfig = p.SpriteBatchConfig
+            };
             _queues[layer].Add(call);
         }
 
-        public void DrawString(
+       public void DrawString(
             string text,
             Vector2 position,
             Color color,
@@ -62,42 +72,21 @@ namespace Monolith.Managers
         {
             var cfg = config ?? SpriteBatchConfig.Default;
 
-            _textQueues[layer].Add(
-                new TextDrawCall(
-                    Engine.Instance.Font,
-                    text,
-                    position,
-                    color,
-                    depth,
-                    cfg,
-                    useCamera
-                )
-            );
-        }
-
-
-
-        private void DrawInternal(SpriteBatch sb, in DrawCall call)
-        {
-            if (call.Texture == null) return;
-
-            Rectangle src = call.SourceRectangle ?? new Rectangle(0, 0, call.Texture.Width, call.Texture.Height);  
-
-            int minDepth = -100;
-            int maxDepth = 100;
-
-            float layerDepth = 1.0f - ((float)(call.Depth - minDepth) / (maxDepth - minDepth));         
-
-            sb.Draw(
-                call.Texture,
-                call.Position,
-                src,
-                call.Color,
-                call.Rotation,
-                call.Origin,
-                call.Scale,
-                call.Effects,
-                layerDepth
+            _queues[layer].Add(
+                new TextDrawCall
+                {
+                    Font = Engine.Instance.Font,
+                    Text = text,
+                    Position = position,
+                    Color = color,
+                    Depth = depth,
+                    UseCamera = useCamera,
+                    SpriteBatchConfig = cfg,
+                    Origin = Vector2.Zero,
+                    Scale = Vector2.One,
+                    Effects = SpriteEffects.None,
+                    Rotation = 0f
+                }
             );
         }
 
@@ -108,69 +97,32 @@ namespace Monolith.Managers
         {
             foreach (DrawLayer layer in Enum.GetValues(typeof(DrawLayer)))
             {
-                var spriteQueue = _queues[layer];
-                var textQueue = _textQueues[layer];
+                var queue = _queues[layer];
+                if (queue.Count == 0) continue;
 
-                if (spriteQueue.Count == 0 && textQueue.Count == 0)
-                    continue;
+                var groups = queue.GroupBy(x => x.SpriteBatchConfig);
 
-                var combinedGroups = spriteQueue
-                    .Select(s => (IsText: false, Sprite: s, Text: default(TextDrawCall)))
-                    .Concat(textQueue.Select(t => (IsText: true, Sprite: default(DrawCall), Text: t)))
-                    .GroupBy(x => x.IsText ? x.Text.SpriteBatchConfig : x.Sprite.SpriteBatchConfig);
-
-                foreach (var group in combinedGroups)
+                foreach (var group in groups)
                 {
                     if (!_spriteBatches.TryGetValue(group.Key, out var sb))
                         sb = _spriteBatches[group.Key] = new SpriteBatch(_spriteBatch.GraphicsDevice);
-
-                    Matrix transform = layer != DrawLayer.UI && group.Any(x => x.IsText ? x.Text.UseCamera : x.Sprite.UseCamera)
+                    
+                    Matrix transform = layer != DrawLayer.UI && group.Any(x => x.UseCamera)
                         ? _camera
                         : Matrix.Identity;
-
+                    
                     var cfg = group.Key;
 
-                    sb.Begin(
-                        cfg.SortMode,
-                        cfg.BlendState,
-                        cfg.SamplerState,
-                        cfg.DepthStencilState,
-                        cfg.RasterizerState,
-                        cfg.Effect,
-                        transform
-                    );
-
-                    foreach (var item in group.OrderBy(x => x.IsText ? x.Text.Depth : x.Sprite.Depth))
-                    {
-                        if (item.IsText)
-                        {
-                            int minDepth = -100;
-                            int maxDepth = 100;
-                            float layerDepth = 1.0f - ((item.Text.Depth - minDepth) / (float)(maxDepth - minDepth));
-
-                            sb.DrawString(
-                                item.Text.Font,
-                                item.Text.Text,
-                                item.Text.Position,
-                                item.Text.Color,
-                                item.Text.Rotation,
-                                item.Text.Origin,
-                                item.Text.Scale,
-                                item.Text.Effects,
-                                layerDepth
-                            );
-                        }
-                        else
-                        {
-                            DrawInternal(sb, item.Sprite);
-                        }
-                    }
-
+                    sb.Begin(cfg.SortMode, cfg.BlendState, cfg.SamplerState,
+                        cfg.DepthStencilState, cfg.RasterizerState, cfg.Effect, transform);
+                    
+                    foreach (var call in group.OrderBy(x => x.Depth))
+                        call.Draw(sb);
+                    
                     sb.End();
                 }
 
-                spriteQueue.Clear();
-                textQueue.Clear();
+                queue.Clear();
             }
 
         }

@@ -4,23 +4,24 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Monolith.Structs
 {
-    internal sealed class TextDrawCall : DrawCallBase
+    internal sealed class TextureDrawCall : DrawCallBase
     {
-        public SpriteFont Font;
-        public string Text;
+        public Texture2D Texture;
+        public Rectangle? SourceRectangle;
 
         public override void Draw(SpriteBatch sb)
         {
-            if (Font == null || string.IsNullOrEmpty(Text)) return;
+            if (Texture == null) return;
 
+            Rectangle src = SourceRectangle ?? new Rectangle(0, 0, Texture.Width, Texture.Height);
             int minDepth = -100;
             int maxDepth = 100;
             float layerDepth = 1.0f - ((float)(Depth - minDepth) / (maxDepth - minDepth));
 
-            sb.DrawString(
-                Font,
-                Text,
+            sb.Draw(
+                Texture,
                 Position,
+                src,
                 Color,
                 Rotation,
                 Origin,
@@ -31,41 +32,41 @@ namespace Monolith.Structs
         }
     }
 
-    public readonly struct TextDrawParams
+    public readonly struct TextureDrawParams
     {
-        public string Text { get; init; }
-        public SpriteFont Font { get; init; }
+        public Texture2D Texture { get; init; }
         public Vector2 Position { get; init; }
+        public Rectangle? SourceRectangle { get; init; }
         public Color Color { get; init; }
         public float Rotation { get; init; }
         public Vector2 Origin { get; init; }
         public Vector2 Scale { get; init; }
         public SpriteEffects Effects { get; init; }
         public int Depth { get; init; }
+        public Effect Effect { get; init; }
         public bool UseCamera { get; init; }
         public SpriteBatchConfig SpriteBatchConfig { get; init; }
 
-        public TextDrawParams(
-            string text,
-            SpriteFont font,
+        public TextureDrawParams(
+            Texture2D texture,
             Vector2 position,
             Color? color = null,
             float rotation = 0f,
             Vector2? origin = null,
             Vector2? scale = null,
+            Rectangle? sourceRectangle = null,
             SpriteEffects effects = SpriteEffects.None,
             int depth = 0,
+            Effect effect = null,
             bool useCamera = true,
             SpriteBatchConfig? spriteBatchConfig = null)
         {
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
-            if (font == null)
-                throw new ArgumentNullException(nameof(font));
+            if (texture == null)
+                throw new ArgumentNullException(nameof(texture));
 
-            Text = text;
-            Font = font;
+            Texture = texture;
             Position = position;
+            SourceRectangle = sourceRectangle;
 
             if (color != null)
                 Color = color.Value;
@@ -86,6 +87,7 @@ namespace Monolith.Structs
 
             Effects = effects;
             Depth = depth;
+            Effect = effect;
             UseCamera = useCamera;
 
             if (spriteBatchConfig != null)

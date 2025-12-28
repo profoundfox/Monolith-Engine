@@ -170,7 +170,7 @@ namespace Monolith.Geometry
                 float rotation = MathF.Atan2(edge.Y, edge.X);
 
                 Engine.DrawManager.Draw(
-                    new DrawParams(Engine.Pixel, prev)
+                    new TextureDrawParams(Engine.Pixel, prev)
                     {
                         Color = color,
                         Rotation = rotation,
