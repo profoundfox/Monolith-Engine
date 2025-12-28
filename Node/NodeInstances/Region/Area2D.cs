@@ -38,7 +38,7 @@ namespace Monolith.Nodes
 
         private Node2D GetOverlappingArea()
         {
-            return Engine.Node.GetNodesByT<CollisionShape2D>()
+            return Engine.Node.GetNodesByType<CollisionShape2D>()
                 .Where(c => c.Parent != this)
                 .Where(c => AcceptedType.Any(t => t.IsAssignableFrom(c.Parent.GetType())))
                 .FirstOrDefault(c => c.Intersects(CollisionShape2D))
@@ -48,7 +48,7 @@ namespace Monolith.Nodes
 
         private KinematicBody2D GetOverlappingBody()
         {
-            return Engine.Node.AllInstances
+            return Engine.Node.All
                 .Where(a => a != this && typeof(KinematicBody2D).IsAssignableFrom(a.GetType()))
                 .Cast<KinematicBody2D>()
                 .FirstOrDefault(a => CollisionShape2D.Intersects(a.CollisionShape2D));

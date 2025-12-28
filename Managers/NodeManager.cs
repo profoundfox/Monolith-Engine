@@ -8,82 +8,61 @@ using Monolith.Nodes;
 
 namespace Monolith.Managers
 {
-    public class NodeManager
+    public sealed class NodeManager : InstanceManager<Node>
     {
-        private readonly List<Node> allInstances = new();
-        private readonly Dictionary<string, List<Node>> allInstancesDetailed = new();
-
-        private readonly List<Node> pendingAdds = new();
-        private readonly List<Node> pendingRemovals = new();
-
-        internal void QueueAdd(Node node)
+        protected override void ApplyPending()
         {
-            pendingAdds.Add(node);
-        }
-        internal void QueueRemove(Node node) => pendingRemovals.Add(node);
+            base.ApplyPending();
 
-        private void ApplyPendingChanges()
-        {
-            ApplyPendingAdds();
-            ApplyPendingRemovals();
-        }
-
-        private void ApplyPendingAdds()
-        {
-            if (pendingAdds.Count == 0) return;
-
-            var toAdd = pendingAdds.ToList();
-            pendingAdds.Clear();
-
-            foreach (var node in toAdd)
-            {
-                allInstances.Add(node);
-
-                if (!allInstancesDetailed.ContainsKey(node.Name))
-                    allInstancesDetailed[node.Name] = new List<Node>();
-
-                allInstancesDetailed[node.Name].Add(node);
-
+            foreach (var node in allInstances)
                 AutoAssignChildNodes(node);
-                node.Load();
-            }
-
-            if (pendingAdds.Count > 0)
-                ApplyPendingAdds();
         }
 
+        public IReadOnlyList<Node> GetNodeChildren(Node node)
+            => node.Children.ToList();
 
+        public Node GetNodeParent(Node node)
+            => node.Parent;
 
-        private void ApplyPendingRemovals()
+        public Node GetFirstNodeByName(string name)
+            => GetByName(name).FirstOrDefault();
+
+        public IReadOnlyList<T> GetNodesByType<T>() where T : Node
+            => allInstances.OfType<T>().ToList();
+
+        public T GetFirstNodeByType<T>() where T : Node
+            => allInstances.OfType<T>().FirstOrDefault();
+
+        public void RemoveRecursive(Node node)
         {
-            if (pendingRemovals.Count == 0) return;
+            foreach (var child in node.Children.ToList())
+                RemoveRecursive(child);
 
-            var toRemove = new List<Node>(pendingRemovals);
-            foreach (var node in toRemove)
-                RemoveNode(node);
-
-            pendingRemovals.Clear();
+            node.Parent?.RemoveChild(node);
+            QueueRemove(node);
         }
 
-        /// <summary>
-        /// Returns the children of a node.
-        /// </summary>
-        public List<Node> GetNodeChildren(Node node) => node.Children.ToList();
+        public void RemoveImmediate(Node node)
+        {
+            RemoveRecursive(node);
+            ApplyPending();
+        }
 
-        /// <summary>
-        /// Returns the parent of a node.
-        /// </summary>
-        public Node GetNodeParent(Node node) => node.Parent;
+        public void DumpAllNodes()
+        {
+            UnloadAll();
+            allInstances.Clear();
+            byName.Clear();
+        }
 
-        /// <summary>
-        /// Sets all the nodes in a node's config to be children of that node.
-        /// </summary>
-        /// <param name="parent"></param>
         private void AutoAssignChildNodes(Node parent)
         {
-            if (parent.Config == null) return;
+            if (parent.Config == null)
+                return;
 
-            var properties = parent.Config.GetType().GetProperties();
+            var properties = parent.Config
+                .GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
             foreach (var prop in properties)
             {
@@ -94,178 +73,31 @@ namespace Monolith.Managers
 
                 if (value is Node child)
                 {
-                    if (child == parent) continue;
-                    if (child.Parent == null && !child.WouldCreateCycle(parent))
-                        child.SetParent(parent);
+                    TryAssignChild(parent, child);
                 }
-
-                if (value is IEnumerable<Node> list)
+                else if (value is IEnumerable<Node> children)
                 {
-                    foreach (var c in list)
-                    {
-                        if (c == parent) continue;
-                        if (c.Parent == null && !c.WouldCreateCycle(parent))
-                            c.SetParent(parent);
-                    }
+                    foreach (var c in children)
+                        TryAssignChild(parent, c);
                 }
             }
         }
 
-
-        /// <summary>
-        /// Removes a specified node.
-        /// </summary>
-        /// <param name="node"></param>
-        private void RemoveNode(Node node)
+        private static void TryAssignChild(Node parent, Node child)
         {
-            allInstances.Remove(node);
+            if (child == null)
+                return;
 
-            if (!string.IsNullOrEmpty(node.Name) && allInstancesDetailed.ContainsKey(node.Name))
-            {
-                allInstancesDetailed[node.Name].Remove(node);
-                if (allInstancesDetailed[node.Name].Count == 0)
-                    allInstancesDetailed.Remove(node.Name);
-            }
+            if (child == parent)
+                return;
 
-            node.Parent?.RemoveChild(node);
+            if (child.Parent != null)
+                return;
 
-            foreach (var child in node.Children.ToList())
-                RemoveNode(child);
+            if (child.WouldCreateCycle(parent))
+                return;
 
-            node.ClearNodeData();
+            child.SetParent(parent);
         }
-
-        /// <summary>
-        /// Removes the node without waiting.
-        /// </summary>
-        /// <param name="node"></param>
-        internal void RemoveImmediate(Node node) => RemoveNode(node);
-
-        /// <summary>
-        /// Loads all the nodes.
-        /// </summary>
-        public void LoadNodes()
-        {
-            ApplyPendingChanges();
-
-            foreach (var node in allInstances.ToList())
-            {
-                AutoAssignChildNodes(node);
-            }
-
-            foreach (var node in allInstances.ToList())
-            {
-                node.Load();
-                ApplyPendingChanges();
-            }
-
-            Console.WriteLine("Nodes Loaded!");
-        }
-
-
-        /// <summary>
-        /// Unloads all the nodes
-        /// </summary>
-        public void UnloadNodes()
-        {
-            ApplyPendingChanges();
-            foreach (var node in allInstances.ToList())
-            {
-                node.Unload();
-                ApplyPendingChanges();
-            }
-        }
-
-        /// <summary>
-        /// Updates all the nodes.
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public void UpdateNodes(GameTime gameTime)
-        {
-            ApplyPendingChanges();
-            foreach (var node in allInstances.ToList())
-            {
-                node.Update(gameTime);
-                ApplyPendingChanges();
-            }
-        }
-
-        /// <summary>
-        /// Draws all the nodes.
-        /// </summary>
-        /// <param name="spriteBatch"></param>
-        public void DrawNodes(SpriteBatch spriteBatch)
-        {
-            foreach (var node in allInstances)
-                node.Draw(spriteBatch);
-        }
-
-        /// <summary>
-        /// Dumps all instances of nodes.
-        /// </summary>
-        public void DumpAllInstances()
-        {
-            UnloadNodes();
-            allInstances.Clear();
-            allInstancesDetailed.Clear();
-        }
-
-        /// <summary>
-        /// Gets a node based of the name.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public Node GetFirstNodeByName(string name)
-        {
-            return GetNodesByName(name).FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Gets all nodes based of the name.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public IReadOnlyList<Node> GetNodesByName(string name)
-        {
-            if (string.IsNullOrEmpty(name)) return Array.Empty<Node>();
-            return allInstancesDetailed.TryGetValue(name, out var nodes) ? nodes : Array.Empty<Node>();
-        }  
-
-        /// <summary>
-        /// Gets the first node based of type.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public T GetFirstNodeByT<T>() where T : Node
-        {
-            return GetNodesByT<T>().FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Gets a list of nodes based of type.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public IReadOnlyList<T> GetNodesByT<T>() where T : Node
-        {
-            return allInstancesDetailed
-                .SelectMany(kvp => kvp.Value)
-                .OfType<T>()
-                .ToList();
-        }
-
-        /// <summary>
-        /// All instances of nodes.
-        /// </summary>
-        public IReadOnlyList<Node> AllInstances => allInstances.AsReadOnly();
-
-        /// <summary>
-        /// Detailed instances of all nodes.
-        /// </summary>
-        public IReadOnlyDictionary<string, IReadOnlyList<Node>> AllInstancesDetailed =>
-            allInstancesDetailed.ToDictionary(
-                kvp => kvp.Key,
-                kvp => (IReadOnlyList<Node>)kvp.Value.AsReadOnly()
-            );
     }
 }

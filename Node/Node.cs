@@ -9,7 +9,11 @@ using Monolith.Managers;
 
 namespace Monolith.Nodes
 {
-    public abstract class Node
+    public abstract class Node : 
+        IInstance,
+        ILoadable,
+        IUpdatable,
+        IDrawable
     {
         private readonly List<Node> children = new();
         

@@ -95,8 +95,8 @@ namespace Monolith
         private void InitializeDebug()
         {
             DebugOverlay.AddInfo("FPS", () => $"Current FPS: {Math.Round(FPS)}", Color.LimeGreen);
-            DebugOverlay.AddInfo("NodeCount", () => $"Total Nodes: {Node.AllInstances.Count}", Color.Green);
-            DebugOverlay.AddInfo("NodeTypes", () => $"Node Types: {Node.AllInstancesDetailed.Count}", Color.Aqua);
+            DebugOverlay.AddInfo("NodeCount", () => $"Total Nodes: {Node.All.Count}", Color.Green);
+            DebugOverlay.AddInfo("NodeTypes", () => $"Node Types: {Node.All.Count}", Color.Aqua);
             DebugOverlay.AddInfo("Scene", () => $"Current Scene: {Scene.GetCurrentScene()}", Color.LightBlue);
 
             DebugOverlay.AddInfo("Spacer", () => "", Color.White);
@@ -112,9 +112,10 @@ namespace Monolith
 
         protected override void Initialize()
         {
+            Node = new NodeManager();
+
             Tween = new TweenManager();
             Scene = new SceneManager();
-            Node = new NodeManager();
             Input = new InputManager();
             Input.InitializeBinds(Config.Actions);
 

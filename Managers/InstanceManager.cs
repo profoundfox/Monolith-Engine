@@ -5,9 +5,9 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Monolith
+namespace Monolith.Managers
 {
-    public class InsanceManager<T> where T : IInstance
+    public class InstanceManager<T> where T : IInstance
     {
         protected readonly List<T> allInstances = new();
         protected readonly Dictionary<string, List<T>> byName = new();
@@ -19,6 +19,7 @@ namespace Monolith
 
         public void QueueAdd(T instance)
         {
+            Console.WriteLine(GetHashCode());
             pendingAdds.Add(instance);
         }
 
@@ -39,33 +40,46 @@ namespace Monolith
                     {
                         if (!byName.TryGetValue(inst.Name, out var list))
                             byName[inst.Name] = list = new List<T>();
-                        
+
                         list.Add(inst);
                     }
-
-                    pendingAdds.Clear();
                 }
+
+                pendingAdds.Clear();
             }
 
             if (pendingRemovals.Count > 0)
             {
-                foreach(var inst in pendingRemovals)
+                foreach (var inst in pendingRemovals)
                 {
                     allInstances.Remove(inst);
 
-                    if (!string.IsNullOrEmpty(inst.Name)
-                        && byName.TryGetValue(inst.Name, out var list))
+                    if (!string.IsNullOrEmpty(inst.Name) &&
+                        byName.TryGetValue(inst.Name, out var list))
                     {
                         list.Remove(inst);
                         if (list.Count == 0)
                             byName.Remove(inst.Name);
                     }
-
                 }
-
                 pendingRemovals.Clear();
             }
         }
+
+
+        public virtual void DumpAllInstances()
+        {
+            ApplyPending();
+
+            foreach (var inst in allInstances.OfType<ILoadable>())
+                inst.Unload();
+
+            allInstances.Clear();
+            byName.Clear();
+            pendingAdds.Clear();
+            pendingRemovals.Clear();
+        }
+
 
         public IReadOnlyList<T> GetByName(string name)
          => byName.TryGetValue(name, out var list) ? list : Array.Empty<T>();
@@ -111,6 +125,8 @@ namespace Monolith
             foreach (var inst in allInstances.OfType<IDrawable>())
                 inst.Draw(spriteBatch);
         }
+
+        
 
     }
 }

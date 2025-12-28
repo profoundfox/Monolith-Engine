@@ -182,7 +182,7 @@ namespace Monolith.Managers
             if (!IsStackEmpty() && !_sceneFrozen)
             {
                 Engine.Tween.Update();
-                Engine.Node.UpdateNodes(gameTime);
+                Engine.Node.UpdateAll(gameTime);
                 GetCurrentScene()?.Update(gameTime);
             }
 
@@ -198,7 +198,7 @@ namespace Monolith.Managers
             if (!IsStackEmpty())
             {
                 Engine.Screen.DrawTilemaps(spriteBatch);
-                Engine.Node.DrawNodes(spriteBatch);
+                Engine.Node.DrawAll(spriteBatch);
                 GetCurrentScene()?.Draw(spriteBatch);
             }
         }

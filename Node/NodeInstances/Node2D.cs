@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Monlith.Nodes;
 using Monolith.Geometry;
 using Monolith.Graphics;
 using Monolith.Helpers;
@@ -104,6 +105,13 @@ namespace Monolith.Nodes
             if (Parent is Node2D parent2D)
             {
                 GlobalTransform = Transform2D.Combine(parent2D.GlobalTransform, LocalTransform);
+
+                if (this is CollisionShape2D)
+                {
+                    Console.WriteLine($"Parent Name: {parent2D.Name} Parent Global Transform: {parent2D.GlobalTransform.Position}");
+
+                    Console.WriteLine($"Name: {Name} Global Transform: {GlobalTransform.Position}");
+                }
             }
             else
             {

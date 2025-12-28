@@ -58,7 +58,7 @@ namespace Monolith.Nodes
             float pushX = 0;
             float pushY = 0;
 
-            foreach (var body in Engine.Node.AllInstances.OfType<StaticBody2D>())
+            foreach (var body in Engine.Node.All.OfType<StaticBody2D>())
             {
                 var other = body.CollisionShape2D.Shape;
 
@@ -195,7 +195,7 @@ namespace Monolith.Nodes
             var right = CollisionShape2D.Shape.Clone();
             right.Offset(1, 0);
 
-            foreach (var body in Engine.Node.AllInstances.OfType<StaticBody2D>())
+            foreach (var body in Engine.Node.All.OfType<StaticBody2D>())
             {
                 var shape = body.CollisionShape2D;
 
@@ -222,7 +222,7 @@ namespace Monolith.Nodes
             if (CollisionShape2D.Disabled)
                 return false;
             
-            foreach (var body in Engine.Node.AllInstances.OfType<StaticBody2D>())
+            foreach (var body in Engine.Node.All.OfType<StaticBody2D>())
             {                
                 if (body.CollisionShape2D.Intersects(Region))
                     return true;
