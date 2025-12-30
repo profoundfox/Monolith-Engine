@@ -20,6 +20,8 @@ namespace Monolith.Managers
         private bool _stageFrozen;
         private bool _pendingFreeze;
 
+        public event Action OnStageUpdated;
+
         private static readonly Dictionary<string, Type> _stageTypes = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(a => a.GetTypes())
             .Where(t => typeof(IStage).IsAssignableFrom(t) && !t.IsAbstract)
@@ -170,8 +172,12 @@ namespace Monolith.Managers
 
             if (!_stageFrozen)
                 GetCurrentStage()?.Update(gameTime);
-            
+
+            Engine.Lifecycle.Update(gameTime);
+
             ApplyPendingFreeze();
+
+            OnStageUpdated?.Invoke();
         }
 
         /// <summary>
@@ -181,8 +187,10 @@ namespace Monolith.Managers
         {
             if (IsStackEmpty())
                 return;
-            
+
             GetCurrentStage()?.Draw(spriteBatch);
+
+            Engine.Lifecycle.Draw(spriteBatch);
         }
 
         /// <summary>

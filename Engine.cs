@@ -46,6 +46,7 @@ namespace Monolith
         public static StageManager Stage { get; private set; }
         public static InputManager Input { get; private set; }
         public static NodeManager Node { get; private set; }
+        public static LifecycleManager Lifecycle { get; private set; }
         public static TimerManager Timer { get; private set; }
 
         public static IContentProvider Resources { get; set; }
@@ -113,6 +114,7 @@ namespace Monolith
 
         protected override void Initialize()
         {
+            Lifecycle = new LifecycleManager();
             Tween = new TweenManager();
             Stage = new StageManager();
             Node = new NodeManager();

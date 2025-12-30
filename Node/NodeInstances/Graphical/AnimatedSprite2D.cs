@@ -77,9 +77,11 @@ namespace Monolith.Nodes
             _currentFrame = 0;
             _elapsed = TimeSpan.Zero;
         }
-
+        
         public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
+
             if (_finished || CurrentAnimation == null) return;
 
             _elapsed += gameTime.ElapsedGameTime;
@@ -106,6 +108,8 @@ namespace Monolith.Nodes
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            base.Draw(spriteBatch);
+
             if (CurrentAnimation == null) return;
 
             CurrentFrame.Draw(

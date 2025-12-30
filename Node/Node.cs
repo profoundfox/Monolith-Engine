@@ -9,7 +9,7 @@ using Monolith.Managers;
 
 namespace Monolith.Nodes
 {
-    public abstract class Node
+    public class Node : Lifecycle
     {
         private readonly List<Node> children = new();
         
@@ -129,16 +129,20 @@ namespace Monolith.Nodes
         /// <summary>
         /// Queues a node for removal from the main instance list and clears its data.
         /// </summary>
-        public void QueueFree()
+        public override void QueueFree()
         {
+            base.QueueFree();
+
             Engine.Node.QueueRemove(this);
         }
 
         /// <summary>
         /// Removes the instance of this node immediately.
         /// </summary>
-        public void FreeImmediate()
+        public override void FreeImmediate()
         {
+            base.FreeImmediate();
+            
             Engine.Node.RemoveImmediate(this);
         }
 
@@ -152,10 +156,25 @@ namespace Monolith.Nodes
             Name = null;
         }
 
-        public virtual void Load() { }
-        public virtual void Unload() { }
-        public virtual void Update(GameTime gameTime) { }
-        public virtual void Draw(SpriteBatch spriteBatch) { }
+        public override void Load() 
+        {
+            base.Load();
+        }
+
+        public override void Unload()
+        {
+            base.Unload();
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+        }
 
         /// <summary>
         /// All children of this node.

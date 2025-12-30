@@ -28,22 +28,11 @@ namespace Monolith.Util
         {
             if (Config.DataPath != null)
                 OgmoParser.FromFile(Config.DataPath, Config.TilemapTexturePath, Config.TilemapRegion);
-            
-            Engine.Node.LoadNodes();
         }
         
-        public virtual void Unload()
-        {
-            Engine.Node.UnloadNodes();
-        }
-        public virtual void Update(GameTime gameTime)
-        {
-            Engine.Node.UpdateNodes(gameTime);
-        }
-        public virtual void Draw(SpriteBatch spriteBatch)
-        {
-            Engine.Node.DrawNodes(spriteBatch);
-        }
+        public virtual void Unload() {}
+        public virtual void Update(GameTime gameTime) {}
+        public virtual void Draw(SpriteBatch spriteBatch) {}
     }
 
 }

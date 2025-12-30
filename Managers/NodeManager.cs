@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Monolith.Nodes;
 
 namespace Monolith.Managers
 {
+    /// <summary>
+    /// Manages Nodes in the scene graph: addition, removal, lookup, and hierarchy.
+    /// Lifecycle is now handled by a separate LifecycleManager.
+    /// </summary>
     public class NodeManager
     {
         private readonly List<Node> allInstances = new();
@@ -16,10 +18,22 @@ namespace Monolith.Managers
         private readonly List<Node> pendingAdds = new();
         private readonly List<Node> pendingRemovals = new();
 
+        public NodeManager()
+        {
+            Engine.Stage.OnStageUpdated += ApplyPendingChanges;
+        }
+
+        /// <summary>
+        /// Queue a node to be added to the manager.
+        /// </summary>
         internal void QueueAdd(Node node)
         {
             pendingAdds.Add(node);
         }
+
+        /// <summary>
+        /// Queue a node to be removed from the manager.
+        /// </summary>
         internal void QueueRemove(Node node) => pendingRemovals.Add(node);
 
         private void ApplyPendingChanges()
@@ -45,14 +59,11 @@ namespace Monolith.Managers
                 allInstancesDetailed[node.Name].Add(node);
 
                 AutoAssignChildNodes(node);
-                node.Load();
             }
 
             if (pendingAdds.Count > 0)
                 ApplyPendingAdds();
         }
-
-
 
         private void ApplyPendingRemovals()
         {
@@ -78,7 +89,6 @@ namespace Monolith.Managers
         /// <summary>
         /// Sets all the nodes in a node's config to be children of that node.
         /// </summary>
-        /// <param name="parent"></param>
         private void AutoAssignChildNodes(Node parent)
         {
             if (parent.Config == null) return;
@@ -111,11 +121,9 @@ namespace Monolith.Managers
             }
         }
 
-
         /// <summary>
         /// Removes a specified node.
         /// </summary>
-        /// <param name="node"></param>
         private void RemoveNode(Node node)
         {
             allInstances.Remove(node);
@@ -136,116 +144,47 @@ namespace Monolith.Managers
         }
 
         /// <summary>
-        /// Removes the node without waiting.
+        /// Removes the node immediately.
         /// </summary>
-        /// <param name="node"></param>
         internal void RemoveImmediate(Node node) => RemoveNode(node);
-
-        /// <summary>
-        /// Loads all the nodes.
-        /// </summary>
-        public void LoadNodes()
-        {
-            ApplyPendingChanges();
-
-            foreach (var node in allInstances.ToList())
-            {
-                AutoAssignChildNodes(node);
-            }
-
-            foreach (var node in allInstances.ToList())
-            {
-                node.Load();
-                ApplyPendingChanges();
-            }
-
-            Console.WriteLine("Nodes Loaded!");
-        }
-
-
-        /// <summary>
-        /// Unloads all the nodes
-        /// </summary>
-        public void UnloadNodes()
-        {
-            ApplyPendingChanges();
-            foreach (var node in allInstances.ToList())
-            {
-                node.Unload();
-                ApplyPendingChanges();
-            }
-        }
-
-        /// <summary>
-        /// Updates all the nodes.
-        /// </summary>
-        /// <param name="gameTime"></param>
-        public void UpdateNodes(GameTime gameTime)
-        {
-            ApplyPendingChanges();
-            foreach (var node in allInstances.ToList())
-            {
-                node.Update(gameTime);
-                ApplyPendingChanges();
-            }
-        }
-
-        /// <summary>
-        /// Draws all the nodes.
-        /// </summary>
-        /// <param name="spriteBatch"></param>
-        public void DrawNodes(SpriteBatch spriteBatch)
-        {
-            foreach (var node in allInstances)
-                node.Draw(spriteBatch);
-        }
 
         /// <summary>
         /// Dumps all instances of nodes.
         /// </summary>
         public void DumpAllInstances()
         {
-            UnloadNodes();
             allInstances.Clear();
             allInstancesDetailed.Clear();
         }
 
         /// <summary>
-        /// Gets a node based of the name.
+        /// Gets the first node based on name.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
         public Node GetFirstNodeByName(string name)
         {
             return GetNodesByName(name).FirstOrDefault();
         }
 
         /// <summary>
-        /// Gets all nodes based of the name.
+        /// Gets all nodes based on name.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
         public IReadOnlyList<Node> GetNodesByName(string name)
         {
             if (string.IsNullOrEmpty(name)) return Array.Empty<Node>();
             return allInstancesDetailed.TryGetValue(name, out var nodes) ? nodes : Array.Empty<Node>();
-        }  
+        }
 
         /// <summary>
-        /// Gets the first node based of type.
+        /// Gets the first node based on type.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         public T GetFirstNodeByT<T>() where T : Node
         {
             return GetNodesByT<T>().FirstOrDefault();
         }
 
         /// <summary>
-        /// Gets a list of nodes based of type.
+        /// Gets a list of nodes based on type.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
         public IReadOnlyList<T> GetNodesByT<T>() where T : Node
         {
             return allInstancesDetailed

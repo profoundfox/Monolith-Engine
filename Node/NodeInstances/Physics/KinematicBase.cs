@@ -31,8 +31,10 @@ namespace Monolith.Nodes
             CollisionShape2D = cfg.CollisionShape2D;
         }
         
-        public void UpdateKinematicBody()
+        public override void Update(GameTime gameTime)
         {
+            base.Update(gameTime);
+            
             if (Locked)
             {
                 PriorityVelocity = Vector2.Zero;
