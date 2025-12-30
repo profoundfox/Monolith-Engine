@@ -1,19 +1,15 @@
 using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
 namespace Monolith.Util
 {
-    public static class MTimer
+    public class Timer
     {
-        /// <summary>
-        /// Waits for seconds represented as a float, calls an action once the timer runs out.
-        /// </summary>
-        /// <param name="seconds"></param>
-        /// <param name="callback"></param>
-        public static async void Wait(float seconds, Action callback)
-        {
-            await Task.Delay(TimeSpan.FromSeconds(seconds));
-            callback?.Invoke();
-        }
+        public float TimeLeft;
+        public float Interval;
+        public Action Callback;
+        public bool Repeat;
+        public bool Cancelled;
     }
 }

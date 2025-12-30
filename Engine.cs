@@ -46,6 +46,7 @@ namespace Monolith
         public static SceneManager Scene { get; private set; }
         public static InputManager Input { get; private set; }
         public static NodeManager Node { get; private set; }
+        public static TimerManager Timer { get; private set; }
 
         public static IContentProvider Resources { get; set; }
         internal ContentManager ContentManager { get; private set; }
@@ -115,7 +116,9 @@ namespace Monolith
             Tween = new TweenManager();
             Scene = new SceneManager();
             Node = new NodeManager();
+            Timer = new TimerManager();
             Input = new InputManager();
+
             Input.InitializeBinds(Config.Actions);
 
             base.Initialize();
@@ -142,6 +145,7 @@ namespace Monolith
         protected override void Update(GameTime gameTime)
         {
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Timer.Update(gameTime);
             Input.Update(gameTime);
 
             if ((Config.ExitOnEscape && Input.Keyboard.IsKeyDown(Keys.Escape)) || _quit)
@@ -172,6 +176,7 @@ namespace Monolith
 
             if (Config.DebugMode)
                 DebugOverlay.Draw(SpriteBatch);
+                
             Scene.DrawCurrentScene(SpriteBatch);
 
             Screen.Flush();

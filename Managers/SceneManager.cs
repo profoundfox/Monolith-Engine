@@ -19,6 +19,12 @@ namespace Monolith.Managers
         public readonly Stack<IScene> Scenes = new();
         private bool _sceneFrozen;
         private bool _pendingFreeze;
+
+        private static readonly Dictionary<string, Type> _sceneTypes = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(a => a.GetTypes())
+            .Where(t => typeof(IScene).IsAssignableFrom(t) && !t.IsAbstract)
+            .ToDictionary(t => t.Name);
+
         
         public bool SceneFrozen => _sceneFrozen;
 
@@ -70,18 +76,11 @@ namespace Monolith.Managers
         /// <returns></returns>
         public IScene GetSceneFromString(string sceneName)
         {
-            var assembly = AppDomain.CurrentDomain.GetAssemblies()
-                .FirstOrDefault(a => a.GetTypes().Any(t => t.Name == sceneName && typeof(IScene).IsAssignableFrom(t)));
-
-            if (assembly == null) return null;
-
-            var type = assembly.GetTypes()
-                .FirstOrDefault(t => t.Name == sceneName && typeof(IScene).IsAssignableFrom(t));
-
-            if (type == null) return null;
-
-            return (IScene)Activator.CreateInstance(type);
+            return _sceneTypes.TryGetValue(sceneName, out var type)
+                ? (IScene)Activator.CreateInstance(type)
+                : null;
         }
+
 
         /// <summary>
         /// Adds scene from string
@@ -115,7 +114,10 @@ namespace Monolith.Managers
 
             var current = Scenes.Pop();
             current?.Unload();
+
+            SceneIntervention();
         }
+
 
         /// <summary>
         /// Gets the current scene
@@ -170,7 +172,7 @@ namespace Monolith.Managers
         public void QueueFreezeCurrentSceneFor(float duration)
         {
             QueueFreezeCurrentScene();
-            MTimer.Wait(duration, UnfreezeCurrentScene);
+            Engine.Timer.Wait(duration, UnfreezeCurrentScene);
         }
 
         /// <summary>
@@ -179,7 +181,10 @@ namespace Monolith.Managers
         /// <param name="gameTime"></param>
         public void UpdateCurrentScene(GameTime gameTime)
         {
-            if (!IsStackEmpty() && !_sceneFrozen)
+            if (IsStackEmpty())
+                return;
+
+            if (!_sceneFrozen)
             {
                 Engine.Tween.Update();
                 Engine.Node.UpdateNodes(gameTime);
@@ -189,19 +194,21 @@ namespace Monolith.Managers
             ApplyPendingFreeze();
         }
 
+
         /// <summary>
         /// Draws the current scene.
         /// </summary>
         /// <param name="spriteBatch"></param>
         public void DrawCurrentScene(SpriteBatch spriteBatch)
         {
-            if (!IsStackEmpty())
-            {
-                Engine.Screen.DrawTilemaps(spriteBatch);
-                Engine.Node.DrawNodes(spriteBatch);
-                GetCurrentScene()?.Draw(spriteBatch);
-            }
+            if (IsStackEmpty())
+                return;
+
+            Engine.Screen.DrawTilemaps(spriteBatch);
+            Engine.Node.DrawNodes(spriteBatch);
+            GetCurrentScene()?.Draw(spriteBatch);
         }
+
 
         /// <summary>
         /// Checks if the stack is empty
@@ -219,10 +226,13 @@ namespace Monolith.Managers
         {
             if (Scenes.Count == 0) return;
 
-            var currentType = Scenes.Peek().GetType();
-            var newScene = (IScene)Activator.CreateInstance(currentType);
+            var oldScene = Scenes.Pop();
+            oldScene.Unload();
+
+            var newScene = (IScene)Activator.CreateInstance(oldScene.GetType());
             AddScene(newScene);
         }
+
         
         /// <summary>
         /// Clears data related to scenes.
