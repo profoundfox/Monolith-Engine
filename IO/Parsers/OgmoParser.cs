@@ -109,7 +109,7 @@ namespace Monolith.IO
                 textureRegion = texture.CreateSubTexture(region);
 
             var tileset = new Tileset(textureRegion, gridRegion.Width, gridRegion.Height);
-            var tilemap = new Tilemap(tileset, gridRegion.X, gridRegion.Y, 0);
+            var tilemap = new Graphics.Tilemap(tileset, gridRegion.X, gridRegion.Y, 0);
 
             for (int row = 0; row < gridRegion.Y; row++)
             {

@@ -39,7 +39,6 @@ namespace Monolith.Managers
 
             StageIntervention();
 
-            //! Must be called before load to ensure new map is loaded.
             Stages.Push(stage);
 
             stage.Initialize();
@@ -170,12 +169,8 @@ namespace Monolith.Managers
                 return;
 
             if (!_stageFrozen)
-            {
-                Engine.Tween.Update();
-                Engine.Node.UpdateNodes(gameTime);
                 GetCurrentStage()?.Update(gameTime);
-            }
-
+            
             ApplyPendingFreeze();
         }
 
@@ -186,9 +181,6 @@ namespace Monolith.Managers
         {
             if (IsStackEmpty())
                 return;
-
-            Engine.Screen.DrawTilemaps(spriteBatch);
-            Engine.Node.DrawNodes(spriteBatch);
             
             GetCurrentStage()?.Draw(spriteBatch);
         }
@@ -220,7 +212,6 @@ namespace Monolith.Managers
         /// </summary>
         public static void ClearStageData()
         {
-            Engine.Screen.Tilemaps.Clear();
             Engine.Node.DumpAllInstances();
         }
     }
