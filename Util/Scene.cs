@@ -7,7 +7,7 @@ using Monolith.Nodes;
 
 namespace Monolith.Util
 {
-    public interface IScene
+    public interface IStage
     {
         public void Initialize();
         public void Load();
@@ -16,7 +16,7 @@ namespace Monolith.Util
         public void Draw(SpriteBatch spriteBatch);
     }
 
-    public class Scene : IScene
+    public class Scene : IStage
     {
         public SceneConfig Config {get; set;}
         public Scene(SceneConfig config)

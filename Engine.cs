@@ -20,7 +20,7 @@ using System.Collections.Generic;
 namespace Monolith
 {
     /// <summary>
-    /// The core game engine class that manages the main game loop, rendering, input, scenes, and UI.
+    /// The core game engine class that manages the main game loop, rendering, input, Stages, and UI.
     /// Implements a singleton pattern to ensure only one instance exists.
     /// </summary>
     public class Engine : Game
@@ -43,7 +43,7 @@ namespace Monolith
 
         public static TweenManager Tween { get; private set; }
         public static ScreenManager Screen { get; private set; }
-        public static SceneManager Scene { get; private set; }
+        public static StageManager Stage { get; private set; }
         public static InputManager Input { get; private set; }
         public static NodeManager Node { get; private set; }
         public static TimerManager Timer { get; private set; }
@@ -98,23 +98,23 @@ namespace Monolith
             DebugOverlay.AddInfo("FPS", () => $"Current FPS: {Math.Round(FPS)}", Color.LimeGreen);
             DebugOverlay.AddInfo("NodeCount", () => $"Total Nodes: {Node.AllInstances.Count}", Color.Green);
             DebugOverlay.AddInfo("NodeTypes", () => $"Node Types: {Node.AllInstancesDetailed.Count}", Color.Aqua);
-            DebugOverlay.AddInfo("Scene", () => $"Current Scene: {Scene.GetCurrentScene()}", Color.LightBlue);
+            DebugOverlay.AddInfo("Stage", () => $"Current Stage: {Stage.GetCurrentStage()}", Color.LightBlue);
 
             DebugOverlay.AddInfo("Spacer", () => "", Color.White);
 
             DebugOverlay.AddInfo("KeybindU", () => "U: Toggle Debug", Color.Yellow, DebugOverlay.Side.Right);
-            DebugOverlay.AddInfo("KeybindR", () => "R: Reload Scene", Color.Yellow, DebugOverlay.Side.Right);
+            DebugOverlay.AddInfo("KeybindR", () => "R: Reload Stage", Color.Yellow, DebugOverlay.Side.Right);
             DebugOverlay.AddInfo("KeybindT", () => "T: Toggle Regions", Color.Yellow, DebugOverlay.Side.Right);
 
             DebugTools.AddShortcut(Keys.U, () => DebugOverlay.ToggleOverlay());
-            DebugTools.AddShortcut(Keys.R, () => Scene.ReloadCurrentScene());
+            DebugTools.AddShortcut(Keys.R, () => Stage.ReloadCurrentStage());
             DebugTools.AddShortcut(Keys.T, () => DebugTools.ToggleRegions());
         }
 
         protected override void Initialize()
         {
             Tween = new TweenManager();
-            Scene = new SceneManager();
+            Stage = new StageManager();
             Node = new NodeManager();
             Timer = new TimerManager();
             Input = new InputManager();
@@ -151,7 +151,7 @@ namespace Monolith
             if ((Config.ExitOnEscape && Input.Keyboard.IsKeyDown(Keys.Escape)) || _quit)
                 Exit();
 
-            Scene.UpdateCurrentScene(gameTime);
+            Stage.UpdateCurrentStage(gameTime);
 
             if (Config.DebugMode)
                 DebugTools.Update();
@@ -177,7 +177,7 @@ namespace Monolith
             if (Config.DebugMode)
                 DebugOverlay.Draw(SpriteBatch);
                 
-            Scene.DrawCurrentScene(SpriteBatch);
+            Stage.DrawCurrentStage(SpriteBatch);
 
             Screen.Flush();
 
