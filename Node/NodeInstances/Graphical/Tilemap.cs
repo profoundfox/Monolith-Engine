@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Graphics;
 using Monolith.Managers;
+using Monolith.Structs;
 
 namespace Monolith.Nodes
 {
@@ -11,7 +12,6 @@ namespace Monolith.Nodes
         public Tileset Tileset { get; set; }
         public int Columns { get; set; }
         public int Rows { get; set; }
-        public int Depth { get; set; }
     }
     
     public class Tilemap : Node2D
@@ -23,13 +23,11 @@ namespace Monolith.Nodes
         public int Columns { get; }
         public int Count { get; }
 
-        public int Depth { get; set; }
         public float TileWidth => Tileset.TileWidth;
         public float TileHeight => Tileset.TileHeight;
 
         public Tilemap(TilemapConfig cfg) : base(cfg)
         {
-            Depth = cfg.Depth;
             Tileset = cfg.Tileset;
             Rows = cfg.Rows;
             Columns = cfg.Columns;
@@ -76,13 +74,23 @@ namespace Monolith.Nodes
                 int x = i % Columns;
                 int y = i / Columns;
 
-                Vector2 position = new Vector2(
+               Vector2 localTilePos = new Vector2(
                     x * TileWidth,
                     y * TileHeight
                 );
 
-                tile.Draw(position, Color.White, 0f, Vector2.Zero, null, SpriteEffects.None, null, Depth);
-                
+                Vector2 worldTilePos = localTilePos + GlobalTransform.Position;
+
+                tile.Draw(
+                    worldTilePos,
+                    GlobalVisibility.Modulate,
+                    GlobalTransform.Rotation,
+                    Vector2.Zero,
+                    GlobalTransform.Scale,
+                    GlobalMaterial.SpriteEffects,
+                    GlobalMaterial.Shader,
+                    GlobalOrdering.Depth
+                );
             }
         }
     }

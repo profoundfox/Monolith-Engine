@@ -109,7 +109,12 @@ namespace Monolith.IO
                 textureRegion = texture.CreateSubTexture(region);
 
             var tileset = new Tileset(textureRegion, gridRegion.Width, gridRegion.Height);
-            var tilemap = new Graphics.Tilemap(tileset, gridRegion.X, gridRegion.Y, 0);
+            Nodes.Tilemap tMap = new Nodes.Tilemap(new TilemapConfig
+            {
+                Tileset = tileset,
+                Columns = gridRegion.X,
+                Rows = gridRegion.Y
+            });
 
             for (int row = 0; row < gridRegion.Y; row++)
             {
@@ -117,11 +122,12 @@ namespace Monolith.IO
                 {
                     int index = row * gridRegion.X + col;
                     int tile = (index >= 0 && index < tileData.Count) ? tileData[index] : 0;
-                    tilemap.SetTile(col, row, tile);
+                    tMap.SetTile(col, row, tile);
                 }
             }
 
-            tilemap.Depth = depth;
+            tMap.LocalOrdering = tMap.LocalOrdering with { Depth = depth };
+
         }
 
         public static void LoadTilemapFromJson(

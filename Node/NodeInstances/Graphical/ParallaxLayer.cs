@@ -1,19 +1,27 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Monolith.Graphics;
 using Monolith.Managers;
 using Monolith.Nodes;
 using Monolith.Structs;
 using Monolith.Util;
 
-namespace Monolith.Graphics
+namespace Monolith.Nodes
 {
+    public enum LoopAxis
+    {
+        None = 0,
+        X = 1 << 0,
+        Y = 1 << 1,
+        Both = X | Y
+    }
 
     public record class ParallaxLayerConfig : SpatialNodeConfig
     {
         public MTexture Texture { get; set; }
-        public Vector2 ParallaxFactor { get; set; } = Vector2.One;
-        public int LoopTimes { get; set; } = 1;
+        public Vector2 MotionScale { get; set; } = Vector2.One;
+        public LoopAxis LoopAxes { get; set; } = LoopAxis.Both;
     }
     /// <summary>
     /// Represents a single infinite scrolling parallax layer.
@@ -21,74 +29,84 @@ namespace Monolith.Graphics
     public class ParallaxLayer : Node2D
     {
         public MTexture Texture { get; set; }
-        public Vector2 ParallaxFactor { get; set; }
-        public int LoopTimes { get; set; }
+        public Vector2 MotionScale { get; set; }
+        public LoopAxis LoopAxes { get; set; }
+        private Vector2 offset;
 
-        private Vector2 offset = Vector2.Zero;
-
-        /// <summary>
-        /// Creates a parallax layer with a texture and parallax factor.
-        /// </summary>
-        /// <param name="texture">Tileable texture.</param>
-        /// <param name="parallaxFactor">How fast the layer moves relative to camera. (0 = static, 1 = full speed)</param>
         public ParallaxLayer(ParallaxLayerConfig cfg) : base(cfg)
         {
-            Texture = cfg.Texture ?? throw new ArgumentNullException(nameof(cfg.Texture));
-            ParallaxFactor = cfg.ParallaxFactor;
-            LoopTimes = cfg.LoopTimes;
+            Texture = cfg.Texture;
+            MotionScale = cfg.MotionScale;
+            LoopAxes = cfg.LoopAxes;
         }
 
-        /// <summary>
-        /// Updates the parallax offset based on the camera position.
-        /// </summary>
-        /// <param name="cameraPosition">Camera world position.</param>
-        public override void Update(GameTime gameTime)
+        public void ApplyCameraDelta(Vector2 cameraDelta)
         {
-            base.Update(gameTime);
+            offset += cameraDelta * MotionScale;
 
-            offset = Camera2D.CurrentCameraInstance.GlobalPosition * ParallaxFactor;
+            if (LoopAxes.HasFlag(LoopAxis.X))
+                offset.X = Mod(offset.X, Texture.Width);
 
-            offset.X %= Texture.Width;
-            offset.Y %= Texture.Height;
+            if (LoopAxes.HasFlag(LoopAxis.Y))
+                offset.Y = Mod(offset.Y, Texture.Height);
 
-            if (offset.X < 0) offset.X += Texture.Width;
-            if (offset.Y < 0) offset.Y += Texture.Height;
+            if (!LoopAxes.HasFlag(LoopAxis.X))
+                offset.X = 0;
+            if (!LoopAxes.HasFlag(LoopAxis.Y))
+                offset.Y = 0;
         }
 
-        /// <summary>
-        /// Draws the parallax layer to fill the screen.
-        /// </summary>
-        /// <param name="screenSize">Size of the viewport / screen in pixels.</param>
         public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch);
-
             var camera = Camera2D.CurrentCameraInstance;
             Rectangle view = camera.GetWorldViewRectangle();
 
             int texW = Texture.Width;
             int texH = Texture.Height;
 
-            Vector2 parallaxPos = camera.GlobalPosition * ParallaxFactor;
+            Vector2 basePos = new Vector2(
+                LoopAxes.HasFlag(LoopAxis.X)
+                    ? GlobalPosition.X - Mod(GlobalPosition.X - offset.X, Texture.Width)
+                    : GlobalPosition.X,
+                LoopAxes.HasFlag(LoopAxis.Y)
+                    ? GlobalPosition.Y - Mod(GlobalPosition.Y - offset.Y, Texture.Height)
+                    : GlobalPosition.Y
+            );
 
-            int startX = (int)Math.Floor((view.Left + parallaxPos.X) / texW) - 1;
-            int startY = (int)Math.Floor((view.Top + parallaxPos.Y) / texH) - 1;
+            int startX = LoopAxes.HasFlag(LoopAxis.X)
+                ? (int)Math.Floor((double)view.Left / texW) - 1
+                : 0;
 
-            int endX = (int)Math.Ceiling((view.Right + parallaxPos.X) / texW) + 1;
-            int endY = (int)Math.Ceiling((view.Bottom + parallaxPos.Y) / texH) + 1;
+            int startY = LoopAxes.HasFlag(LoopAxis.Y)
+                ? (int)Math.Floor((double)view.Top / texH) - 1
+                : 0;
+
+            int endX = LoopAxes.HasFlag(LoopAxis.X)
+                ? (int)Math.Ceiling((double)view.Right / texW) + 1
+                : 1;
+
+            int endY = LoopAxes.HasFlag(LoopAxis.Y)
+                ? (int)Math.Ceiling((double)view.Bottom / texH) + 1
+                : 1;
 
             for (int y = startY; y < endY; y++)
             {
                 for (int x = startX; x < endX; x++)
                 {
-                    Vector2 worldPos = new Vector2(
-                        x * texW - parallaxPos.X,
-                        y * texH - parallaxPos.Y
+                    Vector2 pos = new(
+                        x * texW + basePos.X,
+                        y * texH + basePos.Y
                     );
 
-                    Texture.Draw(worldPos, Color.White, depth: GlobalOrdering.Depth);
+                    Texture.Draw(pos, Color.White);
                 }
             }
         }
+
+        private static float Mod(float x, float m)
+        {
+            return (x % m + m) % m;
+        }
     }
+
 }
