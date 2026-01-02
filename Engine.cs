@@ -145,6 +145,7 @@ namespace Monolith
         protected override void Update(GameTime gameTime)
         {
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Tween.Update(gameTime);
             Timer.Update(gameTime);
             Input.Update(gameTime);
 

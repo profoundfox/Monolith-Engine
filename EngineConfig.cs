@@ -123,7 +123,7 @@ namespace Monolith
         /// The actions which will be bound to the map at start.
         /// Has no effect on loading actions since it is being loaded at the start of the game.
         /// </summary>
-        public Dictionary<string, List<InputAction>> Actions { get; set; } = DefaultInput.Binds;
+        public Dictionary<string, List<InputAction>> Actions { get; set; } = new Dictionary<string, List<InputAction>>();
 
         /// <summary>
         /// The color of the background.
@@ -155,19 +155,4 @@ namespace Monolith
         /// </summary>
         public string Name { get; set; }
     }
-
-    public static class DefaultInput
-    {
-        public static Dictionary<string, List<InputAction>> Binds = new()
-        {
-            {"MoveLeft", new List<InputAction> { new InputAction(Keys.Left), new InputAction(Buttons.DPadLeft) }},
-            {"MoveRight", new List<InputAction> { new InputAction(Keys.Right), new InputAction(Buttons.DPadRight) }},
-            {"Jump", new List<InputAction> { new InputAction(Keys.Z), new InputAction(Buttons.A) }},
-            {"Attack", new List<InputAction> { new InputAction(Keys.X), new InputAction(Buttons.Y), new InputAction(MouseButton.Left) }},
-            {"Pause", new List<InputAction> { new InputAction(Keys.Escape), new InputAction(Buttons.Start) }},
-            {"Back", new List<InputAction> { new InputAction(Keys.X), new InputAction(Buttons.B) }}
-        };
-    }
-
-
 }

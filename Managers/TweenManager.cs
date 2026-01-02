@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Monolith.Util;
 
 namespace Monolith.Managers
@@ -30,7 +31,7 @@ namespace Monolith.Managers
         /// <summary>
         /// Updates all the tweens.
         /// </summary>
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             for (int i = _tweens.Count - 1; i >= 0; i--)
             {

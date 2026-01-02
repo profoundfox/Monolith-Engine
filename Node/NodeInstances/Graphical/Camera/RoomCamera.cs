@@ -109,17 +109,16 @@ namespace Monolith.Nodes
 
         private void ShiftRoom(int dir)
         {
+            Console.WriteLine(dir);
             _dir = dir;
 
             var camera = GetWorldViewRectangle();
 
-            Vector2 targetPos = new Vector2(LocalPosition.X + camera.Width * dir, 0);
+            Vector2 targetPos = new Vector2(LocalPosition.X + camera.Width * dir, LocalPosition.Y);
 
 
             foreach (var action in TransitionStarted)
-            {
                 action?.Invoke();
-            }
             
             float startX = LocalPosition.X;
             var cameraXTween = new Tween(
@@ -132,16 +131,12 @@ namespace Monolith.Nodes
                         action?.Invoke();
                 }
             );
-
-
-            cameraXTween.Start();
         }
 
         private void LockBody()
         {
             if (TargetNode is KinematicBody2D body)
             {
-                
                 body.Locked = true;
                 body.Offset(5 * _dir, 0);
             }
