@@ -120,12 +120,6 @@ namespace Monolith
         public IContentProvider Resources { get; init; } = new ContentPipelineLoader();
 
         /// <summary>
-        /// The actions which will be bound to the map at start.
-        /// Has no effect on loading actions since it is being loaded at the start of the game.
-        /// </summary>
-        public Dictionary<string, List<InputAction>> Actions { get; set; } = new Dictionary<string, List<InputAction>>();
-
-        /// <summary>
         /// The color of the background.
         /// </summary>
         public Color BackgroundColor { get; set; } = Color.DarkSlateGray;

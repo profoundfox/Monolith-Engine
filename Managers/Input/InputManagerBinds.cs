@@ -9,19 +9,6 @@ namespace Monolith.Managers
     public partial class InputManager
     {
         /// <summary>
-        /// Adds binds to the map and clones it.
-        /// </summary>
-        public void InitializeBinds(Dictionary<string, List<InputAction>> bindsToAdd)
-        {
-            AddBinds(bindsToAdd);
-
-            InitialBinds = DictionaryHelper.CloneDictionaryOfLists(
-                Binds,
-                action => action.Clone()
-            );
-        }
-
-        /// <summary>
         /// Adds a bind to the dictionary.
         /// </summary>
         public void AddBind(string actionName, List<InputAction> inputActions)
@@ -30,6 +17,11 @@ namespace Monolith.Managers
                 existing.AddRange(inputActions.Select(a => a.Clone()));
             else
                 Binds[actionName] = inputActions.Select(a => a.Clone()).ToList();
+            
+            if (!InitialBinds.TryGetValue(actionName, out _))
+            {
+                InitialBinds.Add(actionName, inputActions);
+            }
         }
 
         /// <summary>

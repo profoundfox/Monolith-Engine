@@ -119,8 +119,6 @@ namespace Monolith
             Timer = new TimerManager();
             Input = new InputManager();
 
-            Input.InitializeBinds(Config.Actions);
-
             base.Initialize();
 
             Window.ClientSizeChanged += (_, _) => UpdateRenderTargetTransform();

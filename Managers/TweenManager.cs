@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Monolith.Helpers;
 using Monolith.Util;
 
 namespace Monolith.Managers
@@ -27,6 +28,27 @@ namespace Monolith.Managers
         {
             _tweens.AddRange(tweens);
         }
+
+        public Tween CreateTween
+        (
+            Action<float> setter,
+            float start,
+            float end,
+            float duration,
+            Func<float, float> easingFunction = default
+        )
+        {
+            if (easingFunction == default)
+                easingFunction = EasingFunctions.Linear;
+
+
+            return new Tween(
+                duration,
+                easingFunction,
+                t => setter(MathHelper.Lerp(start, end, t))
+            );
+        }
+
         
         /// <summary>
         /// Updates all the tweens.

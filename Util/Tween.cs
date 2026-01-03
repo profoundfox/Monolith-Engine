@@ -17,7 +17,7 @@ namespace Monolith.Util
         private bool isRunning = false;
         private bool isComplete = false;
 
-        public Tween(float duration, Func<float, float> easingFunction, Action<float> onUpdate, Action onComplete = null)
+        internal Tween(float duration, Func<float, float> easingFunction, Action<float> onUpdate, Action onComplete = null)
         {
             Duration = duration;
             EasingFunction = easingFunction ?? EasingFunctions.Linear;
