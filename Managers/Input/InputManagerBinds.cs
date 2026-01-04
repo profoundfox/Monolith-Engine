@@ -8,10 +8,16 @@ namespace Monolith.Managers
 {
     public partial class InputManager
     {
+        public void AddBind(params InputAction[] inputActions)
+        {
+            var name = "InputAction" + (Binds.Count + 1).ToString();
+
+            AddBind(name, inputActions);
+        }
         /// <summary>
-        /// Adds a bind to the dictionary.
+        /// Adds a bind to the dictionary with a given name.
         /// </summary>
-        public void AddBind(string actionName, List<InputAction> inputActions)
+        public void AddBind(string actionName, params InputAction[] inputActions)
         {
             if (Binds.TryGetValue(actionName, out var existing))
                 existing.AddRange(inputActions.Select(a => a.Clone()));
@@ -20,17 +26,12 @@ namespace Monolith.Managers
             
             if (!InitialBinds.TryGetValue(actionName, out _))
             {
-                InitialBinds.Add(actionName, inputActions);
-            }
-        }
+                InitialBinds.Add(
+                    actionName,
+                    inputActions.Select(a => a.Clone()).ToList()
+                );
 
-        /// <summary>
-        /// Adds multiple binds at once.
-        /// </summary>
-        public void AddBinds(Dictionary<string, List<InputAction>> bindsToAdd)
-        {
-            foreach (var kvp in bindsToAdd)
-                AddBind(kvp.Key, kvp.Value);
+            }
         }
 
         /// <summary>
