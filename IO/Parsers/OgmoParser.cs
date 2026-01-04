@@ -11,7 +11,6 @@ using Monolith.Nodes;
 using Monolith.Geometry;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using Monlith.Nodes;
 
 namespace Monolith.IO
 {

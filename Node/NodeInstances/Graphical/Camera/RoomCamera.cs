@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Monlith.Nodes;
 using Monolith.Helpers;
 using Monolith.Util;
 
@@ -119,18 +118,19 @@ namespace Monolith.Nodes
 
             foreach (var action in TransitionStarted)
                 action?.Invoke();
-            
-            float startX = LocalPosition.X;
-            var cameraXTween = new Tween(
-                0.5f,
-                EasingFunctions.Linear,
-                t => LocalPosition = new Vector2(MathHelper.Lerp(startX, targetPos.X, t), LocalPosition.Y),
+
+
+            var cameraXTween = Engine.Tween.CreateTween(t => LocalPosition = t, LocalPosition, targetPos, 0.5f, Vector2.Lerp, EasingFunctions.Linear);
+
+            cameraXTween.SetCallbackAction
+            (
                 () =>
                 {
                     foreach (var action in TransitionEnded)
                         action?.Invoke();
                 }
             );
+            
         }
 
         private void LockBody()

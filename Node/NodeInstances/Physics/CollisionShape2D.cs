@@ -2,10 +2,9 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Geometry;
-using Monolith.Nodes;
 using Monolith.Structs;
 
-namespace Monlith.Nodes
+namespace Monolith.Nodes
 {
     public record class CollisionShapeConfig : SpatialNodeConfig
     {
@@ -63,6 +62,27 @@ namespace Monlith.Nodes
         {
             base.Unload();
             TransformChanged -= _onTransformChanged;
+        }
+
+        private void CheckOneWay()
+        {
+            foreach (KinematicBody2D kb in Engine.Node.GetNodesByT<KinematicBody2D>())
+            {
+                IRegionShape2D body = kb.CollisionShape2D.Shape;
+
+                if (!OneWay)
+                    continue;
+
+                if (kb.Velocity.Y < 0)
+                {
+                    Disabled = true;
+                }
+
+                else if(!Shape.Intersects(body))
+                {
+                    Disabled = false;
+                }
+            }
         }
 
         public bool Contains(Point p)

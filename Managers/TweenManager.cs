@@ -8,14 +8,14 @@ namespace Monolith.Managers
 {
     public class TweenManager
     {
-        private readonly List<Tween> _tweens = new();
+        private readonly List<ITween> _tweens = new();
         public TweenManager() {}
 
         /// <summary>
         /// Adds a tween.
         /// </summary>
         /// <param name="tween"></param>
-        public void AddTween(Tween tween)
+        public void AddTween<T>(Tween<T> tween)
         {
             _tweens.Add(tween);
         }
@@ -24,29 +24,34 @@ namespace Monolith.Managers
         /// Adds multiple tweens from a list.
         /// </summary>
         /// <param name="tweens"></param>
-        public void AddTweens(Tween[] tweens)
+        public void AddTweens<T>(Tween<T>[] tweens)
         {
             _tweens.AddRange(tweens);
         }
 
-        public Tween CreateTween
+        public Tween<T> CreateTween<T>
         (
-            Action<float> setter,
-            float start,
-            float end,
+            Action<T> setter,
+            T start,
+            T end,
             float duration,
-            Func<float, float> easingFunction = default
-        )
+            Func<T, T, float, T> lerpFunc,
+            Func<float, float> easingFunction = null)
         {
-            if (easingFunction == default)
+            if (easingFunction != null)
                 easingFunction = EasingFunctions.Linear;
 
-
-            return new Tween(
+            var tween = new Tween<T>(
+                start,
+                end,
                 duration,
-                easingFunction,
-                t => setter(MathHelper.Lerp(start, end, t))
+                lerpFunc,
+                setter,
+                easingFunction
             );
+
+            AddTween(tween);
+            return tween;
         }
 
         
@@ -63,6 +68,6 @@ namespace Monolith.Managers
             }
         }
 
-        public IReadOnlyList<Tween> Tweens => _tweens;
+        public IReadOnlyList<ITween> Tweens => _tweens;
     }
 }
