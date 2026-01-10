@@ -200,9 +200,7 @@ namespace Monolith.Graphics
                 depth: depth,
                 spriteBatchConfig: SpriteBatchConfig
             ));
-
         }
-
 
         /// <summary>
         /// Sets the pixel data of the texture.

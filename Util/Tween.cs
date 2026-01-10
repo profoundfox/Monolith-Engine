@@ -20,14 +20,15 @@ namespace Monolith.Util
         private readonly T _start;
         private readonly T _end;
 
-        internal Tween(
+        internal Tween
+        (
             T start,
             T end,
             float duration,
             Func<T, T, float, T> lerpFunc,
             Action<T> onUpdate,
             Func<float, float> easingFunction = null
-            )
+        )
         {
             if (easingFunction == null)
                 easingFunction = EasingFunctions.Linear;

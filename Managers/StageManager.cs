@@ -40,8 +40,7 @@ namespace Monolith.Managers
             StageIntervention();
 
             Stages.Push(stage);
-
-            stage.Initialize();
+            
             stage.Load();
         }
 

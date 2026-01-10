@@ -48,6 +48,8 @@ namespace Monolith
         public static NodeManager Node { get; private set; }
         public static TimerManager Timer { get; private set; }
 
+        public static BitmapFont Bitmap { get; private set; }
+
         public static IContentProvider Resources { get; set; }
         internal ContentManager ContentManager { get; private set; }
 
@@ -58,6 +60,7 @@ namespace Monolith
         private double _fpsTimer;
         private bool _quit;
 
+        private MTexture _bitMapTexture;
 
         public Engine(EngineConfig config)
         {
@@ -113,6 +116,8 @@ namespace Monolith
 
         protected override void Initialize()
         {
+            GraphicsDevice = base.GraphicsDevice;
+
             Tween = new TweenManager();
             Stage = new StageManager();
             Node = new NodeManager();
@@ -123,7 +128,6 @@ namespace Monolith
 
             Window.ClientSizeChanged += (_, _) => UpdateRenderTargetTransform();
 
-            GraphicsDevice = base.GraphicsDevice;
             SpriteBatch = new SpriteBatch(GraphicsDevice);
 
             Pixel = new MTexture(1, 1, new[] { Color.White });
@@ -138,6 +142,40 @@ namespace Monolith
 
             LoadRenderTarget();
             UpdateRenderTargetTransform();
+        }
+
+        protected override void LoadContent()
+        {
+            base.LoadContent();
+
+            var assembly = typeof(Engine).Assembly;
+            var resourceName = "Monolith.Graphics.Font.bitmap_font.png";
+
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+
+            if (stream == null)
+                throw new InvalidOperationException(
+                    $"Embedded resource not found: {resourceName}"
+                );
+
+            _bitMapTexture = new MTexture(
+                Texture2D.FromStream(GraphicsDevice, stream)
+            );
+
+            Bitmap = new BitmapFont(_bitMapTexture, 6, 10);
+
+            Bitmap.AddMap(
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-=()[]{}<>/*:#%!?.,'\"@&$"
+            );
+        }
+
+        protected override void UnloadContent()
+        {
+            base.UnloadContent();
+
+            _bitMapTexture.Dispose();
+
+
         }
 
         protected override void Update(GameTime gameTime)

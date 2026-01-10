@@ -9,7 +9,6 @@ namespace Monolith.Util
 {
     public interface IStage
     {
-        public void Initialize();
         public void Load();
         public void Unload();
         public void Update(GameTime gameTime);
@@ -23,7 +22,6 @@ namespace Monolith.Util
         {
             Config = config;
         }
-        public virtual void Initialize() {}
         public virtual void Load()
         {
             if (Config.DataPath != null)

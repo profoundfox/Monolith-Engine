@@ -68,7 +68,8 @@ namespace Monolith.Managers
             DrawLayer layer = DrawLayer.UI,
             int depth = 0,
             SpriteBatchConfig? config = null,
-            bool useCamera = false)
+            bool useCamera = false
+            )
         {
             var cfg = config ?? SpriteBatchConfig.Default;
 

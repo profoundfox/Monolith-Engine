@@ -77,6 +77,7 @@ public static class DebugOverlay
 
                     Engine.Screen.DrawString(text, new Vector2(10, yLeft), entry.Color, depth: 100);
 
+
                     yLeft += 20;
                     break;
 

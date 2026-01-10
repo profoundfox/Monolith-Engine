@@ -21,7 +21,7 @@ namespace Monolith.Nodes
     {
         public MTexture Texture { get; set; }
         public Vector2 MotionScale { get; set; } = Vector2.One;
-        public LoopAxis LoopAxes { get; set; } = LoopAxis.Both;
+        public LoopAxis LoopAxis { get; set; } = LoopAxis.Both;
     }
     /// <summary>
     /// Represents a single infinite scrolling parallax layer.
@@ -37,7 +37,7 @@ namespace Monolith.Nodes
         {
             Texture = cfg.Texture;
             MotionScale = cfg.MotionScale;
-            LoopAxes = cfg.LoopAxes;
+            LoopAxes = cfg.LoopAxis;
         }
 
         public void ApplyCameraDelta(Vector2 cameraDelta)

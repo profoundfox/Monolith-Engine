@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Monolith.Structs
 {
-    public readonly record struct Material
+    public readonly record struct Material : IProperty<Material>
     {
         public Effect Shader { get; init; }
         public SpriteEffects SpriteEffects { get; init; }

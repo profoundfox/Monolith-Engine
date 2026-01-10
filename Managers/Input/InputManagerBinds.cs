@@ -14,6 +14,7 @@ namespace Monolith.Managers
 
             AddBind(name, inputActions);
         }
+        
         /// <summary>
         /// Adds a bind to the dictionary with a given name.
         /// </summary>
