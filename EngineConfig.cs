@@ -135,8 +135,6 @@ namespace Monolith
         public string TilemapTexturePath {get; init; } = null;
     }
 
-    
-
     public record class NodeConfig
     {
         /// <summary>

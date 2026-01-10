@@ -4,18 +4,15 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Monolith.Structs
 {
-    internal sealed class TextDrawCall : DrawCallBase
+    public sealed class TextDrawCall : DrawCallBase
     {
-        public SpriteFont Font;
-        public string Text;
+        public SpriteFont Font { get; init; }
+        public string Text { get; init; }
 
         public override void Draw(SpriteBatch sb)
         {
-            if (Font == null || string.IsNullOrEmpty(Text)) return;
-
-            int minDepth = -100;
-            int maxDepth = 100;
-            float layerDepth = 1.0f - ((float)(Depth - minDepth) / (maxDepth - minDepth));
+            if (Font == null || string.IsNullOrEmpty(Text))
+                return;
 
             sb.DrawString(
                 Font,
@@ -26,72 +23,8 @@ namespace Monolith.Structs
                 Origin,
                 Scale,
                 Effects,
-                layerDepth
+                LayerDepth
             );
-        }
-    }
-
-    public readonly struct TextDrawParams
-    {
-        public string Text { get; init; }
-        public SpriteFont Font { get; init; }
-        public Vector2 Position { get; init; }
-        public Color Color { get; init; }
-        public float Rotation { get; init; }
-        public Vector2 Origin { get; init; }
-        public Vector2 Scale { get; init; }
-        public SpriteEffects Effects { get; init; }
-        public int Depth { get; init; }
-        public bool UseCamera { get; init; }
-        public SpriteBatchConfig SpriteBatchConfig { get; init; }
-
-        public TextDrawParams(
-            string text,
-            SpriteFont font,
-            Vector2 position,
-            Color? color = null,
-            float rotation = 0f,
-            Vector2? origin = null,
-            Vector2? scale = null,
-            SpriteEffects effects = SpriteEffects.None,
-            int depth = 0,
-            bool useCamera = true,
-            SpriteBatchConfig? spriteBatchConfig = null)
-        {
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
-            if (font == null)
-                throw new ArgumentNullException(nameof(font));
-
-            Text = text;
-            Font = font;
-            Position = position;
-
-            if (color != null)
-                Color = color.Value;
-            else
-                Color = Color.White;
-
-            Rotation = rotation;
-
-            if (origin != null)
-                Origin = origin.Value;
-            else
-                Origin = Vector2.Zero;
-
-            if (scale != null)
-                Scale = scale.Value;
-            else
-                Scale = Vector2.One;
-
-            Effects = effects;
-            Depth = depth;
-            UseCamera = useCamera;
-
-            if (spriteBatchConfig != null)
-                SpriteBatchConfig = spriteBatchConfig.Value;
-            else
-                SpriteBatchConfig = SpriteBatchConfig.Default;
         }
     }
 }

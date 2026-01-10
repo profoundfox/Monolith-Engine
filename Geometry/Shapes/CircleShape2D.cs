@@ -170,8 +170,10 @@ namespace Monolith.Geometry
                 float rotation = MathF.Atan2(edge.Y, edge.X);
 
                 Engine.Screen.Draw(
-                    new TextureDrawParams(Engine.Pixel, prev)
+                    new TextureDrawCall
                     {
+                        Texture = Engine.Pixel,
+                        Position = prev,
                         Color = color,
                         Rotation = rotation,
                         Scale = new Vector2(length, thickness),

@@ -155,38 +155,38 @@ namespace Monolith.Graphics
 
         public void Draw()
         {
-            Engine.Screen.Draw(new TextureDrawParams(
-                texture: this,
-                position: Position,
-                sourceRectangle: SourceRectangle,
-                color: Color,
-                rotation: Rotation,
-                origin: Origin,
-                scale: Scale,
-                effects: Effects,
-                effect: Shader,
-                depth: Depth,
-                spriteBatchConfig: SpriteBatchConfig
-            ),
-            Layer);
+            Engine.Screen.Draw(new TextureDrawCall
+            {
+                Texture = this,
+                Position = Position,
+                SourceRectangle = SourceRectangle,
+                Color = Color,
+                Rotation = Rotation,
+                Origin = Origin,
+                Scale = Scale,
+                Effects = Effects,
+                Effect = Shader,
+                Depth = Depth,
+                SpriteBatchConfig = SpriteBatchConfig
+            }, Layer);
         }
 
         public void Draw(Vector2 position)
         {
-            Engine.Screen.Draw(new TextureDrawParams(
-                texture: this,
-                position: position,
-                sourceRectangle: SourceRectangle,
-                color: Color,
-                rotation: Rotation,
-                origin: Origin,
-                scale: Scale,
-                effects: Effects,
-                effect: Shader,
-                depth: Depth,
-                spriteBatchConfig: SpriteBatchConfig
-            ),
-            Layer);
+            Engine.Screen.Draw(new TextureDrawCall
+            {
+                Texture = this,
+                Position = position,
+                SourceRectangle = SourceRectangle,
+                Color = Color,
+                Rotation = Rotation,
+                Origin = Origin,
+                Scale = Scale,
+                Effects = Effects,
+                Effect = Shader,
+                Depth = Depth,
+                SpriteBatchConfig = SpriteBatchConfig
+            }, Layer);
         }
 
         /// <summary>
@@ -194,21 +194,20 @@ namespace Monolith.Graphics
         /// </summary>  
         public void Draw(Vector2 position, Color color, float rotation = 0f, Vector2 origin = default, Vector2? scale = null, SpriteEffects effects = SpriteEffects.None, Effect shader = null, int depth = 0, DrawLayer layer = DrawLayer.Middleground)
         {
-            Engine.Screen.Draw(new TextureDrawParams
-            (
-                texture: this,
-                position: position,
-                sourceRectangle: SourceRectangle,
-                color: color,
-                rotation: rotation,
-                origin: origin,
-                scale: scale ?? Vector2.One,
-                effects: effects,
-                effect: shader,
-                depth: depth,
-                spriteBatchConfig: SpriteBatchConfig
-            ),
-            layer);
+            Engine.Screen.Draw(new TextureDrawCall
+            {
+                Texture = this,
+                Position = position,
+                SourceRectangle = SourceRectangle,
+                Color = color,
+                Rotation = rotation,
+                Origin = origin,
+                Scale = scale ?? Vector2.One,
+                Effects = effects,
+                Effect = shader,
+                Depth = depth,
+                SpriteBatchConfig = SpriteBatchConfig
+            }, layer);
         }
 
         /// <summary>

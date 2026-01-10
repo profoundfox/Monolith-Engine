@@ -134,8 +134,23 @@ namespace Monolith.Geometry
             int thickness = 2;
 
             Engine.Screen.Draw(
-                new TextureDrawParams(Engine.Pixel, new Vector2(X, Y))
+                new TextureDrawCall
                 {
+                    Position = new Vector2(X, Y),
+                    Texture = Engine.Pixel,
+                    Color = color,
+                    Scale = new Vector2(BoundingBox.Width, thickness),
+                    Depth = depth
+                },
+                Managers.DrawLayer.Middleground
+            );
+            
+
+            Engine.Screen.Draw(
+                new TextureDrawCall
+                {
+                    Position = new Vector2(X, BoundingBox.Bottom - thickness),
+                    Texture = Engine.Pixel,
                     Color = color,
                     Scale = new Vector2(BoundingBox.Width, thickness),
                     Depth = depth
@@ -144,18 +159,10 @@ namespace Monolith.Geometry
             );
 
             Engine.Screen.Draw(
-                new TextureDrawParams(Engine.Pixel, new Vector2(X, BoundingBox.Bottom - thickness))
+                new TextureDrawCall
                 {
-                    Color = color,
-                    Scale = new Vector2(BoundingBox.Width, thickness),
-                    Depth = depth
-                },
-                Managers.DrawLayer.Middleground
-            );
-
-            Engine.Screen.Draw(
-                new TextureDrawParams(Engine.Pixel, new Vector2(X, Y))
-                {
+                    Position = new Vector2(X, Y),
+                    Texture = Engine.Pixel,
                     Color = color,
                     Scale = new Vector2(thickness, BoundingBox.Height),
                     Depth = depth
@@ -164,8 +171,10 @@ namespace Monolith.Geometry
             );
 
             Engine.Screen.Draw(
-                new TextureDrawParams(Engine.Pixel, new Vector2(BoundingBox.Right - thickness, Y))
+                new TextureDrawCall
                 {
+                    Position = new Vector2(BoundingBox.Right - thickness, Y),
+                    Texture = Engine.Pixel,
                     Color = color,
                     Scale = new Vector2(thickness, BoundingBox.Height),
                     Depth = depth

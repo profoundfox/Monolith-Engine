@@ -7,8 +7,7 @@ using System.Linq;
 using Monolith.Structs;
 
 namespace Monolith.Managers
-{   
-
+{
     public enum DrawLayer
     {
         Background,
@@ -27,7 +26,7 @@ namespace Monolith.Managers
         public ScreenManager(SpriteBatch spriteBatch)
         {
             _spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
-            
+
             _queues = new Dictionary<DrawLayer, List<IDrawCall>>();
             foreach (DrawLayer l in Enum.GetValues(typeof(DrawLayer)))
                 _queues[l] = new List<IDrawCall>();
@@ -39,29 +38,18 @@ namespace Monolith.Managers
         public void SetCamera(Matrix transform) => _camera = transform;
 
         /// <summary>
-        /// Queue a draw using DrawParams.
+        /// Queue a TextureDrawCall directly.
         /// </summary>
-        public void Draw(in TextureDrawParams p, DrawLayer layer = DrawLayer.Middleground)
+        public void Draw(TextureDrawCall call, DrawLayer layer = DrawLayer.Middleground)
         {
-            var call = new TextureDrawCall
-            {
-                Texture = p.Texture,
-                SourceRectangle = p.SourceRectangle,
-                Position = p.Position,
-                Color = p.Color,
-                Rotation = p.Rotation,
-                Origin = p.Origin,
-                Scale = p.Scale,
-                Effects = p.Effects,
-                Depth = p.Depth,
-                Effect = p.Effect,
-                UseCamera = p.UseCamera,
-                SpriteBatchConfig = p.SpriteBatchConfig
-            };
+            if (call == null) throw new ArgumentNullException(nameof(call));
             _queues[layer].Add(call);
         }
 
-       public void DrawString(
+        /// <summary>
+        /// Queue a TextDrawCall quickly.
+        /// </summary>
+        public void DrawString(
             string text,
             Vector2 position,
             Color color,
@@ -69,7 +57,7 @@ namespace Monolith.Managers
             int depth = 0,
             SpriteBatchConfig? config = null,
             bool useCamera = false
-            )
+        )
         {
             var cfg = config ?? SpriteBatchConfig.Default;
 
@@ -107,25 +95,31 @@ namespace Monolith.Managers
                 {
                     if (!_spriteBatches.TryGetValue(group.Key, out var sb))
                         sb = _spriteBatches[group.Key] = new SpriteBatch(_spriteBatch.GraphicsDevice);
-                    
+
                     Matrix transform = layer != DrawLayer.UI && group.Any(x => x.UseCamera)
                         ? _camera
                         : Matrix.Identity;
-                    
+
                     var cfg = group.Key;
 
-                    sb.Begin(cfg.SortMode, cfg.BlendState, cfg.SamplerState,
-                        cfg.DepthStencilState, cfg.RasterizerState, cfg.Effect, transform);
-                    
+                    sb.Begin(
+                        cfg.SortMode,
+                        cfg.BlendState,
+                        cfg.SamplerState,
+                        cfg.DepthStencilState,
+                        cfg.RasterizerState,
+                        cfg.Effect,
+                        transform
+                    );
+
                     foreach (var call in group.OrderBy(x => x.Depth))
                         call.Draw(sb);
-                    
+
                     sb.End();
                 }
 
                 queue.Clear();
             }
-
         }
     }
 }

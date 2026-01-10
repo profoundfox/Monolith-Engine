@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Monolith.Graphics;
 using Monolith.Helpers;
 using Monolith.Managers;
@@ -108,8 +109,10 @@ namespace Monolith.Geometry
             float angle = (float)Math.Atan2(edge.Y, edge.X);
 
             Engine.Screen.Draw(
-                new TextureDrawParams(Engine.Pixel, Position)
+                new TextureDrawCall
                 {
+                    Texture = Engine.Pixel,
+                    Position = Position,
                     Color = drawColor,
                     Rotation = angle,
                     Scale = new Vector2(edge.Length(), thickness),
