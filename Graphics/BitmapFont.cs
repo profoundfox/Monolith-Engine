@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
+using Monolith.Managers;
+using Monolith.Structs;
 
 namespace Monolith.Graphics
 {
@@ -13,7 +15,7 @@ namespace Monolith.Graphics
         public Dictionary<char, int> Map { get; private set; } = new();
 
         int charWidth, charHeight;
-        int columns, rows;
+        int columns;
 
         public BitmapFont(MTexture mapTexture, int charWidth, int charHeight)
         {
@@ -22,8 +24,6 @@ namespace Monolith.Graphics
             this.charHeight = charHeight;
 
             columns = MapTexture.Width / this.charWidth;
-            rows = MapTexture.Height / this.charHeight;
-
         }
 
         public void AddMap(string charOrder)
@@ -34,7 +34,12 @@ namespace Monolith.Graphics
             }
         }
 
-        public void DrawString(string text, Vector2 position, Color color)
+        public void DrawString
+        (
+            string text,
+            Vector2 position,
+            Color color
+        )
         {
             Vector2 cursor = position;
 

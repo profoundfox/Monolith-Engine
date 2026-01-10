@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Monolith.Managers;
 using Monolith.Structs;
 
 namespace Monolith.Graphics
@@ -88,6 +89,11 @@ namespace Monolith.Graphics
         /// </summary>
         public SpriteBatchConfig SpriteBatchConfig { get; set;} = SpriteBatchConfig.Default;
 
+        /// <summary>
+        /// The layer the texture will be drawn at.
+        /// </summary>
+        public DrawLayer Layer { get; set; } = DrawLayer.Middleground;
+
 
         /// <summary>
         /// Creates a blank texture.
@@ -161,7 +167,8 @@ namespace Monolith.Graphics
                 effect: Shader,
                 depth: Depth,
                 spriteBatchConfig: SpriteBatchConfig
-            ));
+            ),
+            Layer);
         }
 
         public void Draw(Vector2 position)
@@ -178,13 +185,14 @@ namespace Monolith.Graphics
                 effect: Shader,
                 depth: Depth,
                 spriteBatchConfig: SpriteBatchConfig
-            ));
+            ),
+            Layer);
         }
 
         /// <summary>
         /// Draws the texture with given parameters.
         /// </summary>  
-        public void Draw(Vector2 position, Color color, float rotation = 0f, Vector2 origin = default, Vector2? scale = null, SpriteEffects effects = SpriteEffects.None, Effect shader = null, int depth = 0)
+        public void Draw(Vector2 position, Color color, float rotation = 0f, Vector2 origin = default, Vector2? scale = null, SpriteEffects effects = SpriteEffects.None, Effect shader = null, int depth = 0, DrawLayer layer = DrawLayer.Middleground)
         {
             Engine.Screen.Draw(new TextureDrawParams
             (
@@ -199,7 +207,8 @@ namespace Monolith.Graphics
                 effect: shader,
                 depth: depth,
                 spriteBatchConfig: SpriteBatchConfig
-            ));
+            ),
+            layer);
         }
 
         /// <summary>

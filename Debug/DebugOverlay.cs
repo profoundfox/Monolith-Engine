@@ -76,8 +76,7 @@ public static class DebugOverlay
                 case Side.Left:
 
                     Engine.Screen.DrawString(text, new Vector2(10, yLeft), entry.Color, depth: 100);
-
-
+    
                     yLeft += 20;
                     break;
 
