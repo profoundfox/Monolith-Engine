@@ -2,8 +2,9 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Graphics;
+using Monolith.Structs;
 
-namespace Monolith.Structs
+namespace Monolith.Graphics
 {
     internal interface IDrawCall
     {

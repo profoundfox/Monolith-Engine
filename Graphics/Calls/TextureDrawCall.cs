@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Graphics;
 
-namespace Monolith.Structs
+namespace Monolith.Graphics
 {
     public sealed class TextureDrawCall : DrawCallBase
     {

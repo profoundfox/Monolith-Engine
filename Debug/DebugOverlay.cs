@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith;
+using Monolith.Graphics;
+using Monolith.Managers;
 
 public static class DebugOverlay
 {   
@@ -75,7 +77,14 @@ public static class DebugOverlay
             {
                 case Side.Left:
 
-                    Engine.Screen.DrawString(text, new Vector2(10, yLeft), entry.Color, depth: 100);
+                    Engine.Screen.DrawString(new TextDrawCall
+                    {
+                        Font = Engine.Instance.Font,
+                        Text = text, 
+                        Position = new Vector2(10, yLeft), 
+                        Color = entry.Color, 
+                        Depth = 100
+                    }, DrawLayer.UI);
     
                     yLeft += 20;
                     break;
@@ -83,7 +92,14 @@ public static class DebugOverlay
                 case Side.Right:
                     Vector2 textSize = Engine.Instance.Font.MeasureString(text);
                     
-                    Engine.Screen.DrawString(text, new Vector2(screenWidth - textSize.X - 10, yRight), entry.Color, depth: 100);
+                    Engine.Screen.DrawString(new TextDrawCall
+                    {
+                        Font = Engine.Instance.Font,
+                        Text = text, 
+                        Position = new Vector2(screenWidth - textSize.X - 10, yRight), 
+                        Color = entry.Color, 
+                        Depth = 100
+                    }, DrawLayer.UI);
 
                     yRight += 20;
                     break;

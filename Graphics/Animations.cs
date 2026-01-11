@@ -9,7 +9,6 @@ namespace Monolith.Graphics
 
         public TimeSpan Delay { get; set; }
 
-
         public Animation()
         {
             Frames = new List<MTexture>();

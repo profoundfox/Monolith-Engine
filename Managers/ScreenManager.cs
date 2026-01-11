@@ -16,7 +16,7 @@ namespace Monolith.Managers
         UI
     }
 
-    public sealed partial class ScreenManager
+    public sealed class ScreenManager
     {
         private readonly Dictionary<SpriteBatchConfig, SpriteBatch> _spriteBatches = new();
         private readonly SpriteBatch _spriteBatch;
@@ -47,36 +47,12 @@ namespace Monolith.Managers
         }
 
         /// <summary>
-        /// Queue a TextDrawCall quickly.
+        /// Queue a TextDrawCall.
         /// </summary>
-        public void DrawString(
-            string text,
-            Vector2 position,
-            Color color,
-            DrawLayer layer = DrawLayer.UI,
-            int depth = 0,
-            SpriteBatchConfig? config = null,
-            bool useCamera = false
-        )
+        public void DrawString(TextDrawCall call, DrawLayer layer = DrawLayer.Middleground)
         {
-            var cfg = config ?? SpriteBatchConfig.Default;
-
-            _queues[layer].Add(
-                new TextDrawCall
-                {
-                    Font = Engine.Instance.Font,
-                    Text = text,
-                    Position = position,
-                    Color = color,
-                    Depth = depth,
-                    UseCamera = useCamera,
-                    SpriteBatchConfig = cfg,
-                    Origin = Vector2.Zero,
-                    Scale = Vector2.One,
-                    Effects = SpriteEffects.None,
-                    Rotation = 0f
-                }
-            );
+            if (call == null) throw new ArgumentNullException(nameof(call));
+            _queues[layer].Add(call);
         }
 
         /// <summary>

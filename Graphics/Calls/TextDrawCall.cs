@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Monolith.Structs
+namespace Monolith.Graphics
 {
     public sealed class TextDrawCall : DrawCallBase
     {
