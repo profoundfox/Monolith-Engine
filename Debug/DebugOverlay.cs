@@ -77,9 +77,9 @@ public static class DebugOverlay
             {
                 case Side.Left:
 
-                    Engine.Screen.DrawString(new TextDrawCall
+                    Engine.Screen.Draw(new BitmapFontDrawCall
                     {
-                        Font = Engine.Instance.Font,
+                        Font = Engine.Instance.BitmapFont,
                         Text = text, 
                         Position = new Vector2(10, yLeft), 
                         Color = entry.Color, 
@@ -92,9 +92,9 @@ public static class DebugOverlay
                 case Side.Right:
                     Vector2 textSize = Engine.Instance.Font.MeasureString(text);
                     
-                    Engine.Screen.DrawString(new TextDrawCall
+                    Engine.Screen.Draw(new BitmapFontDrawCall
                     {
-                        Font = Engine.Instance.Font,
+                        Font = Engine.Instance.BitmapFont,
                         Text = text, 
                         Position = new Vector2(screenWidth - textSize.X - 10, yRight), 
                         Color = entry.Color, 

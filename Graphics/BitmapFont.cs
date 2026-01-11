@@ -1,81 +1,53 @@
 
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
-using Monolith.Managers;
-using Monolith.Structs;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Monolith.Graphics
 {
-    public class BitmapFont
+    public sealed class BitmapFont
     {
-        public MTexture MapTexture { get; private set; }
-        public Dictionary<char, int> Map { get; private set; } = new();
+        public Texture2D Texture { get; }
+        public int CharWidth { get; }
+        public int CharHeight { get; }
 
-        int charWidth, charHeight;
-        int columns;
+        readonly Dictionary<char, int> map = new();
+        readonly int columns;
 
-        public BitmapFont(MTexture mapTexture, int charWidth, int charHeight)
+        public BitmapFont(Texture2D texture, int charWidth, int charHeight)
         {
-            MapTexture = mapTexture;
-            this.charWidth = charWidth;
-            this.charHeight = charHeight;
-
-            columns = MapTexture.Width / this.charWidth;
+            Texture = texture;
+            CharWidth = charWidth;
+            CharHeight = charHeight;
+            columns = texture.Width / charWidth;
         }
 
         public void AddMap(string charOrder)
         {
             for (int i = 0; i < charOrder.Length; i++)
-            {
-                Map[charOrder[i]] = i;
-            }
+                map[charOrder[i]] = i;
         }
 
-        public void DrawString
-        (
-            string text,
-            Vector2 position,
-            Color color
-        )
+        public bool TryGetSource(char c, out Rectangle source)
         {
-            Vector2 cursor = position;
-
-            foreach (char c in text)
+            if (!map.TryGetValue(c, out int index))
             {
-                if (c == '\n')
-                {
-                    cursor.X = position.X;
-                    cursor.Y += charHeight;
-                    continue;
-                }
-
-                if (!Map.TryGetValue(c, out int index))
-                    continue;
-
-                int col = index % columns;
-                int row = index / columns;
-
-                Rectangle region = new Rectangle(
-                    col * charWidth,
-                    row * charHeight,
-                    charWidth,
-                    charHeight
-                );
-
-                Console.WriteLine(region.ToString());
-
-                MTexture character = MapTexture.CreateSubTexture(region);
-
-                character.Draw(cursor, color);
-
-                cursor.X += charWidth;
+                source = default;
+                return false;
             }
-}
 
+            int col = index % columns;
+            int row = index / columns;
 
+            source = new Rectangle(
+                col * CharWidth,
+                row * CharHeight,
+                CharWidth,
+                CharHeight
+            );
 
+            return true;
+        }
     }
+
 }

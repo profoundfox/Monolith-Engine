@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Monolith.Graphics
 {
-    public sealed class TextDrawCall : DrawCallBase
+    public sealed class SpritFontDrawCall : DrawCallBase
     {
         public SpriteFont Font { get; init; }
         public string Text { get; init; }

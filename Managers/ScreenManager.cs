@@ -37,19 +37,11 @@ namespace Monolith.Managers
         /// </summary>
         public void SetCamera(Matrix transform) => _camera = transform;
 
-        /// <summary>
-        /// Queue a TextureDrawCall directly.
-        /// </summary>
-        public void Draw(TextureDrawCall call, DrawLayer layer = DrawLayer.Middleground)
-        {
-            if (call == null) throw new ArgumentNullException(nameof(call));
-            _queues[layer].Add(call);
-        }
 
         /// <summary>
-        /// Queue a TextDrawCall.
+        /// Queues a call directly.
         /// </summary>
-        public void DrawString(TextDrawCall call, DrawLayer layer = DrawLayer.Middleground)
+        public void Draw(IDrawCall call, DrawLayer layer = DrawLayer.Middleground)
         {
             if (call == null) throw new ArgumentNullException(nameof(call));
             _queues[layer].Add(call);
@@ -60,36 +52,57 @@ namespace Monolith.Managers
         /// </summary>
         public void Flush()
         {
+            var groupedQueue = new Dictionary<SpriteBatchConfig, List<IDrawCall>>();
+
             foreach (DrawLayer layer in Enum.GetValues(typeof(DrawLayer)))
             {
                 var queue = _queues[layer];
-                if (queue.Count == 0) continue;
+                if (queue.Count == 0)
+                    continue;
 
-                var groups = queue.GroupBy(x => x.SpriteBatchConfig);
+                groupedQueue.Clear();
 
-                foreach (var group in groups)
+                foreach (var call in queue)
                 {
-                    if (!_spriteBatches.TryGetValue(group.Key, out var sb))
-                        sb = _spriteBatches[group.Key] = new SpriteBatch(_spriteBatch.GraphicsDevice);
+                    if (!groupedQueue.TryGetValue(call.SpriteBatchConfig, out var list))
+                    {
+                        list = new List<IDrawCall>();
+                        groupedQueue[call.SpriteBatchConfig] = list;
+                    }
+                    list.Add(call);
+                }
 
-                    Matrix transform = layer != DrawLayer.UI && group.Any(x => x.UseCamera)
+                foreach (var kvp in groupedQueue)
+                {
+                    var config = kvp.Key;
+                    var calls = kvp.Value;
+
+                    // In-place sort by Depth
+                    if (calls.Count > 1)
+                        calls.Sort((a, b) => a.Depth.CompareTo(b.Depth));
+
+                    // Determine transform: use camera for non-UI layers if any call wants it
+                    Matrix transform = (layer != DrawLayer.UI && calls.Exists(c => c.UseCamera))
                         ? _camera
                         : Matrix.Identity;
 
-                    var cfg = group.Key;
+                    // Get or reuse SpriteBatch for this config
+                    if (!_spriteBatches.TryGetValue(config, out var sb))
+                        sb = _spriteBatches[config] = new SpriteBatch(_spriteBatch.GraphicsDevice);
 
+                    // Begin / Draw / End
                     sb.Begin(
-                        cfg.SortMode,
-                        cfg.BlendState,
-                        cfg.SamplerState,
-                        cfg.DepthStencilState,
-                        cfg.RasterizerState,
-                        cfg.Effect,
+                        config.SortMode,
+                        config.BlendState,
+                        config.SamplerState,
+                        config.DepthStencilState,
+                        config.RasterizerState,
+                        config.Effect,
                         transform
                     );
 
-                    foreach (var call in group.OrderBy(x => x.Depth))
-                        call.Draw(sb);
+                    for (int i = 0; i < calls.Count; i++)
+                        calls[i].Draw(sb);
 
                     sb.End();
                 }
@@ -97,5 +110,6 @@ namespace Monolith.Managers
                 queue.Clear();
             }
         }
+
     }
 }

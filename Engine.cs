@@ -33,6 +33,7 @@ namespace Monolith
         public static RenderTarget2D RenderTarget { get; private set; }
         public SpriteBatch SpriteBatch { get; private set; }
         public SpriteFont Font { get; private set; }
+        public BitmapFont BitmapFont { get; private set; }
         public Effect PostProcessingShader { get; set; }
         public static MTexture Pixel { get; private set; }
         public Point ScreenSize => new Point(RenderTarget.Width, RenderTarget.Height);
@@ -48,8 +49,6 @@ namespace Monolith
         public static NodeManager Node { get; private set; }
         public static TimerManager Timer { get; private set; }
 
-        public static BitmapFont Bitmap { get; private set; }
-
         public static IContentProvider Resources { get; set; }
         internal ContentManager ContentManager { get; private set; }
 
@@ -59,9 +58,6 @@ namespace Monolith
         private int _fpsFrames;
         private double _fpsTimer;
         private bool _quit;
-
-        private MTexture _bitMapTexture;
-
         public Engine(EngineConfig config)
         {
             if (Instance != null)
@@ -148,32 +144,14 @@ namespace Monolith
         {
             base.LoadContent();
 
-            var assembly = typeof(Engine).Assembly;
-            var resourceName = "Monolith.Graphics.Font.bitmap_font.png";
-
-            using var stream = assembly.GetManifestResourceStream(resourceName);
-
-            if (stream == null)
-                throw new InvalidOperationException(
-                    $"Embedded resource not found: {resourceName}"
-                );
-
-            _bitMapTexture = new MTexture(
-                Texture2D.FromStream(GraphicsDevice, stream)
-            );
-
-            Bitmap = new BitmapFont(_bitMapTexture, 6, 10);
-
-            Bitmap.AddMap(
-                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-=()[]{}<>/*:#%!?.,'\"@&$"
-            );
+            LoadDefaultBitmap();
         }
 
         protected override void UnloadContent()
         {
             base.UnloadContent();
 
-            _bitMapTexture.Dispose();
+            BitmapFont.Texture.Dispose();
 
 
         }
@@ -238,7 +216,28 @@ namespace Monolith
             base.Draw(gameTime);
         }
 
-        public void SetRenderTarget() =>
+        private void LoadDefaultBitmap()
+        {
+            var assembly = typeof(Engine).Assembly;
+            var resourceName = "Monolith.Graphics.Font.bitmap_font.png";
+
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+
+            if (stream == null)
+                throw new InvalidOperationException(
+                    $"Embedded resource not found: {resourceName}"
+                );
+
+            var t = Texture2D.FromStream(GraphicsDevice, stream);
+
+            BitmapFont = new BitmapFont(t, 6, 10);
+
+            BitmapFont.AddMap(
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-=()[]{}<>/*:#%!?.,'\"@&$"
+            );
+        }
+
+        private void SetRenderTarget() =>
             GraphicsDevice.SetRenderTarget(RenderTarget);
 
         public void LoadRenderTarget()

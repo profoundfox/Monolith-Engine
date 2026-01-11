@@ -6,7 +6,7 @@ using Monolith.Structs;
 
 namespace Monolith.Graphics
 {
-    internal interface IDrawCall
+    public interface IDrawCall
     {
         int Depth { get; }
         SpriteBatchConfig SpriteBatchConfig { get; }
