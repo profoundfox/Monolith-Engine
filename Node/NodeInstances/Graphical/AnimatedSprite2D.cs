@@ -111,9 +111,9 @@ namespace Monolith.Nodes
             CurrentFrame.Draw(
                 position: GlobalTransform.Position,
                 color: GlobalVisibility.Modulate,
-                rotation: Rotation,
+                rotation: GlobalTransform.Rotation,
                 origin: CurrentFrame.Center,
-                scale: Scale,
+                scale: GlobalTransform.Scale,
                 effects: GlobalMaterial.SpriteEffects,
                 shader: GlobalMaterial.Shader,
                 depth: GlobalOrdering.Depth

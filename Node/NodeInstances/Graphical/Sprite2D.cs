@@ -21,21 +21,15 @@ namespace Monolith.Nodes
         {
             Texture = cfg.Texture;
         }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-
-        }
         
         public override void Draw(SpriteBatch spriteBatch)
         {
             Texture.Draw(
                 position: GlobalTransform.Position,
                 color: GlobalVisibility.Modulate,
-                rotation: Rotation,
+                rotation: GlobalTransform.Rotation,
                 origin: Texture.Center,
-                scale: Scale,
+                scale: GlobalTransform.Scale,
                 effects: GlobalMaterial.SpriteEffects,
                 shader: GlobalMaterial.Shader,
                 depth: GlobalOrdering.Depth

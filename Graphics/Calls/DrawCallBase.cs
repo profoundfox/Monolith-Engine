@@ -21,7 +21,6 @@ namespace Monolith.Graphics
 
         int IDrawCall.Depth => Depth;
         SpriteBatchConfig IDrawCall.SpriteBatchConfig => SpriteBatchConfig;
-        bool IDrawCall.UseCamera => UseCamera;
 
         protected float LayerDepth
         {

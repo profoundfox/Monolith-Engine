@@ -109,11 +109,6 @@ namespace Monolith
         public bool ExitOnEscape { get; init; } = false;
 
         /// <summary>
-        /// Path to the default font (optional).
-        /// </summary>
-        public string FontPath { get; init; } = null;
-
-        /// <summary>
         /// Given content provider.
         /// Default: ContentPipelineLoader
         /// </summary>

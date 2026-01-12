@@ -10,7 +10,6 @@ namespace Monolith.Graphics
     {
         int Depth { get; }
         SpriteBatchConfig SpriteBatchConfig { get; }
-        bool UseCamera { get; }
         void Draw(SpriteBatch sb);
     }
 }

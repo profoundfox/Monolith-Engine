@@ -77,20 +77,16 @@ namespace Monolith.Managers
                     var config = kvp.Key;
                     var calls = kvp.Value;
 
-                    // In-place sort by Depth
                     if (calls.Count > 1)
                         calls.Sort((a, b) => a.Depth.CompareTo(b.Depth));
 
-                    // Determine transform: use camera for non-UI layers if any call wants it
-                    Matrix transform = (layer != DrawLayer.UI && calls.Exists(c => c.UseCamera))
+                    Matrix transform = (layer != DrawLayer.UI)
                         ? _camera
                         : Matrix.Identity;
 
-                    // Get or reuse SpriteBatch for this config
                     if (!_spriteBatches.TryGetValue(config, out var sb))
                         sb = _spriteBatches[config] = new SpriteBatch(_spriteBatch.GraphicsDevice);
 
-                    // Begin / Draw / End
                     sb.Begin(
                         config.SortMode,
                         config.BlendState,

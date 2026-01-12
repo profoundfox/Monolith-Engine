@@ -130,9 +130,6 @@ namespace Monolith
 
             Screen = new ScreenManager(SpriteBatch);
 
-            if (!string.IsNullOrEmpty(Config.FontPath))
-                Font = Content.Load<SpriteFont>(Config.FontPath);
-
             if (Config.DebugMode)
                 InitializeDebug();
 
