@@ -29,9 +29,9 @@ namespace Monolith.Nodes
             CollisionShape2D.Disabled = !Collidable;
         }
 
-        public override void Update(GameTime gameTime)
+        public override void ProcessUpdate(GameTime gameTime)
         {
-            base.Update(gameTime);
+            base.ProcessUpdate(gameTime);
         }
 
     }

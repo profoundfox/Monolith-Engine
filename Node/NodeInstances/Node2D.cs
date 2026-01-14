@@ -97,7 +97,7 @@ namespace Monolith.Nodes
         }
         /// <summary>
         /// Recompute global transform based on parent.
-        /// Automatically updates children.
+        /// Automatically ProcessProcessProcessProcessUpdates children.
         /// </summary>
         private void UpdateGlobalTransform()
         {
@@ -149,9 +149,9 @@ namespace Monolith.Nodes
             base.Unload();
         }
 
-        public override void Update(GameTime gameTime)
+        public override void ProcessUpdate(GameTime gameTime)
         {
-            base.Update(gameTime);
+            base.ProcessUpdate(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

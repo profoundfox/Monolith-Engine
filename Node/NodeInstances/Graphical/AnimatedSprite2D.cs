@@ -78,7 +78,7 @@ namespace Monolith.Nodes
             _elapsed = TimeSpan.Zero;
         }
 
-        public override void Update(GameTime gameTime)
+        public override void ProcessUpdate(GameTime gameTime)
         {
             if (_finished || CurrentAnimation == null) return;
 

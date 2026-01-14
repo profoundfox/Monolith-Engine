@@ -16,6 +16,9 @@ namespace Monolith.Managers
         private readonly List<Node> pendingAdds = new();
         private readonly List<Node> pendingRemovals = new();
 
+        private const float FixedDelta = 1f / 60f;
+        private float _accumulator = 0f;
+
         internal void QueueAdd(Node node)
         {
             pendingAdds.Add(node);
@@ -158,8 +161,6 @@ namespace Monolith.Managers
                 node.Load();
                 ApplyPendingChanges();
             }
-
-            Console.WriteLine("Nodes Loaded!");
         }
 
 
@@ -176,16 +177,44 @@ namespace Monolith.Managers
             }
         }
 
+        public void UpdateNodes(GameTime gameTime)
+        {
+            float frameDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            _accumulator += frameDelta;
+
+            while (_accumulator >= FixedDelta)
+            {
+                PhysicsUpdateNodes(FixedDelta);
+                _accumulator -= FixedDelta;
+            }
+
+            ProcessUpdateNodes(frameDelta);
+        }
+
         /// <summary>
-        /// Updates all the nodes.
+        /// Updates all the nodes' process function.
         /// </summary>
         /// <param name="gameTime"></param>
-        public void UpdateNodes(GameTime gameTime)
+        private void ProcessUpdateNodes(float delta)
         {
             ApplyPendingChanges();
             foreach (var node in allInstances.ToList())
             {
-                node.Update(gameTime);
+                node.ProcessUpdate(delta);
+                ApplyPendingChanges();
+            }
+        }
+        /// <summary>
+        /// Updates all the nodes' physics function.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        private void PhysicsUpdateNodes(float delta)
+        {
+            ApplyPendingChanges();
+            foreach (var node in allInstances.ToList())
+            {
+                node.PhysicsUpdate(delta);
                 ApplyPendingChanges();
             }
         }

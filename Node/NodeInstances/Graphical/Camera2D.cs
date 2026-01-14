@@ -66,9 +66,9 @@ namespace Monolith.Nodes
             );
         }
 
-        public override void Update(GameTime gameTime)
+        public override void ProcessUpdate(GameTime gameTime)
         {
-            base.Update(gameTime);
+            base.ProcessUpdate(gameTime);
 
             Engine.Screen.SetCamera(GetTransform());
         }

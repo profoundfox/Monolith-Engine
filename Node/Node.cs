@@ -154,7 +154,8 @@ namespace Monolith.Nodes
 
         public virtual void Load() { }
         public virtual void Unload() { }
-        public virtual void Update(GameTime gameTime) { }
+        public virtual void ProcessUpdate(float delta) { }
+        public virtual void PhysicsUpdate(float delta) { }
         public virtual void Draw(SpriteBatch spriteBatch) { }
 
         /// <summary>

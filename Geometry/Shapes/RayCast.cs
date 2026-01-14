@@ -9,7 +9,7 @@ using Monolith.Structs;
 
 namespace Monolith.Geometry
 {
-    public class RayCast2D
+    public class RayCast
     {
         public Vector2 Position { get; set; }
         public float AngleDegrees { get; set; }
@@ -26,7 +26,7 @@ namespace Monolith.Geometry
             MathF.Sin(MathHelper.ToRadians(AngleDegrees))
         );
 
-        public RayCast2D(Vector2 position, float angleDegrees, float length)
+        public RayCast(Vector2 position, float angleDegrees, float length)
         {
             Position = position;
             AngleDegrees = angleDegrees;

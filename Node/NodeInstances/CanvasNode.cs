@@ -21,7 +21,7 @@ namespace Monolith.Nodes
             set
             {
                 _localVisibility = value;
-                UpdateStructs();
+                ProcessUpdateStructs();
             }
         }
 
@@ -31,7 +31,7 @@ namespace Monolith.Nodes
             set
             {
                 _localOrdering = value;
-                UpdateStructs();
+                ProcessUpdateStructs();
             }
         }
 
@@ -41,7 +41,7 @@ namespace Monolith.Nodes
             set
             {
                 _localMaterial = value;
-                UpdateStructs();
+                ProcessUpdateStructs();
             }
         }
 
@@ -55,10 +55,10 @@ namespace Monolith.Nodes
             _localOrdering = Ordering.Identity;
             _localMaterial = Material.Identity;
             
-            UpdateStructs();
+            ProcessUpdateStructs();
         }
 
-        public void UpdateStructs()
+        public void ProcessUpdateStructs()
         {
             if (Parent is CanvasNode parent2D)
             {
@@ -76,7 +76,7 @@ namespace Monolith.Nodes
             foreach (var child in Children)
             {
                 if (child is CanvasNode c2d)
-                    c2d.UpdateStructs();
+                    c2d.ProcessUpdateStructs();
             }
         }
 
@@ -90,9 +90,9 @@ namespace Monolith.Nodes
             base.Unload();
         }
 
-        public override void Update(GameTime gameTime)
+        public override void ProcessUpdate(GameTime gameTime)
         {
-            base.Update(gameTime);
+            base.ProcessUpdate(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
