@@ -64,6 +64,13 @@ namespace Monolith.Nodes
             TransformChanged -= _onTransformChanged;
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            base.Update(gameTime);
+
+            CheckOneWay();
+        }
+
         private void CheckOneWay()
         {
             foreach (KinematicBody2D kb in Engine.Node.GetNodesByT<KinematicBody2D>())
@@ -166,16 +173,6 @@ namespace Monolith.Nodes
             };
 
             return clone;
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
-        }
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            base.Draw(spriteBatch);
         }
     }
 }

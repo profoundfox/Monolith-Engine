@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -48,6 +49,36 @@ namespace Monolith.Graphics
 
             return true;
         }
-    }
 
+        public Vector2 MeasureString(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return Vector2.Zero;
+
+            int maxLineWidth = 0;
+            int currentLineWidth = 0;
+            int lineCount = 1;
+
+            foreach (char c in text)
+            {
+                if (c == '\n')
+                {
+                    maxLineWidth = Math.Max(maxLineWidth, currentLineWidth);
+                    currentLineWidth = 0;
+                    lineCount++;
+                    continue;
+                }
+
+                if (map.ContainsKey(c))
+                    currentLineWidth += CharWidth;
+            }
+
+            maxLineWidth = Math.Max(maxLineWidth, currentLineWidth);
+
+            return new Vector2(
+                maxLineWidth,
+                lineCount * CharHeight
+            );
+        }
+    }
 }

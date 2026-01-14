@@ -91,6 +91,14 @@ namespace Monolith.IO
                         values = ParseValues(e.values);
                     
                     NodeFactory.CreateNode(e.name, new RectangleShape2D(e.x , e.y, e.width, e.height), values);
+
+                    if (e.nodes == null)
+                        continue;
+                    
+                    foreach (var n in e.nodes)
+                    {
+                        NodeFactory.CreateNode(e.name, new RectangleShape2D(n.x , n.y, e.width, e.height), values);
+                    }
                 }
             }
         }

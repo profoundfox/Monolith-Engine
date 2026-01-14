@@ -1,3 +1,5 @@
+using System;
+
 namespace Monolith.Structs
 {
     public readonly record struct Ordering 
@@ -5,7 +7,7 @@ namespace Monolith.Structs
         public int Depth { get; init; }
         public bool RelativeDepth { get; init; }
         public static readonly Ordering Identity =
-            new(0, false);
+            new(0, true);
 
         public Ordering(int depth, bool relativeDepth)
         {
