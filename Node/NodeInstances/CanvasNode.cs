@@ -90,9 +90,9 @@ namespace Monolith.Nodes
             base.Unload();
         }
 
-        public override void ProcessUpdate(GameTime gameTime)
+        public override void ProcessUpdate(float delta)
         {
-            base.ProcessUpdate(gameTime);
+            base.ProcessUpdate(delta);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

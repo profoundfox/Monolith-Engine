@@ -40,9 +40,6 @@ namespace Monolith.Nodes
             return transform; 
         }
 
-
-
-
         /// <summary>
         /// Returns the rectangle of world space currently visible by this camera
         /// </summary>
@@ -66,9 +63,9 @@ namespace Monolith.Nodes
             );
         }
 
-        public override void ProcessUpdate(GameTime gameTime)
+        public override void ProcessUpdate(float delta)
         {
-            base.ProcessUpdate(gameTime);
+            base.ProcessUpdate(delta);
 
             Engine.Screen.SetCamera(GetTransform());
         }

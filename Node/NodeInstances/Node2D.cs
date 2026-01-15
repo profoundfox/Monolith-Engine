@@ -36,6 +36,7 @@ namespace Monolith.Nodes
         public event Action<Transform2D> TransformChanged;
 
         /// <summary>
+        /// The local transform of the node, updates the global transform.
         /// </summary>
         public Transform2D LocalTransform
         {
@@ -149,9 +150,9 @@ namespace Monolith.Nodes
             base.Unload();
         }
 
-        public override void ProcessUpdate(GameTime gameTime)
+        public override void ProcessUpdate(float delta)
         {
-            base.ProcessUpdate(gameTime);
+            base.ProcessUpdate(delta);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

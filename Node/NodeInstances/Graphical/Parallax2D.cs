@@ -12,17 +12,17 @@ namespace Monolith.Nodes
 
         public Parallax2D(ParallaxConfig cfg) : base(cfg) { }
 
-        public override void ProcessUpdate(GameTime gameTime)
+        public override void ProcessUpdate(float delta)
         {
-            base.ProcessUpdate(gameTime);
+            base.ProcessUpdate(delta);
 
             var camera = Camera2D.CurrentCameraInstance;
-            Vector2 delta = camera.GlobalPosition - lastCameraPos;
+            Vector2 camDelta = camera.GlobalPosition - lastCameraPos;
             lastCameraPos = camera.GlobalPosition;
 
             foreach (var child in Children.OfType<ParallaxLayer>())
             {
-                child.ApplyCameraDelta(delta);
+                child.ApplyCameraDelta(camDelta);
             }
         }
     }

@@ -7,15 +7,21 @@ namespace Monolith.Graphics
     {
         public List<MTexture> Frames { get; set; }
 
-        public TimeSpan Delay { get; set; }
+        private float _delay;
+
+        public float Delay
+        {
+            get => _delay;
+            set => _delay = value / 1000f;
+        }
 
         public Animation()
         {
             Frames = new List<MTexture>();
-            Delay = TimeSpan.FromMicroseconds(100);
+            Delay = 0f;
         }
 
-        public Animation(List<MTexture> frames, TimeSpan delay)
+        public Animation(List<MTexture> frames, float delay)
         {
             Frames = frames;
             Delay = delay;

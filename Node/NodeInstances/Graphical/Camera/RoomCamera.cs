@@ -58,9 +58,9 @@ namespace Monolith.Nodes
             base.Unload();
         }
 
-        public override void ProcessUpdate(GameTime gameTime)
+        public override void ProcessUpdate(float delta)
         {
-            base.ProcessUpdate(gameTime);
+            base.ProcessUpdate(delta);
 
             if (TargetNode == null || !TargetNode.HasChildByT<CollisionShape2D>())
                 return;

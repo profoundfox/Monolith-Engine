@@ -60,10 +60,10 @@ namespace Monolith.Util
         }
 
 
-        public void Update(GameTime gameTime)
+        public void Update(float delta)
         {
-            _currentState?.Update(gameTime);
-            _globalState?.Update(gameTime);
+            _currentState?.Update(delta);
+            _globalState?.Update(delta);
         }
 
         private void OnChildTransition(IState state, string newStateName)

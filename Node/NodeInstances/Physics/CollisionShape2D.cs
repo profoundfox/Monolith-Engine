@@ -64,9 +64,9 @@ namespace Monolith.Nodes
             TransformChanged -= _onTransformChanged;
         }
 
-        public override void ProcessUpdate(GameTime gameTime)
+        public override void PhysicsUpdate(float delta)
         {
-            base.ProcessUpdate(gameTime);
+            base.PhysicsUpdate(delta);
 
             CheckOneWay();
         }

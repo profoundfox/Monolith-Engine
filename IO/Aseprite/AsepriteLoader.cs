@@ -47,12 +47,12 @@ namespace Monolith.IO
                     durations.Add(f.duration);
                 }
 
-                int speedMs = (int)durations.Average();
+                float speedMs = (int)durations.Average();
 
                 animations[tag.name] = new Animation
                 {
                     Frames = animFrames,
-                    Delay = TimeSpan.FromMilliseconds(speedMs)
+                    Delay = speedMs
                 };
             }
 

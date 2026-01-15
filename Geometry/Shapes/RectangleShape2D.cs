@@ -83,43 +83,66 @@ namespace Monolith.Geometry
             };
         }
 
-        public bool RayIntersect(Vector2 rayOrigin, Vector2 rayDir, float maxLength, out Vector2 hitPoint, out float distance)
+        public bool RayIntersect(
+            Vector2 rayOrigin,
+            Vector2 rayDir,
+            float maxLength,
+            out Vector2 hitPoint,
+            out float distance)
         {
             hitPoint = Vector2.Zero;
-            distance = float.MaxValue;
+            distance = 0f;
 
-            Vector2 rayEnd = rayOrigin + rayDir * maxLength;
+            Rectangle r = BoundingBox;
 
-            Vector2[] corners =
+            float tmin = 0f;
+            float tmax = maxLength;
+
+            if (Math.Abs(rayDir.X) < float.Epsilon)
             {
-                new Vector2(BoundingBox.Left,  BoundingBox.Top),
-                new Vector2(BoundingBox.Right, BoundingBox.Top),
-                new Vector2(BoundingBox.Right, BoundingBox.Bottom),
-                new Vector2(BoundingBox.Left,  BoundingBox.Bottom)
-            };
-
-            bool hit = false;
-
-            for (int i = 0; i < 4; i++)
+                if (rayOrigin.X < r.Left || rayOrigin.X > r.Right)
+                    return false;
+            }
+            else
             {
-                Vector2 p1 = corners[i];
-                Vector2 p2 = corners[(i + 1) % 4];
+                float inv = 1f / rayDir.X;
+                float t1 = (r.Left - rayOrigin.X) * inv;
+                float t2 = (r.Right - rayOrigin.X) * inv;
 
-                if (RayCast2D.LineIntersects(rayOrigin, rayEnd, p1, p2, out Vector2 pt))
-                {
-                    float d = Vector2.Distance(rayOrigin, pt);
+                if (t1 > t2) (t1, t2) = (t2, t1);
 
-                    if (d < distance)
-                    {
-                        distance = d;
-                        hitPoint = pt;
-                        hit = true;
-                    }
-                }
+                tmin = Math.Max(tmin, t1);
+                tmax = Math.Min(tmax, t2);
+
+                if (tmin > tmax)
+                    return false;
             }
 
-            return hit;
+            if (Math.Abs(rayDir.Y) < float.Epsilon)
+            {
+                if (rayOrigin.Y < r.Top || rayOrigin.Y > r.Bottom)
+                    return false;
+            }
+            else
+            {
+                float inv = 1f / rayDir.Y;
+                float t1 = (r.Top - rayOrigin.Y) * inv;
+                float t2 = (r.Bottom - rayOrigin.Y) * inv;
+
+                if (t1 > t2) (t1, t2) = (t2, t1);
+
+                tmin = Math.Max(tmin, t1);
+                tmax = Math.Min(tmax, t2);
+
+                if (tmin > tmax)
+                    return false;
+            }
+
+            distance = tmin;
+            hitPoint = rayOrigin + rayDir * distance;
+            return true;
         }
+
 
         public IRegionShape2D Clone() => new RectangleShape2D(Rect);
 

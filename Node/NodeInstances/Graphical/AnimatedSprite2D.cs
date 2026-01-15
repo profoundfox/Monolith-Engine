@@ -16,7 +16,7 @@ namespace Monolith.Nodes
     public class AnimatedSprite2D : Node2D
     {
         private int _currentFrame = 0;
-        private TimeSpan _elapsed = TimeSpan.Zero;
+        private float _elapsed = 0f;
         private bool _finished = false;
 
         public Dictionary<string, Animation> Atlas { get; set; }
@@ -45,7 +45,7 @@ namespace Monolith.Nodes
             {
                 CurrentAnimation = target;
                 _currentFrame = 0;
-                _elapsed = TimeSpan.Zero;
+                _elapsed = 0f;
                 _finished = false;
                 IsLooping = isLooping;
             }
@@ -60,7 +60,7 @@ namespace Monolith.Nodes
             {
                 CurrentAnimation = animation;
                 _currentFrame = 0;
-                _elapsed = TimeSpan.Zero;
+                _elapsed = 0f;
                 _finished = false;
                 IsLooping = isLooping;
             }
@@ -75,16 +75,17 @@ namespace Monolith.Nodes
         {
             _finished = false;
             _currentFrame = 0;
-            _elapsed = TimeSpan.Zero;
+            _elapsed = 0f;
         }
 
-        public override void ProcessUpdate(GameTime gameTime)
+        public override void ProcessUpdate(float delta)
         {
-            if (_finished || CurrentAnimation == null) return;
+            if (_finished || CurrentAnimation == null)
+                return;
 
-            _elapsed += gameTime.ElapsedGameTime;
+            _elapsed += delta;
 
-            if (_elapsed >= CurrentAnimation.Delay)
+            while (_elapsed >= CurrentAnimation.Delay)
             {
                 _elapsed -= CurrentAnimation.Delay;
                 _currentFrame++;
@@ -99,10 +100,12 @@ namespace Monolith.Nodes
                     {
                         _currentFrame = CurrentAnimation.Frames.Count - 1;
                         _finished = true;
+                        break;
                     }
                 }
             }
         }
+
 
         public override void Draw(SpriteBatch spriteBatch)
         {

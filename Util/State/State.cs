@@ -9,7 +9,7 @@ namespace Monolith.Util
         event Action<IState, string> TransitionRequested;
         void OnEnter();
         
-        void Update(GameTime gameTime);
+        void Update(float delta);
         void OnExit();
     }
     
@@ -23,7 +23,7 @@ namespace Monolith.Util
         }
 
         public virtual void OnEnter() { }
-        public virtual void Update(GameTime gameTime) {}
+        public virtual void Update(float delta) {}
         public virtual void OnExit() { }
     }
 }
