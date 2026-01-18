@@ -9,7 +9,7 @@ using Monolith.Structs;
 
 namespace Monolith.Geometry
 {
-    public class RayCast
+    public class RayCastShape2D
     {
         public Vector2 Origin { get; set; }
         public Vector2 TargetOffset { get; set; }
@@ -51,5 +51,43 @@ namespace Monolith.Geometry
 
             return _hasHit;
         }
+
+        public void Draw()
+        {
+            Color color = HasHit ? Color.Yellow : Color.Red;
+            int depth = 99;
+            int thickness = 2;
+
+            Engine.Screen.Draw(
+                new TextureDrawCall
+                {
+                    Position = Origin,
+                    Texture = Engine.Pixel,
+                    Color = color,
+                    Scale = new Vector2(Length, thickness),
+                    Rotation = MathF.Atan2(Direction.Y, Direction.X),
+                    Origin = new Vector2(0f, 0.5f),
+                    Depth = depth
+                },
+                DrawLayer.Middleground
+            );
+
+            if (HasHit)
+            {
+                Engine.Screen.Draw(
+                    new TextureDrawCall
+                    {
+                        Position = HitPoint,
+                        Texture = Engine.Pixel,
+                        Color = Color.Blue,
+                        Scale = new Vector2(4, 4),
+                        Origin = new Vector2(0.5f),
+                        Depth = depth + 1
+                    },
+                    DrawLayer.Middleground
+                );
+            }
+        }
+
     }
 }

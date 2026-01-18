@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Graphics;
+using Monolith.IO;
 using Monolith.Managers;
 using Monolith.Structs;
 
@@ -38,14 +40,27 @@ namespace Monolith.Nodes
                 _tiles[i] = -1;
         }
 
-        public void SetTile(int index, int tilesetID)
+        private void SetTile(int index, int tilesetID)
         {
             _tiles[index] = tilesetID;
         }
 
-        public void SetTile(int column, int row, int tilesetID)
+        private void SetTile(int column, int row, int tilesetID)
         {
             SetTile(row * Columns + column, tilesetID);
+        }
+
+        public void SetData(Rectangle size, List<int> tileData)
+        {   
+            for (int row = 0; row < size.Y; row++)
+            {
+                for (int col = 0; col < size.X; col++)
+                {
+                    int index = row * size.X + col;
+                    int tile = (index >= 0 && index < tileData.Count) ? tileData[index] : 0;
+                    SetTile(col, row, tile);
+                }
+            }
         }
 
         public MTexture GetTile(int index)

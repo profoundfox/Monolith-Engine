@@ -15,7 +15,7 @@ namespace Monolith.Nodes
 
         public bool Disabled { get; set; }
 
-        private readonly RayCast _ray = new RayCast();
+        public readonly RayCastShape2D Ray = new RayCastShape2D();
 
         public RayCast2D(RayCastConfig cfg) : base(cfg)
         {
@@ -27,7 +27,7 @@ namespace Monolith.Nodes
             if (Disabled)
                 return;
 
-            _ray.Origin = GlobalTransform.Position;
+            Ray.Origin = GlobalTransform.Position;
 
             Vector2 worldOffset = Vector2.Transform(
                 TargetPosition,
@@ -36,7 +36,7 @@ namespace Monolith.Nodes
                 )
             );
 
-            _ray.TargetOffset = worldOffset;
+            Ray.TargetOffset = worldOffset;
 
             var shapes = Engine.Node
                 .GetNodesByT<CollisionShape2D>()
@@ -45,10 +45,10 @@ namespace Monolith.Nodes
                 .ToList();
 
 
-            _ray.CheckIntersections(shapes);
+            Ray.CheckIntersections(shapes);
         }
 
-        public bool IsColliding => _ray.HasHit;
-        public Vector2 CollisionPoint => _ray.HitPoint;
+        public bool IsColliding => Ray.HasHit;
+        public Vector2 CollisionPoint => Ray.HitPoint;
     }
 }

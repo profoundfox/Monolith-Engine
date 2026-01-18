@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Monolith.Graphics;
+using Monolith.Managers;
 using Monolith.Structs;
 
 namespace Monolith.Geometry
@@ -179,7 +180,7 @@ namespace Monolith.Geometry
                         Scale = new Vector2(length, thickness),
                         Depth = depth
                     },
-                    Managers.DrawLayer.Middleground
+                    DrawLayer.Middleground
                 );
 
                 prev = next;

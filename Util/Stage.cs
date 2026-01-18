@@ -25,7 +25,7 @@ namespace Monolith.Util
         public virtual void Load()
         {
             if (Config.DataPath != null)
-                OgmoParser.FromFile(Config.DataPath, Config.TilemapTexturePath, Config.TilemapRegion);
+                OgmoParser.FromFile(Config.DataPath, Config.TilemapTexturePath);
             
             Engine.Node.LoadNodes();
         }

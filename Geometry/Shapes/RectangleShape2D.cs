@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Monolith.Graphics;
+using Monolith.Managers;
 using Monolith.Structs;
 
 namespace Monolith.Geometry
@@ -165,7 +166,7 @@ namespace Monolith.Geometry
                     Scale = new Vector2(BoundingBox.Width, thickness),
                     Depth = depth
                 },
-                Managers.DrawLayer.Middleground
+                DrawLayer.Middleground
             );
             
 
@@ -178,7 +179,7 @@ namespace Monolith.Geometry
                     Scale = new Vector2(BoundingBox.Width, thickness),
                     Depth = depth
                 },
-                Managers.DrawLayer.Middleground
+                DrawLayer.Middleground
             );
 
             Engine.Screen.Draw(
@@ -190,7 +191,7 @@ namespace Monolith.Geometry
                     Scale = new Vector2(thickness, BoundingBox.Height),
                     Depth = depth
                 },
-                Managers.DrawLayer.Middleground
+                DrawLayer.Middleground
             );
 
             Engine.Screen.Draw(
@@ -202,7 +203,7 @@ namespace Monolith.Geometry
                     Scale = new Vector2(thickness, BoundingBox.Height),
                     Depth = depth
                 },
-                Managers.DrawLayer.Middleground
+                DrawLayer.Middleground
             );
         }
     }

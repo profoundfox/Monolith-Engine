@@ -105,33 +105,22 @@ namespace Monolith.IO
 
         public static void LoadTilemap(
             MTexture texture,
-            Rectangle region,
             Rectangle gridRegion,
-            IReadOnlyList<int> tileData,
+            List<int> tileData,
             int depth)
         {
             MTexture textureRegion = texture;
 
-            if (region != default)
-                textureRegion = texture.CreateSubTexture(region);
-
             var tileset = new Tileset(textureRegion, gridRegion.Width, gridRegion.Height);
-            Nodes.Tilemap tMap = new Nodes.Tilemap(new TilemapConfig
+
+            var tMap = new Tilemap(new TilemapConfig
             {
                 Tileset = tileset,
                 Columns = gridRegion.X,
                 Rows = gridRegion.Y
             });
 
-            for (int row = 0; row < gridRegion.Y; row++)
-            {
-                for (int col = 0; col < gridRegion.X; col++)
-                {
-                    int index = row * gridRegion.X + col;
-                    int tile = (index >= 0 && index < tileData.Count) ? tileData[index] : 0;
-                    tMap.SetTile(col, row, tile);
-                }
-            }
+            tMap.SetData(gridRegion, tileData);
 
             tMap.LocalOrdering = tMap.LocalOrdering with { Depth = depth };
 
@@ -139,12 +128,9 @@ namespace Monolith.IO
 
         public static void LoadTilemapFromJson(
             string filename,
-            string texturePath,
-            Rectangle region)
+            string texturePath)
         {
             var root = LoadJson(filename);
-
-            var rect = region;
 
             var layer = root.layers.FirstOrDefault(l => l.data != null && l.tileset != null)
                 ?? throw new Exception("No tile layer found in JSON.");
@@ -153,7 +139,6 @@ namespace Monolith.IO
 
             LoadTilemap(
                 texture: new MTexture(texturePath),
-                region: rect,
                 gridRegion: new Rectangle(layer.gridCellsX, layer.gridCellsY, layer.gridCellWidth, layer.gridCellHeight),
                 tileData: layer.data,
                 depth: depth
@@ -165,15 +150,14 @@ namespace Monolith.IO
         /// </summary>
         public static void FromFile(
             string filename,
-            string defaultTileTexture = null,
-            Rectangle defaultTileRegion = default)
+            string defaultTileTexture = null)
         {
             LoadNodes(filename);
             SearchForDecals(filename);
 
             if (!string.IsNullOrEmpty(defaultTileTexture))
             {
-                LoadTilemapFromJson(filename, defaultTileTexture, defaultTileRegion);
+                LoadTilemapFromJson(filename, defaultTileTexture);
             }
         }
     }
