@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Graphics;
-using Monolith.Structs;
+using Monolith.Attributes;
 
 namespace Monolith.Nodes
 {

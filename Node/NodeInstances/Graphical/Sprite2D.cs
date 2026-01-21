@@ -4,7 +4,7 @@ using Monolith.Nodes;
 using Monolith.Graphics;
 using Monolith;
 using System;
-using Monolith.Structs;
+using Monolith.Attributes;
 
 namespace Monolith.Nodes
 {   

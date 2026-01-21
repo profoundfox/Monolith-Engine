@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Monolith.Graphics;
 using Monolith.IO;
 using Monolith.Managers;
-using Monolith.Structs;
+using Monolith.Attributes;
 
 namespace Monolith.Nodes
 {

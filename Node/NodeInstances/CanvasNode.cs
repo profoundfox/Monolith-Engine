@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Monolith.Structs;
+using Monolith.Attributes;
 
 namespace Monolith.Nodes
 {
@@ -21,7 +21,7 @@ namespace Monolith.Nodes
             set
             {
                 _localVisibility = value;
-                ProcessUpdateStructs();
+                ProcessUpdateAttributes();
             }
         }
 
@@ -31,7 +31,7 @@ namespace Monolith.Nodes
             set
             {
                 _localOrdering = value;
-                ProcessUpdateStructs();
+                ProcessUpdateAttributes();
             }
         }
 
@@ -41,7 +41,7 @@ namespace Monolith.Nodes
             set
             {
                 _localMaterial = value;
-                ProcessUpdateStructs();
+                ProcessUpdateAttributes();
             }
         }
 
@@ -55,10 +55,10 @@ namespace Monolith.Nodes
             _localOrdering = Ordering.Identity;
             _localMaterial = Material.Identity;
             
-            ProcessUpdateStructs();
+            ProcessUpdateAttributes();
         }
 
-        public void ProcessUpdateStructs()
+        public void ProcessUpdateAttributes()
         {
             if (Parent is CanvasNode parent2D)
             {
@@ -76,7 +76,7 @@ namespace Monolith.Nodes
             foreach (var child in Children)
             {
                 if (child is CanvasNode c2d)
-                    c2d.ProcessUpdateStructs();
+                    c2d.ProcessUpdateAttributes();
             }
         }
 

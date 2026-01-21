@@ -1,6 +1,6 @@
 using System;
 
-namespace Monolith.Structs
+namespace Monolith.Attributes
 {
     public readonly record struct Ordering 
     {

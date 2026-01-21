@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Monolith.Helpers;
 
-namespace Monolith.Structs
+namespace Monolith.Attributes
 {
     public readonly record struct Visibility 
     {   

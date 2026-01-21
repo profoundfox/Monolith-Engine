@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace Monolith.Structs
+namespace Monolith.Attributes
 {
     public readonly record struct Transform2D
     {

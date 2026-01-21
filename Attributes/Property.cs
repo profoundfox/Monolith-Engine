@@ -1,4 +1,4 @@
-namespace Monolith.Structs
+namespace Monolith.Attributes
 {
     public interface IProperty<TSelf>
         where TSelf : struct

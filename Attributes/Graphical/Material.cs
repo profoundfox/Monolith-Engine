@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Monolith.Structs
+namespace Monolith.Attributes
 {
     public readonly record struct Material : IProperty<Material>
     {

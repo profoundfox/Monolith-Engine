@@ -2,7 +2,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Geometry;
-using Monolith.Structs;
+using Monolith.Attributes;
 
 namespace Monolith.Nodes
 {
