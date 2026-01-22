@@ -135,7 +135,7 @@ namespace Monolith.Graphics
 
         public MTexture(string texturePath, Rectangle? region = null)
         {
-            Texture2D texture = Engine.Resources.Load<Texture2D>(texturePath);
+            Texture2D texture = Engine.ContentManager.Load<Texture2D>(texturePath);
             Texture = texture ?? throw new ArgumentNullException(nameof(texture));
             SourceRectangle = region;
         }

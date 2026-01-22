@@ -27,9 +27,9 @@ namespace Monolith.Nodes
         /// </summary>
         public Matrix GetTransform() 
         { 
-            var cfg = Engine.Instance.Config; 
+            var cfg = Engine.Settings; 
 
-            Vector2 screenCenter = new Vector2(cfg.RenderWidth, cfg.RenderHeight) * 0.5f; 
+            Vector2 screenCenter = new Vector2(cfg.Graphics.RenderWidth, cfg.Graphics.RenderHeight) * 0.5f; 
 
 
             Matrix transform = Matrix.CreateScale(Zoom)
@@ -45,13 +45,13 @@ namespace Monolith.Nodes
         /// </summary>
         public Rectangle GetWorldViewRectangle()
         {
-            var cfg = Engine.Instance.Config;
+            var cfg = Engine.Settings;
 
             Matrix inverse = Matrix.Invert(GetTransform());
 
             Vector2 topLeft = Vector2.Transform(Vector2.Zero, inverse);
             Vector2 bottomRight = Vector2.Transform(
-                new Vector2(cfg.RenderWidth, cfg.RenderHeight),
+                new Vector2(cfg.Graphics.RenderWidth, cfg.Graphics.RenderHeight),
                 inverse
             );
 

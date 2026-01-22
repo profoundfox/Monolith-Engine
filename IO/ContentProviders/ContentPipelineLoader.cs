@@ -30,7 +30,7 @@ namespace Monolith.IO
         }
 
         /// <summary>
-        /// Generic loader for the ContentManager pipeline.
+        /// Generic loader for the MonoContentManager pipeline.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="path"></param>
@@ -49,47 +49,47 @@ namespace Monolith.IO
 
 
         /// <summary>
-        /// Loads a texture using the ContentManager pipeline.
+        /// Loads a texture using the MonoContentManager pipeline.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
         public Texture2D LoadTexture(string path)
         {
-            return Engine.Instance.ContentManager.Load<Texture2D>(path);
+            return Engine.MonoContentManager.Load<Texture2D>(path);
         }
 
         /// <summary>
-        /// Function for loading sound effects using the ContentManager pipeline.
+        /// Function for loading sound effects using the MonoContentManager pipeline.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
         public SoundEffect LoadSound(string path)
         {
-            return Engine.Instance.ContentManager.Load<SoundEffect>(path);
+            return Engine.MonoContentManager.Load<SoundEffect>(path);
         }
 
         /// <summary>
-        /// Function for loading music using the ContentManager pipeline.
+        /// Function for loading music using the MonoContentManager pipeline.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
         public Song LoadMusic(string path)
         {
-            return Engine.Instance.ContentManager.Load<Song>(path);
+            return Engine.MonoContentManager.Load<Song>(path);
         }
 
         /// <summary>
-        /// Function for loading text using the ContentManager pipeline.
+        /// Function for loading text using the MonoContentManager pipeline.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
         public string LoadText(string path)
         {
-            return Engine.Instance.ContentManager.Load<string>(path);
+            return Engine.MonoContentManager.Load<string>(path);
         }
 
         /// <summary>
-        /// Function for loading a Json file using the ContentManager pipeline.
+        /// Function for loading a Json file using the MonoContentManager pipeline.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="path"></param>
@@ -101,43 +101,43 @@ namespace Monolith.IO
         }
 
         /// <summary>
-        /// Function for loading a font using the ContentManager pipeline.
+        /// Function for loading a font using the MonoContentManager pipeline.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
         public SpriteFont LoadFont(string path)
         {
-            return Engine.Instance.ContentManager.Load<SpriteFont>(path);
+            return Engine.MonoContentManager.Load<SpriteFont>(path);
         }
 
         /// <summary>
-        /// Function for loading an effect using the ContentManager pipeline.
+        /// Function for loading an effect using the MonoContentManager pipeline.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
         public Effect LoadEffect(string path)
         {
-            return Engine.Instance.ContentManager.Load<Effect>(path);
+            return Engine.MonoContentManager.Load<Effect>(path);
         }
 
         /// <summary>
-        /// Function for loading raw file information using the ContentManager pipeline.
+        /// Function for loading raw file information using the MonoContentManager pipeline.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
         public byte[] LoadRaw(string path)
         {
-            return Engine.Instance.ContentManager.Load<byte[]>(path);
+            return Engine.MonoContentManager.Load<byte[]>(path);
         }
 
         /// <summary>
-        /// Function for unloading a ContentManager file.
+        /// Function for unloading a MonoContentManager file.
         /// </summary>
         /// <param name="path"></param>
         /// <remarks>
-        /// Individual unloading does not work when using the ContentManager pipeline.
+        /// Individual unloading does not work when using the MonoContentManager pipeline.
         /// </remarks>
-        [Obsolete("Unloading does not work with the ContentManager pipeline", false)]
+        [Obsolete("Unloading does not work with the MonoContentManager pipeline", false)]
         public void Unload(string path)
         {
             Console.WriteLine("You cannot unload individual items with the pipeline.");
@@ -148,16 +148,16 @@ namespace Monolith.IO
         /// </summary>
         public void ClearCache()
         {
-            Engine.Instance.ContentManager.Unload();
+            Engine.MonoContentManager.Unload();
         }
 
         /// <summary>
-        /// Function for reloading all ContentManager files.
+        /// Function for reloading all MonoContentManager files.
         /// </summary>
         /// <remarks>
-        /// Reloading does not work with the ContentManager pipeline.
+        /// Reloading does not work with the MonoContentManager pipeline.
         /// </remarks>
-        [Obsolete("Reload all does not work with the ContentManager pipeline", false)]
+        [Obsolete("Reload all does not work with the MonoContentManager pipeline", false)]
         public void ReloadAll()
         {
             Console.WriteLine("You cannot reload all items with the pipeline.");
