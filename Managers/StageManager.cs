@@ -41,7 +41,7 @@ namespace Monolith.Managers
 
             Stages.Push(stage);
             
-            stage.Load();
+            stage.OnEnter();
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Monolith.Managers
             if (Stages.Count == 0) return;
 
             var current = Stages.Pop();
-            current?.Unload();
+            current?.OnExit();
 
             StageIntervention();
         }
@@ -200,7 +200,7 @@ namespace Monolith.Managers
             if (Stages.Count == 0) return;
 
             var oldStage = Stages.Pop();
-            oldStage.Unload();
+            oldStage.OnExit();
 
             var newStage = (IStage)Activator.CreateInstance(oldStage.GetType());
             AddStage(newStage);

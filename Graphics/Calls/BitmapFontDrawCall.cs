@@ -5,7 +5,7 @@ namespace Monolith.Graphics
 {
     public sealed class BitmapFontDrawCall : DrawCallBase
     {
-        public BitmapFont Font { get; init; }
+        public required BitmapFont Font { get; init; }
         public string Text { get; init; }
 
         public override void Draw(SpriteBatch sb)

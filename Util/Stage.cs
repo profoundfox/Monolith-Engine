@@ -9,8 +9,8 @@ namespace Monolith.Util
 {
     public interface IStage
     {
-        public void Load();
-        public void Unload();
+        public void OnEnter();
+        public void OnExit();
         public void Update(GameTime gameTime);
         public void Draw(SpriteBatch spriteBatch);
     }
@@ -22,7 +22,7 @@ namespace Monolith.Util
         {
             Config = config;
         }
-        public virtual void Load()
+        public virtual void OnEnter()
         {
             if (Config.DataPath != null)
                 OgmoParser.FromFile(Config.DataPath, Config.TilemapTexturePath);
@@ -30,7 +30,7 @@ namespace Monolith.Util
             Engine.Node.LoadNodes();
         }
         
-        public virtual void Unload()
+        public virtual void OnExit()
         {
             Engine.Node.UnloadNodes();
         }
