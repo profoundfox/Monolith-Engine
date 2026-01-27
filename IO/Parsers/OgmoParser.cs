@@ -52,14 +52,14 @@ namespace Monolith.IO
         {
             var root = LoadJson(filename);
 
-            foreach (var layer in root.layers.Where(l => !string.IsNullOrEmpty(l.folder) && l.decals != null))
+            foreach (var layer in root.Layers.Where(l => !string.IsNullOrEmpty(l.Folder) && l.Decals != null))
             {
-                foreach (var decal in layer.decals)
+                foreach (var decal in layer.Decals)
                 {
-                    string textureName = Path.GetFileNameWithoutExtension(decal.texture);
+                    string textureName = Path.GetFileNameWithoutExtension(decal.Texture);
                     string texturePathWithoutExtension = Path.Combine(
-                        Path.GetDirectoryName(decal.texture) ?? string.Empty,
-                        Path.GetFileNameWithoutExtension(decal.texture)
+                        Path.GetDirectoryName(decal.Texture) ?? string.Empty,
+                        Path.GetFileNameWithoutExtension(decal.Texture)
                     );
 
                     MTexture texture = new(texturePathWithoutExtension);
@@ -68,7 +68,7 @@ namespace Monolith.IO
                     {
                         Parent = null,
                         Name = $"Decal: {texturePathWithoutExtension}",
-                        LocalPosition = new Vector2(decal.x, decal.y),
+                        LocalPosition = new Vector2(decal.X, decal.X),
                         Texture = new MTexture(texturePathWithoutExtension)
                     });
                 }
@@ -79,25 +79,25 @@ namespace Monolith.IO
         {
             var root = LoadJson(fileName);
 
-            foreach (var l in root.layers)
+            foreach (var l in root.Layers)
             {
-                if (l.entities == null) continue;
+                if (l.Entities == null) continue;
                 
-                foreach (var e in l.entities)
+                foreach (var e in l.Entities)
                 {
                     Dictionary<string, object> values = new Dictionary<string, object>();
 
-                    if (e.values != null)
-                        values = ParseValues(e.values);
+                    if (e.Values != null)
+                        values = ParseValues(e.Values);
                     
-                    NodeFactory.CreateNode(e.name, new RectangleShape2D(e.x , e.y, e.width, e.height), values);
+                    NodeFactory.CreateNode(e.Name, new RectangleShape2D(e.X , e.Y, e.Width, e.Height), values);
 
-                    if (e.nodes == null)
+                    if (e.Nodes == null)
                         continue;
                     
-                    foreach (var n in e.nodes)
+                    foreach (var n in e.Nodes)
                     {
-                        NodeFactory.CreateNode(e.name, new RectangleShape2D(n.x , n.y, e.width, e.height), values);
+                        NodeFactory.CreateNode(e.Name, new RectangleShape2D(n.X , n.Y, e.Width, e.Height), values);
                     }
                 }
             }
@@ -132,14 +132,17 @@ namespace Monolith.IO
         {
             var root = LoadJson(filename);
 
-            foreach (var l in root.layers)
+            foreach (var l in root.Layers)
             {
-                int depth = int.Parse(l.name, CultureInfo.InvariantCulture);
+                if (l.Tileset == null)
+                    continue;
+                    
+                int depth = int.Parse(l.Name, CultureInfo.InvariantCulture);
 
                 LoadTilemap(
                     texture: new MTexture(texturePath),
-                    gridRegion: new Rectangle(l.gridCellsX, l.gridCellsY, l.gridCellWidth, l.gridCellHeight),
-                    tileData: l.data,
+                    gridRegion: new Rectangle(l.GridCellsX, l.GridCellsY, l.GridCellWidth, l.GridCellHeight),
+                    tileData: l.Data,
                     depth: depth
                 );
             }
