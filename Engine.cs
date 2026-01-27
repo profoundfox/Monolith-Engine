@@ -137,7 +137,7 @@ namespace Monolith
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.SetRenderTarget(RenderTarget);
-            GraphicsDevice.Clear(Color.MonoGameOrange);
+            GraphicsDevice.Clear(Color.Black);
 
             Stage.DrawCurrentStage(SpriteBatch);
 

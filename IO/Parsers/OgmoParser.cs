@@ -132,17 +132,19 @@ namespace Monolith.IO
         {
             var root = LoadJson(filename);
 
-            var layer = root.layers.FirstOrDefault(l => l.data != null && l.tileset != null)
-                ?? throw new Exception("No tile layer found in JSON.");
+            foreach (var l in root.layers)
+            {
+                int depth = int.Parse(l.name, CultureInfo.InvariantCulture);
 
-            int depth = int.Parse(layer.name, CultureInfo.InvariantCulture);
+                LoadTilemap(
+                    texture: new MTexture(texturePath),
+                    gridRegion: new Rectangle(l.gridCellsX, l.gridCellsY, l.gridCellWidth, l.gridCellHeight),
+                    tileData: l.data,
+                    depth: depth
+                );
+            }
 
-            LoadTilemap(
-                texture: new MTexture(texturePath),
-                gridRegion: new Rectangle(layer.gridCellsX, layer.gridCellsY, layer.gridCellWidth, layer.gridCellHeight),
-                tileData: layer.data,
-                depth: depth
-            );
+            
         }
         
         /// <summary>
