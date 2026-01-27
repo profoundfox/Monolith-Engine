@@ -180,13 +180,8 @@
 /Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/bin/Release/net9.0/win-x64/publish/hostfxr.dll
 /Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/bin/Release/net9.0/win-x64/publish/hostpolicy.dll
 /Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/bin/Release/net9.0/win-x64/publish/mscordaccore.dll
-/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/bin/Release/net9.0/win-x64/publish/mscordaccore_amd64_amd64_9.0.1025.47515.dll
+/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/bin/Release/net9.0/win-x64/publish/mscordaccore_amd64_amd64_9.0.1225.60609.dll
 /Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/bin/Release/net9.0/win-x64/publish/mscordbi.dll
 /Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/bin/Release/net9.0/win-x64/publish/mscorrc.dll
 /Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/bin/Release/net9.0/win-x64/publish/msquic.dll
-/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/bin/Release/net9.0/win-x64/publish/GumCommon.dll
-/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/bin/Release/net9.0/win-x64/publish/FlatRedBall.InterpolationCore.dll
-/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/bin/Release/net9.0/win-x64/publish/MonoGameGum.dll
-/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/bin/Release/net9.0/win-x64/publish/Microsoft.Extensions.DependencyInjection.Abstractions.dll
-/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/bin/Release/net9.0/win-x64/publish/TextCopy.dll
 /Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/bin/Release/net9.0/win-x64/publish/Monolith.deps.json

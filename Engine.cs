@@ -31,19 +31,19 @@ namespace Monolith
         public static NodeManager Node { get; private set; }
         public static TimerManager Timer { get; private set; }
 
-        public float FPS { get; private set; }
+        public static float FPS { get; private set; }
         private int _fpsFrames;
         private double _fpsTimer;
 
         public static float DeltaTime { get; private set; }
 
         public static IContentProvider ContentManager { get; set; }
-        internal static ContentManager MonoContentManager { get; private set; }
 
         internal Rectangle Destination { get; set; }
         internal int RenderWidth { get; set; } = 640;
         internal int RenderHeight { get; set; } = 360;
         internal bool IntegerScaling { get; set; } = true;
+        internal string ContentRoot { get; set; } = "Content";
 
         public Engine()
         {
@@ -53,8 +53,12 @@ namespace Monolith
             Instance = this;
             Graphics = new GraphicsDeviceManager(this);
 
+            Graphics.PreferredBackBufferWidth = 640;
+            Graphics.PreferredBackBufferHeight = 360;
+            Graphics.ApplyChanges();
+
             Window.AllowUserResizing = true;
-            IsFixedTimeStep = false;
+            IsFixedTimeStep = true;
             Graphics.SynchronizeWithVerticalRetrace = true;
         }
 
@@ -87,7 +91,6 @@ namespace Monolith
         {
             base.LoadContent();
 
-            MonoContentManager = base.Content;
             ContentManager = new ContentPipelineLoader();
 
             var assembly = typeof(Engine).Assembly;
@@ -150,6 +153,7 @@ namespace Monolith
                 effect: PostProcessingShader);
 
             SpriteBatch.Draw(RenderTarget, Destination, Color.White);
+
             SpriteBatch.End();
 
             base.Draw(gameTime);
