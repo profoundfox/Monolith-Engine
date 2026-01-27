@@ -1,21 +1,19 @@
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Monolith.Graphics
 {
-    public sealed class SpritFontDrawCall : DrawCallBase
+    public sealed class FontDrawCall : DrawCallBase
     {
-        public SpriteFont Font { get; init; }
+        public IFont Font { get; init; }
         public string Text { get; init; }
-
         public override void Draw(SpriteBatch sb)
         {
             if (Font == null || string.IsNullOrEmpty(Text))
                 return;
-
-            sb.DrawString(
-                Font,
+            
+            Font.DrawString(
+                sb,
                 Text,
                 Position,
                 Color,
@@ -26,5 +24,6 @@ namespace Monolith.Graphics
                 LayerDepth
             );
         }
+
     }
 }

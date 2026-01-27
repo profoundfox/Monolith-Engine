@@ -59,7 +59,7 @@ namespace Monolith.Nodes
         public override void Draw(SpriteBatch spriteBatch)
         {
             var camera = Camera2D.CurrentCameraInstance;
-            Rectangle view = camera.GetWorldViewRectangle();
+            Rectangle view = Engine.Screen.GetWorldViewRectangle();
 
             int texW = Texture.Width;
             int texH = Texture.Height;

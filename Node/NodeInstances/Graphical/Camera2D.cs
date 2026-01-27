@@ -27,10 +27,8 @@ namespace Monolith.Nodes
         /// </summary>
         public Matrix GetTransform() 
         { 
-            var cfg = Engine.Settings; 
 
-            Vector2 screenCenter = new Vector2(cfg.Graphics.RenderWidth, cfg.Graphics.RenderHeight) * 0.5f; 
-
+            Vector2 screenCenter = new Vector2(Engine.RenderTarget.Width, Engine.RenderTarget.Height) * 0.5f; 
 
             Matrix transform = Matrix.CreateScale(Zoom)
                 * Matrix.CreateRotationZ(GlobalTransform.Rotation)
@@ -40,34 +38,11 @@ namespace Monolith.Nodes
             return transform; 
         }
 
-        /// <summary>
-        /// Returns the rectangle of world space currently visible by this camera
-        /// </summary>
-        public Rectangle GetWorldViewRectangle()
-        {
-            var cfg = Engine.Settings;
-
-            Matrix inverse = Matrix.Invert(GetTransform());
-
-            Vector2 topLeft = Vector2.Transform(Vector2.Zero, inverse);
-            Vector2 bottomRight = Vector2.Transform(
-                new Vector2(cfg.Graphics.RenderWidth, cfg.Graphics.RenderHeight),
-                inverse
-            );
-
-            return new Rectangle(
-                (int)topLeft.X,
-                (int)topLeft.Y,
-                (int)(bottomRight.X - topLeft.X),
-                (int)(bottomRight.Y - topLeft.Y)
-            );
-        }
-
         public override void ProcessUpdate(float delta)
         {
             base.ProcessUpdate(delta);
-
-            Engine.Screen.SetCamera(GetTransform());
+            
+            Engine.Screen.SetMatrix(GetTransform());
         }
     }
 }

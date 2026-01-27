@@ -1,12 +1,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Monolith.Graphics
 {
-    public sealed class BitmapFont
+    public sealed class BitmapFont : IFont
     {
         public Texture2D Texture { get; }
         public int CharWidth { get; }
@@ -80,5 +81,42 @@ namespace Monolith.Graphics
                 lineCount * CharHeight
             );
         }
+
+        public void DrawString(SpriteBatch spriteBatch, string text, Vector2 position, Color color)
+        => DrawString(spriteBatch, text, position, color, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, 0f);
+
+        public void DrawString(SpriteBatch spriteBatch, string text, Vector2 position, Color color,
+                            float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
+        {
+            Vector2 pos = position;
+
+            foreach (char c in text)
+            {
+                if (c == '\n')
+                {
+                    pos.X = position.X;
+                    pos.Y += CharHeight * scale.Y;
+                    continue;
+                }
+
+                if (TryGetSource(c, out Rectangle source))
+                {
+                    spriteBatch.Draw(
+                        Texture,
+                        pos,
+                        source,
+                        color,
+                        rotation,
+                        origin,
+                        scale,
+                        effects,
+                        layerDepth
+                    );
+
+                    pos.X += CharWidth * scale.X;
+                }
+            }
+        }
+
     }
 }

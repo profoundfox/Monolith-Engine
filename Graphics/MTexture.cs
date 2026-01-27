@@ -12,6 +12,9 @@ namespace Monolith.Graphics
     /// </summary>
     public class MTexture : IDisposable
     {
+        private Texture2D texture2D;
+        private object value;
+
         /// <summary>
         /// Internal texture used for rendering.
         /// </summary>
@@ -96,6 +99,15 @@ namespace Monolith.Graphics
 
 
         /// <summary>
+        /// Creates an MTexture from an existing Texture2D.
+        /// </summary>
+        public MTexture(Texture2D texture, Rectangle? region = null)
+        {
+            Texture = texture ?? throw new ArgumentNullException(nameof(texture));
+            SourceRectangle = region;
+        }
+
+        /// <summary>
         /// Creates a blank texture.
         /// </summary>
         public MTexture(int width, int height, bool mipMap = false, SurfaceFormat format = SurfaceFormat.Color)
@@ -118,15 +130,6 @@ namespace Monolith.Graphics
         }
 
         /// <summary>
-        /// Creates an MTexture from an existing Texture2D.
-        /// </summary>
-        public MTexture(Texture2D texture, Rectangle? region = null)
-        {
-            Texture = texture ?? throw new ArgumentNullException(nameof(texture));
-            SourceRectangle = region;
-        }
-
-        /// <summary>
         /// Creates an MTexture from a file.
         /// </summary>
         /// <param name="texturePath"></param>
@@ -138,6 +141,12 @@ namespace Monolith.Graphics
             Texture2D texture = Engine.ContentManager.Load<Texture2D>(texturePath);
             Texture = texture ?? throw new ArgumentNullException(nameof(texture));
             SourceRectangle = region;
+        }
+
+        public MTexture(Texture2D texture2D, object value)
+        {
+            this.texture2D = texture2D;
+            this.value = value;
         }
 
         /// <summary>

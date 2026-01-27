@@ -12,8 +12,7 @@ namespace Monolith
 {
     public class Engine : Game
     {
-        private static Engine Instance { get; set; }
-        public static Preferences Settings { get; private set; }
+        public static Engine Instance { get; set; }
 
         public static GraphicsDeviceManager Graphics { get; private set; }
         public static new GraphicsDevice GraphicsDevice { get; private set; }
@@ -41,15 +40,17 @@ namespace Monolith
         public static IContentProvider ContentManager { get; set; }
         internal static ContentManager MonoContentManager { get; private set; }
 
+        internal Rectangle Destination { get; set; }
+        internal int RenderWidth { get; set; } = 640;
+        internal int RenderHeight { get; set; } = 360;
+        internal bool IntegerScaling { get; set; } = true;
+
         public Engine()
         {
             if (Instance != null)
                 throw new InvalidOperationException("Only one Engine instance can exist.");
 
             Instance = this;
-
-            Settings = new Preferences(this);
-
             Graphics = new GraphicsDeviceManager(this);
 
             Window.AllowUserResizing = true;
@@ -61,6 +62,8 @@ namespace Monolith
         {
             GraphicsDevice = base.GraphicsDevice;
 
+            Content.RootDirectory = "Content";
+
             Tween = new TweenManager();
             Stage = new StageManager();
             Node = new NodeManager();
@@ -69,14 +72,15 @@ namespace Monolith
 
             base.Initialize();
 
-            Settings.Initialize();
-
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             Pixel = new MTexture(1, 1, new[] { Color.White });
 
             Screen = new ScreenManager(SpriteBatch);
 
-            Window.ClientSizeChanged += (_, _) => Settings.Graphics.UpdateTransform();
+                        
+            CreateRenderTarget();
+            Window.ClientSizeChanged += (_, _) => UpdateTransform();
+            UpdateTransform();
         }
 
         protected override void LoadContent()
@@ -84,6 +88,7 @@ namespace Monolith
             base.LoadContent();
 
             MonoContentManager = base.Content;
+            ContentManager = new ContentPipelineLoader();
 
             var assembly = typeof(Engine).Assembly;
             using var stream = assembly.GetManifestResourceStream("Monolith.Graphics.Font.bitmap_font.png");
@@ -109,7 +114,7 @@ namespace Monolith
             Timer.Update(gameTime);
             Input.Update(gameTime);
 
-            if (Settings.Debug.ExitOnEscape && Input.Keyboard.IsKeyDown(Keys.Escape))
+            if (Input.Keyboard.IsKeyDown(Keys.Escape))
                 Exit();
 
             Stage.UpdateCurrentStage(gameTime);
@@ -129,7 +134,7 @@ namespace Monolith
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.SetRenderTarget(RenderTarget);
-            GraphicsDevice.Clear(Settings.Graphics.BackgroundColor);
+            GraphicsDevice.Clear(Color.MonoGameOrange);
 
             Stage.DrawCurrentStage(SpriteBatch);
 
@@ -144,10 +149,43 @@ namespace Monolith
                 SamplerState.PointClamp,
                 effect: PostProcessingShader);
 
-            SpriteBatch.Draw(RenderTarget, Settings.Graphics.Destination, Color.White);
+            SpriteBatch.Draw(RenderTarget, Destination, Color.White);
             SpriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        internal void CreateRenderTarget()
+        {
+            RenderTarget?.Dispose();
+
+            RenderTarget = new RenderTarget2D(
+                GraphicsDevice,
+                RenderWidth,
+                RenderHeight,
+                false,
+                SurfaceFormat.Color,
+                DepthFormat.None);
+        }
+
+        internal void UpdateTransform()
+        {
+            var pp = GraphicsDevice.PresentationParameters;
+
+            float scale = Math.Min(
+                pp.BackBufferWidth / (float)RenderWidth,
+                pp.BackBufferHeight / (float)RenderHeight);
+
+            if (IntegerScaling)
+                scale = Math.Max(1, MathF.Floor(scale));
+
+            int w = (int)(RenderWidth * scale);
+            int h = (int)(RenderHeight * scale);
+
+            int x = (pp.BackBufferWidth - w) / 2;
+            int y = (pp.BackBufferHeight - h) / 2;
+
+            Destination = new Rectangle(x, y, w, h);
         }
 
         public static void Quit() => Instance.Exit();
