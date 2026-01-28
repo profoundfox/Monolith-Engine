@@ -138,7 +138,7 @@ namespace Monolith.Graphics
 
         public MTexture(string texturePath, Rectangle? region = null)
         {
-            Texture2D texture = Engine.ContentManager.Load<Texture2D>(texturePath);
+            Texture2D texture = Engine.ContentProvider.Load<Texture2D>(texturePath);
             Texture = texture ?? throw new ArgumentNullException(nameof(texture));
             SourceRectangle = region;
         }
@@ -164,7 +164,7 @@ namespace Monolith.Graphics
 
         public void Draw()
         {
-            Engine.Screen.Draw(new TextureDrawCall
+            Engine.Screen.Call(new TextureDrawCall
             {
                 Texture = this,
                 Position = Position,
@@ -182,7 +182,7 @@ namespace Monolith.Graphics
 
         public void Draw(Vector2 position)
         {
-            Engine.Screen.Draw(new TextureDrawCall
+            Engine.Screen.Call(new TextureDrawCall
             {
                 Texture = this,
                 Position = position,
@@ -203,7 +203,7 @@ namespace Monolith.Graphics
         /// </summary>  
         public void Draw(Vector2 position, Color color, float rotation = 0f, Vector2 origin = default, Vector2? scale = null, SpriteEffects effects = SpriteEffects.None, Effect shader = null, int depth = 0, DrawLayer layer = DrawLayer.Middleground)
         {
-            Engine.Screen.Draw(new TextureDrawCall
+            Engine.Screen.Call(new TextureDrawCall
             {
                 Texture = this,
                 Position = position,

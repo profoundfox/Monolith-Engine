@@ -36,7 +36,7 @@ namespace Monolith
 
         public static float DeltaTime { get; private set; }
 
-        public static IContentProvider ContentManager { get; set; }
+        public static IContentProvider ContentProvider { get; set; }
 
 
         internal string ContentRoot { get; set; } = "Content";
@@ -84,7 +84,7 @@ namespace Monolith
         {
             base.LoadContent();
 
-            ContentManager = new ContentPipelineLoader();
+            ContentProvider = new ContentPipelineLoader();
 
             var assembly = typeof(Engine).Assembly;
             using var stream = assembly.GetManifestResourceStream("Monolith.Graphics.Font.bitmap_font.png");

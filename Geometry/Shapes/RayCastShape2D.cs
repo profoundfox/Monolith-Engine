@@ -58,7 +58,7 @@ namespace Monolith.Geometry
             int depth = 99;
             int thickness = 2;
 
-            Engine.Screen.Draw(
+            Engine.Screen.Call(
                 new TextureDrawCall
                 {
                     Position = Origin,
@@ -74,7 +74,7 @@ namespace Monolith.Geometry
 
             if (HasHit)
             {
-                Engine.Screen.Draw(
+                Engine.Screen.Call(
                     new TextureDrawCall
                     {
                         Position = HitPoint,

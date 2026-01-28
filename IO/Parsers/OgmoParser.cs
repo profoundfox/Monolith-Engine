@@ -11,6 +11,7 @@ using Monolith.Nodes;
 using Monolith.Geometry;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Monolith.Helpers;
 
 namespace Monolith.IO
 {
@@ -26,8 +27,11 @@ namespace Monolith.IO
         private static OgmoFileInfo.Root LoadJson(string filename)
         {
             string json = File.ReadAllText(filename);
-            var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-            return JsonSerializer.Deserialize<OgmoFileInfo.Root>(json, options)!;
+
+            return JsonSerializer.Deserialize<OgmoFileInfo.Root>(
+                json,
+                new JsonSerializerOptions { PropertyNameCaseInsensitive = true }
+            )!;
         }
 
         private static Dictionary<string, object> ParseValues(Dictionary<string, JsonElement> values)

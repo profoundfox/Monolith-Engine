@@ -157,7 +157,7 @@ namespace Monolith.Geometry
             int depth = 99;
             int thickness = 2;
 
-            Engine.Screen.Draw(
+            Engine.Screen.Call(
                 new TextureDrawCall
                 {
                     Position = new Vector2(X, Y),
@@ -170,7 +170,7 @@ namespace Monolith.Geometry
             );
             
 
-            Engine.Screen.Draw(
+            Engine.Screen.Call(
                 new TextureDrawCall
                 {
                     Position = new Vector2(X, BoundingBox.Bottom - thickness),
@@ -182,7 +182,7 @@ namespace Monolith.Geometry
                 DrawLayer.Middleground
             );
 
-            Engine.Screen.Draw(
+            Engine.Screen.Call(
                 new TextureDrawCall
                 {
                     Position = new Vector2(X, Y),
@@ -194,7 +194,7 @@ namespace Monolith.Geometry
                 DrawLayer.Middleground
             );
 
-            Engine.Screen.Draw(
+            Engine.Screen.Call(
                 new TextureDrawCall
                 {
                     Position = new Vector2(BoundingBox.Right - thickness, Y),

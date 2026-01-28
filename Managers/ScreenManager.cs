@@ -59,7 +59,7 @@ namespace Monolith.Managers
         /// <summary>
         /// Queues a call directly.
         /// </summary>
-        public void Draw(IDrawCall call, DrawLayer layer = DrawLayer.Middleground)
+        public void Call(IDrawCall call, DrawLayer layer = DrawLayer.Middleground)
         {
             if (call == null) throw new ArgumentNullException(nameof(call));
             _queues[layer].Add(call);
