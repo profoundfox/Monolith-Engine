@@ -16,7 +16,6 @@ namespace Monolith
 
         public static GraphicsDeviceManager Graphics { get; private set; }
         public static new GraphicsDevice GraphicsDevice { get; private set; }
-        public static RenderTarget2D RenderTarget { get; internal set; }
 
         public static SpriteBatch SpriteBatch { get; private set; }
         public static SpriteFont Font { get; private set; }
@@ -39,10 +38,7 @@ namespace Monolith
 
         public static IContentProvider ContentManager { get; set; }
 
-        internal Rectangle Destination { get; set; }
-        internal int RenderWidth { get; set; } = 640;
-        internal int RenderHeight { get; set; } = 360;
-        internal bool IntegerScaling { get; set; } = true;
+
         internal string ContentRoot { get; set; } = "Content";
 
         public Engine()
@@ -81,10 +77,7 @@ namespace Monolith
 
             Screen = new ScreenManager(SpriteBatch);
 
-                        
-            CreateRenderTarget();
-            Window.ClientSizeChanged += (_, _) => UpdateTransform();
-            UpdateTransform();
+            Screen.Initialize();
         }
 
         protected override void LoadContent()
@@ -136,7 +129,7 @@ namespace Monolith
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.SetRenderTarget(RenderTarget);
+            GraphicsDevice.SetRenderTarget(Screen.RenderTarget);
             GraphicsDevice.Clear(Color.Black);
 
             Stage.DrawCurrentStage(SpriteBatch);
@@ -152,44 +145,11 @@ namespace Monolith
                 SamplerState.PointClamp,
                 effect: PostProcessingShader);
 
-            SpriteBatch.Draw(RenderTarget, Destination, Color.White);
+            SpriteBatch.Draw(Screen.RenderTarget, Screen.Destination, Color.White);
 
             SpriteBatch.End();
 
             base.Draw(gameTime);
-        }
-
-        internal void CreateRenderTarget()
-        {
-            RenderTarget?.Dispose();
-
-            RenderTarget = new RenderTarget2D(
-                GraphicsDevice,
-                RenderWidth,
-                RenderHeight,
-                false,
-                SurfaceFormat.Color,
-                DepthFormat.None);
-        }
-
-        internal void UpdateTransform()
-        {
-            var pp = GraphicsDevice.PresentationParameters;
-
-            float scale = Math.Min(
-                pp.BackBufferWidth / (float)RenderWidth,
-                pp.BackBufferHeight / (float)RenderHeight);
-
-            if (IntegerScaling)
-                scale = Math.Max(1, MathF.Floor(scale));
-
-            int w = (int)(RenderWidth * scale);
-            int h = (int)(RenderHeight * scale);
-
-            int x = (pp.BackBufferWidth - w) / 2;
-            int y = (pp.BackBufferHeight - h) / 2;
-
-            Destination = new Rectangle(x, y, w, h);
         }
 
         public static void Quit() => Instance.Exit();

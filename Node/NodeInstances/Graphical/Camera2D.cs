@@ -28,7 +28,7 @@ namespace Monolith.Nodes
         public Matrix GetTransform() 
         { 
 
-            Vector2 screenCenter = new Vector2(Engine.RenderTarget.Width, Engine.RenderTarget.Height) * 0.5f; 
+            Vector2 screenCenter = new Vector2(Engine.Screen.RenderTarget.Width, Engine.Screen.RenderTarget.Height) * 0.5f; 
 
             Matrix transform = Matrix.CreateScale(Zoom)
                 * Matrix.CreateRotationZ(GlobalTransform.Rotation)
