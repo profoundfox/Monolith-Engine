@@ -18,7 +18,7 @@ namespace Monolith.IO
         private readonly Dictionary<string, Song> _musicCache = new();
         private readonly Dictionary<string, string> _textCache = new();
         private readonly HashSet<string> _loadedRelativePaths = new();
-        private readonly string _rawContentPath;
+        private readonly string _baseContentPath;
         private readonly bool _allowAbsolutePaths;
 
         private readonly Dictionary<Type, Func<string, object>> _genericLoaders =
@@ -31,15 +31,13 @@ namespace Monolith.IO
         /// <param name="allowAbsolutePaths">If true, can load files from absolute paths on the system. Intended for development/testing only.</param>
         /// <remarks> 
         /// Intended for non release builds as the pipeline produces cleaner and faster files,
-        /// release builds also need to have all files relative to the game's exe.
         /// </remarks>
 
-        public RuntimeContentLoader(string rawContentPath, bool allowAbsolutePaths = false)
+        public RuntimeContentLoader(string baseContentPath, bool allowAbsolutePaths = false)
         {
-            _rawContentPath = rawContentPath;
+            _baseContentPath = baseContentPath;
             _allowAbsolutePaths = allowAbsolutePaths;
 
-            // Register generic loaders
             _genericLoaders[typeof(Texture2D)] = p => LoadTexture(p);
             _genericLoaders[typeof(SoundEffect)] = p => LoadSound(p);
             _genericLoaders[typeof(Song)] = p => LoadMusic(p);
@@ -83,7 +81,7 @@ namespace Monolith.IO
             if (string.IsNullOrWhiteSpace(path))
                 throw new ArgumentException("Path cannot be null or empty.", nameof(path));
 
-            if (!_allowAbsolutePaths && Path.IsPathRooted(_rawContentPath))
+            if (!_allowAbsolutePaths && Path.IsPathRooted(_baseContentPath))
                 throw new InvalidOperationException(
                     "Absolute rawContentPath is not allowed unless allowAbsolutePaths is enabled."
                 );
@@ -93,7 +91,7 @@ namespace Monolith.IO
                     "Asset paths must be relative. Do not pass absolute paths to the loader."
                 );
 
-            return Path.GetFullPath(Path.Combine(_rawContentPath, path));
+            return Path.GetFullPath(Path.Combine(_baseContentPath, path));
         }
 
 

@@ -24,6 +24,7 @@ namespace Monolith
         public static MTexture Pixel { get; private set; }
 
         public static TweenManager Tween { get; private set; }
+        public static ResourceManager Resource { get; private set; }
         public static ScreenManager Screen { get; private set; }
         public static StageManager Stage { get; private set; }
         public static InputManager Input { get; private set; }
@@ -35,11 +36,6 @@ namespace Monolith
         private double _fpsTimer;
 
         public static float DeltaTime { get; private set; }
-
-        public static IContentProvider ContentProvider { get; set; }
-
-
-        internal string ContentRoot { get; set; } = "Content";
 
         public Engine()
         {
@@ -62,8 +58,7 @@ namespace Monolith
         {
             GraphicsDevice = base.GraphicsDevice;
 
-            Content.RootDirectory = "Content";
-
+            Resource = new ResourceManager();
             Tween = new TweenManager();
             Stage = new StageManager();
             Node = new NodeManager();
@@ -83,8 +78,6 @@ namespace Monolith
         protected override void LoadContent()
         {
             base.LoadContent();
-
-            ContentProvider = new ContentPipelineLoader();
 
             var assembly = typeof(Engine).Assembly;
             using var stream = assembly.GetManifestResourceStream("Monolith.Graphics.Font.bitmap_font.png");
