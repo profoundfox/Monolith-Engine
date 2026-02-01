@@ -73,9 +73,9 @@ namespace Monolith.Nodes
             return GetTile(row * Columns + column);
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void SubmitCall()
         {
-            base.Draw(spriteBatch);
+            base.SubmitCall();
 
             for (int i = 0; i < Count; i++)
             {

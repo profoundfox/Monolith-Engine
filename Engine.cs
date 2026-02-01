@@ -64,7 +64,6 @@ namespace Monolith
             Node = new NodeManager();
             Timer = new TimerManager();
             Input = new InputManager();
-
             base.Initialize();
 
             SpriteBatch = new SpriteBatch(GraphicsDevice);
@@ -107,6 +106,7 @@ namespace Monolith
                 Exit();
 
             Stage.UpdateCurrentStage(gameTime);
+            Stage.SubmitCallCurrentStage();
 
             _fpsTimer += gameTime.ElapsedGameTime.TotalSeconds;
             _fpsFrames++;
@@ -124,8 +124,6 @@ namespace Monolith
         {
             GraphicsDevice.SetRenderTarget(Screen.RenderTarget);
             GraphicsDevice.Clear(Color.Black);
-
-            Stage.DrawCurrentStage(SpriteBatch);
 
             Screen.Flush();
 

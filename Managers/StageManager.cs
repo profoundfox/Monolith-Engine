@@ -11,10 +11,11 @@ using Monolith.Util;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Monolith.Helpers;
 
 namespace Monolith.Managers
 {
-    public class StageManager
+    public partial class StageManager
     {
         public readonly Stack<IStage> Stages = new();
         private bool _stageFrozen;
@@ -40,7 +41,10 @@ namespace Monolith.Managers
             StageIntervention();
 
             Stages.Push(stage);
+
+            OgmoParser.FromFile(PathHelper.Combine("Raw", "LevelData", "Level1.json"), "Assets/Tileset/SlumberTilesetAtlas");
             
+            LoadRelative();
             stage.OnEnter();
         }
 
@@ -100,6 +104,7 @@ namespace Monolith.Managers
             if (Stages.Count == 0) return;
 
             var current = Stages.Pop();
+            UnloadRelative();
             current?.OnExit();
 
             StageIntervention();
@@ -168,20 +173,26 @@ namespace Monolith.Managers
                 return;
 
             if (!_stageFrozen)
+            {
+                UpdateRelative(gameTime);
                 GetCurrentStage()?.Update(gameTime);
+            }
             
             ApplyPendingFreeze();
         }
 
-        /// <summary>
-        /// Draws the current stage
-        /// </summary>
-        public void DrawCurrentStage(SpriteBatch spriteBatch)
+        public void SubmitCallCurrentStage()
         {
             if (IsStackEmpty())
                 return;
+
+            if (!_stageFrozen)
+            {
+                SubmitCallRelative();
+                GetCurrentStage()?.SubmitCall();
+            }
             
-            GetCurrentStage()?.Draw(spriteBatch);
+            ApplyPendingFreeze();
         }
 
         /// <summary>
@@ -200,6 +211,7 @@ namespace Monolith.Managers
             if (Stages.Count == 0) return;
 
             var oldStage = Stages.Pop();
+            UnloadRelative();
             oldStage.OnExit();
 
             var newStage = (IStage)Activator.CreateInstance(oldStage.GetType());

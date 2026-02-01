@@ -56,7 +56,7 @@ namespace Monolith.Nodes
                 offset.Y = 0;
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void SubmitCall()
         {
             var camera = Camera2D.CurrentCameraInstance;
             Rectangle view = Engine.Screen.GetWorldViewRectangle();
@@ -98,7 +98,11 @@ namespace Monolith.Nodes
                         y * texH + basePos.Y
                     );
 
-                    Texture.Draw(pos, Color.White);
+                    Texture.Draw(
+                        position: pos,
+                        color: Color.White,
+                        depth: GlobalOrdering.Depth
+                    );
                 }
             }
         }

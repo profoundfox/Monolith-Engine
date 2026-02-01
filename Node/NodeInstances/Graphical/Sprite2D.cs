@@ -22,7 +22,7 @@ namespace Monolith.Nodes
             Texture = cfg.Texture;
         }
         
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void SubmitCall()
         {
             Texture.Draw(
                 position: GlobalTransform.Position,

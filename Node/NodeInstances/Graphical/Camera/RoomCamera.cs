@@ -101,9 +101,9 @@ namespace Monolith.Nodes
 
 
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void SubmitCall()
         {
-            base.Draw(spriteBatch);
+            base.SubmitCall();
         }
 
         private void ShiftRoom(int dir)

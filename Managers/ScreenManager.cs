@@ -99,6 +99,7 @@ namespace Monolith.Managers
                 var queue = _queues[layer];
                 if (queue.Count == 0)
                     continue;
+                
 
                 groupedQueue.Clear();
 

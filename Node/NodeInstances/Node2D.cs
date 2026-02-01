@@ -155,9 +155,9 @@ namespace Monolith.Nodes
             base.ProcessUpdate(delta);
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void SubmitCall()
         {
-            base.Draw(spriteBatch);
+            base.SubmitCall();
         }
     }
 }

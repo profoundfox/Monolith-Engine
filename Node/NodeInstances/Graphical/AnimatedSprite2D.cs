@@ -107,7 +107,7 @@ namespace Monolith.Nodes
         }
 
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void SubmitCall()
         {
             if (CurrentAnimation == null) return;
 

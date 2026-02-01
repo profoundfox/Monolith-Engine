@@ -35,6 +35,12 @@ namespace Monolith.Nodes
             }
         }
 
+        public int LocalDepth
+        {
+            get => LocalOrdering.Depth;
+            set => LocalOrdering = LocalOrdering with { Depth = value };
+        }
+
         public Material LocalMaterial
         {
             get => _localMaterial;
@@ -95,9 +101,9 @@ namespace Monolith.Nodes
             base.ProcessUpdate(delta);
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void SubmitCall()
         {
-            base.Draw(spriteBatch);
+            base.SubmitCall();
         }
     }
 }

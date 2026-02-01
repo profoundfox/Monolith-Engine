@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Monolith.Graphics;
 using Monolith.Attributes;
+using Monolith.Graphics;
 
 namespace Monolith.Graphics
 {

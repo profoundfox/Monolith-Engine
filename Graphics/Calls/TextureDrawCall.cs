@@ -14,8 +14,7 @@ namespace Monolith.Graphics
             if (Texture?.Texture == null)
                 return;
 
-            Rectangle src = SourceRectangle ??
-                new Rectangle(0, 0, Texture.Width, Texture.Height);
+            Rectangle src = SourceRectangle ?? new Rectangle(0, 0, Texture.Width, Texture.Height);
 
             sb.Draw(
                 Texture.Texture,
@@ -26,15 +25,8 @@ namespace Monolith.Graphics
                 Origin,
                 Scale,
                 Effects,
-                DepthToLayer(Depth)
+                LayerDepth
             );
-        }
-
-        private static float DepthToLayer(int depth)
-        {
-            const int min = -100;
-            const int max = 100;
-            return 1f - (depth - min) / (float)(max - min);
         }
     }
 }

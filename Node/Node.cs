@@ -157,7 +157,7 @@ namespace Monolith.Nodes
         public virtual void Unload() { }
         public virtual void ProcessUpdate(float delta) { }
         public virtual void PhysicsUpdate(float delta) { }
-        public virtual void Draw(SpriteBatch spriteBatch) { }
+        public virtual void SubmitCall() { }
 
         /// <summary>
         /// All children of this node.

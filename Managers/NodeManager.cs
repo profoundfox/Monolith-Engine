@@ -223,10 +223,10 @@ namespace Monolith.Managers
         /// Draws all the nodes.
         /// </summary>
         /// <param name="spriteBatch"></param>
-        public void DrawNodes(SpriteBatch spriteBatch)
+        public void SubmitCallNodes()
         {
             foreach (var node in allInstances)
-                node.Draw(spriteBatch);
+                node.SubmitCall();
         }
 
         /// <summary>
