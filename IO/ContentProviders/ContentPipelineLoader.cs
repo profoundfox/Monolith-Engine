@@ -30,7 +30,7 @@ namespace Monolith.IO
         }
 
         /// <summary>
-        /// Generic loader for the Instance.Content pipeline.
+        /// Generic loader for thecontentpipeline.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="path"></param>
@@ -49,7 +49,7 @@ namespace Monolith.IO
 
 
         /// <summary>
-        /// Loads a texture using the Instance.Content pipeline.
+        /// Loads a texture using thecontentpipeline.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -59,7 +59,7 @@ namespace Monolith.IO
         }
 
         /// <summary>
-        /// Function for loading sound effects using the Instance.Content pipeline.
+        /// Function for loading sound effects using thecontentpipeline.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -79,7 +79,7 @@ namespace Monolith.IO
         }
 
         /// <summary>
-        /// Function for loading text using the Instance.Content pipeline.
+        /// Function for loading text using thecontentpipeline.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -89,7 +89,7 @@ namespace Monolith.IO
         }
 
         /// <summary>
-        /// Function for loading a Json file using the Instance.Content pipeline.
+        /// Function for loading a Json file using thecontentpipeline.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="path"></param>
@@ -101,7 +101,7 @@ namespace Monolith.IO
         }
 
         /// <summary>
-        /// Function for loading a font using the Instance.Content pipeline.
+        /// Function for loading a font using thecontentpipeline.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -111,7 +111,7 @@ namespace Monolith.IO
         }
 
         /// <summary>
-        /// Function for loading an effect using the Instance.Content pipeline.
+        /// Function for loading an effect using thecontentpipeline.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -121,7 +121,7 @@ namespace Monolith.IO
         }
 
         /// <summary>
-        /// Function for loading raw file information using the Instance.Content pipeline.
+        /// Function for loading raw file information using thecontentpipeline.
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
@@ -131,11 +131,11 @@ namespace Monolith.IO
         }
 
         /// <summary>
-        /// Function for unloading a Instance.Content file.
+        /// Function for unloading acontentfile.
         /// </summary>
         /// <param name="path"></param>
         /// <remarks>
-        /// Individual unloading does not work when using the Instance.Content pipeline.
+        /// Individual unloading does not work when using thecontentpipeline.
         /// </remarks>
         [Obsolete("Unloading does not work with the Instance.Content pipeline", false)]
         public void Unload(string path)
@@ -152,10 +152,10 @@ namespace Monolith.IO
         }
 
         /// <summary>
-        /// Function for reloading all Instance.Content files.
+        /// Function for reloading allcontentfiles.
         /// </summary>
         /// <remarks>
-        /// Reloading does not work with the Instance.Content pipeline.
+        /// Reloading does not work with thecontentpipeline.
         /// </remarks>
         [Obsolete("Reload all does not work with the Instance.Content pipeline", false)]
         public void ReloadAll()
