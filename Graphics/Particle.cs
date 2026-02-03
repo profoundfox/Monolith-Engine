@@ -43,7 +43,7 @@ namespace Monolith.Graphics
             _opacity = MathHelper.Clamp(MathHelper.Lerp(InitialInfo.OpacityEnd, InitialInfo.OpacityStart, _lifespanAmount), 0, 1);
         }
 
-        public void Draw()
+        public void SubmitCall()
         {
             Engine.Screen.Call(new TextureDrawCall
             {

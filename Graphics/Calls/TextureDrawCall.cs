@@ -6,7 +6,7 @@ namespace Monolith.Graphics
 {
     public sealed class TextureDrawCall : DrawCallBase
     {
-        public MTexture Texture { get; init; }
+        public required MTexture Texture { get; init; }
         public Rectangle? SourceRectangle { get; init; }
 
         public override void Draw(SpriteBatch sb)

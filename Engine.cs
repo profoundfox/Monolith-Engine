@@ -45,8 +45,8 @@ namespace Monolith
             Instance = this;
             Graphics = new GraphicsDeviceManager(this);
 
-            Graphics.PreferredBackBufferWidth = 2560;
-            Graphics.PreferredBackBufferHeight = 1600;
+            Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
+            Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             Graphics.ApplyChanges();
 
             Window.AllowUserResizing = true;

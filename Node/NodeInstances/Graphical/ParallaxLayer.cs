@@ -101,7 +101,8 @@ namespace Monolith.Nodes
                     Texture.Draw(
                         position: pos,
                         color: Color.White,
-                        depth: GlobalOrdering.Depth
+                        depth: GlobalOrdering.Depth,
+                        layer: DrawLayer.Background
                     );
                 }
             }

@@ -7,8 +7,9 @@ namespace Monolith.Nodes
 {
     public record class CanvasNodeConfig : NodeConfig
     {
-        
+        public int Depth { get; set; }
     }
+
     public class CanvasNode : Node
     {
         private Visibility _localVisibility;
@@ -58,7 +59,7 @@ namespace Monolith.Nodes
         public CanvasNode(CanvasNodeConfig cfg) : base(cfg)
         {
             _localVisibility = Visibility.Identity;
-            _localOrdering = Ordering.Identity;
+            _localOrdering = Ordering.Identity with { Depth = cfg.Depth };
             _localMaterial = Material.Identity;
             
             ProcessUpdateAttributes();
