@@ -58,6 +58,9 @@ namespace Monolith.Nodes
 
         public override void SubmitCall()
         {
+            if (!GlobalVisibility.Visibile)
+                return;
+            
             var camera = Camera2D.CurrentCameraInstance;
             Rectangle view = Engine.Screen.GetWorldViewRectangle();
 

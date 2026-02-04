@@ -3,13 +3,15 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Attributes;
+using Monolith.Managers;
 
 namespace Monolith.Graphics
 {
     public class Particle
     {
         public ParticleInfo InitialInfo { get; private set; }
-
+        public int Depth;
+    
         private Vector2 _position;
         private float _lifespanLeft;
         private float _lifespanAmount;
@@ -41,6 +43,8 @@ namespace Monolith.Graphics
             _lifespanAmount = MathHelper.Clamp(_lifespanLeft / InitialInfo.Lifespan, 0, 1);
             _color = Color.Lerp(InitialInfo.ColorEnd, InitialInfo.ColorStart, _lifespanAmount);
             _opacity = MathHelper.Clamp(MathHelper.Lerp(InitialInfo.OpacityEnd, InitialInfo.OpacityStart, _lifespanAmount), 0, 1);
+
+            _position.Y += 1;
         }
 
         public void SubmitCall()
@@ -48,11 +52,14 @@ namespace Monolith.Graphics
             Engine.Screen.Call(new TextureDrawCall
             {
                 Texture = InitialInfo.Texture,
-                Color = Color.Red,
+                Color = _color * _opacity,
                 Rotation = 0f,
                 Origin = Vector2.Zero,
-                Scale = new Vector2(100)
-            });
+                Scale = Vector2.One,
+                Depth = Depth,
+                Position = _position
+            },
+            DrawLayer.UI);
         }
     }
 }
