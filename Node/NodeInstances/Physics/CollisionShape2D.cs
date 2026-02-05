@@ -75,7 +75,7 @@ namespace Monolith.Nodes
         {
             foreach (KinematicBody2D kb in Engine.Node.GetNodesByT<KinematicBody2D>())
             {
-                IRegionShape2D body = kb.CollisionShape2D.Shape;
+                IRegionShape2D body = kb.CollisionShape.Shape;
 
                 if (!OneWay)
                     continue;

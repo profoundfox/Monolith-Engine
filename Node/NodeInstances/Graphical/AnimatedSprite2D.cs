@@ -25,11 +25,6 @@ namespace Monolith.Nodes
 
         public MTexture CurrentFrame => CurrentAnimation?.Frames[_currentFrame];
 
-        public SpriteEffects Effects { get; set; }
-
-        public bool Finished => _finished;
-
-
         public AnimatedSprite2D(AnimatedSpriteConfig cfg) : base(cfg)
         {
             Atlas = cfg.Atlas;

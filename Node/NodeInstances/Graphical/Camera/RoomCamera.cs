@@ -137,7 +137,6 @@ namespace Monolith.Nodes
         {
             if (TargetNode is KinematicBody2D body)
             {
-                body.Locked = true;
                 body.Offset(5 * _dir, 0);
             }
         }
@@ -146,7 +145,6 @@ namespace Monolith.Nodes
         {
             if (TargetNode is KinematicBody2D body)
             {
-                body.Locked = false;
             }
         }
 

@@ -50,7 +50,7 @@ namespace Monolith.Nodes
             return Engine.Node.AllInstances
                 .Where(a => a != this && typeof(KinematicBody2D).IsAssignableFrom(a.GetType()))
                 .Cast<KinematicBody2D>()
-                .FirstOrDefault(a => CollisionShape2D.Intersects(a.CollisionShape2D));
+                .FirstOrDefault(a => CollisionShape2D.Intersects(a.CollisionShape));
         }
 
 
