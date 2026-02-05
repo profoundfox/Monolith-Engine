@@ -164,18 +164,32 @@ namespace Monolith.Managers
             Engine.Timer.Wait(duration, UnfreezeCurrentStage);
         }
 
-        /// <summary>
-        /// Updates the current stage
-        /// </summary>
-        public void UpdateCurrentStage(GameTime gameTime)
+        public void ProcessUpdate(float deltaTime)
         {
             if (IsStackEmpty())
                 return;
 
             if (!_stageFrozen)
             {
-                UpdateRelative(gameTime);
-                GetCurrentStage()?.Update(gameTime);
+                ProcessUpdateRelative(deltaTime);
+                GetCurrentStage()?.ProcessUpdate(deltaTime);
+            }
+            
+            ApplyPendingFreeze();
+        }
+
+        /// <summary>
+        /// Updates the current stage with a fixed framerate.
+        /// </summary>
+        public void PhysicsUpdate(float deltaTime)
+        {
+            if (IsStackEmpty())
+                return;
+
+            if (!_stageFrozen)
+            {
+                PhysicsUpdateRelative(deltaTime);
+                GetCurrentStage()?.PhysicsUpdate(deltaTime);
             }
             
             ApplyPendingFreeze();

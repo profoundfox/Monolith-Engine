@@ -58,7 +58,7 @@ namespace Monolith.Managers
         /// <summary>
         /// Updates all the tweens.
         /// </summary>
-        public void Update(GameTime gameTime)
+        public void Update(float deltaTime)
         {
             for (int i = _tweens.Count - 1; i >= 0; i--)
             {

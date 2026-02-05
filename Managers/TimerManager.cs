@@ -67,7 +67,7 @@ namespace Monolith.Managers
         /// <summary>
         /// Update all timers. Call this every frame from Game.Update().
         /// </summary>
-        public void Update(GameTime gameTime)
+        public void PhysicsUpdate(float deltaTime)
         {
             for (int i = timers.Count - 1; i >= 0; i--)
             {

@@ -22,6 +22,7 @@ namespace Monolith
         public static BitmapFont BitmapFont { get; private set; }
         public static Effect PostProcessingShader { get; set; }
         public static MTexture Pixel { get; private set; }
+        public static EngineTime Time { get; private set; }
 
         public static TweenManager Tween { get; private set; }
         public static ResourceManager Resource { get; private set; }
@@ -50,7 +51,7 @@ namespace Monolith
             Graphics.ApplyChanges();
 
             Window.AllowUserResizing = true;
-            IsFixedTimeStep = true;
+            IsFixedTimeStep = false;
             Graphics.SynchronizeWithVerticalRetrace = true;
         }
 
@@ -58,12 +59,15 @@ namespace Monolith
         {
             GraphicsDevice = base.GraphicsDevice;
 
+            Time = new EngineTime(1f / 60f);
+
             Resource = new ResourceManager();
             Tween = new TweenManager();
             Stage = new StageManager();
             Node = new NodeManager();
             Timer = new TimerManager();
             Input = new InputManager();
+
             base.Initialize();
 
             SpriteBatch = new SpriteBatch(GraphicsDevice);
@@ -96,19 +100,28 @@ namespace Monolith
 
         protected override void Update(GameTime gameTime)
         {
-            DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float frameDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            DeltaTime = frameDelta;
 
-            Tween.Update(gameTime);
-            Timer.Update(gameTime);
+            int physicsSteps = Time.Update(frameDelta);
+
             Input.Update(gameTime);
+
+            Tween.Update(frameDelta);
+
+            for (int i = 0; i < physicsSteps; i++)
+            {
+                Timer.PhysicsUpdate(Time.FixedDelta);
+                Stage.PhysicsUpdate(Time.FixedDelta);
+            }
+
+            Stage.ProcessUpdate(Time.FrameDelta);
+            Stage.SubmitCallCurrentStage();
 
             if (Input.Keyboard.IsKeyDown(Keys.Escape))
                 Exit();
 
-            Stage.UpdateCurrentStage(gameTime);
-            Stage.SubmitCallCurrentStage();
-
-            _fpsTimer += gameTime.ElapsedGameTime.TotalSeconds;
+            _fpsTimer += frameDelta;
             _fpsFrames++;
             if (_fpsTimer >= 1.0)
             {
@@ -119,6 +132,7 @@ namespace Monolith
 
             base.Update(gameTime);
         }
+
 
         protected override void Draw(GameTime gameTime)
         {

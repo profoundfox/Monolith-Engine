@@ -9,9 +9,14 @@ namespace Monolith.Managers
             Engine.Node.LoadNodes();
         }
 
-        private void UpdateRelative(GameTime gameTime)
+        private void ProcessUpdateRelative(float deltaTime)
         {
-            Engine.Node.UpdateNodes(gameTime);
+            Engine.Node.ProcessUpdateNodes(deltaTime);
+        }
+
+        private void PhysicsUpdateRelative(float deltaTime)
+        {
+            Engine.Node.PhysicsUpdateNodes(deltaTime);
         }
 
         private void SubmitCallRelative()

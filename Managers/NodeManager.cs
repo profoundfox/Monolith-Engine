@@ -177,26 +177,11 @@ namespace Monolith.Managers
             }
         }
 
-        public void UpdateNodes(GameTime gameTime)
-        {
-            float frameDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            _accumulator += frameDelta;
-
-            while (_accumulator >= FixedDelta)
-            {
-                PhysicsUpdateNodes(FixedDelta);
-                _accumulator -= FixedDelta;
-            }
-
-            ProcessUpdateNodes(frameDelta);
-        }
-
         /// <summary>
         /// Updates all the nodes' process function.
         /// </summary>
         /// <param name="gameTime"></param>
-        private void ProcessUpdateNodes(float delta)
+        internal void ProcessUpdateNodes(float delta)
         {
             ApplyPendingChanges();
             foreach (var node in allInstances.ToList())
@@ -209,7 +194,7 @@ namespace Monolith.Managers
         /// Updates all the nodes' physics function.
         /// </summary>
         /// <param name="gameTime"></param>
-        private void PhysicsUpdateNodes(float delta)
+        internal void PhysicsUpdateNodes(float delta)
         {
             ApplyPendingChanges();
             foreach (var node in allInstances.ToList())
