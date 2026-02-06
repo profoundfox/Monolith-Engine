@@ -23,6 +23,8 @@ namespace Monolith.Nodes
         public Animation CurrentAnimation { get; private set; }
         public bool IsLooping { get; private set; } = false;
 
+        public bool IsFinished => _finished;
+
         public MTexture CurrentFrame => CurrentAnimation?.Frames[_currentFrame];
 
         public AnimatedSprite2D(AnimatedSpriteConfig cfg) : base(cfg)

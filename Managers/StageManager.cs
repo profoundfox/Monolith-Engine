@@ -83,7 +83,7 @@ namespace Monolith.Managers
             IStage targetStage = GetStageFromString(stageName);
             if (targetStage == null)
                 throw new InvalidOperationException($"Stage '{stageName}' not found.");
-
+        
             AddStage(targetStage);
         }
 

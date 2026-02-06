@@ -25,7 +25,7 @@ namespace Monolith.Nodes
         private bool _isOnFloor = false;
         private bool _isOnRoof = false;
 
-        const float FloorTolerance = 2f;
+        const float FLOOR_TOLERANCE = 2f;
 
         public KinematicBody2D(KinematicBodyConfig cfg) : base(cfg) {}
 
@@ -77,7 +77,7 @@ namespace Monolith.Nodes
 
                 if (CollisionShape.Intersects(other))
                 {
-                    if (movement.Y > 0 || movement.Y >= -FloorTolerance)
+                    if (movement.Y > 0 || movement.Y >= -FLOOR_TOLERANCE)
                     {
                         _isOnFloor = true;
                         _floorShape = other;
@@ -101,7 +101,7 @@ namespace Monolith.Nodes
                     if (other == CollisionShape || other.Disabled)
                         continue;
 
-                    var verticalOffset = new Vector2(0, FloorTolerance);
+                    var verticalOffset = new Vector2(0, FLOOR_TOLERANCE);
                     CollisionShape.LocalPosition += verticalOffset;
 
                     if (CollisionShape.Intersects(other))
