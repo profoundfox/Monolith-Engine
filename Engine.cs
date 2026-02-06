@@ -22,8 +22,8 @@ namespace Monolith
         public static BitmapFont BitmapFont { get; private set; }
         public static Effect PostProcessingShader { get; set; }
         public static MTexture Pixel { get; private set; }
-        public static EngineTime Time { get; private set; }
-        
+        public static EngineTime EngineTime { get; private set; }
+
         public static TweenManager Tween { get; private set; }
         public static ResourceManager Resource { get; private set; }
         public static ScreenManager Screen { get; private set; }
@@ -59,7 +59,7 @@ namespace Monolith
         {
             GraphicsDevice = base.GraphicsDevice;
 
-            Time = new EngineTime(1f / 60f);
+            EngineTime = new EngineTime(1f / 60f);
 
             Resource = new ResourceManager();
             Tween = new TweenManager();
@@ -103,7 +103,7 @@ namespace Monolith
             float frameDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
             DeltaTime = frameDelta;
 
-            int physicsSteps = Time.Update(frameDelta);
+            int physicsSteps = EngineTime.Update(frameDelta);
 
             Input.Update(gameTime);
 
@@ -111,11 +111,11 @@ namespace Monolith
 
             for (int i = 0; i < physicsSteps; i++)
             {
-                Timer.PhysicsUpdate(Time.FixedDelta);
-                Stage.PhysicsUpdate(Time.FixedDelta);
+                Timer.PhysicsUpdate(EngineTime.FixedDelta);
+                Stage.PhysicsUpdate(EngineTime.FixedDelta);
             }
 
-            Stage.ProcessUpdate(Time.FrameDelta);
+            Stage.ProcessUpdate(EngineTime.FrameDelta);
             Stage.SubmitCallCurrentStage();
 
             if (Input.Keyboard.IsKeyDown(Keys.Escape))
