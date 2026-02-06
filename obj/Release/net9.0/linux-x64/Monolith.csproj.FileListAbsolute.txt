@@ -1,0 +1,13 @@
+/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/bin/Release/net9.0/linux-x64/Monolith.deps.json
+/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/bin/Release/net9.0/linux-x64/Monolith.dll
+/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/bin/Release/net9.0/linux-x64/Monolith.pdb
+/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/obj/Release/net9.0/linux-x64/Monolith.csproj.AssemblyReference.cache
+/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/obj/Release/net9.0/linux-x64/Monolith.GeneratedMSBuildEditorConfig.editorconfig
+/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/obj/Release/net9.0/linux-x64/Monolith.AssemblyInfoInputs.cache
+/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/obj/Release/net9.0/linux-x64/Monolith.AssemblyInfo.cs
+/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/obj/Release/net9.0/linux-x64/Monolith.csproj.CoreCompileInputs.cache
+/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/obj/Release/net9.0/linux-x64/Monolith.sourcelink.json
+/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/obj/Release/net9.0/linux-x64/Monolith.dll
+/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/obj/Release/net9.0/linux-x64/refint/Monolith.dll
+/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/obj/Release/net9.0/linux-x64/Monolith.pdb
+/Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/obj/Release/net9.0/linux-x64/ref/Monolith.dll

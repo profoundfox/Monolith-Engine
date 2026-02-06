@@ -42,7 +42,7 @@ namespace Monolith.Managers
 
             Stages.Push(stage);
 
-            //OgmoParser.FromFile(PathHelper.Combine("Raw", "LevelData", "Level1.json"), "Assets/Tileset/SlumberTilesetAtlas");
+            OgmoParser.FromFile(PathHelper.Combine("Raw", "LevelData", "Level1.json"), "Assets/Tileset/SlumberTilesetAtlas");
             
             LoadRelative();
             stage.OnEnter();
