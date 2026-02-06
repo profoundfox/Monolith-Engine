@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.Xna.Framework;
 
 namespace Monolith.Nodes
@@ -47,70 +48,54 @@ namespace Monolith.Nodes
 
             _isOnFloor = false;
             _isOnRoof = false;
+            _isOnWall = false;
+            WallNormal = Vector2.Zero;
             _floorShape = null;
-            _isOnWall = false;
-            WallNormal = Vector2.Zero;
 
-            LocalPosition += new Vector2(movement.X, 0);
+            var bodies = Engine.Node.GetNodesByT<PhysicsBody2D>()
+                            .Where(b => b.CollisionShape != CollisionShape && !b.CollisionShape.Disabled)
+                            .ToArray();
 
-            _isOnWall = false;
-            WallNormal = Vector2.Zero;
+            Vector2 horizontalMovement = new Vector2(movement.X, 0);
+            LocalPosition += horizontalMovement;
 
-            foreach (var other in Engine.Node.GetNodesByT<PhysicsBody2D>())
+            foreach (var other in bodies)
             {
-                if (other.CollisionShape == CollisionShape || other.CollisionShape.Disabled)
-                    continue;
-
                 if (CollisionShape.Intersects(other.CollisionShape))
                 {
                     _isOnWall = true;
                     WallNormal = movement.X > 0 ? new Vector2(-1, 0) : new Vector2(1, 0);
-                    LocalPosition -= new Vector2(movement.X, 0);
+                    LocalPosition -= horizontalMovement;
                     Velocity = new Vector2(0, Velocity.Y);
                     break;
                 }
-            }
 
-            if (!_isOnWall)
-            {
-                foreach (var other in Engine.Node.GetNodesByT<PhysicsBody2D>())
+                CollisionShape.LocalPosition += new Vector2(WALL_TOLERANCE, 0);
+                if (CollisionShape.Intersects(other.CollisionShape))
                 {
-                    if (other.CollisionShape == CollisionShape || other.CollisionShape.Disabled)
-                        continue;
-
-                    Vector2 rightOffset = new Vector2(WALL_TOLERANCE, 0);
-                    Vector2 leftOffset = new Vector2(-WALL_TOLERANCE, 0);
-
-                    CollisionShape.LocalPosition += rightOffset;
-                    if (CollisionShape.Intersects(other.CollisionShape))
-                    {
-                        _isOnWall = true;
-                        WallNormal = new Vector2(-1, 0);
-                    }
-                    CollisionShape.LocalPosition -= rightOffset;
-
-                    if (_isOnWall) break;
-
-                    CollisionShape.LocalPosition += leftOffset;
-                    if (CollisionShape.Intersects(other.CollisionShape))
-                    {
-                        _isOnWall = true;
-                        WallNormal = new Vector2(1, 0);
-                    }
-                    CollisionShape.LocalPosition -= leftOffset;
-
-                    if (_isOnWall) break;
+                    _isOnWall = true;
+                    WallNormal = new Vector2(-1, 0);
                 }
+                CollisionShape.LocalPosition -= new Vector2(WALL_TOLERANCE, 0);
+
+                if (_isOnWall) break;
+
+                CollisionShape.LocalPosition += new Vector2(-WALL_TOLERANCE, 0);
+                if (CollisionShape.Intersects(other.CollisionShape))
+                {
+                    _isOnWall = true;
+                    WallNormal = new Vector2(1, 0);
+                }
+                CollisionShape.LocalPosition -= new Vector2(-WALL_TOLERANCE, 0);
+
+                if (_isOnWall) break;
             }
 
+            Vector2 verticalMovement = new Vector2(0, movement.Y);
+            LocalPosition += verticalMovement;
 
-            LocalPosition += new Vector2(0, movement.Y);
-
-            foreach (var other in Engine.Node.GetNodesByT<PhysicsBody2D>())
+            foreach (var other in bodies)
             {
-                if (other.CollisionShape == CollisionShape || other.CollisionShape.Disabled)
-                    continue;
-
                 if (CollisionShape.Intersects(other.CollisionShape))
                 {
                     if (movement.Y > 0 || movement.Y >= -FLOOR_TOLERANCE)
@@ -124,35 +109,24 @@ namespace Monolith.Nodes
                         _isOnRoof = true;
                     }
 
-                    LocalPosition -= new Vector2(0, movement.Y);
+                    LocalPosition -= verticalMovement;
                     Velocity = new Vector2(Velocity.X, 0);
                     break;
                 }
-            }
 
-            if (!_isOnFloor)
-            {
-                foreach (var other in Engine.Node.GetNodesByT<PhysicsBody2D>())
+                CollisionShape.LocalPosition += new Vector2(0, FLOOR_TOLERANCE);
+                if (CollisionShape.Intersects(other.CollisionShape))
                 {
-                    if (other.CollisionShape == CollisionShape || other.CollisionShape.Disabled)
-                        continue;
-
-                    var verticalOffset = new Vector2(0, FLOOR_TOLERANCE);
-                    CollisionShape.LocalPosition += verticalOffset;
-
-                    if (CollisionShape.Intersects(other.CollisionShape))
-                    {
-                        _isOnFloor = true;
-                        _floorShape = other.CollisionShape;
-                        _lastFloorPosition = _floorShape.GlobalPosition;
-                    }
-
-                    CollisionShape.LocalPosition -= verticalOffset;
-                    if (_isOnFloor)
-                        break;
+                    _isOnFloor = true;
+                    _floorShape = other.CollisionShape;
+                    _lastFloorPosition = _floorShape.GlobalPosition;
                 }
+                CollisionShape.LocalPosition -= new Vector2(0, FLOOR_TOLERANCE);
+
+                if (_isOnFloor) break;
             }
         }
+
 
 
         public override void PhysicsUpdate(float delta)
