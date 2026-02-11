@@ -155,7 +155,7 @@ namespace Monolith.Geometry
         {
             Color color = Color.Red;
             int depth = 99;
-            int thickness = 2;
+            int thickness = 1;
 
             Engine.Screen.Call(
                 new TextureDrawCall

@@ -14,15 +14,15 @@ namespace Monolith.Nodes
     {
         private readonly List<Node> children = new();
         
-        public NodeConfig Config { get; }
+        public NodeConfig InitialConfig { get; }
 
         /// <summary>
-        /// The parent node in the hierarchy, required to be set, can be null
+        /// The parent node in the hierarchy
         /// </summary>
         public Node Parent { get; private set; }
 
         /// <summary>
-        /// The name of the node, required to be set.
+        /// The name of the node.
         /// </summary>
         public string Name { get; set; }
 
@@ -39,7 +39,7 @@ namespace Monolith.Nodes
             if (config.Parent != null)
                 SetParent(config.Parent);
             
-            Config = config;
+            InitialConfig = config;
 
             Engine.Node.QueueAdd(this);
         }

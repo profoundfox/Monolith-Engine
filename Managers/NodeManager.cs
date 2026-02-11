@@ -16,9 +16,6 @@ namespace Monolith.Managers
         private readonly List<Node> pendingAdds = new();
         private readonly List<Node> pendingRemovals = new();
 
-        private const float FixedDelta = 1f / 60f;
-        private float _accumulator = 0f;
-
         internal void QueueAdd(Node node)
         {
             pendingAdds.Add(node);
@@ -69,31 +66,21 @@ namespace Monolith.Managers
         }
 
         /// <summary>
-        /// Returns the children of a node.
-        /// </summary>
-        public List<Node> GetNodeChildren(Node node) => node.Children.ToList();
-
-        /// <summary>
-        /// Returns the parent of a node.
-        /// </summary>
-        public Node GetNodeParent(Node node) => node.Parent;
-
-        /// <summary>
         /// Sets all the nodes in a node's config to be children of that node.
         /// </summary>
         /// <param name="parent"></param>
         private void AutoAssignChildNodes(Node parent)
         {
-            if (parent.Config == null) return;
+            if (parent.InitialConfig == null) return;
 
-            var properties = parent.Config.GetType().GetProperties();
+            var properties = parent.InitialConfig.GetType().GetProperties();
 
             foreach (var prop in properties)
             {
                 if (prop.GetCustomAttribute<NodeRefferenceAttribute>() != null)
                     continue;
 
-                var value = prop.GetValue(parent.Config);
+                var value = prop.GetValue(parent.InitialConfig);
 
                 if (value is Node child)
                 {

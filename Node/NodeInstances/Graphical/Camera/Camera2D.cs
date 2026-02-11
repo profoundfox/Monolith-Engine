@@ -6,12 +6,12 @@ namespace Monolith.Nodes
 {
     public record class CameraConfig : SpatialNodeConfig
     {
-        public float Zoom { get; set; } = 1f;
+        public Vector2 Zoom { get; set; } = Vector2.One;
     }
 
     public class Camera2D : Node2D
     {
-        public float Zoom { get; set; } = 1f;
+        public Vector2 Zoom { get; set; }
 
         public static Camera2D CurrentCameraInstance { get; private set; }
 
@@ -28,9 +28,9 @@ namespace Monolith.Nodes
         public Matrix GetTransform() 
         { 
 
-            Vector2 screenCenter = new Vector2(Engine.Screen.RenderTarget.Width, Engine.Screen.RenderTarget.Height) * 0.5f; 
+            Vector2 screenCenter = new Vector2(Engine.Screen.RenderTarget.Width / Zoom.X, Engine.Screen.RenderTarget.Height / Zoom.Y) * 0.5f; 
 
-            Matrix transform = Matrix.CreateScale(Zoom)
+            Matrix transform = Matrix.CreateScale(Zoom.X, Zoom.Y, 1f)
                 * Matrix.CreateRotationZ(GlobalTransform.Rotation)
                 * Matrix.CreateTranslation(new Vector3(-GlobalTransform.Position, 0f))
                 * Matrix.CreateTranslation(new Vector3(screenCenter, 0f)); 

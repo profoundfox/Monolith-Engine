@@ -26,8 +26,6 @@ namespace Monolith.Managers
             .Where(t => typeof(IStage).IsAssignableFrom(t) && !t.IsAbstract)
             .ToDictionary(t => t.Name);
 
-        public bool StageFrozen => _stageFrozen;
-
         public StageManager() { }
 
         /// <summary>
@@ -42,7 +40,7 @@ namespace Monolith.Managers
 
             Stages.Push(stage);
 
-            OgmoParser.FromFile(PathHelper.Combine("Raw", "LevelData", "Level1.json"), "Assets/Tileset/SlumberTilesetAtlas");
+            OgmoParser.FromFile(PathHelper.Combine("Raw", "LevelData", "Level2.json"), "Assets/Tileset/SlumberTilesetAtlas");
             
             LoadRelative();
             stage.OnEnter();

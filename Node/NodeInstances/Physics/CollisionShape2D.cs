@@ -96,6 +96,7 @@ namespace Monolith.Nodes
 
                 if (kb.Velocity.Y < 0)
                 {
+                    Console.WriteLine("Yes");
                     Disabled = true;
                 }
 

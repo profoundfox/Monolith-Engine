@@ -1,4 +1,5 @@
 using System;
+using System.Reflection.Emit;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Attributes;
@@ -26,6 +27,24 @@ namespace Monolith.Nodes
             }
         }
 
+        public bool Visibile
+        {
+            get => GlobalVisibility.Visibile;
+            set => LocalVisibility = LocalVisibility with { Visibile = value };
+        }
+
+        public Color Modulate
+        {
+            get => GlobalVisibility.Modulate;
+            set => LocalVisibility = LocalVisibility with { Modulate = value };
+        }
+
+        public Color SelfModulate
+        {
+            get => GlobalVisibility.SelfModulate;
+            set => LocalVisibility = LocalVisibility with { SelfModulate = value };
+        }
+
         public Ordering LocalOrdering
         {
             get => _localOrdering;
@@ -36,9 +55,9 @@ namespace Monolith.Nodes
             }
         }
 
-        public int LocalDepth
+        public int Depth
         {
-            get => LocalOrdering.Depth;
+            get => GlobalOrdering.Depth;
             set => LocalOrdering = LocalOrdering with { Depth = value };
         }
 
@@ -50,6 +69,18 @@ namespace Monolith.Nodes
                 _localMaterial = value;
                 ProcessUpdateAttributes();
             }
+        }
+
+        public Effect Shader
+        {
+            get => GlobalMaterial.Shader;
+            set => LocalMaterial = LocalMaterial with { Shader = value };
+        }
+
+        public SpriteEffects SpriteEffects
+        {
+            get => GlobalMaterial.SpriteEffects;
+            set => LocalMaterial = LocalMaterial with { SpriteEffects = value };
         }
 
         public Visibility GlobalVisibility { get; private set; }
