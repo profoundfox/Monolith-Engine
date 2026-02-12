@@ -23,7 +23,6 @@ namespace Monolith.Geometry
             Location = new Point(x, y);
             Radius = radius;
         }
-
         public CircleShape2D(Point location, int radius)
         {
             Location = location;
@@ -149,7 +148,7 @@ namespace Monolith.Geometry
         public void Draw()
         {
             int segments = 64;
-            int thickness = 2;
+            int thickness = 1;
             Color color = Color.Red;
             int depth = 99;
 
@@ -186,7 +185,7 @@ namespace Monolith.Geometry
                 prev = next;
             }
 
-            Engine.Pixel.Dispose();
+            //Engine.Pixel.Dispose();
         }
     }
 }

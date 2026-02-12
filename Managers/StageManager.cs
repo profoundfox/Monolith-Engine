@@ -17,13 +17,13 @@ namespace Monolith.Managers
 {
     public partial class StageManager
     {
-        public readonly Stack<IStage> Stages = new();
+        public readonly Stack<Stage> Stages = new();
         private bool _stageFrozen;
         private bool _pendingFreeze;
 
         private static readonly Dictionary<string, Type> _stageTypes = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(a => a.GetTypes())
-            .Where(t => typeof(IStage).IsAssignableFrom(t) && !t.IsAbstract)
+            .Where(t => typeof(Stage).IsAssignableFrom(t) && !t.IsAbstract)
             .ToDictionary(t => t.Name);
 
         public StageManager() { }
@@ -31,7 +31,7 @@ namespace Monolith.Managers
         /// <summary>
         /// Takes a stage, adds it to the stack, initializes and loads it
         /// </summary>
-        public void AddStage(IStage stage)
+        public void AddStage(Stage stage)
         {
             if (stage == null)
                 throw new ArgumentNullException(nameof(stage), "Cannot add a null stage.");
@@ -39,9 +39,7 @@ namespace Monolith.Managers
             StageIntervention();
 
             Stages.Push(stage);
-
-            OgmoParser.FromFile(PathHelper.Combine("Raw", "LevelData", "Level2.json"), "Assets/Tileset/SlumberTilesetAtlas");
-            
+     
             LoadRelative();
             stage.OnEnter();
         }
@@ -58,7 +56,7 @@ namespace Monolith.Managers
         /// <summary>
         /// Creates a new stage instance from a type
         /// </summary>
-        public IStage GetStageFromType<T>() where T : IStage, new()
+        public Stage GetStageFromType<T>() where T : Stage, new()
         {
             return new T();
         }
@@ -66,10 +64,10 @@ namespace Monolith.Managers
         /// <summary>
         /// Creates a new stage instance from a string using reflection
         /// </summary>
-        public IStage GetStageFromString(string stageName)
+        public Stage GetStageFromString(string stageName)
         {
             return _stageTypes.TryGetValue(stageName, out var type)
-                ? (IStage)Activator.CreateInstance(type)
+                ? (Stage)Activator.CreateInstance(type)
                 : null;
         }
 
@@ -78,7 +76,7 @@ namespace Monolith.Managers
         /// </summary>
         public void AddStageFromString(string stageName)
         {
-            IStage targetStage = GetStageFromString(stageName);
+            Stage targetStage = GetStageFromString(stageName);
             if (targetStage == null)
                 throw new InvalidOperationException($"Stage '{stageName}' not found.");
         
@@ -88,9 +86,9 @@ namespace Monolith.Managers
         /// <summary>
         /// Adds a stage from a type
         /// </summary>
-        public void AddStageFromType<T>() where T : IStage, new()
+        public void AddStageFromType<T>() where T : Stage, new()
         {
-            IStage targetStage = GetStageFromType<T>();
+            Stage targetStage = GetStageFromType<T>();
             AddStage(targetStage);
         }
 
@@ -111,7 +109,7 @@ namespace Monolith.Managers
         /// <summary>
         /// Gets the current stage
         /// </summary>
-        public IStage GetCurrentStage()
+        public Stage GetCurrentStage()
         {
             return Stages.Count > 0 ? Stages.Peek() : null;
         }
@@ -226,7 +224,7 @@ namespace Monolith.Managers
             UnloadRelative();
             oldStage.OnExit();
 
-            var newStage = (IStage)Activator.CreateInstance(oldStage.GetType());
+            var newStage = (Stage)Activator.CreateInstance(oldStage.GetType());
             AddStage(newStage);
         }
 

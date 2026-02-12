@@ -136,16 +136,21 @@ namespace Monolith.Managers
         /// </summary>
         public void LoadNodes()
         {
+            LoadNodes(allInstances.ToList());
+        }
+
+        public void LoadNodes<T>(List<T> nodes) where T : Node
+        {
             ApplyPendingChanges();
 
-            foreach (var node in allInstances.ToList())
+            foreach (var n in nodes)
             {
-                AutoAssignChildNodes(node);
+                AutoAssignChildNodes(n);
             }
 
-            foreach (var node in allInstances.ToList())
+            foreach (var n in nodes)
             {
-                node.Load();
+                n.Load();
                 ApplyPendingChanges();
             }
         }

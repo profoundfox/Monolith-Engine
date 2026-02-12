@@ -79,9 +79,11 @@ namespace Monolith.IO
             }
         }
 
-        public static void LoadNodes(string fileName)
+        public static List<Node> LoadNodes(string fileName)
         {
             var root = LoadJson(fileName);
+
+            List<Node> nodes = new();
 
             foreach (var l in root.Layers)
             {
@@ -94,20 +96,25 @@ namespace Monolith.IO
                     if (e.Values != null)
                         values = ParseValues(e.Values);
                     
-                    NodeFactory.CreateNode(e.Name, new RectangleShape2D(e.X , e.Y, e.Width, e.Height), values);
+                    var m = NodeFactory.CreateNode(e.Name, new RectangleShape2D(e.X , e.Y, e.Width, e.Height), values);
+                    nodes.Add(m);
 
                     if (e.Nodes == null)
                         continue;
                     
                     foreach (var n in e.Nodes)
                     {
-                        NodeFactory.CreateNode(e.Name, new RectangleShape2D(n.X , n.Y, e.Width, e.Height), values);
+                        var nm  = NodeFactory.CreateNode(e.Name, new RectangleShape2D(n.X , n.Y, e.Width, e.Height), values);
+                        nodes.Add(nm);
                     }
                 }
             }
+            
+            return nodes;
+            
         }
 
-        public static void LoadTilemap(
+        public static Tilemap LoadTilemap(
             MTexture texture,
             Rectangle gridRegion,
             List<int> tileData,
@@ -127,14 +134,16 @@ namespace Monolith.IO
             tMap.SetData(gridRegion, tileData);
 
             tMap.LocalOrdering = tMap.LocalOrdering with { Depth = depth };
-
+            
+            return tMap;
         }
 
-        public static void LoadTilemapFromJson(
+        public static List<Tilemap> LoadTilemapFromJson(
             string filename,
             string texturePath)
         {
             var root = LoadJson(filename);
+            List<Tilemap> tMaps = new();
 
             foreach (var l in root.Layers)
             {
@@ -143,15 +152,17 @@ namespace Monolith.IO
                     
                 int depth = int.Parse(l.Name, CultureInfo.InvariantCulture);
 
-                LoadTilemap(
+                var t = LoadTilemap(
                     texture: new MTexture(texturePath),
                     gridRegion: new Rectangle(l.GridCellsX, l.GridCellsY, l.GridCellWidth, l.GridCellHeight),
                     tileData: l.Data,
                     depth: depth
                 );
+
+                tMaps.Add(t);
             }
 
-            
+            return tMaps;
         }
         
         /// <summary>
