@@ -10,7 +10,7 @@ using Monolith.Managers;
 
 namespace Monolith.Nodes
 {
-    public abstract class Node
+    public class Node
     {
         private readonly List<Node> children = new();
         

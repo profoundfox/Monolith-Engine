@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Security.Authentication.ExtendedProtection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Monolith.Attributes;
 using Monolith.Nodes;
 
 namespace Monolith.Managers
@@ -132,7 +133,9 @@ namespace Monolith.Managers
         /// Removes the node without waiting.
         /// </summary>
         /// <param name="node"></param>
-        internal void RemoveImmediate(Node node) => RemoveNode(node);
+        internal void RemoveImmediate(Node node) => RemoveNode(node); 
+
+        
 
         public void LoadNode(Node node)
         {

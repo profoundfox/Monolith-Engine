@@ -25,11 +25,7 @@ namespace Monolith.Util
             Engine.Node.LoadNodes(nodes); 
         }
 
-        public virtual void SubmitNodes() {}
-        public virtual void OnEnter()
-        {
-            Engine.Node.LoadNodes();
-        }
+        public virtual void OnEnter() {}
         public virtual void PhysicsUpdate(float deltaTime) {}
         public virtual void ProcessUpdate(float deltaTime) {}
         public virtual void SubmitCall() {}
