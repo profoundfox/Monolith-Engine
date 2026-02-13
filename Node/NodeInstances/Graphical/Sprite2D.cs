@@ -11,6 +11,8 @@ namespace Monolith.Nodes
     public record class SpriteConfig : SpatialNodeConfig
     {
         public MTexture Texture { get; set; }
+        public override Type NodeType => typeof(Sprite2D);
+
     }
 
     public class Sprite2D : Node2D

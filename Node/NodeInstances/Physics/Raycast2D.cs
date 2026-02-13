@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Monolith.Geometry;
@@ -7,6 +8,9 @@ namespace Monolith.Nodes
     public record class RayCastConfig : SpatialNodeConfig
     {
         public Vector2 TargetPosition { get; set; } = new Vector2(0, 50);
+
+        public override Type NodeType => typeof(RayCast2D);
+
     }
 
     public class RayCast2D : Node2D
@@ -39,7 +43,7 @@ namespace Monolith.Nodes
             Ray.TargetOffset = worldOffset;
 
             var shapes = Engine.Node
-                .GetNodesByT<CollisionShape2D>()
+                .GetAll<CollisionShape2D>()
                 .Where(cs => cs.Shape != null)
                 .Select(cs => cs.Shape)
                 .ToList();

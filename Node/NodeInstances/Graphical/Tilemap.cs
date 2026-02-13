@@ -14,6 +14,8 @@ namespace Monolith.Nodes
         public Tileset Tileset { get; set; }
         public int Columns { get; set; }
         public int Rows { get; set; }
+        
+        public override Type NodeType => typeof(Tilemap);
     }
     
     public class Tilemap : Node2D

@@ -9,7 +9,7 @@ namespace Monolith.Nodes
 {
     public record class StaticBodyConfig : PhysicsBodyConfig
     {
-        
+        public override Type NodeType => typeof(StaticBody2D);
     }
     
     public class StaticBody2D : PhysicsBody2D

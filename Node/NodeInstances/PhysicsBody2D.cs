@@ -1,4 +1,6 @@
 
+using System;
+
 namespace Monolith.Nodes
 {
     public record class PhysicsBodyConfig : SpatialNodeConfig
@@ -6,6 +8,7 @@ namespace Monolith.Nodes
         public CollisionShape2D CollisionShape { get; set; }
         public bool OneWay { get; set; }
         public bool Disabled { get; set; }
+        public override Type NodeType => typeof(Node2D);
     }
     
     public class PhysicsBody2D : Node2D

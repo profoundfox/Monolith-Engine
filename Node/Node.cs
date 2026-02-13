@@ -142,7 +142,7 @@ namespace Monolith.Nodes
         /// </summary>
         public void FreeImmediate()
         {
-            Engine.Node.RemoveImmediate(this);
+            Engine.Node.RemoveNow(this);
         }
 
         /// <summary>

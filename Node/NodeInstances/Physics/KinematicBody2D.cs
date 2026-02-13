@@ -4,7 +4,10 @@ using Microsoft.Xna.Framework;
 
 namespace Monolith.Nodes
 {
-    public record class KinematicBodyConfig : SpatialNodeConfig {}
+    public record class KinematicBodyConfig : SpatialNodeConfig
+    {
+        public override Type NodeType => typeof(KinematicBody2D);
+    }
 
     public class KinematicBody2D : Node2D
     {
@@ -52,7 +55,7 @@ namespace Monolith.Nodes
             WallNormal = Vector2.Zero;
             _floorShape = null;
 
-            var bodies = Engine.Node.GetNodesByT<PhysicsBody2D>()
+            var bodies = Engine.Node.GetAll<PhysicsBody2D>()
                             .Where(b => b.CollisionShape != CollisionShape && !b.CollisionShape.Disabled)
                             .ToArray();
 

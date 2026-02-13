@@ -9,6 +9,7 @@ namespace Monolith.Nodes
     public record class CollisionShapeConfig : SpatialNodeConfig
     {
         public IRegionShape2D Shape { get; set; }
+        public override Type NodeType => typeof(CollisionShape2D);
     }
 
     public class CollisionShape2D : Node2D
@@ -87,7 +88,7 @@ namespace Monolith.Nodes
 
         private void CheckOneWay()
         {
-            foreach (KinematicBody2D kb in Engine.Node.GetNodesByT<KinematicBody2D>())
+            foreach (KinematicBody2D kb in Engine.Node.GetAll<KinematicBody2D>())
             {
                 IRegionShape2D body = kb.CollisionShape.Shape;
 

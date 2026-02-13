@@ -26,6 +26,8 @@ namespace Monolith.Nodes
         /// The scale of the node.
         /// </summary>
         public Vector2 Scale { get; set; } = Vector2.Zero;
+
+        public override Type NodeType => typeof(Node2D);
     }
 
 

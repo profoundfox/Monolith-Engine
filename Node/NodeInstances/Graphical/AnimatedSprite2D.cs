@@ -11,6 +11,8 @@ namespace Monolith.Nodes
     {
         public Dictionary<string, Animation> Atlas { get; set; } = new Dictionary<string, Animation>();
         public bool IsLooping { get; set; } = false;
+        public override Type NodeType => typeof(AnimatedSprite2D);
+
     }
 
     public class AnimatedSprite2D : Node2D

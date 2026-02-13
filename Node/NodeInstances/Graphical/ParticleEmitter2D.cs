@@ -10,6 +10,8 @@ namespace Monolith.Nodes
     {
         public ParticleInfo ParticleInfo { get; set; } = ParticleInfo.Identity;
         public int EmittedPerSecond { get; set; } = 10;
+        public override Type NodeType => typeof(ParticleEmitter2D);
+
     }
     public class ParticleEmitter2D : Node2D
     {

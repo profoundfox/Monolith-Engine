@@ -1,10 +1,15 @@
 
+using System;
 using System.Numerics;
 using Monolith.Util;
 
 namespace Monolith.Nodes
 {
-    public record class DynamicBodyConfig : PhysicsBodyConfig {}
+    public record class DynamicBodyConfig : PhysicsBodyConfig
+    {
+        public override Type NodeType => typeof(DynamicBody2D);
+
+    }
     public class DynamicBody2D : Node2D
     {
         public Vector2 Velocity;

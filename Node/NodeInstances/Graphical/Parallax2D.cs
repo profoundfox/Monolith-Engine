@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Monolith.Graphics;
@@ -5,7 +6,10 @@ using Monolith.Nodes;
 
 namespace Monolith.Nodes
 {
-    public record class ParallaxConfig : SpatialNodeConfig { }
+    public record class ParallaxConfig : SpatialNodeConfig
+    {
+        public override Type NodeType => typeof(Parallax2D);
+    }
     public class Parallax2D : Node2D
     {
         private Vector2 lastCameraPos;

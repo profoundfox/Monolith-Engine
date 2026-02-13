@@ -4,29 +4,19 @@ namespace Monolith.Managers
 {
     public partial class StageManager
     {
-        private void LoadRelative()
-        {
-            
-        }
-
         private void ProcessUpdateRelative(float deltaTime)
         {
-            Engine.Node.ProcessUpdateNodes(deltaTime);
+            Engine.Node.ProcesssUpdate(deltaTime);
         }
 
         private void PhysicsUpdateRelative(float deltaTime)
         {
-            Engine.Node.PhysicsUpdateNodes(deltaTime);
+            Engine.Node.ProcesssUpdate(deltaTime);
         }
 
         private void SubmitCallRelative()
         {
-            Engine.Node.SubmitCallNodes();
-        }
-
-        private void UnloadRelative()
-        {
-            Engine.Node.UnloadNodes();
+            Engine.Node.SubmitCalls();
         }
     }
 }

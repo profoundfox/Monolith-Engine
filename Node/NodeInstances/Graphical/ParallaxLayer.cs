@@ -22,7 +22,10 @@ namespace Monolith.Nodes
         public MTexture Texture { get; set; }
         public Vector2 MotionScale { get; set; } = Vector2.One;
         public LoopAxis LoopAxis { get; set; } = LoopAxis.Both;
+        
+        public override Type NodeType => typeof(ParallaxLayer);
     }
+
     /// <summary>
     /// Represents a single infinite scrolling parallax layer.
     /// </summary>

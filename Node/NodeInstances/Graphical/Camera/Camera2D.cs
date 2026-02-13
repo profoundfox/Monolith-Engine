@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Managers;
@@ -7,6 +8,8 @@ namespace Monolith.Nodes
     public record class CameraConfig : SpatialNodeConfig
     {
         public Vector2 Zoom { get; set; } = Vector2.One;
+        public override Type NodeType => typeof(CameraConfig);
+
     }
 
     public class Camera2D : Node2D

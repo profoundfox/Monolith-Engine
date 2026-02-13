@@ -1,17 +1,21 @@
+using System;
 using Monolith.Nodes;
 
 namespace Monolith.Attributes
 {    
-    public record class NodeConfig
-    {
+    public abstract record class NodeConfig
+    {   
         /// <summary>
-        /// Optional parent object.
+        /// The name of the node
         /// </summary>
-        public Node Parent { get; set; }
+        public string Name { get; init; }
 
         /// <summary>
-        /// Optional name. Defaults to the node class name.
+        /// The parent of the node.
         /// </summary>
-        public string Name { get; set; }
+        public Node Parent { get; init; }
+
+        public abstract Type NodeType { get; }
     }
+
 }

@@ -9,6 +9,7 @@ namespace Monolith.Nodes
     public record class CanvasNodeConfig : NodeConfig
     {
         public int Depth { get; set; }
+        public override Type NodeType => typeof(CanvasNode);
     }
 
     public class CanvasNode : Node

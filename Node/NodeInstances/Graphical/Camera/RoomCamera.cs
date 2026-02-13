@@ -14,6 +14,8 @@ namespace Monolith.Nodes
 
         public List<Action> TransitionStarted { get; set; } = new();
         public List<Action> TransitionEnded { get; set; } = new();
+        public override Type NodeType => typeof(RoomCameraConfig);
+
     }
 
     public enum CameraSide

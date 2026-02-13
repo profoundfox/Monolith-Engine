@@ -13,16 +13,12 @@ namespace Monolith.Util
 
         public void LoadMap(string path, string texturePath)
         {
-            var tMaps = OgmoParser.LoadTilemapFromJson(path, texturePath);
-            
-            Engine.Node.LoadNodes(tMaps); 
+            OgmoParser.LoadTilemapFromJson(path, texturePath);
         }
 
         public void LoadNodes(string path)
         {
-            var nodes = OgmoParser.LoadNodes(path);
-
-            Engine.Node.LoadNodes(nodes); 
+            OgmoParser.LoadNodes(path);
         }
 
         public virtual void OnEnter() {}
