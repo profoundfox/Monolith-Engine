@@ -11,7 +11,7 @@ namespace Monolith.Managers
 
         private void PhysicsUpdateRelative(float deltaTime)
         {
-            Engine.Node.ProcesssUpdate(deltaTime);
+            Engine.Node.PhysicsUpdate(deltaTime);
         }
 
         private void SubmitCallRelative()

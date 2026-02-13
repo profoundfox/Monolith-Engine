@@ -8,7 +8,7 @@ namespace Monolith.Nodes
         public CollisionShape2D CollisionShape { get; set; }
         public bool OneWay { get; set; }
         public bool Disabled { get; set; }
-        public override Type NodeType => typeof(Node2D);
+        public override Type NodeType => typeof(PhysicsBody2D);
     }
     
     public class PhysicsBody2D : Node2D

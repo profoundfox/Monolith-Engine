@@ -23,7 +23,7 @@ namespace Monolith.Managers
             where T : Node
         {
             if (config.NodeType != typeof(T))
-                throw new InvalidOperationException("Config mismatch");
+                Console.WriteLine("Wrong");
 
             var node = (T)Activator.CreateInstance(typeof(T), config);
 
@@ -140,8 +140,6 @@ namespace Monolith.Managers
 
             if (child.Parent == null && !child.WouldCreateCycle(parent))
                 child.SetParent(parent);
-            else 
-                throw new Exception("You cannot have a child be in a cycle!");
         }
 
         public void Load(Node node)
