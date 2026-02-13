@@ -100,7 +100,7 @@ namespace Monolith.Nodes
         /// Recompute global transform based on parent.
         /// Automatically ProcessProcessProcessProcessUpdates children.
         /// </summary>
-        private void UpdateGlobalTransform()
+        internal void UpdateGlobalTransform()
         {
             if (Parent is Node2D parent2D)
             {

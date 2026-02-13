@@ -9,17 +9,12 @@ namespace Monolith.Nodes
 {
     public record class StaticBodyConfig : PhysicsBodyConfig
     {
-        public bool OneWay { get; set; }
-        public bool Disabled { get; set; }
+        
     }
     
     public class StaticBody2D : PhysicsBody2D
     {
-        public StaticBody2D(StaticBodyConfig cfg) : base(cfg)
-        {
-            CollisionShape.OneWay = cfg.OneWay;
-            CollisionShape.Disabled = cfg.Disabled;
-        }
+        public StaticBody2D(StaticBodyConfig cfg) : base(cfg) {}
 
         public override void PhysicsUpdate(float delta)
         {

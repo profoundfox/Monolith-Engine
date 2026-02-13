@@ -42,6 +42,8 @@ namespace Monolith.Nodes
             InitialConfig = config;
 
             Engine.Node.QueueAdd(this);
+
+            //Engine.Node.LoadNode(this);
         }
 
         /// <summary>

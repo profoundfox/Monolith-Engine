@@ -6,7 +6,7 @@ namespace Monolith.Managers
     {
         private void LoadRelative()
         {
-            Engine.Node.LoadNodes();
+            
         }
 
         private void ProcessUpdateRelative(float deltaTime)

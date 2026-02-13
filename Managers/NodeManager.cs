@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Security.Authentication.ExtendedProtection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Nodes;
@@ -85,8 +86,10 @@ namespace Monolith.Managers
                 if (value is Node child)
                 {
                     if (child == parent) continue;
+
                     if (child.Parent == null && !child.WouldCreateCycle(parent))
                         child.SetParent(parent);
+                    
                 }
 
                 if (value is IEnumerable<Node> list)
@@ -131,6 +134,15 @@ namespace Monolith.Managers
         /// <param name="node"></param>
         internal void RemoveImmediate(Node node) => RemoveNode(node);
 
+        public void LoadNode(Node node)
+        {
+            ApplyPendingChanges();
+            AutoAssignChildNodes(node);
+
+            node.Load();
+            ApplyPendingChanges();
+        }
+
         /// <summary>
         /// Loads all the nodes.
         /// </summary>
@@ -139,6 +151,11 @@ namespace Monolith.Managers
             LoadNodes(allInstances.ToList());
         }
 
+        /// <summary>
+        /// Loads a specific list of nodes.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="nodes"></param>
         public void LoadNodes<T>(List<T> nodes) where T : Node
         {
             ApplyPendingChanges();
