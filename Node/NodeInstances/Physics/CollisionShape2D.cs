@@ -6,12 +6,6 @@ using Monolith.Attributes;
 
 namespace Monolith.Nodes
 {
-    public record class CollisionShapeConfig : SpatialNodeConfig
-    {
-        public IRegionShape2D Shape { get; set; }
-        public override Type NodeType => typeof(CollisionShape2D);
-    }
-
     public class CollisionShape2D : Node2D
     {
         private Action<Transform2D> _onTransformChanged;
@@ -32,15 +26,7 @@ namespace Monolith.Nodes
             set => Shape.Height = value;
         }
 
-        public CollisionShape2D(CollisionShapeConfig cfg) : base(cfg)
-        {
-            Shape = cfg.Shape;
-
-            if (Shape.Location != Point.Zero)
-            {
-                LocalPosition = Shape.Location.ToVector2();
-            }
-        }
+        public CollisionShape2D() {}
 
         public override void Load()
         {
@@ -75,13 +61,13 @@ namespace Monolith.Nodes
         public AABB GetAABB()
         {
             if (Shape == null || Disabled)
-                return new AABB(GlobalPosition, GlobalPosition);
+                return new AABB(Position, Position);
 
             Vector2 localMin = Shape.Location.ToVector2();
             Vector2 localMax = localMin + new Vector2(Shape.Width, Shape.Height);
 
-            Vector2 worldMin = GlobalPosition + localMin;
-            Vector2 worldMax = GlobalPosition + localMax;
+            Vector2 worldMin = Position + localMin;
+            Vector2 worldMax = Position + localMax;
 
             return new AABB(worldMin, worldMax);
         }
@@ -173,16 +159,8 @@ namespace Monolith.Nodes
             {
                 clonedShape = Shape.Clone();
             }
-
-            var cfg = new CollisionShapeConfig
-            {
-                Shape = clonedShape,
-                LocalPosition = this.LocalPosition,
-                Name = Name,
-                Parent = Parent
-            };
-
-            var clone = new CollisionShape2D(cfg)
+            
+            var clone = new CollisionShape2D()
             {
                 Disabled = this.Disabled,
                 OneWay = this.OneWay

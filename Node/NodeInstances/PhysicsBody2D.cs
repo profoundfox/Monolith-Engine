@@ -3,24 +3,12 @@ using System;
 
 namespace Monolith.Nodes
 {
-    public record class PhysicsBodyConfig : SpatialNodeConfig
-    {
-        public CollisionShape2D CollisionShape { get; set; }
-        public bool OneWay { get; set; }
-        public bool Disabled { get; set; }
-        public override Type NodeType => typeof(PhysicsBody2D);
-    }
-    
+   
     public class PhysicsBody2D : Node2D
     {
         public CollisionShape2D CollisionShape { get; set; }
 
-        public PhysicsBody2D(PhysicsBodyConfig cfg) : base(cfg)
-        {
-            CollisionShape = cfg.CollisionShape;
-            CollisionShape.OneWay = cfg.OneWay;
-            CollisionShape.Disabled = cfg.Disabled;
-        }
+        public PhysicsBody2D() {}
 
         public override void Load()
         {

@@ -19,18 +19,17 @@ namespace Monolith.Managers
         private readonly List<Node> pendingAdd = new();
         private readonly List<Node> pendingRemove = new();
 
-        public T Create<T>(NodeConfig config)
-            where T : Node
+        public T Create<T>() 
+            where T : Node, new()
         {
-
-            var node = (T)Activator.CreateInstance(typeof(T), config);
+            var node = new T();
 
             Flush();
-            AssignChildren(node);
             node.Load();
 
             return node;
         }
+
 
 
         internal void QueueAdd(Node node) => pendingAdd.Add(node);
@@ -106,31 +105,6 @@ namespace Monolith.Managers
         }
 
 
-        private void AssignChildren(Node parent)
-        {
-            if (parent.InitialConfig == null)
-                return;
-            
-            var props = parent.InitialConfig.
-                GetType().
-                GetProperties();
-
-            foreach (var prop in props)
-            {
-                if (prop.GetCustomAttribute<NodeRefferenceAttribute>() != null)
-                    continue;
-                
-                var value = prop.GetValue(parent.InitialConfig);
-
-                if (value is Node child)
-                    TrySetParent(parent, child);
-                
-                if (value is IEnumerable<Node> list)
-                    foreach (var c in list)
-                        TrySetParent(parent, c);
-            }
-        }
-
         private static void TrySetParent(Node parent, Node child)
         {
             if (child == null || child == parent)
@@ -143,23 +117,8 @@ namespace Monolith.Managers
         public void Load(Node node)
         {
             Flush();
-            AssignChildren(node);
             node.Load();
             Flush();
-        }
-
-        public void Load<T>(IEnumerable<T> list) where T : Node
-        {
-            Flush();
-
-            foreach (var n in list)
-                AssignChildren(n);
-
-            foreach (var n in list)
-            {
-                n.Load();
-                Flush();
-            }
         }
 
         internal void ProcesssUpdate(float delta)

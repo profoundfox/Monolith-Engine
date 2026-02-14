@@ -7,14 +7,6 @@ using Monolith.Nodes;
 
 namespace Monolith.Nodes
 {
-    public record class AreaConfig : SpatialNodeConfig
-    {
-        public bool MonitorAreas { get; set; }
-        public bool MonitorBodies { get; set; }
-        public CollisionShape2D CollisionShape2D { get; set; }
-        public override Type NodeType => typeof(Area2D);
-    }
-
     public class Area2D : Node2D
     {
         private bool wasInArea2D = false;
@@ -29,13 +21,8 @@ namespace Monolith.Nodes
         public bool MonitorBodies { get; set; }
         public CollisionShape2D CollisionShape2D { get; set; }
 
-        public Area2D(AreaConfig cfg) : base(cfg)
-        {
-            CollisionShape2D = cfg.CollisionShape2D;
-            MonitorAreas = cfg.MonitorAreas;
-            MonitorBodies = cfg.MonitorBodies;
-        }
-
+        public Area2D() {}
+        
         private Node2D GetOverlappingArea()
         {
             return Engine.Node.GetAll<CollisionShape2D>()

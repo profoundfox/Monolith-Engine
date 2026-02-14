@@ -6,23 +6,19 @@ using Monolith.Nodes;
 
 namespace Monolith.Nodes
 {
-    public record class ParallaxConfig : SpatialNodeConfig
-    {
-        public override Type NodeType => typeof(Parallax2D);
-    }
     public class Parallax2D : Node2D
     {
         private Vector2 lastCameraPos;
 
-        public Parallax2D(ParallaxConfig cfg) : base(cfg) { }
+        public Parallax2D() {}
 
         public override void ProcessUpdate(float delta)
         {
             base.ProcessUpdate(delta);
 
             var camera = Camera2D.CurrentCameraInstance;
-            Vector2 camDelta = camera.GlobalPosition - lastCameraPos;
-            lastCameraPos = camera.GlobalPosition;
+            Vector2 camDelta = camera.Position - lastCameraPos;
+            lastCameraPos = camera.Position;
 
             foreach (var child in Children.OfType<ParallaxLayer>())
             {

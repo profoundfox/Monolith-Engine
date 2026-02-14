@@ -8,21 +8,12 @@ using Monolith.Attributes;
 
 namespace Monolith.Nodes
 {   
-    public record class SpriteConfig : SpatialNodeConfig
-    {
-        public MTexture Texture { get; set; }
-        public override Type NodeType => typeof(Sprite2D);
-
-    }
 
     public class Sprite2D : Node2D
     {
         public MTexture Texture { get; set; }
 
-        public Sprite2D(SpriteConfig cfg) : base(cfg)
-        {
-            Texture = cfg.Texture;
-        }
+        public Sprite2D() {}
         
         public override void SubmitCall()
         {

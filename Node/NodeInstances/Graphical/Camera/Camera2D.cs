@@ -5,22 +5,14 @@ using Monolith.Managers;
 
 namespace Monolith.Nodes
 {
-    public record class CameraConfig : SpatialNodeConfig
-    {
-        public Vector2 Zoom { get; set; } = Vector2.One;
-        public override Type NodeType => typeof(CameraConfig);
-
-    }
-
     public class Camera2D : Node2D
     {
-        public Vector2 Zoom { get; set; }
+        public Vector2 Zoom { get; set; } = Vector2.One;
 
         public static Camera2D CurrentCameraInstance { get; private set; }
 
-        public Camera2D(CameraConfig cfg) : base(cfg)
+        public Camera2D()
         {
-            Zoom = cfg.Zoom;
             CurrentCameraInstance = this;
         }
 

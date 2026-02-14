@@ -7,17 +7,6 @@ using Monolith.Util;
 
 namespace Monolith.Nodes
 {
-    public record class RoomCameraConfig : CameraConfig
-    {
-        [NodeRefference]
-        public Node2D TargetNode { get; set; }
-
-        public List<Action> TransitionStarted { get; set; } = new();
-        public List<Action> TransitionEnded { get; set; } = new();
-        public override Type NodeType => typeof(RoomCameraConfig);
-
-    }
-
     public enum CameraSide
     {
         None,
@@ -34,15 +23,10 @@ namespace Monolith.Nodes
         
         public Node2D TargetNode { get; set; }
 
-        public List<Action> TransitionStarted { get; set; }
-        public List<Action> TransitionEnded { get; set; }
+        public List<Action> TransitionStarted { get; set; } = new();
+        public List<Action> TransitionEnded { get; set; } = new();
 
-        public RoomCamera(RoomCameraConfig cfg) : base(cfg)
-        {
-            TargetNode = cfg.TargetNode;
-            TransitionStarted = cfg.TransitionStarted;
-            TransitionEnded = cfg.TransitionEnded;
-        }
+        public RoomCamera() {}
 
         public override void Load()
         {
@@ -70,7 +54,7 @@ namespace Monolith.Nodes
             var targetShape = (CollisionShape2D)TargetNode.GetFirstChildByT<CollisionShape2D>();
             var shape = targetShape.Shape;
 
-            var pos = TargetNode.GlobalPosition;            
+            var pos = TargetNode.Position;            
 
             var camera = Engine.Screen.GetWorldViewRectangle();
 
@@ -115,14 +99,14 @@ namespace Monolith.Nodes
 
             var camera = Engine.Screen.GetWorldViewRectangle();
 
-            Vector2 targetPos = new Vector2(LocalPosition.X + camera.Width * dir, LocalPosition.Y);
+            Vector2 targetPos = new Vector2(Position.X + camera.Width * dir, Position.Y);
 
 
             foreach (var action in TransitionStarted)
                 action?.Invoke();
 
 
-            var cameraXTween = Engine.Tween.CreateTween(t => LocalPosition = t, LocalPosition, targetPos, 0.5f, Vector2.Lerp, EasingFunctions.Linear);
+            var cameraXTween = Engine.Tween.CreateTween(t => Position = t, Position, targetPos, 0.5f, Vector2.Lerp, EasingFunctions.Linear);
 
             cameraXTween.SetCallbackAction
             (

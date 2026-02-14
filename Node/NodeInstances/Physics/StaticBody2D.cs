@@ -6,15 +6,10 @@ using Monolith.Geometry;
 using Monolith.Managers;
 
 namespace Monolith.Nodes
-{
-    public record class StaticBodyConfig : PhysicsBodyConfig
-    {
-        public override Type NodeType => typeof(StaticBody2D);
-    }
-    
+{    
     public class StaticBody2D : PhysicsBody2D
     {
-        public StaticBody2D(StaticBodyConfig cfg) : base(cfg) {}
+        public StaticBody2D() {}
 
         public override void PhysicsUpdate(float delta)
         {
