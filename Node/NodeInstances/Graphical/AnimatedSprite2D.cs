@@ -98,16 +98,18 @@ namespace Monolith.Nodes
         {
             if (CurrentAnimation == null) return;
 
-            CurrentFrame.Draw(
-                position: GlobalTransform.Position,
-                color: GlobalVisibility.Modulate,
-                rotation: GlobalTransform.Rotation,
-                origin: CurrentFrame.Center,
-                scale: GlobalTransform.Scale,
-                effects: GlobalMaterial.SpriteEffects,
-                shader: GlobalMaterial.Shader,
-                depth: GlobalOrdering.Depth
-            );
+            Engine.Screen.Call(new TextureDrawCall
+            {
+                Texture = CurrentFrame,
+                Position = Position,
+                Color = Modulate,
+                Rotation = Rotation,
+                Origin = CurrentFrame.Center,
+                Scale = Scale,
+                Effects = SpriteEffects,
+                Effect = Shader,
+                Depth = Depth
+            });
         }
     }
 }

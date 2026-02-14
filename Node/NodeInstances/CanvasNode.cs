@@ -90,8 +90,15 @@ namespace Monolith.Nodes
             }
         }
 
+        public CanvasNode()
+        {
+            UpdateAttributes();
+        }
+
         protected override void OnParentChanged()
         {
+            base.OnParentChanged();
+            
             UpdateAttributes();
         }
 

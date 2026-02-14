@@ -72,6 +72,13 @@ namespace Monolith.Nodes
             UpdateGlobalTransform();
         }
 
+        protected override void OnParentChanged()
+        {
+            base.OnParentChanged();
+
+            UpdateGlobalTransform();
+        }
+
         /// <summary>
         /// Recompute global transform based on parent.
         /// Automatically ProcessProcessProcessProcessUpdates children.
