@@ -22,8 +22,6 @@ namespace Monolith.Managers
         public T Create<T>(NodeConfig config)
             where T : Node
         {
-            if (config.NodeType != typeof(T))
-                Console.WriteLine("Wrong");
 
             var node = (T)Activator.CreateInstance(typeof(T), config);
 
