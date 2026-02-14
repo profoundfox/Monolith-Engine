@@ -7,31 +7,21 @@ using Monolith.Attributes;
 
 namespace Monolith.Nodes
 {
-    public record class AnimatedSpriteConfig : SpriteConfig
-    {
-        public Dictionary<string, Animation> Atlas { get; set; } = new Dictionary<string, Animation>();
-        public bool IsLooping { get; set; } = false;
-    }
-
     public class AnimatedSprite2D : Node2D
     {
         private int _currentFrame = 0;
         private float _elapsed = 0f;
         private bool _finished = false;
 
-        public Dictionary<string, Animation> Atlas { get; set; }
+        public Dictionary<string, Animation> Atlas { get; set; } = new Dictionary<string, Animation>();
         public Animation CurrentAnimation { get; private set; }
-        public bool IsLooping { get; private set; } = false;
+        public bool IsLooping { get; set; } = false;
 
         public bool IsFinished => _finished;
 
         public MTexture CurrentFrame => CurrentAnimation?.Frames[_currentFrame];
 
-        public AnimatedSprite2D(AnimatedSpriteConfig cfg) : base(cfg)
-        {
-            Atlas = cfg.Atlas;
-            IsLooping = cfg.IsLooping;
-        }
+        public AnimatedSprite2D() {}
 
         public void PlayAnimation(string name, bool isLooping = false)
         {
@@ -108,16 +98,18 @@ namespace Monolith.Nodes
         {
             if (CurrentAnimation == null) return;
 
-            CurrentFrame.Draw(
-                position: GlobalTransform.Position,
-                color: GlobalVisibility.Modulate,
-                rotation: GlobalTransform.Rotation,
-                origin: CurrentFrame.Center,
-                scale: GlobalTransform.Scale,
-                effects: GlobalMaterial.SpriteEffects,
-                shader: GlobalMaterial.Shader,
-                depth: GlobalOrdering.Depth
-            );
+            Engine.Screen.Call(new TextureDrawCall
+            {
+                Texture = CurrentFrame,
+                Position = Position,
+                Color = Modulate,
+                Rotation = Rotation,
+                Origin = CurrentFrame.Center,
+                Scale = Scale,
+                Effects = SpriteEffects,
+                Effect = Shader,
+                Depth = Depth
+            });
         }
     }
 }

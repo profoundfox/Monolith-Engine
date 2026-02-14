@@ -1,20 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Monolith.Attributes;
-using Monolith.Geometry;
-using Monolith.Helpers;
-using Monolith.Managers;
 
 namespace Monolith.Nodes
 {
     public class Node
     {
         private readonly List<Node> children = new();
-        
-        public NodeConfig InitialConfig { get; }
 
         /// <summary>
         /// The parent node in the hierarchy
@@ -27,23 +19,17 @@ namespace Monolith.Nodes
         public string Name { get; set; }
 
         /// <summary>
-        /// Creates a new Node using a NodeConfig.
+        /// All children of this node.
         /// </summary>
-        public Node(NodeConfig config)
+        public IReadOnlyList<Node> Children => children.AsReadOnly();
+
+        /// <summary>
+        /// Creates a new Node.
+        /// </summary>
+        public Node()
         {
-            if (config.Name != null)
-                Name = config.Name;
-            else 
-                Name = ToString();
-
-            if (config.Parent != null)
-                SetParent(config.Parent);
-            
-            InitialConfig = config;
-
+            Name = GetType().Name;
             Engine.Node.QueueAdd(this);
-
-            //Engine.Node.LoadNode(this);
         }
 
         /// <summary>
@@ -54,19 +40,23 @@ namespace Monolith.Nodes
             if (newParent == this)
                 throw new Exception("Node attempted to become its own parent!");
 
-            if (Parent == newParent) return;
+            if (Parent == newParent)
+                return;
+
+            if (WouldCreateCycle(newParent))
+                throw new Exception("Parenting would create a cycle in the node tree.");
 
             Parent?.children.Remove(this);
             Parent = newParent;
             Parent?.children.Add(this);
+
+            OnParentChanged();
         }
 
         /// <summary>
         /// Checks if a node creates a cycle.
         /// A - B - A
         /// </summary>
-        /// <param name="newParent"></param>
-        /// <returns></returns>
         internal bool WouldCreateCycle(Node newParent)
         {
             var p = newParent;
@@ -78,54 +68,49 @@ namespace Monolith.Nodes
             return false;
         }
 
-
         /// <summary>
         /// Adds a child to this node.
         /// </summary>
         public void AddChild(Node child)
         {
-            if (child == null || children.Contains(child)) return;
+            if (child == null || children.Contains(child))
+                return;
+
             child.SetParent(this);
         }
 
         /// <summary>
         /// Gets the first found child of a specified type.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public Node GetFirstChildByT<T>()
+        public Node GetFirstChildByT<T>() where T : Node
         {
-            return GetChildrenByT<T>().FirstOrDefault();
+            return children.OfType<T>().FirstOrDefault();
         }
 
         /// <summary>
         /// Gets all children of a specified type.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public IReadOnlyList<Node> GetChildrenByT<T>()
+        public IReadOnlyList<Node> GetChildrenByT<T>() where T : Node
         {
-            return children.OfType<T>().Cast<Node>().ToList();
+            return children.OfType<T>().ToList();
         }
-        
-        
+
         /// <summary>
         /// Returns if the node has a node of a specified type.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public bool HasChildByT<T>()
+        public bool HasChildByT<T>() where T : Node
         {
             return GetFirstChildByT<T>() != null;
         }
-
 
         /// <summary>
         /// Removes a child from this node.
         /// </summary>
         public void RemoveChild(Node child)
         {
-            if (child == null || !children.Contains(child)) return;
+            if (child == null || !children.Contains(child))
+                return;
+
             child.SetParent(null);
         }
 
@@ -142,7 +127,7 @@ namespace Monolith.Nodes
         /// </summary>
         public void FreeImmediate()
         {
-            Engine.Node.RemoveImmediate(this);
+            Engine.Node.RemoveNow(this);
         }
 
         /// <summary>
@@ -155,15 +140,34 @@ namespace Monolith.Nodes
             Name = null;
         }
 
+        /// <summary>
+        /// Called when the node enters the tree.
+        /// </summary>
         public virtual void Load() { }
+
+        /// <summary>
+        /// Called when the node exits the tree.
+        /// </summary>
         public virtual void Unload() { }
+
+        /// <summary>
+        /// Called every frame.
+        /// </summary>
         public virtual void ProcessUpdate(float delta) { }
+
+        /// <summary>
+        /// Called every physics tick.
+        /// </summary>
         public virtual void PhysicsUpdate(float delta) { }
+
+        /// <summary>
+        /// Called when submitting draw calls.
+        /// </summary>
         public virtual void SubmitCall() { }
 
         /// <summary>
-        /// All children of this node.
+        /// Called when the parent changes.
         /// </summary>
-        public IReadOnlyList<Node> Children => children.AsReadOnly();
+        protected virtual void OnParentChanged() { }
     }
 }

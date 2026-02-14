@@ -7,13 +7,6 @@ using Monolith.Nodes;
 
 namespace Monolith.Nodes
 {
-    public record class AreaConfig : SpatialNodeConfig
-    {
-        public bool MonitorAreas { get; set; }
-        public bool MonitorBodies { get; set; }
-        public CollisionShape2D CollisionShape2D { get; set; }
-    }
-
     public class Area2D : Node2D
     {
         private bool wasInArea2D = false;
@@ -28,16 +21,11 @@ namespace Monolith.Nodes
         public bool MonitorBodies { get; set; }
         public CollisionShape2D CollisionShape2D { get; set; }
 
-        public Area2D(AreaConfig cfg) : base(cfg)
-        {
-            CollisionShape2D = cfg.CollisionShape2D;
-            MonitorAreas = cfg.MonitorAreas;
-            MonitorBodies = cfg.MonitorBodies;
-        }
-
+        public Area2D() {}
+        
         private Node2D GetOverlappingArea()
         {
-            return Engine.Node.GetNodesByT<CollisionShape2D>()
+            return Engine.Node.GetAll<CollisionShape2D>()
                 .Where(c => c.Parent != this)
                 .Where(c => AcceptedType.Any(t => t.IsAssignableFrom(c.Parent.GetType())))
                 .FirstOrDefault(c => c.Intersects(CollisionShape2D))
@@ -47,7 +35,7 @@ namespace Monolith.Nodes
 
         private KinematicBody2D GetOverlappingBody()
         {
-            return Engine.Node.AllInstances
+            return Engine.Node.All
                 .Where(a => a != this && typeof(KinematicBody2D).IsAssignableFrom(a.GetType()))
                 .Cast<KinematicBody2D>()
                 .FirstOrDefault(a => CollisionShape2D.Intersects(a.CollisionShape));

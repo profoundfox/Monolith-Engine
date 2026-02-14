@@ -1,15 +1,15 @@
 
+using System;
 using System.Numerics;
 using Monolith.Util;
 
 namespace Monolith.Nodes
 {
-    public record class DynamicBodyConfig : PhysicsBodyConfig {}
     public class DynamicBody2D : Node2D
     {
         public Vector2 Velocity;
 
-        public DynamicBody2D(DynamicBodyConfig cfg) : base(cfg) {}
+        public DynamicBody2D() {}
 
         public override void Load()
         {
@@ -20,7 +20,7 @@ namespace Monolith.Nodes
         {
             base.PhysicsUpdate(delta);
 
-            LocalPosition += Velocity * delta;
+            Position += Velocity * delta;
         }
 
         public override void ProcessUpdate(float delta)

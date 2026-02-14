@@ -6,25 +6,19 @@ using Monolith.Graphics;
 
 namespace Monolith.Nodes
 {
-    public record class ParticleEmitterConfig : SpatialNodeConfig
+    public class ParticleEmitter2D : Node2D
     {
         public ParticleInfo ParticleInfo { get; set; } = ParticleInfo.Identity;
         public int EmittedPerSecond { get; set; } = 10;
-    }
-    public class ParticleEmitter2D : Node2D
-    {
-        public ParticleInfo ParticleInfo { get; set; }
+
         private List<Particle> _particles = new();
 
         private float _emissionTimer;
         private float _spawnInterval;
 
-        public ParticleEmitter2D(ParticleEmitterConfig cfg) : base(cfg)
+        public ParticleEmitter2D()
         {
-            ParticleInfo = cfg.ParticleInfo;
-            LocalOrdering = LocalOrdering with { Depth = cfg.Depth };
-
-            _spawnInterval = 1f / cfg.EmittedPerSecond;
+            _spawnInterval = 1f / EmittedPerSecond;
         }
 
         public override void Load()
@@ -40,7 +34,7 @@ namespace Monolith.Nodes
 
             while (_emissionTimer >= _spawnInterval)
             {
-                _particles.Add(new Particle(GlobalPosition, ParticleInfo));
+                _particles.Add(new Particle(Position, ParticleInfo));
                 _emissionTimer -= _spawnInterval; 
             }
 

@@ -4,8 +4,6 @@ using Microsoft.Xna.Framework;
 
 namespace Monolith.Nodes
 {
-    public record class KinematicBodyConfig : SpatialNodeConfig {}
-
     public class KinematicBody2D : Node2D
     {
         public Vector2 Velocity = Vector2.Zero;
@@ -29,7 +27,7 @@ namespace Monolith.Nodes
         const float FLOOR_TOLERANCE = 2f;
         const float WALL_TOLERANCE = 2f;
 
-        public KinematicBody2D(KinematicBodyConfig cfg) : base(cfg) {}
+        public KinematicBody2D() {}
 
         private void Move(float delta)
         {
@@ -41,9 +39,9 @@ namespace Monolith.Nodes
 
             if (_isOnFloor && _floorShape != null)
             {
-                Vector2 platformDelta = _floorShape.GlobalPosition - _lastFloorPosition;
-                LocalPosition += platformDelta;
-                _lastFloorPosition = _floorShape.GlobalPosition;
+                Vector2 platformDelta = _floorShape.Position - _lastFloorPosition;
+                Position += platformDelta;
+                _lastFloorPosition = _floorShape.Position;
             }
 
             _isOnFloor = false;
@@ -52,12 +50,12 @@ namespace Monolith.Nodes
             WallNormal = Vector2.Zero;
             _floorShape = null;
 
-            var bodies = Engine.Node.GetNodesByT<PhysicsBody2D>()
+            var bodies = Engine.Node.GetAll<PhysicsBody2D>()
                             .Where(b => b.CollisionShape != CollisionShape && !b.CollisionShape.Disabled)
                             .ToArray();
 
             Vector2 horizontalMovement = new Vector2(movement.X, 0);
-            LocalPosition += horizontalMovement;
+            Position += horizontalMovement;
 
             foreach (var other in bodies)
             {
@@ -65,34 +63,34 @@ namespace Monolith.Nodes
                 {
                     _isOnWall = true;
                     WallNormal = movement.X > 0 ? new Vector2(-1, 0) : new Vector2(1, 0);
-                    LocalPosition -= horizontalMovement;
+                    Position -= horizontalMovement;
                     Velocity = new Vector2(0, Velocity.Y);
                     break;
                 }
 
-                CollisionShape.LocalPosition += new Vector2(WALL_TOLERANCE, 0);
+                CollisionShape.Position += new Vector2(WALL_TOLERANCE, 0);
                 if (CollisionShape.Intersects(other.CollisionShape))
                 {
                     _isOnWall = true;
                     WallNormal = new Vector2(-1, 0);
                 }
-                CollisionShape.LocalPosition -= new Vector2(WALL_TOLERANCE, 0);
+                CollisionShape.Position -= new Vector2(WALL_TOLERANCE, 0);
 
                 if (_isOnWall) break;
 
-                CollisionShape.LocalPosition += new Vector2(-WALL_TOLERANCE, 0);
+                CollisionShape.Position += new Vector2(-WALL_TOLERANCE, 0);
                 if (CollisionShape.Intersects(other.CollisionShape))
                 {
                     _isOnWall = true;
                     WallNormal = new Vector2(1, 0);
                 }
-                CollisionShape.LocalPosition -= new Vector2(-WALL_TOLERANCE, 0);
+                CollisionShape.Position -= new Vector2(-WALL_TOLERANCE, 0);
 
                 if (_isOnWall) break;
             }
 
             Vector2 verticalMovement = new Vector2(0, movement.Y);
-            LocalPosition += verticalMovement;
+            Position += verticalMovement;
 
             foreach (var other in bodies)
             {
@@ -102,26 +100,26 @@ namespace Monolith.Nodes
                     {
                         _isOnFloor = true;
                         _floorShape = other.CollisionShape;
-                        _lastFloorPosition = _floorShape.GlobalPosition;
+                        _lastFloorPosition = _floorShape.Position;
                     }
                     else if (movement.Y < 0)
                     {
                         _isOnRoof = true;
                     }
 
-                    LocalPosition -= verticalMovement;
+                    Position -= verticalMovement;
                     Velocity = new Vector2(Velocity.X, 0);
                     break;
                 }
 
-                CollisionShape.LocalPosition += new Vector2(0, FLOOR_TOLERANCE);
+                CollisionShape.Position += new Vector2(0, FLOOR_TOLERANCE);
                 if (CollisionShape.Intersects(other.CollisionShape))
                 {
                     _isOnFloor = true;
                     _floorShape = other.CollisionShape;
-                    _lastFloorPosition = _floorShape.GlobalPosition;
+                    _lastFloorPosition = _floorShape.Position;
                 }
-                CollisionShape.LocalPosition -= new Vector2(0, FLOOR_TOLERANCE);
+                CollisionShape.Position -= new Vector2(0, FLOOR_TOLERANCE);
 
                 if (_isOnFloor) break;
             }

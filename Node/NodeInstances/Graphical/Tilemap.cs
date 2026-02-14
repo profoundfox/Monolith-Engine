@@ -8,14 +8,7 @@ using Monolith.Managers;
 using Monolith.Attributes;
 
 namespace Monolith.Nodes
-{
-    public record class TilemapConfig : SpatialNodeConfig
-    {
-        public Tileset Tileset { get; set; }
-        public int Columns { get; set; }
-        public int Rows { get; set; }
-    }
-    
+{    
     public class Tilemap : Node2D
     {
         private readonly int[] _tiles;
@@ -28,11 +21,8 @@ namespace Monolith.Nodes
         public float TileWidth => Tileset.TileWidth;
         public float TileHeight => Tileset.TileHeight;
 
-        public Tilemap(TilemapConfig cfg) : base(cfg)
+        public Tilemap()
         {
-            Tileset = cfg.Tileset;
-            Rows = cfg.Rows;
-            Columns = cfg.Columns;
             Count = Columns * Rows;
 
             _tiles = new int[Count];

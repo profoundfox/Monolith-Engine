@@ -17,28 +17,17 @@ namespace Monolith.Nodes
         Both = X | Y
     }
 
-    public record class ParallaxLayerConfig : SpatialNodeConfig
-    {
-        public MTexture Texture { get; set; }
-        public Vector2 MotionScale { get; set; } = Vector2.One;
-        public LoopAxis LoopAxis { get; set; } = LoopAxis.Both;
-    }
     /// <summary>
     /// Represents a single infinite scrolling parallax layer.
     /// </summary>
     public class ParallaxLayer : Node2D
     {
         public MTexture Texture { get; set; }
-        public Vector2 MotionScale { get; set; }
-        public LoopAxis LoopAxes { get; set; }
+        public Vector2 MotionScale { get; set; } = Vector2.One;
+        public LoopAxis LoopAxes { get; set; } = LoopAxis.Both;
         private Vector2 offset;
 
-        public ParallaxLayer(ParallaxLayerConfig cfg) : base(cfg)
-        {
-            Texture = cfg.Texture;
-            MotionScale = cfg.MotionScale;
-            LoopAxes = cfg.LoopAxis;
-        }
+        public ParallaxLayer() {}
 
         public void ApplyCameraDelta(Vector2 cameraDelta)
         {
@@ -69,11 +58,11 @@ namespace Monolith.Nodes
 
             Vector2 basePos = new Vector2(
                 LoopAxes.HasFlag(LoopAxis.X)
-                    ? GlobalPosition.X - Mod(GlobalPosition.X - offset.X, Texture.Width)
-                    : GlobalPosition.X,
+                    ? Position.X - Mod(Position.X - offset.X, Texture.Width)
+                    : Position.X,
                 LoopAxes.HasFlag(LoopAxis.Y)
-                    ? GlobalPosition.Y - Mod(GlobalPosition.Y - offset.Y, Texture.Height)
-                    : GlobalPosition.Y
+                    ? Position.Y - Mod(Position.Y - offset.Y, Texture.Height)
+                    : Position.Y
             );
 
             int startX = LoopAxes.HasFlag(LoopAxis.X)

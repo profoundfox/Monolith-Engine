@@ -10,64 +10,32 @@ using Monolith.Attributes;
 
 namespace Monolith.Nodes
 {
-    public record class SpatialNodeConfig : CanvasNodeConfig
-    {
-        /// <summary>
-        /// Optional LocalPosition for the node. Defaults to Vector2.Zero.
-        /// </summary>
-        public Vector2? LocalPosition { get; set; }
-
-        /// <summary>
-        /// The rotation of the node measured in radians
-        /// </summary>
-        public float Rotation { get; set; } = 0f;
-
-        /// <summary>
-        /// The scale of the node.
-        /// </summary>
-        public Vector2 Scale { get; set; } = Vector2.Zero;
-    }
-
 
     public class Node2D : CanvasNode
     {
-        private Transform2D _localTransform;
+        private Transform2D _localTransform = Transform2D.Identity;
 
         public event Action<Transform2D> TransformChanged;
 
-        /// <summary>
-        /// The local transform of the node, updates the global transform.
-        /// </summary>
-        public Transform2D LocalTransform
-        {
-            get => _localTransform;
-            set
-            {
-                _localTransform = value;
-                UpdateGlobalTransform();
-            }
-        }
 
         /// <summary>
-        /// The transform relative to global coordinates.
+        /// The transform relative to the parent.
         /// </summary>
         public Transform2D GlobalTransform { get; private set; }
 
-        /// <summary>
-        /// The global LocalPosition of the node.
-        /// </summary>
-        public Vector2 GlobalPosition
-        {
-            get => GlobalTransform.Position;
-        }
+ 
 
         /// <summary>
-        /// The local LocalPosition of the node, relative to its parent.
+        /// The position of the node.
         /// </summary>
-        public Vector2 LocalPosition
+        public Vector2 Position
         {
-            get => LocalTransform.Position;
-            set => LocalTransform = LocalTransform with { Position = value };
+            get => GlobalTransform.Position;
+            set
+            {
+                _localTransform = _localTransform with { Position = value };
+                UpdateGlobalTransform();
+            }
         }
 
         /// <summary>
@@ -75,8 +43,12 @@ namespace Monolith.Nodes
         /// </summary>
         public float Rotation
         {
-            get => LocalTransform.Rotation;
-            set => LocalTransform = LocalTransform with { Rotation = value };
+            get => GlobalTransform.Rotation;
+            set
+            {
+                _localTransform = _localTransform with { Rotation = value };
+                UpdateGlobalTransform();
+            }
         }
 
         /// <summary>
@@ -84,18 +56,29 @@ namespace Monolith.Nodes
         /// </summary>
         public Vector2 Scale
         {
-            get => LocalTransform.Scale;
-            set => LocalTransform = LocalTransform with { Scale = value };
+            get => GlobalTransform.Scale;
+            set
+            {
+                _localTransform = _localTransform with { Scale = value };
+                UpdateGlobalTransform();
+            }
         }
 
         /// <summary>
         /// Creates a new Node2D using a SpatialNodeConfig.
         /// </summary>
-        public Node2D(SpatialNodeConfig cfg) : base(cfg)
+        public Node2D()
         {
-            _localTransform = new Transform2D(cfg.LocalPosition ?? Vector2.Zero, rotation: cfg.Rotation, scale: cfg.Scale);
             UpdateGlobalTransform();
         }
+
+        protected override void OnParentChanged()
+        {
+            base.OnParentChanged();
+
+            UpdateGlobalTransform();
+        }
+
         /// <summary>
         /// Recompute global transform based on parent.
         /// Automatically ProcessProcessProcessProcessUpdates children.
@@ -104,11 +87,11 @@ namespace Monolith.Nodes
         {
             if (Parent is Node2D parent2D)
             {
-                GlobalTransform = Transform2D.Combine(parent2D.GlobalTransform, LocalTransform);
+                GlobalTransform = Transform2D.Combine(parent2D.GlobalTransform, _localTransform);
             }
             else
             {
-                GlobalTransform = LocalTransform;
+                GlobalTransform = _localTransform;
             }
 
             TransformChanged?.Invoke(GlobalTransform);
@@ -127,7 +110,7 @@ namespace Monolith.Nodes
         /// <param name="delta"></param>
         public void Offset(Vector2 delta)
         {
-            LocalPosition += delta;
+            Position += delta;
         }
 
         /// <summary>

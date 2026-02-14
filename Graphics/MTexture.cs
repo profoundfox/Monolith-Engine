@@ -217,6 +217,7 @@ namespace Monolith.Graphics
                 Depth = depth,
                 SpriteBatchConfig = SpriteBatchConfig
             }, layer);
+
         }
 
         /// <summary>

@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Monolith.Helpers;
 
@@ -21,6 +22,8 @@ namespace Monolith.Attributes
 
         public static Visibility Combine(in Visibility parent, in Visibility child)
         {
+            Console.WriteLine(parent.Modulate);
+
             return new Visibility(
                 parent.Visibile && child.Visibile,
                 ColorHelper.Multiply(parent.Modulate, child.Modulate),

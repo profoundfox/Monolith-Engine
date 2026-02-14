@@ -8,32 +8,28 @@ using Monolith.Attributes;
 
 namespace Monolith.Nodes
 {   
-    public record class SpriteConfig : SpatialNodeConfig
-    {
-        public MTexture Texture { get; set; }
-    }
 
     public class Sprite2D : Node2D
     {
         public MTexture Texture { get; set; }
 
-        public Sprite2D(SpriteConfig cfg) : base(cfg)
-        {
-            Texture = cfg.Texture;
-        }
+        public Sprite2D() {}
         
         public override void SubmitCall()
         {
-            Texture.Draw(
-                position: GlobalTransform.Position,
-                color: GlobalVisibility.Modulate,
-                rotation: GlobalTransform.Rotation,
-                origin: Texture.Center,
-                scale: GlobalTransform.Scale,
-                effects: GlobalMaterial.SpriteEffects,
-                shader: GlobalMaterial.Shader,
-                depth: GlobalOrdering.Depth
-            );
+            Engine.Screen.Call(new TextureDrawCall
+            {
+                Texture = Texture,
+                Position = Position,
+                Color = Modulate,
+                Rotation = Rotation,
+                Origin = Texture.Center,
+                Scale = Scale,
+                Effects = SpriteEffects,
+                Effect = Shader,
+                Depth = Depth
+            });
+            
         }
     }
 

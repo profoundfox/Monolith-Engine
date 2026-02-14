@@ -1,141 +1,131 @@
-using System;
-using System.Reflection.Emit;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Attributes;
 
 namespace Monolith.Nodes
 {
-    public record class CanvasNodeConfig : NodeConfig
-    {
-        public int Depth { get; set; }
-    }
-
     public class CanvasNode : Node
     {
-        private Visibility _localVisibility;
-        private Ordering _localOrdering;
-        private Material _localMaterial;
+        private Visibility localVisibility = Visibility.Identity;
+        private Ordering localOrdering = Ordering.Identity;
+        private Material localMaterial = Material.Identity;
 
-        public Visibility LocalVisibility
+        /// <summary>
+        /// The combined visibility after inheriting from parents.
+        /// </summary>
+        public Visibility GlobalVisibility { get; private set; }
+
+        /// <summary>
+        /// The combined ordering after inheriting from parents.
+        /// </summary>
+        public Ordering GlobalOrdering { get; private set; }
+
+        /// <summary>
+        /// The combined material after inheriting from parents.
+        /// </summary>
+        public Material GlobalMaterial { get; private set; }
+
+        /// <summary>
+        /// Whether the node is visible.
+        /// </summary>
+        public bool Visible
         {
-            get => _localVisibility;
+            get => GlobalVisibility.Visibile;
             set
             {
-                _localVisibility = value;
-                ProcessUpdateAttributes();
+                localVisibility = localVisibility with { Visibile = value };
+                UpdateAttributes();
             }
         }
 
-        public bool Visibile
-        {
-            get => GlobalVisibility.Visibile;
-            set => LocalVisibility = LocalVisibility with { Visibile = value };
-        }
-
+        /// <summary>
+        /// The color modulation applied to this node.
+        /// </summary>
         public Color Modulate
         {
             get => GlobalVisibility.Modulate;
-            set => LocalVisibility = LocalVisibility with { Modulate = value };
-        }
-
-        public Color SelfModulate
-        {
-            get => GlobalVisibility.SelfModulate;
-            set => LocalVisibility = LocalVisibility with { SelfModulate = value };
-        }
-
-        public Ordering LocalOrdering
-        {
-            get => _localOrdering;
             set
             {
-                _localOrdering = value;
-                ProcessUpdateAttributes();
+                localVisibility = localVisibility with { Modulate = value };
+                UpdateAttributes();
             }
         }
 
+        /// <summary>
+        /// The rendering depth of the node.
+        /// </summary>
         public int Depth
         {
             get => GlobalOrdering.Depth;
-            set => LocalOrdering = LocalOrdering with { Depth = value };
-        }
-
-        public Material LocalMaterial
-        {
-            get => _localMaterial;
             set
             {
-                _localMaterial = value;
-                ProcessUpdateAttributes();
+                localOrdering = localOrdering with { Depth = value };
+                UpdateAttributes();
             }
         }
 
+        /// <summary>
+        /// The shader used by this node.
+        /// </summary>
         public Effect Shader
         {
             get => GlobalMaterial.Shader;
-            set => LocalMaterial = LocalMaterial with { Shader = value };
+            set
+            {
+                localMaterial = localMaterial with { Shader = value };
+                UpdateAttributes();
+            }
         }
 
+        /// <summary>
+        /// The sprite effects applied to this node.
+        /// </summary>
         public SpriteEffects SpriteEffects
         {
             get => GlobalMaterial.SpriteEffects;
-            set => LocalMaterial = LocalMaterial with { SpriteEffects = value };
-        }
-
-        public Visibility GlobalVisibility { get; private set; }
-        public Ordering GlobalOrdering { get; private set; }
-        public Material GlobalMaterial { get; private set; }
-
-        public CanvasNode(CanvasNodeConfig cfg) : base(cfg)
-        {
-            _localVisibility = Visibility.Identity;
-            _localOrdering = Ordering.Identity with { Depth = cfg.Depth };
-            _localMaterial = Material.Identity;
-            
-            ProcessUpdateAttributes();
-        }
-
-        public void ProcessUpdateAttributes()
-        {
-            if (Parent is CanvasNode parent2D)
+            set
             {
-                GlobalVisibility = Visibility.Combine(parent2D.GlobalVisibility, LocalVisibility);
-                GlobalOrdering = Ordering.Combine(parent2D.GlobalOrdering, LocalOrdering);
-                GlobalMaterial = Material.Combine(parent2D.GlobalMaterial, LocalMaterial);
+                localMaterial = localMaterial with { SpriteEffects = value };
+                UpdateAttributes();
+            }
+        }
+
+        public CanvasNode()
+        {
+            UpdateAttributes();
+        }
+
+        protected override void OnParentChanged()
+        {
+            base.OnParentChanged();
+            
+            UpdateAttributes();
+        }
+
+        /// <summary>
+        /// Recalculates global rendering attributes and propagates them to children.
+        /// </summary>
+        private void UpdateAttributes()
+        {
+            if (Parent is CanvasNode parentCanvas)
+            {
+                GlobalVisibility = Visibility.Combine(parentCanvas.GlobalVisibility, localVisibility);
+                GlobalOrdering = Ordering.Combine(parentCanvas.GlobalOrdering, localOrdering);
+                GlobalMaterial = Material.Combine(parentCanvas.GlobalMaterial, localMaterial);
             }
             else
             {
-                GlobalVisibility = LocalVisibility;
-                GlobalOrdering = LocalOrdering;
-                GlobalMaterial = LocalMaterial;
+                GlobalVisibility = localVisibility;
+                GlobalOrdering = localOrdering;
+                GlobalMaterial = localMaterial;
             }
 
             foreach (var child in Children)
             {
-                if (child is CanvasNode c2d)
-                    c2d.ProcessUpdateAttributes();
+                if (child is CanvasNode canvasChild)
+                    canvasChild.UpdateAttributes();
             }
         }
-
-        public override void Load()
-        {
-            base.Load();
-        }
-
-        public override void Unload()
-        {
-            base.Unload();
-        }
-
-        public override void ProcessUpdate(float delta)
-        {
-            base.ProcessUpdate(delta);
-        }
-
-        public override void SubmitCall()
-        {
-            base.SubmitCall();
-        }
     }
+
 }
