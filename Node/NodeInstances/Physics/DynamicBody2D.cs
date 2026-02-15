@@ -5,7 +5,7 @@ using Monolith.Util;
 
 namespace Monolith.Nodes
 {
-    public class DynamicBody2D : Node2D
+    public class DynamicBody2D : PhysicsBody2D
     {
         public Vector2 Velocity;
 

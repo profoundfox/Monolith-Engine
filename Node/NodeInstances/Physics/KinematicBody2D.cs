@@ -93,21 +93,25 @@ namespace Monolith.Nodes
             {
                 if (CollisionShape.Intersects(other.CollisionShape))
                 {
-                    if (movement.Y > 0 || movement.Y >= -FLOOR_TOLERANCE)
+                    if (movement.Y > 0)
                     {
+                        float penetration = (Position.Y + CollisionShape.Height) - other.CollisionShape.Position.Y;
+                        Position = new Vector2(Position.X, Position.Y - penetration);
                         _isOnFloor = true;
                         _floorShape = other.CollisionShape;
                         _lastFloorPosition = _floorShape.GlobalTransform.Position;
                     }
                     else if (movement.Y < 0)
                     {
+                        float penetration = other.CollisionShape.Position.Y + other.CollisionShape.Height - Position.Y;
+                        Position = new Vector2(Position.X, Position.Y + penetration);
                         _isOnRoof = true;
                     }
 
-                    Position -= verticalMovement;
                     Velocity = new Vector2(Velocity.X, 0);
                     break;
                 }
+
 
                 if (CollisionShape.IntersectsAt(
                     new Vector2(0, FLOOR_TOLERANCE),
