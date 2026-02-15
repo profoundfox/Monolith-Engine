@@ -89,6 +89,15 @@ namespace Monolith.Geometry
             };
         }
 
+        public bool IntersectsAt(Point offset, IRegionShape2D other)
+        {
+            IRegionShape2D testShape = Clone();
+
+            testShape.Location = Location + offset;
+
+            return testShape.Intersects(other);
+        }
+
         private bool IntersectsCircle(CircleShape2D other)
         {
             int sum = Radius + other.Radius;

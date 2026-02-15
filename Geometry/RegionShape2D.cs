@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.Xna.Framework;
 
 
@@ -18,6 +19,7 @@ namespace Monolith.Geometry
         bool Contains(Point p);
         bool Contains(IRegionShape2D other);
         bool Intersects(IRegionShape2D other);
+        bool IntersectsAt(Point offset, IRegionShape2D other);
         bool RayIntersect(Vector2 rayOrigin, Vector2 rayDir, float maxLength, out Vector2 hitPoint, out float distance);
 
         IRegionShape2D Clone();

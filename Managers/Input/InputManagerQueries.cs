@@ -1,5 +1,6 @@
 
 
+using System.Numerics;
 using Monolith.Input;
 
 namespace Monolith.Managers
@@ -124,7 +125,7 @@ namespace Monolith.Managers
         }
 
         /// <summary>
-        /// Returns an axis value based on two actions.
+        /// Returns a signle axis value based on two actions.
         /// </summary>
         public int GetAxis(string negativeAction, string positiveAction)
         {
@@ -135,6 +136,14 @@ namespace Monolith.Managers
             if (negativePressed) return -1;
             if (positivePressed) return 1;
             return 0;
+        }
+
+        public Vector2 GetAxis(string xNegativeAction, string xPositiveAction, string yNegativeAction, string yPositiveAction)
+        {
+            int xAxis = GetAxis(xNegativeAction, xPositiveAction);
+            int yAxis = GetAxis(yNegativeAction, yPositiveAction);
+            
+            return new Vector2(xAxis, yAxis);
         }
     }
 }

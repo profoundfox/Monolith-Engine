@@ -83,7 +83,6 @@ namespace Monolith.Nodes
 
                 if (kb.Velocity.Y < 0)
                 {
-                    Console.WriteLine("Yes");
                     Disabled = true;
                 }
 
@@ -114,12 +113,20 @@ namespace Monolith.Nodes
 
         public bool Intersects(CollisionShape2D other)
         {
-            if (!Disabled && other != null)
-            {
-                return Shape.Intersects(other.Shape);
-            }
-            return false;
+            if (Disabled || other == null)
+                return false;
+
+            return Shape.Intersects(other.Shape);
         }
+
+        public bool IntersectsAt(Vector2 offset, CollisionShape2D other)
+        {
+            if (Disabled || other == null || other.Disabled)
+                return false;
+
+            return Shape.IntersectsAt(offset.ToPoint(), other.Shape);
+        }
+
 
         public bool Contains(IRegionShape2D other)
         {

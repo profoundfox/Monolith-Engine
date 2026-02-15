@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 
 namespace Monolith.Nodes
 {
-    public class KinematicBody2D : Node2D
+    public class KinematicBody2D : PhysicsBody2D
     {
         public Vector2 Velocity = Vector2.Zero;
         public Vector2 WallNormal { get; private set; } = Vector2.Zero;
@@ -12,10 +12,6 @@ namespace Monolith.Nodes
         public bool IsOnFloor => _isOnFloor;
         public bool IsOnWall => _isOnWall;
         public bool IsOnRoof => _isOnRoof;
-
-        public Vector2 movement;
-
-        public CollisionShape2D CollisionShape { get; set; }
 
         private CollisionShape2D _floorShape;
         private Vector2 _lastFloorPosition;
@@ -31,17 +27,16 @@ namespace Monolith.Nodes
 
         private void Move(float delta)
         {
-            CollisionShape = (CollisionShape2D)GetFirstChildByT<CollisionShape2D>();
             if (CollisionShape == null)
                 return;
 
-            movement = Velocity * delta;
+            Vector2 movement = Velocity * delta;
 
             if (_isOnFloor && _floorShape != null)
             {
-                Vector2 platformDelta = _floorShape.Position - _lastFloorPosition;
+                Vector2 platformDelta = _floorShape.GlobalTransform.Position - _lastFloorPosition;
                 Position += platformDelta;
-                _lastFloorPosition = _floorShape.Position;
+                _lastFloorPosition = _floorShape.GlobalTransform.Position;
             }
 
             _isOnFloor = false;
@@ -68,23 +63,25 @@ namespace Monolith.Nodes
                     break;
                 }
 
-                CollisionShape.Position += new Vector2(WALL_TOLERANCE, 0);
-                if (CollisionShape.Intersects(other.CollisionShape))
+                if (CollisionShape.IntersectsAt(
+                    new Vector2(WALL_TOLERANCE, 0),
+                    other.CollisionShape))
                 {
                     _isOnWall = true;
                     WallNormal = new Vector2(-1, 0);
                 }
-                CollisionShape.Position -= new Vector2(WALL_TOLERANCE, 0);
+
 
                 if (_isOnWall) break;
 
-                CollisionShape.Position += new Vector2(-WALL_TOLERANCE, 0);
-                if (CollisionShape.Intersects(other.CollisionShape))
+                if (CollisionShape.IntersectsAt(
+                    new Vector2(-WALL_TOLERANCE, 0),
+                    other.CollisionShape))
                 {
                     _isOnWall = true;
                     WallNormal = new Vector2(1, 0);
                 }
-                CollisionShape.Position -= new Vector2(-WALL_TOLERANCE, 0);
+
 
                 if (_isOnWall) break;
             }
@@ -100,7 +97,7 @@ namespace Monolith.Nodes
                     {
                         _isOnFloor = true;
                         _floorShape = other.CollisionShape;
-                        _lastFloorPosition = _floorShape.Position;
+                        _lastFloorPosition = _floorShape.GlobalTransform.Position;
                     }
                     else if (movement.Y < 0)
                     {
@@ -112,14 +109,15 @@ namespace Monolith.Nodes
                     break;
                 }
 
-                CollisionShape.Position += new Vector2(0, FLOOR_TOLERANCE);
-                if (CollisionShape.Intersects(other.CollisionShape))
+                if (CollisionShape.IntersectsAt(
+                    new Vector2(0, FLOOR_TOLERANCE),
+                    other.CollisionShape))
                 {
                     _isOnFloor = true;
                     _floorShape = other.CollisionShape;
-                    _lastFloorPosition = _floorShape.Position;
+                    _lastFloorPosition = _floorShape.GlobalTransform.Position;
                 }
-                CollisionShape.Position -= new Vector2(0, FLOOR_TOLERANCE);
+
 
                 if (_isOnFloor) break;
             }

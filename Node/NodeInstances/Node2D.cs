@@ -94,6 +94,8 @@ namespace Monolith.Nodes
                 GlobalTransform = _localTransform;
             }
 
+            //Console.WriteLine($"This: {this} Parent: {Parent} LocalTransform: {_localTransform}");
+
             TransformChanged?.Invoke(GlobalTransform);
 
             foreach (var child in Children)
