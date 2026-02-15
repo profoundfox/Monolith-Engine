@@ -30,8 +30,6 @@ namespace Monolith.Managers
             return node;
         }
 
-
-
         internal void QueueAdd(Node node) => pendingAdd.Add(node);
         internal void QueueRemove(Node node) => pendingRemove.Add(node);
 

@@ -27,7 +27,7 @@ namespace Monolith.Nodes
         {
             if (!Atlas.TryGetValue(name, out Animation target))
                 return;
-
+            
             if (CurrentAnimation != target || _finished)
             {
                 CurrentAnimation = target;
@@ -98,18 +98,17 @@ namespace Monolith.Nodes
         {
             if (CurrentAnimation == null) return;
 
-            Engine.Screen.Call(new TextureDrawCall
-            {
-                Texture = CurrentFrame,
-                Position = Position,
-                Color = Modulate,
-                Rotation = Rotation,
-                Origin = CurrentFrame.Center,
-                Scale = Scale,
-                Effects = SpriteEffects,
-                Effect = Shader,
-                Depth = Depth
-            });
+            CurrentFrame.Draw
+            (
+                position: Position,
+                color: Modulate,
+                rotation: Rotation,
+                origin: CurrentFrame.Center,
+                scale: Scale,
+                effects: SpriteEffects,
+                shader: Shader,
+                depth: Depth
+            );
         }
     }
 }
