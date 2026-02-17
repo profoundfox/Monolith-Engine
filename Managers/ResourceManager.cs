@@ -5,7 +5,7 @@ namespace Monolith.Managers
 {
     public class ResourceManager
     {
-        public IContentProvider Provider { get; private set; }
+        private IContentProvider Provider { get; set; }
 
         internal string ContentRoot { get; set; } = "Content";
 
@@ -100,5 +100,19 @@ namespace Monolith.Managers
         {
             return RuntimeLoad<T>(path, rootDir, true);
         }
+
+        public void Unload(string path)
+        {
+            Provider.Unload(path);
+        }
+        public void ClearCache()
+        {
+            Provider.ClearCache();
+        }
+        public void ReloadAll()
+        {
+            Provider.ReloadAll();
+        }
+
     }
 }

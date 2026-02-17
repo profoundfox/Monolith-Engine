@@ -67,6 +67,8 @@ namespace Monolith.Nodes
 
         public override void ProcessUpdate(float delta)
         {
+            base.ProcessUpdate(delta);
+
             if (_finished || CurrentAnimation == null)
                 return;
 
@@ -96,6 +98,8 @@ namespace Monolith.Nodes
 
         public override void SubmitCall()
         {
+            base.SubmitCall();
+            
             if (CurrentAnimation == null) return;
 
             CurrentFrame.Draw

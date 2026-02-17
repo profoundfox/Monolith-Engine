@@ -4,7 +4,7 @@ using Monolith.Helpers;
 
 namespace Monolith.Attributes
 {
-    public readonly record struct Visibility 
+    public readonly record struct Visibility : IProperty<Visibility>
     {   
         public bool Visibile { get; init; }
         public Color Modulate { get; init; }
@@ -22,8 +22,6 @@ namespace Monolith.Attributes
 
         public static Visibility Combine(in Visibility parent, in Visibility child)
         {
-            Console.WriteLine(parent.Modulate);
-
             return new Visibility(
                 parent.Visibile && child.Visibile,
                 ColorHelper.Multiply(parent.Modulate, child.Modulate),

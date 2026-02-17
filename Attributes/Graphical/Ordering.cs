@@ -2,7 +2,7 @@ using System;
 
 namespace Monolith.Attributes
 {
-    public readonly record struct Ordering 
+    public readonly record struct Ordering : IProperty<Ordering>
     {
         public int Depth { get; init; }
         public bool RelativeDepth { get; init; }
