@@ -48,10 +48,10 @@ namespace Monolith.Nodes
         {
             base.ProcessUpdate(delta);
 
-            if (TargetNode == null || !TargetNode.HasChildByT<CollisionShape2D>())
+            if (TargetNode == null || TargetNode.Get<CollisionShape2D>() == null)
                 return;
 
-            var targetShape = (CollisionShape2D)TargetNode.GetFirstChildByT<CollisionShape2D>();
+            var targetShape = TargetNode.Get<CollisionShape2D>();
             var shape = targetShape.Shape;
 
             var pos = TargetNode.GlobalPosition;            

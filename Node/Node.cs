@@ -82,25 +82,17 @@ namespace Monolith.Nodes
         /// <summary>
         /// Gets the first found child of a specified type.
         /// </summary>
-        public Node GetFirstChildByT<T>() where T : Node
+        public T Get<T>() where T : Node
         {
             return children.OfType<T>().FirstOrDefault();
         }
-
+        
         /// <summary>
         /// Gets all children of a specified type.
         /// </summary>
-        public IReadOnlyList<Node> GetChildrenByT<T>() where T : Node
+        public IReadOnlyList<T> GetAll<T>() where T : Node
         {
             return children.OfType<T>().ToList();
-        }
-
-        /// <summary>
-        /// Returns if the node has a node of a specified type.
-        /// </summary>
-        public bool HasChildByT<T>() where T : Node
-        {
-            return GetFirstChildByT<T>() != null;
         }
 
         /// <summary>

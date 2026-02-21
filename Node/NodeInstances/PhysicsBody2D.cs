@@ -7,7 +7,7 @@ namespace Monolith.Nodes
    
     public class PhysicsBody2D : Node2D
     {
-        public CollisionShape2D CollisionShape { get => (CollisionShape2D)GetChildrenByT<CollisionShape2D>().FirstOrDefault();}
+        public CollisionShape2D CollisionShape { get => Get<CollisionShape2D>(); }
 
         public PhysicsBody2D() {}
 

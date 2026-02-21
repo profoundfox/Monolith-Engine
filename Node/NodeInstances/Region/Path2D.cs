@@ -9,7 +9,7 @@ namespace Monolith.Nodes
     public class Path2D : Node2D
     {
         public List<Vector2> Path { get; private set; }
-        public float Speed { get; set; } = 10f;
+        public float Speed { get; set; } = 100f;
 
         private int currentTargetIndex = 0;
         private float segmentProcess = 0f;
