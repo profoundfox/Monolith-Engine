@@ -94,7 +94,8 @@ namespace Monolith.Nodes
                 GlobalTransform = _localTransform;
             }
 
-            //Console.WriteLine($"This: {this} Parent: {Parent} LocalTransform: {_localTransform}");
+            if (Parent is DynamicBody2D parent)
+                Console.WriteLine($"ThisPos: {Position} ParPos: {parent.Position}");
 
             TransformChanged?.Invoke(GlobalTransform);
 
