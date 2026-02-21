@@ -21,13 +21,13 @@ namespace Monolith.Nodes
             {
                 Texture = Texture,
                 Position = GlobalPosition,
-                Color = Modulate,
+                Color = GlobalModulate,
                 Rotation = GlobalRotation,
                 Origin = Texture.Center,
                 Scale = GlobalScale,
-                Effects = SpriteEffects,
-                Effect = Shader,
-                Depth = Depth
+                Effects = GlobalSpriteEffects,
+                Effect = GlobalShader,
+                Depth = GlobalDepth
             });
             
         }

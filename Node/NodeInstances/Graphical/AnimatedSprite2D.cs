@@ -105,13 +105,13 @@ namespace Monolith.Nodes
             CurrentFrame.Draw
             (
                 position: GlobalPosition,
-                color: Modulate,
+                color: GlobalModulate,
                 rotation: GlobalRotation,
                 origin: CurrentFrame.Center,
                 scale: GlobalScale,
-                effects: SpriteEffects,
-                shader: Shader,
-                depth: Depth
+                effects: GlobalSpriteEffects,
+                shader: GlobalShader,
+                depth: GlobalDepth
             );
         }
     }

@@ -1,3 +1,5 @@
+using System.IO.Compression;
+using System.Reflection.Metadata.Ecma335;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Attributes;
@@ -11,9 +13,118 @@ namespace Monolith.Nodes
         private Material localMaterial = Material.Identity;
 
         /// <summary>
+        /// The self contained visibility of this node.
+        /// </summary>
+        public Visibility LocalVisibility
+        {
+            get => localVisibility;
+            set
+            {
+                localVisibility = value;
+                UpdateAttributes();
+            }
+        }
+
+        /// <summary>
+        /// The self contained visibility of this node. 
+        /// </summary>
+        public bool LocalVisible
+        {
+            get => LocalVisibility.Visibile;
+            set
+            {
+                LocalVisibility = LocalVisibility with { Visibile = value };
+            }
+        }
+
+        /// <summary>
+        /// The self contained modulate of this node.
+        /// </summary>
+        public Color LocalModulate
+        {
+            get => LocalVisibility.Modulate;
+            set
+            {
+                LocalVisibility = LocalVisibility with { Modulate = value };
+            }
+        }
+
+        /// <summary>
+        /// The self contained ordering of this node.
+        /// </summary>
+        public Ordering LocalOrdering
+        {
+            get => localOrdering;
+            set
+            {
+                localOrdering = value;
+                UpdateAttributes();
+            }
+        }
+
+        /// <summary>
+        /// The self contained depth of this node.
+        /// </summary>
+        public int LocalDepth
+        {
+            get => LocalOrdering.Depth;
+            set
+            {
+                LocalOrdering = LocalOrdering with { Depth = value };
+            }
+        }
+
+        /// <summary>
+        /// The self contained material of this node.
+        /// </summary>
+        public Material LocalMaterial
+        {
+            get => localMaterial;
+            set
+            {
+                localMaterial = value;
+                UpdateAttributes();
+            }
+        }
+
+        /// <summary>
+        /// The self contained shader of this node.
+        /// </summary>
+        public Effect LocalShader
+        {
+            get => LocalMaterial.Shader;
+            set
+            {
+                LocalMaterial = LocalMaterial with { Shader = value };
+            }
+        }
+
+        /// <summary>
+        /// The self contained sprite effects of this node.
+        /// </summary>
+        public SpriteEffects LocalSpriteEffects
+        {
+            get => LocalMaterial.SpriteEffects;
+            set
+            {
+                LocalMaterial = LocalMaterial with { SpriteEffects = value };
+            }
+        }
+
+        /// <summary>
         /// The combined visibility after inheriting from parents.
         /// </summary>
         public Visibility GlobalVisibility { get; private set; }
+
+        /// <summary>
+        /// The visibility relative to the parent.
+        /// </summary>
+        public bool GlobalVisible => GlobalVisibility.Visibile;
+
+        /// <summary>
+        /// The modulate relative to the parent.
+        /// </summary>
+        public Color GlobalModulate => GlobalVisibility.Modulate;
 
         /// <summary>
         /// The combined ordering after inheriting from parents.
@@ -21,74 +132,25 @@ namespace Monolith.Nodes
         public Ordering GlobalOrdering { get; private set; }
 
         /// <summary>
+        /// The depth relative to the parent.
+        /// </summary>
+        public int GlobalDepth => GlobalOrdering.Depth;
+
+        /// <summary>
         /// The combined material after inheriting from parents.
         /// </summary>
         public Material GlobalMaterial { get; private set; }
 
         /// <summary>
-        /// Whether the node is visible.
+        /// The shader relative to the parent.
         /// </summary>
-        public bool Visible
-        {
-            get => GlobalVisibility.Visibile;
-            set
-            {
-                localVisibility = localVisibility with { Visibile = value };
-                UpdateAttributes();
-            }
-        }
+        public Effect GlobalShader => GlobalMaterial.Shader;
 
         /// <summary>
-        /// The color modulation applied to this node.
+        /// The global sprite effects relative to the parent.
         /// </summary>
-        public Color Modulate
-        {
-            get => GlobalVisibility.Modulate;
-            set
-            {
-                localVisibility = localVisibility with { Modulate = value };
-                UpdateAttributes();
-            }
-        }
+        public SpriteEffects GlobalSpriteEffects => GlobalMaterial.SpriteEffects;
 
-        /// <summary>
-        /// The rendering depth of the node.
-        /// </summary>
-        public int Depth
-        {
-            get => GlobalOrdering.Depth;
-            set
-            {
-                localOrdering = localOrdering with { Depth = value };
-                UpdateAttributes();
-            }
-        }
-
-        /// <summary>
-        /// The shader used by this node.
-        /// </summary>
-        public Effect Shader
-        {
-            get => GlobalMaterial.Shader;
-            set
-            {
-                localMaterial = localMaterial with { Shader = value };
-                UpdateAttributes();
-            }
-        }
-
-        /// <summary>
-        /// The sprite effects applied to this node.
-        /// </summary>
-        public SpriteEffects SpriteEffects
-        {
-            get => GlobalMaterial.SpriteEffects;
-            set
-            {
-                localMaterial = localMaterial with { SpriteEffects = value };
-                UpdateAttributes();
-            }
-        }
 
         public CanvasNode()
         {
