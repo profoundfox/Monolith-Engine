@@ -104,7 +104,7 @@ namespace Monolith.Nodes
 
             CurrentFrame.Draw
             (
-                position: Position,
+                position: GlobalPosition,
                 color: Modulate,
                 rotation: Rotation,
                 origin: CurrentFrame.Center,

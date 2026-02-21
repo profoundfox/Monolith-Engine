@@ -20,7 +20,7 @@ namespace Monolith.Nodes
             Engine.Screen.Call(new TextureDrawCall
             {
                 Texture = Texture,
-                Position = Position,
+                Position = GlobalPosition,
                 Color = Modulate,
                 Rotation = Rotation,
                 Origin = Texture.Center,

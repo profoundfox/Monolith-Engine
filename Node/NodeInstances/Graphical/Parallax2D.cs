@@ -17,8 +17,8 @@ namespace Monolith.Nodes
             base.ProcessUpdate(delta);
 
             var camera = Camera2D.CurrentCameraInstance;
-            Vector2 camDelta = camera.Position - lastCameraPos;
-            lastCameraPos = camera.Position;
+            Vector2 camDelta = camera.GlobalPosition - lastCameraPos;
+            lastCameraPos = camera.GlobalPosition;
 
             foreach (var child in Children.OfType<ParallaxLayer>())
             {

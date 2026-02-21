@@ -34,7 +34,7 @@ namespace Monolith.Nodes
 
             while (_emissionTimer >= _spawnInterval)
             {
-                _particles.Add(new Particle(Position, ParticleInfo));
+                _particles.Add(new Particle(GlobalPosition, ParticleInfo));
                 _emissionTimer -= _spawnInterval; 
             }
 

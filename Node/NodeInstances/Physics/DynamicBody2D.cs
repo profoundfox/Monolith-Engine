@@ -20,7 +20,7 @@ namespace Monolith.Nodes
         {
             base.PhysicsUpdate(delta);
 
-            Position += Velocity * delta;
+            LocalPosition += Velocity * delta;
         }
 
         public override void ProcessUpdate(float delta)

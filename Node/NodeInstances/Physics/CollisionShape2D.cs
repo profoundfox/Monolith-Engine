@@ -61,13 +61,13 @@ namespace Monolith.Nodes
         public AABB GetAABB()
         {
             if (Shape == null || Disabled)
-                return new AABB(Position, Position);
+                return new AABB(GlobalPosition, GlobalPosition);
 
             Vector2 localMin = Shape.Location.ToVector2();
             Vector2 localMax = localMin + new Vector2(Shape.Width, Shape.Height);
 
-            Vector2 worldMin = Position + localMin;
-            Vector2 worldMax = Position + localMax;
+            Vector2 worldMin = GlobalPosition + localMin;
+            Vector2 worldMax = GlobalPosition + localMax;
 
             return new AABB(worldMin, worldMax);
         }

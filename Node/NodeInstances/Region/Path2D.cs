@@ -50,7 +50,7 @@ namespace Monolith.Nodes
                 segmentProcess = 1f;
             }
 
-            Position = Vector2.Lerp(start, end, segmentProcess);
+            LocalPosition = Vector2.Lerp(start, end, segmentProcess);
 
             if (segmentProcess >= 1f)
             {

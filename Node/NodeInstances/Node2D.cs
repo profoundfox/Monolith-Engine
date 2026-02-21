@@ -7,6 +7,7 @@ using Monolith.Graphics;
 using Monolith.Helpers;
 using Monolith.Managers;
 using Monolith.Attributes;
+using System.IO.Compression;
 
 namespace Monolith.Nodes
 {
@@ -17,26 +18,77 @@ namespace Monolith.Nodes
 
         public event Action<Transform2D> TransformChanged;
 
+        /// <summary>
+        /// The self contained transform of this node.
+        /// </summary>
+        public Transform2D LocalTransform
+        {
+            get => _localTransform;
+            set
+            {
+                _localTransform = value;
+                UpdateGlobalTransform();
+            }
+        }
+
+        /// <summary>
+        /// The self contained position of this node, updates child nodes' position.
+        /// </summary>
+        public Vector2 LocalPosition
+        {
+            get => LocalTransform.Position;
+            set
+            {
+                LocalTransform = LocalTransform with { Position = value };
+            }
+        }
+
+        /// <summary>
+        /// The self contained rotation of this node, updates child node's rotation.
+        /// </summary>
+        public float LocalRotation
+        {
+            get => LocalTransform.Rotation;
+            set
+            {
+                LocalTransform = LocalTransform with { Rotation = value };
+            }
+        }
+
+        /// <summary>
+        /// The self contained scale of this node, updates child node's scale.
+        /// </summary>
+        public Vector2 LocalScale
+        {
+            get => LocalTransform.Scale;
+            set
+            {
+                LocalTransform = LocalTransform with { Scale = value };
+            }
+        }
+    
 
         /// <summary>
         /// The transform relative to the parent.
         /// </summary>
         public Transform2D GlobalTransform { get; private set; }
 
- 
+        /// <summary>
+        /// The position relative to the parent.
+        /// </summary>
+        public Vector2 GlobalPosition => GlobalTransform.Position;
 
         /// <summary>
-        /// The position of the node.
+        /// The rotation reltaive to the parent.
         /// </summary>
-        public Vector2 Position
-        {
-            get => GlobalTransform.Position;
-            set
-            {
-                _localTransform = _localTransform with { Position = value };
-                UpdateGlobalTransform();
-            }
-        }
+        public float GlobalRotation => GlobalTransform.Rotation;
+
+        /// <summary>
+        /// The scale relative to the parent.
+        /// </summary>
+        public Vector2 GlobalScale => GlobalTransform.Scale;
+
+    
 
         /// <summary>
         /// The local rotation of the node, measured in radians.
@@ -94,9 +146,6 @@ namespace Monolith.Nodes
                 GlobalTransform = _localTransform;
             }
 
-            if (Parent is DynamicBody2D parent)
-                Console.WriteLine($"ThisPos: {Position} ParPos: {parent.Position}");
-
             TransformChanged?.Invoke(GlobalTransform);
 
             foreach (var child in Children)
@@ -113,7 +162,7 @@ namespace Monolith.Nodes
         /// <param name="delta"></param>
         public void Offset(Vector2 delta)
         {
-            Position += delta;
+            LocalPosition += delta;
         }
 
         /// <summary>

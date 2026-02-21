@@ -58,11 +58,11 @@ namespace Monolith.Nodes
 
             Vector2 basePos = new Vector2(
                 LoopAxes.HasFlag(LoopAxis.X)
-                    ? Position.X - Mod(Position.X - offset.X, Texture.Width)
-                    : Position.X,
+                    ? GlobalPosition.X - Mod(GlobalPosition.X - offset.X, Texture.Width)
+                    : GlobalPosition.X,
                 LoopAxes.HasFlag(LoopAxis.Y)
-                    ? Position.Y - Mod(Position.Y - offset.Y, Texture.Height)
-                    : Position.Y
+                    ? GlobalPosition.Y - Mod(GlobalPosition.Y - offset.Y, Texture.Height)
+                    : GlobalPosition.Y
             );
 
             int startX = LoopAxes.HasFlag(LoopAxis.X)
@@ -105,5 +105,4 @@ namespace Monolith.Nodes
             return (x % m + m) % m;
         }
     }
-
 }
