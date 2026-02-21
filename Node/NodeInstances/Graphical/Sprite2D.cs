@@ -22,9 +22,9 @@ namespace Monolith.Nodes
                 Texture = Texture,
                 Position = GlobalPosition,
                 Color = Modulate,
-                Rotation = Rotation,
+                Rotation = GlobalRotation,
                 Origin = Texture.Center,
-                Scale = Scale,
+                Scale = GlobalScale,
                 Effects = SpriteEffects,
                 Effect = Shader,
                 Depth = Depth

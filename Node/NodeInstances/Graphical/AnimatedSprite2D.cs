@@ -106,9 +106,9 @@ namespace Monolith.Nodes
             (
                 position: GlobalPosition,
                 color: Modulate,
-                rotation: Rotation,
+                rotation: GlobalRotation,
                 origin: CurrentFrame.Center,
-                scale: Scale,
+                scale: GlobalScale,
                 effects: SpriteEffects,
                 shader: Shader,
                 depth: Depth

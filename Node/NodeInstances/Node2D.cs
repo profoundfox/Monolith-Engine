@@ -88,34 +88,6 @@ namespace Monolith.Nodes
         /// </summary>
         public Vector2 GlobalScale => GlobalTransform.Scale;
 
-    
-
-        /// <summary>
-        /// The local rotation of the node, measured in radians.
-        /// </summary>
-        public float Rotation
-        {
-            get => GlobalTransform.Rotation;
-            set
-            {
-                _localTransform = _localTransform with { Rotation = value };
-                UpdateGlobalTransform();
-            }
-        }
-
-        /// <summary>
-        /// The local scale of the node.
-        /// </summary>
-        public Vector2 Scale
-        {
-            get => GlobalTransform.Scale;
-            set
-            {
-                _localTransform = _localTransform with { Scale = value };
-                UpdateGlobalTransform();
-            }
-        }
-
         /// <summary>
         /// Creates a new Node2D using a SpatialNodeConfig.
         /// </summary>
