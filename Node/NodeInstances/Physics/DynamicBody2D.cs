@@ -1,6 +1,6 @@
 
 using System;
-using System.Numerics;
+using Microsoft.Xna.Framework;
 using Monolith.Util;
 
 namespace Monolith.Nodes

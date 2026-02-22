@@ -9,12 +9,7 @@ namespace Monolith.Nodes
     {
         public Vector2 Zoom { get; set; } = Vector2.One;
 
-        public static Camera2D CurrentCameraInstance { get; private set; }
-
-        public Camera2D()
-        {
-            CurrentCameraInstance = this;
-        }
+        public Camera2D() {}
 
         /// <summary>
         /// Returns the camera transform matrix for SpriteBatch.Begin.

@@ -25,6 +25,8 @@ namespace Monolith.Nodes
         public MTexture Texture { get; set; }
         public Vector2 MotionScale { get; set; } = Vector2.One;
         public LoopAxis LoopAxes { get; set; } = LoopAxis.Both;
+
+        private Vector2 lastCameraPos;
         private Vector2 offset;
 
         public ParallaxLayer() {}
@@ -45,12 +47,25 @@ namespace Monolith.Nodes
                 offset.Y = 0;
         }
 
+        public override void ProcessUpdate(float delta)
+        {
+            base.ProcessUpdate(delta);
+
+            var camera = Engine.Node.Get<Camera2D>();
+            Vector2 camDelta = camera.GlobalPosition - lastCameraPos;
+            lastCameraPos = camera.GlobalPosition;
+
+            foreach (var child in GetAll<ParallaxLayer>())
+            {
+                child.ApplyCameraDelta(camDelta);
+            }
+        }
+
         public override void SubmitCall()
         {
             if (!GlobalVisibility.Visibile)
                 return;
             
-            var camera = Camera2D.CurrentCameraInstance;
             Rectangle view = Engine.Screen.GetWorldViewRectangle();
 
             int texW = Texture.Width;
