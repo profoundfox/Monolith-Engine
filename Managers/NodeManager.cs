@@ -102,23 +102,6 @@ namespace Monolith.Managers
             byName.Clear();
         }
 
-
-        private static void TrySetParent(Node parent, Node child)
-        {
-            if (child == null || child == parent)
-                return;
-
-            if (child.GetParent() == null && !child.WouldCreateCycle(parent))
-                child.SetParent(parent);
-        }
-
-        public void Load(Node node)
-        {
-            Flush();
-            node.Load();
-            Flush();
-        }
-
         internal void ProcesssUpdate(float delta)
         {
             Flush();

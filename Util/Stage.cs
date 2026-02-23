@@ -12,9 +12,18 @@ namespace Monolith.Util
     {
 
         public virtual void OnEnter() {}
-        public virtual void PhysicsUpdate(float deltaTime) {}
-        public virtual void ProcessUpdate(float deltaTime) {}
-        public virtual void SubmitCall() {}
+        public virtual void PhysicsUpdate(float deltaTime)
+        {
+            Engine.Node.PhysicsUpdate(deltaTime);
+        }
+        public virtual void ProcessUpdate(float deltaTime)
+        {
+            Engine.Node.ProcesssUpdate(deltaTime);
+        }
+        public virtual void SubmitCall()
+        {
+            Engine.Node.SubmitCalls();
+        }
         public virtual void OnExit() {}
     }
 }

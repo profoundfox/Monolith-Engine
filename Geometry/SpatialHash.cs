@@ -1,0 +1,91 @@
+
+
+using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+
+namespace Monolith.Geometry
+{
+    public class SpatialHash<T> where T : IHashAble
+    {
+        private readonly Dictionary<Point, List<T>> _cells = new();
+        private float _cellSize;
+
+        public SpatialHash(float cellSize = 64f)
+        {
+            _cellSize = cellSize;
+        }
+
+        private Point GetWorldCoords(Vector2 position)
+        {
+            return Vector2.Floor(position / _cellSize).ToPoint();
+        }
+
+        private IEnumerable<Point> GetCellsForBounds(Rectangle bounds)
+        {
+            int minX = (int)Math.Floor(bounds.Left / _cellSize);
+            int maxX = (int)Math.Floor(bounds.Right / _cellSize);
+            int minY = (int)Math.Floor(bounds.Top / _cellSize);
+            int maxY = (int)Math.Floor(bounds.Bottom / _cellSize);
+
+            for (int x = minX; x <= maxX; x++)
+                for (int y = minY; y <= maxY; y++)
+                    yield return new Point(x, y);
+        }
+
+        public void Insert(T obj)
+        {
+            foreach(var cell in GetCellsForBounds(obj.Bounds))
+            {
+                if (!_cells.TryGetValue(cell, out var list))
+                {
+                    list = new List<T>();
+                    _cells[cell] = list;
+                }
+                list.Add(obj);
+            }
+        }
+
+        public void Remove(T obj)
+        {
+            foreach(var cell in GetCellsForBounds(obj.Bounds))
+            {
+                if (!_cells.TryGetValue(cell, out var list))
+                    list.Remove(obj);
+            }
+        }
+
+        private void RemoveFromOldCells(T obj, Rectangle oldBounds)
+        {
+            foreach(var cell in GetCellsForBounds(oldBounds))
+            {
+                if (_cells.TryGetValue(cell, out var list))
+                    list.Remove(obj);
+            }
+        }
+
+        public List<T> Query(Rectangle bounds)
+        {
+            var results = new HashSet<T>();
+            foreach(var cell in GetCellsForBounds(bounds))
+            {
+                if (_cells.TryGetValue(cell, out var list))
+                    foreach(var obj in list)
+                        results.Add(obj);
+            }
+
+            return new List<T>(results);
+        }
+
+        public void Update(T obj, Rectangle oldBounds)
+        {
+            RemoveFromOldCells(obj, oldBounds);
+            Insert(obj);
+        }
+    }
+
+    public interface IHashAble
+    {
+        Rectangle Bounds { get; }
+    }
+}

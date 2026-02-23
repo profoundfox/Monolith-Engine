@@ -1,13 +1,17 @@
 
 using System;
 using System.Linq;
+using Microsoft.Xna.Framework;
+using Monolith.Geometry;
 
 namespace Monolith.Nodes
 {
    
-    public class PhysicsBody2D : Node2D
+    public class PhysicsBody2D : Node2D, IHashAble
     {
         public CollisionShape2D CollisionShape { get => Get<CollisionShape2D>(); }
+
+        public Rectangle Bounds => CollisionShape.Shape.BoundingBox;
 
         public PhysicsBody2D() {}
 

@@ -165,7 +165,6 @@ namespace Monolith.Managers
 
             if (!_stageFrozen)
             {
-                ProcessUpdateRelative(deltaTime);
                 GetCurrentStage()?.ProcessUpdate(deltaTime);
             }
             
@@ -182,7 +181,6 @@ namespace Monolith.Managers
 
             if (!_stageFrozen)
             {
-                PhysicsUpdateRelative(deltaTime);
                 GetCurrentStage()?.PhysicsUpdate(deltaTime);
             }
             
@@ -196,7 +194,6 @@ namespace Monolith.Managers
 
             if (!_stageFrozen)
             {
-                SubmitCallRelative();
                 GetCurrentStage()?.SubmitCall();
             }
             
