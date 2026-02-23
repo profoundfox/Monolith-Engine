@@ -109,7 +109,7 @@ namespace Monolith.Nodes
         /// </summary>
         internal void UpdateGlobalTransform()
         {
-            if (Parent is Node2D parent2D)
+            if (GetParent() is Node2D parent2D)
             {
                 GlobalTransform = Transform2D.Combine(parent2D.GlobalTransform, _localTransform);
             }

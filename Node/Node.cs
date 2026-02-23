@@ -7,11 +7,7 @@ namespace Monolith.Nodes
     public class Node
     {
         private readonly List<Node> children = new();
-
-        /// <summary>
-        /// The parent node in the hierarchy
-        /// </summary>
-        public Node Parent { get; private set; }
+        private Node parent;
 
         /// <summary>
         /// The name of the node.
@@ -32,6 +28,16 @@ namespace Monolith.Nodes
             Engine.Node.QueueAdd(this);
         }
 
+        public Node GetParent()
+        {
+            return parent;
+        }
+
+        public TParent GetParent<TParent>() where TParent : Node
+        {
+            return parent as TParent;
+        }
+
         /// <summary>
         /// Sets the parent of this node, automatically updating the children lists.
         /// </summary>
@@ -40,15 +46,15 @@ namespace Monolith.Nodes
             if (newParent == this)
                 throw new Exception("Node attempted to become its own parent!");
 
-            if (Parent == newParent)
+            if (parent == newParent)
                 return;
 
             if (WouldCreateCycle(newParent))
                 throw new Exception("Parenting would create a cycle in the node tree.");
 
-            Parent?.children.Remove(this);
-            Parent = newParent;
-            Parent?.children.Add(this);
+            parent?.children.Remove(this);
+            parent = newParent;
+            parent?.children.Add(this);
 
             OnParentChanged();
         }
@@ -63,7 +69,7 @@ namespace Monolith.Nodes
             while (p != null)
             {
                 if (p == this) return true;
-                p = p.Parent;
+                p = p.parent;
             }
             return false;
         }
@@ -127,7 +133,7 @@ namespace Monolith.Nodes
         /// </summary>
         internal void ClearNodeData()
         {
-            Parent = null;
+            parent = null;
             children.Clear();
             Name = null;
         }

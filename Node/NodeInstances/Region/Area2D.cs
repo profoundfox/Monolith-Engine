@@ -26,10 +26,10 @@ namespace Monolith.Nodes
         private Node2D GetOverlappingArea()
         {
             return Engine.Node.GetAll<CollisionShape2D>()
-                .Where(c => c.Parent != this)
-                .Where(c => AcceptedType.Any(t => t.IsAssignableFrom(c.Parent.GetType())))
+                .Where(c => c.GetParent() != this)
+                .Where(c => AcceptedType.Any(t => t.IsAssignableFrom(c.GetParent().GetType())))
                 .FirstOrDefault(c => c.Intersects(CollisionShape2D))
-                ?.Parent as Node2D;
+                ?.GetParent<Node2D>();
         }
 
 

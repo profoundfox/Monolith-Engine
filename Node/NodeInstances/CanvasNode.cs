@@ -169,7 +169,7 @@ namespace Monolith.Nodes
         /// </summary>
         private void UpdateAttributes()
         {
-            if (Parent is CanvasNode parentCanvas)
+            if (GetParent() is CanvasNode parentCanvas)
             {
                 GlobalVisibility = Visibility.Combine(parentCanvas.GlobalVisibility, localVisibility);
                 GlobalOrdering = Ordering.Combine(parentCanvas.GlobalOrdering, localOrdering);

@@ -78,7 +78,7 @@ namespace Monolith.Managers
                     byName.Remove(node.Name);
             }
 
-            node.Parent?.RemoveChild(node);
+            node.GetParent()?.RemoveChild(node);
 
             foreach (var child in node.Children.ToList())
                 RemoveInternal(child);
@@ -108,7 +108,7 @@ namespace Monolith.Managers
             if (child == null || child == parent)
                 return;
 
-            if (child.Parent == null && !child.WouldCreateCycle(parent))
+            if (child.GetParent() == null && !child.WouldCreateCycle(parent))
                 child.SetParent(parent);
         }
 
