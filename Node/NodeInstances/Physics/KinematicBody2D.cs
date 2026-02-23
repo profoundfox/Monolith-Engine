@@ -14,6 +14,9 @@ namespace Monolith.Nodes
         public bool IsOnRoof => _isOnRoof;
 
         private CollisionShape2D _floorShape;
+        private CollisionShape2D _wallShape;
+        
+        private Vector2 _lastWallGlobalPosition;
         private Vector2 _lastFloorGlobalPosition;
 
         private bool _isOnWall = false;
@@ -39,11 +42,21 @@ namespace Monolith.Nodes
                 _lastFloorGlobalPosition = _floorShape.GlobalTransform.Position;
             }
 
+            if (_isOnWall && _wallShape != null)
+            {
+                Vector2 wallDelta = _wallShape.GlobalTransform.Position - _lastWallGlobalPosition;
+                LocalPosition += wallDelta;
+                _lastWallGlobalPosition = _wallShape.GlobalTransform.Position;
+            }
+
+            ResolveStaticPenetration();
+
             _isOnFloor = false;
             _isOnRoof = false;
             _isOnWall = false;
             WallNormal = Vector2.Zero;
             _floorShape = null;
+            _wallShape = null;
 
             var bodies = Engine.Node.GetAll<PhysicsBody2D>()
                             .Where(b => b.CollisionShape != CollisionShape && !b.CollisionShape.Disabled)
@@ -57,12 +70,15 @@ namespace Monolith.Nodes
                 if (CollisionShape.Intersects(other.CollisionShape))
                 {
                     _isOnWall = true;
+                    _wallShape = other.CollisionShape;
+                    _lastWallGlobalPosition = _wallShape.GlobalTransform.Position;
+
                     WallNormal = movement.X > 0 ? new Vector2(-1, 0) : new Vector2(1, 0);
+
                     LocalPosition -= horizontalMovement;
                     Velocity = new Vector2(0, Velocity.Y);
                     break;
                 }
-
                 if (CollisionShape.IntersectsAt(new Vector2(WALL_TOLERANCE, 0), other.CollisionShape))
                 {
                     _isOnWall = true;
@@ -114,6 +130,43 @@ namespace Monolith.Nodes
                 }
 
                 if (_isOnFloor) break;
+            }
+        }
+
+        private void ResolveStaticPenetration()
+        {
+            var bodies = Engine.Node.GetAll<PhysicsBody2D>()
+                            .Where(b => b.CollisionShape != CollisionShape && !b.CollisionShape.Disabled)
+                            .ToArray();
+
+            foreach (var other in bodies)
+            {
+                if (CollisionShape.Intersects(other.CollisionShape))
+                {
+                    Rectangle a = CollisionShape.Shape.BoundingBox;
+                    Rectangle b = other.CollisionShape.Shape.BoundingBox;
+
+                    float moveRight = b.Right - a.Left;
+                    float moveLeft = a.Right - b.Left;
+                    float moveDown = b.Bottom - a.Top;
+                    float moveUp = a.Bottom - b.Top;
+
+                    float minX = Math.Min(moveRight, moveLeft);
+                    float minY = Math.Min(moveDown, moveUp);
+
+                    if (minX < minY)
+                    {
+                        LocalPosition += new Vector2(
+                            moveRight < moveLeft ? moveRight : -moveLeft,
+                            0);
+                    }
+                    else
+                    {
+                        LocalPosition += new Vector2(
+                            0,
+                            moveDown < moveUp ? moveDown : -moveUp);
+                    }
+                }
             }
         }
 
