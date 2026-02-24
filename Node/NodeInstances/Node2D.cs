@@ -16,8 +16,6 @@ namespace Monolith.Nodes
     {
         private Transform2D _localTransform = Transform2D.Identity;
 
-        public event Action<Transform2D> TransformChanged;
-
         /// <summary>
         /// The self contained transform of this node.
         /// </summary>
@@ -89,18 +87,21 @@ namespace Monolith.Nodes
         public Vector2 GlobalScale => GlobalTransform.Scale;
 
         /// <summary>
+        /// Signal for when the transform changes.
+        /// </summary>
+        public event Action<Transform2D> OnTransformChanged;
+
+
+        /// <summary>
         /// Creates a new Node2D using a SpatialNodeConfig.
         /// </summary>
         public Node2D()
         {
             UpdateGlobalTransform();
-        }
-
-        protected override void OnParentChanged()
-        {
-            base.OnParentChanged();
-
-            UpdateGlobalTransform();
+            OnParentChanged += (node) =>
+            {
+                UpdateGlobalTransform();
+            };
         }
 
         /// <summary>
@@ -118,7 +119,7 @@ namespace Monolith.Nodes
                 GlobalTransform = _localTransform;
             }
 
-            TransformChanged?.Invoke(GlobalTransform);
+            OnTransformChanged?.Invoke(GlobalTransform);
 
             foreach (var child in Children)
             {

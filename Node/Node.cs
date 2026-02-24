@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Linq;
 
 namespace Monolith.Nodes
@@ -18,6 +19,21 @@ namespace Monolith.Nodes
         /// All children of this node.
         /// </summary>
         public IReadOnlyList<Node> Children => children.AsReadOnly();
+
+        /// <summary>
+        /// Signal for when a parent is changed.
+        /// </summary>
+        public event Action<Node> OnParentChanged;
+
+        /// <summary>
+        /// Signal for when a child is added.
+        /// </summary>
+        public event Action<Node> OnChildAdded;
+
+        /// <summary>
+        /// Signal for when a child is removed.
+        /// </summary>
+        public event Action<Node> OnChildRemoved;
 
         /// <summary>
         /// Creates a new Node.
@@ -56,7 +72,7 @@ namespace Monolith.Nodes
             parent = newParent;
             parent?.children.Add(this);
 
-            OnParentChanged();
+            OnParentChanged?.Invoke(newParent);
         }
 
         /// <summary>
@@ -83,6 +99,8 @@ namespace Monolith.Nodes
                 return;
 
             child.SetParent(this);
+
+            OnChildAdded?.Invoke(child);
         }
 
         /// <summary>
@@ -110,6 +128,8 @@ namespace Monolith.Nodes
                 return;
 
             child.SetParent(null);
+
+            OnChildRemoved?.Invoke(child);
         }
 
         /// <summary>
@@ -162,10 +182,5 @@ namespace Monolith.Nodes
         /// Called when submitting draw calls.
         /// </summary>
         public virtual void SubmitCall() { }
-
-        /// <summary>
-        /// Called when the parent changes.
-        /// </summary>
-        protected virtual void OnParentChanged() { }
     }
 }

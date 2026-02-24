@@ -42,13 +42,13 @@ namespace Monolith.Nodes
                 Shape.Location = newTransform.Position.ToPoint();
             };
 
-            TransformChanged += _onTransformChanged;
+            OnTransformChanged += _onTransformChanged;
         }
 
         public override void Unload()
         {
             base.Unload();
-            TransformChanged -= _onTransformChanged;
+            OnTransformChanged -= _onTransformChanged;
         }
 
         public override void PhysicsUpdate(float delta)

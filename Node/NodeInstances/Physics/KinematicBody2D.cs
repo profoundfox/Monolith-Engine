@@ -58,14 +58,12 @@ namespace Monolith.Nodes
             _floorShape = null;
             _wallShape = null;
 
-            var bodies = Engine.Node.GetAll<PhysicsBody2D>()
-                            .Where(b => b.CollisionShape != CollisionShape && !b.CollisionShape.Disabled)
-                            .ToArray();
-
             Vector2 horizontalMovement = new Vector2(movement.X, 0);
             LocalPosition += horizontalMovement;
 
-            foreach (var other in bodies)
+            var nearby = Engine.Physics.Query(Bounds);
+
+            foreach (var other in nearby.Where(b => b != this))
             {
                 if (CollisionShape.Intersects(other.CollisionShape))
                 {
@@ -99,7 +97,9 @@ namespace Monolith.Nodes
             Vector2 verticalMovement = new Vector2(0, movement.Y);
             LocalPosition += verticalMovement;
 
-            foreach (var other in bodies)
+            nearby = Engine.Physics.Query(Bounds);
+
+            foreach (var other in nearby.Where(b => b != this))
             {
                 if (CollisionShape.Intersects(other.CollisionShape))
                 {
@@ -135,11 +135,9 @@ namespace Monolith.Nodes
 
         private void ResolveStaticPenetration()
         {
-            var bodies = Engine.Node.GetAll<PhysicsBody2D>()
-                            .Where(b => b.CollisionShape != CollisionShape && !b.CollisionShape.Disabled)
-                            .ToArray();
+            var nearby = Engine.Physics.Query(Bounds);
 
-            foreach (var other in bodies)
+            foreach (var other in nearby.Where(b => b != this))
             {
                 if (CollisionShape.Intersects(other.CollisionShape))
                 {

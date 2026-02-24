@@ -1,16 +1,14 @@
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Monolith.Helpers;
-using Monolith.IO;
-using Monolith.Managers;
-using Monolith.Nodes;
 
+using System.Collections.Generic;
+using System.Net.NetworkInformation;
+using Microsoft.Xna.Framework;
+using Monolith.Geometry;
+using Monolith.Nodes;
 
 namespace Monolith.Util
 {
     public class Stage
     {
-
         public virtual void OnEnter() {}
         public virtual void PhysicsUpdate(float deltaTime)
         {

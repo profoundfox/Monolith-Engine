@@ -31,6 +31,7 @@ namespace Monolith
         public static InputManager Input { get; private set; }
         public static NodeManager Node { get; private set; }
         public static TimerManager Timer { get; private set; }
+        public static PhysicsServer2D Physics { get; private set; }
 
         public static float FPS { get; private set; }
         private int _fpsFrames;
@@ -44,10 +45,11 @@ namespace Monolith
                 throw new InvalidOperationException("Only one Engine instance can exist.");
 
             Instance = this;
-            Graphics = new GraphicsDeviceManager(this);
-
-            Graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            Graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+            Graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width,
+                PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height
+            };
             Graphics.ApplyChanges();
 
             Window.AllowUserResizing = true;
@@ -65,6 +67,7 @@ namespace Monolith
             Tween = new TweenManager();
             Stage = new StageManager();
             Node = new NodeManager();
+            Physics = new PhysicsServer2D();
             Timer = new TimerManager();
             Input = new InputManager();
 

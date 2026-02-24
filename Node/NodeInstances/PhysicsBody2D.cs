@@ -18,10 +18,20 @@ namespace Monolith.Nodes
         public override void Load()
         {
             base.Load();
+
+            OnChildAdded += (node) =>
+            {
+                Engine.Physics.RegisterBody(this);
+                OnTransformChanged += (transform) =>
+                {
+                    Engine.Physics.NotifyMoved(this);
+                };
+            };
         }
 
         public override void Unload()
         {
+            Engine.Physics.UnregisterBody(this);
             base.Unload();
         }
 
