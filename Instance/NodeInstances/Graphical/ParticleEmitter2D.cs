@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Monolith.Attributes;
 using Monolith.Graphics;
 
-namespace Monolith.Nodes
+namespace Monolith.Instances
 {
     public class ParticleEmitter2D : Node2D
     {
@@ -21,9 +21,9 @@ namespace Monolith.Nodes
             _spawnInterval = 1f / EmittedPerSecond;
         }
 
-        public override void Load()
+        public override void OnEnter()
         {
-            base.Load();
+            base.OnEnter();
         }
 
         public override void ProcessUpdate(float delta)

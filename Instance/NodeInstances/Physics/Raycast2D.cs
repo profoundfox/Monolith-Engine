@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Monolith.Geometry;
 
-namespace Monolith.Nodes
+namespace Monolith.Instances
 {
     public class RayCast2D : Node2D
     {
@@ -31,7 +31,7 @@ namespace Monolith.Nodes
 
             Ray.TargetOffset = worldOffset;
 
-            var shapes = Engine.Node
+            var shapes = Engine.Tree
                 .GetAll<CollisionShape2D>()
                 .Where(cs => cs.Shape != null)
                 .Select(cs => cs.Shape)

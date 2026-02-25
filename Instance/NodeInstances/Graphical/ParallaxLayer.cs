@@ -3,11 +3,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Graphics;
 using Monolith.Managers;
-using Monolith.Nodes;
+using Monolith.Instances;
 using Monolith.Attributes;
 using Monolith.Util;
 
-namespace Monolith.Nodes
+namespace Monolith.Instances
 {
     public enum LoopAxis
     {
@@ -51,7 +51,7 @@ namespace Monolith.Nodes
         {
             base.ProcessUpdate(delta);
 
-            var camera = Engine.Node.Get<Camera2D>();
+            var camera = Engine.Tree.Get<Camera2D>();
             Vector2 camDelta = camera.GlobalPosition - lastCameraPos;
             lastCameraPos = camera.GlobalPosition;
 

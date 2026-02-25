@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Attributes;
 
-namespace Monolith.Nodes
+namespace Monolith.Instances
 {
     public class CanvasNode : Node
     {

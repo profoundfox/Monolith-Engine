@@ -2,22 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Linq;
+using Monolith.Managers;
 
-namespace Monolith.Nodes
+namespace Monolith.Instances
 {
-    public class Node
+    public class Node : Instance
     {
         private readonly List<Node> children = new();
         private Node parent;
 
-        /// <summary>
-        /// The name of the node.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// All children of this node.
-        /// </summary>
         public IReadOnlyList<Node> Children => children.AsReadOnly();
 
         /// <summary>
@@ -34,15 +27,8 @@ namespace Monolith.Nodes
         /// Signal for when a child is removed.
         /// </summary>
         public event Action<Node> OnChildRemoved;
-
-        /// <summary>
-        /// Creates a new Node.
-        /// </summary>
-        public Node()
-        {
-            Name = GetType().Name;
-            Engine.Node.QueueAdd(this);
-        }
+        
+        public Node() {}
 
         public Node GetParent()
         {
@@ -54,9 +40,6 @@ namespace Monolith.Nodes
             return parent as TParent;
         }
 
-        /// <summary>
-        /// Sets the parent of this node, automatically updating the children lists.
-        /// </summary>
         public void SetParent(Node newParent)
         {
             if (newParent == this)
@@ -75,10 +58,6 @@ namespace Monolith.Nodes
             OnParentChanged?.Invoke(newParent);
         }
 
-        /// <summary>
-        /// Checks if a node creates a cycle.
-        /// A - B - A
-        /// </summary>
         internal bool WouldCreateCycle(Node newParent)
         {
             var p = newParent;
@@ -90,9 +69,6 @@ namespace Monolith.Nodes
             return false;
         }
 
-        /// <summary>
-        /// Adds a child to this node.
-        /// </summary>
         public void AddChild(Node child)
         {
             if (child == null || children.Contains(child))
@@ -103,25 +79,17 @@ namespace Monolith.Nodes
             OnChildAdded?.Invoke(child);
         }
 
-        /// <summary>
-        /// Gets the first found child of a specified type.
-        /// </summary>
+
         public T Get<T>() where T : Node
         {
             return children.OfType<T>().FirstOrDefault();
         }
-        
-        /// <summary>
-        /// Gets all children of a specified type.
-        /// </summary>
+
         public IReadOnlyList<T> GetAll<T>() where T : Node
         {
             return children.OfType<T>().ToList();
         }
 
-        /// <summary>
-        /// Removes a child from this node.
-        /// </summary>
         public void RemoveChild(Node child)
         {
             if (child == null || !children.Contains(child))
@@ -132,55 +100,53 @@ namespace Monolith.Nodes
             OnChildRemoved?.Invoke(child);
         }
 
-        /// <summary>
-        /// Queues a node for removal from the main instance list and clears its data.
-        /// </summary>
-        public void QueueFree()
+        internal override void ClearData()
         {
-            Engine.Node.QueueRemove(this);
-        }
+            base.ClearData();
 
-        /// <summary>
-        /// Removes the instance of this node immediately.
-        /// </summary>
-        public void FreeImmediate()
-        {
-            Engine.Node.RemoveNow(this);
-        }
-
-        /// <summary>
-        /// Clears the node's data to help with memory management.
-        /// </summary>
-        internal void ClearNodeData()
-        {
             parent = null;
             children.Clear();
-            Name = null;
         }
 
+        
         /// <summary>
         /// Called when the node enters the tree.
         /// </summary>
-        public virtual void Load() { }
+        public override void OnEnter()
+        {
+            base.OnEnter();
+        }
 
         /// <summary>
         /// Called when the node exits the tree.
         /// </summary>
-        public virtual void Unload() { }
+        public override void OnExit()
+        {
+            base.OnExit();
+        }
 
         /// <summary>
         /// Called every frame.
         /// </summary>
-        public virtual void ProcessUpdate(float delta) { }
+        public override void ProcessUpdate(float delta)
+        {
+            base.ProcessUpdate(delta);
+        }
 
         /// <summary>
         /// Called every physics tick.
         /// </summary>
-        public virtual void PhysicsUpdate(float delta) { }
+        public override void PhysicsUpdate(float delta)
+        {
+            base.PhysicsUpdate(delta);
+        }
 
         /// <summary>
         /// Called when submitting draw calls.
         /// </summary>
-        public virtual void SubmitCall() { }
+        public override void SubmitCall()
+        {
+            base.SubmitCall();
+        }
     }
 }

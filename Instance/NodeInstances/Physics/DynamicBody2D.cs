@@ -3,7 +3,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Monolith.Util;
 
-namespace Monolith.Nodes
+namespace Monolith.Instances
 {
     public class DynamicBody2D : PhysicsBody2D
     {
@@ -11,9 +11,9 @@ namespace Monolith.Nodes
 
         public DynamicBody2D() {}
 
-        public override void Load()
+        public override void OnEnter()
         {
-            base.Load();
+            base.OnEnter();
         }
 
         public override void PhysicsUpdate(float delta)
@@ -33,9 +33,9 @@ namespace Monolith.Nodes
             base.SubmitCall();
         }
 
-        public override void Unload()
+        public override void OnExit()
         {
-            base.Unload();
+            base.OnEnter();
         }
     }
 }

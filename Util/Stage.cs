@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using Microsoft.Xna.Framework;
 using Monolith.Geometry;
-using Monolith.Nodes;
+using Monolith.Instances;
 
 namespace Monolith.Util
 {
@@ -13,17 +13,14 @@ namespace Monolith.Util
         public virtual void PhysicsUpdate(float deltaTime)
         {
             Engine.Tree.PhysicsUpdate(deltaTime);
-            Engine.Node.PhysicsUpdate(deltaTime);
         }
         public virtual void ProcessUpdate(float deltaTime)
         {
             Engine.Tree.ProcesssUpdate(deltaTime);
-            Engine.Node.ProcesssUpdate(deltaTime);
         }
         public virtual void SubmitCall()
         {
             Engine.Tree.SubmitCalls();
-            Engine.Node.SubmitCalls();
         }
         public virtual void OnExit() {}
     }

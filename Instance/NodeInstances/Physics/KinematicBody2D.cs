@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 
-namespace Monolith.Nodes
+namespace Monolith.Instances
 {
     public class KinematicBody2D : PhysicsBody2D
     {

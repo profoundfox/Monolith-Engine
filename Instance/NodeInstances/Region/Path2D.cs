@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 
-namespace Monolith.Nodes
+namespace Monolith.Instances
 {
     public class Path2D : Node2D
     {

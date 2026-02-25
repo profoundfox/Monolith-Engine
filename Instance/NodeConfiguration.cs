@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Monolith.Nodes
+namespace Monolith.Instances
 {
     public static class Properties
     {

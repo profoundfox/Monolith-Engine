@@ -30,7 +30,6 @@ namespace Monolith
         public static ScreenManager Screen { get; private set; }
         public static StageManager Stage { get; private set; }
         public static InputManager Input { get; private set; }
-        public static NodeManager Node { get; private set; }
         public static TimerManager Timer { get; private set; }
         public static PhysicsServer2D Physics { get; private set; }
 
@@ -68,7 +67,6 @@ namespace Monolith
             Tween = new TweenManager();
             Stage = new StageManager();
             Tree = new TreeServer2D();
-            Node = new NodeManager();
             Physics = new PhysicsServer2D();
             Timer = new TimerManager();
             Input = new InputManager();

@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Monolith.Graphics;
 using Monolith.Attributes;
 
-namespace Monolith.Nodes
+namespace Monolith.Instances
 {
     public class AnimatedSprite2D : Node2D
     {

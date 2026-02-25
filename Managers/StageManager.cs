@@ -5,7 +5,7 @@ using System.Reflection;
 
 using Monolith.IO;
 using Monolith.Graphics;
-using Monolith.Nodes;
+using Monolith.Instances;
 using Monolith.Geometry;
 using Monolith.Util;
 
@@ -227,7 +227,7 @@ namespace Monolith.Managers
         /// </summary>
         public static void ClearStageData()
         {
-            Engine.Node.DumpAllInstances();
+            Engine.Tree.DumpAllInstances();
         }
     }
 }

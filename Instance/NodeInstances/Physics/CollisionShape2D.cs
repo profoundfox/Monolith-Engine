@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Monolith.Geometry;
 using Monolith.Attributes;
 
-namespace Monolith.Nodes
+namespace Monolith.Instances
 {
     public class CollisionShape2D : Node2D
     {
@@ -28,9 +28,9 @@ namespace Monolith.Nodes
 
         public CollisionShape2D() {}
 
-        public override void Load()
+        public override void OnEnter()
         {
-            base.Load();
+            base.OnEnter();
 
             if (Shape != null)
             {
@@ -45,9 +45,9 @@ namespace Monolith.Nodes
             OnTransformChanged += _onTransformChanged;
         }
 
-        public override void Unload()
+        public override void OnExit()
         {
-            base.Unload();
+            base.OnExit();
             OnTransformChanged -= _onTransformChanged;
         }
 
@@ -74,7 +74,7 @@ namespace Monolith.Nodes
 
         private void CheckOneWay()
         {
-            foreach (KinematicBody2D kb in Engine.Node.GetAll<KinematicBody2D>())
+            foreach (KinematicBody2D kb in Engine.Tree.GetAll<KinematicBody2D>())
             {
                 IRegionShape2D body = kb.CollisionShape.Shape;
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Monolith.Instances;
 
 namespace Monolith.Managers
 {
@@ -71,12 +72,18 @@ namespace Monolith.Managers
                     byName.Remove(instance.GetName());
             }
 
-            instance.GetParent()?.RemoveChild(instance);
+            instance.OnExit();
 
-            foreach (var child in instance.Children.ToList())
-                RemoveInternal(child);
+            //TBD if should keep like this.
+            if (instance is Node node)
+            {
+                node.GetParent()?.RemoveChild(node);
 
-            instance.ClearNodeData();
+                foreach (var child in node.Children.ToList())
+                    RemoveInternal(child);
+            }
+
+            instance.ClearData();
         }
 
         internal void RemoveNow(Instance instance) => RemoveInternal(instance);

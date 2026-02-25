@@ -7,7 +7,7 @@ using Monolith.IO;
 using Monolith.Managers;
 using Monolith.Attributes;
 
-namespace Monolith.Nodes
+namespace Monolith.Instances
 {    
     public class Tilemap : Node2D
     {

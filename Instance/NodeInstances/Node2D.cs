@@ -9,7 +9,7 @@ using Monolith.Managers;
 using Monolith.Attributes;
 using System.IO.Compression;
 
-namespace Monolith.Nodes
+namespace Monolith.Instances
 {
 
     public class Node2D : CanvasNode
@@ -148,14 +148,14 @@ namespace Monolith.Nodes
             Offset(new Vector2(x, y));
         }
 
-        public override void Load()
+        public override void OnEnter()
         {
-            base.Load();
+            base.OnEnter();
         }
 
-        public override void Unload()
+        public override void OnExit()
         {
-            base.Unload();
+            base.OnExit();
         }
 
         public override void ProcessUpdate(float delta)

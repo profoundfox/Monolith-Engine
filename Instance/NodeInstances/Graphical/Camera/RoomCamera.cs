@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Monolith.Helpers;
 using Monolith.Util;
 
-namespace Monolith.Nodes
+namespace Monolith.Instances
 {
     public enum CameraSide
     {
@@ -28,9 +28,9 @@ namespace Monolith.Nodes
 
         public RoomCamera() {}
 
-        public override void Load()
+        public override void OnEnter()
         {
-            base.Load();
+            base.OnEnter();
 
             if (TargetNode is KinematicBody2D)
             {
@@ -39,9 +39,9 @@ namespace Monolith.Nodes
             }
         }
 
-        public override void Unload()
+        public override void OnExit()
         {
-            base.Unload();
+            base.OnExit();
         }
 
         public override void ProcessUpdate(float delta)

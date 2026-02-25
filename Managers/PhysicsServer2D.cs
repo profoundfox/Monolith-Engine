@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Xna.Framework;
 using Monolith.Geometry;
-using Monolith.Nodes;
+using Monolith.Instances;
 
 namespace Monolith.Managers
 {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Monolith;
 using Monolith.Managers;
-using Monolith.Nodes;
+using Monolith.Instances;
 
-namespace Monolith.Nodes
+namespace Monolith.Instances
 {
     public class Area2D : Node2D
     {
@@ -25,7 +25,7 @@ namespace Monolith.Nodes
         
         private Node2D GetOverlappingArea()
         {
-            return Engine.Node.GetAll<CollisionShape2D>()
+            return Engine.Tree.GetAll<CollisionShape2D>()
                 .Where(c => c.GetParent() != this)
                 .Where(c => AcceptedType.Any(t => t.IsAssignableFrom(c.GetParent().GetType())))
                 .FirstOrDefault(c => c.Intersects(CollisionShape2D))
@@ -35,7 +35,7 @@ namespace Monolith.Nodes
 
         private KinematicBody2D GetOverlappingBody()
         {
-            return Engine.Node.All
+            return Engine.Tree.All
                 .Where(a => a != this && typeof(KinematicBody2D).IsAssignableFrom(a.GetType()))
                 .Cast<KinematicBody2D>()
                 .FirstOrDefault(a => CollisionShape2D.Intersects(a.CollisionShape));

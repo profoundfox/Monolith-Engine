@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Monolith.Geometry;
 
-namespace Monolith.Nodes
+namespace Monolith.Instances
 {
    
     public class PhysicsBody2D : Node2D, IHashAble
@@ -15,9 +15,9 @@ namespace Monolith.Nodes
 
         public PhysicsBody2D() {}
 
-        public override void Load()
+        public override void OnEnter()
         {
-            base.Load();
+            base.OnEnter();
 
             OnChildAdded += (node) =>
             {
@@ -29,10 +29,10 @@ namespace Monolith.Nodes
             };
         }
 
-        public override void Unload()
+        public override void OnExit()
         {
             Engine.Physics.UnregisterBody(this);
-            base.Unload();
+            base.OnExit();
         }
 
         public override void PhysicsUpdate(float delta)
