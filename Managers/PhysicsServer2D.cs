@@ -49,7 +49,7 @@ namespace Monolith.Managers
                 _bounds[body] = newBounds;
             }
         }
-
+    
         public List<PhysicsBody2D> Query(Rectangle area)
         {
             return _broadphase.Query(area);

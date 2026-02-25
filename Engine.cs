@@ -24,6 +24,7 @@ namespace Monolith
         public static MTexture Pixel { get; private set; }
         public static EngineTime EngineTime { get; private set; }
 
+        public static TreeServer2D Tree { get; private set; }
         public static TweenManager Tween { get; private set; }
         public static ResourceManager Resource { get; private set; }
         public static ScreenManager Screen { get; private set; }
@@ -66,6 +67,7 @@ namespace Monolith
             Resource = new ResourceManager();
             Tween = new TweenManager();
             Stage = new StageManager();
+            Tree = new TreeServer2D();
             Node = new NodeManager();
             Physics = new PhysicsServer2D();
             Timer = new TimerManager();

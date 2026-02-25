@@ -16,11 +16,21 @@ namespace Monolith.Geometry
             _cellSize = cellSize;
         }
 
+        /// <summary>
+        /// Gets the cell coordinates of a Vector2.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
         private Point GetWorldCoords(Vector2 position)
         {
             return Vector2.Floor(position / _cellSize).ToPoint();
         }
 
+        /// <summary>
+        /// Gets the cell a rectangle intersects.
+        /// </summary>
+        /// <param name="bounds"></param>
+        /// <returns></returns>
         private IEnumerable<Point> GetCellsForBounds(Rectangle bounds)
         {
             int minX = (int)Math.Floor(bounds.Left / _cellSize);
@@ -33,6 +43,10 @@ namespace Monolith.Geometry
                     yield return new Point(x, y);
         }
 
+        /// <summary>
+        /// Inserts an object.
+        /// </summary>
+        /// <param name="obj"></param>
         public void Insert(T obj)
         {
             foreach(var cell in GetCellsForBounds(obj.Bounds))
@@ -46,6 +60,10 @@ namespace Monolith.Geometry
             }
         }
 
+        /// <summary>
+        /// Removes an object.
+        /// </summary>
+        /// <param name="obj"></param>
         public void Remove(T obj)
         {
             foreach(var cell in GetCellsForBounds(obj.Bounds))
@@ -55,6 +73,11 @@ namespace Monolith.Geometry
             }
         }
 
+        /// <summary>
+        /// Removes an object from old cells.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="oldBounds"></param>
         private void RemoveFromOldCells(T obj, Rectangle oldBounds)
         {
             foreach(var cell in GetCellsForBounds(oldBounds))
@@ -64,6 +87,11 @@ namespace Monolith.Geometry
             }
         }
 
+        /// <summary>
+        /// Gets the cells a rectangle intersects.
+        /// </summary>
+        /// <param name="bounds"></param>
+        /// <returns></returns>
         public List<T> Query(Rectangle bounds)
         {
             var results = new HashSet<T>();
@@ -77,6 +105,11 @@ namespace Monolith.Geometry
             return new List<T>(results);
         }
 
+        /// <summary>
+        /// Updates hashes.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="oldBounds"></param>
         public void Update(T obj, Rectangle oldBounds)
         {
             RemoveFromOldCells(obj, oldBounds);

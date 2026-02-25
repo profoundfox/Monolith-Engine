@@ -12,14 +12,17 @@ namespace Monolith.Util
         public virtual void OnEnter() {}
         public virtual void PhysicsUpdate(float deltaTime)
         {
+            Engine.Tree.PhysicsUpdate(deltaTime);
             Engine.Node.PhysicsUpdate(deltaTime);
         }
         public virtual void ProcessUpdate(float deltaTime)
         {
+            Engine.Tree.ProcesssUpdate(deltaTime);
             Engine.Node.ProcesssUpdate(deltaTime);
         }
         public virtual void SubmitCall()
         {
+            Engine.Tree.SubmitCalls();
             Engine.Node.SubmitCalls();
         }
         public virtual void OnExit() {}
