@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Monolith.Geometry;
 
-namespace Monolith.Instances
+namespace Monolith.Nodes
 {
     public class RayCast2D : Node2D
     {

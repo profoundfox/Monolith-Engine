@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Monolith.Geometry;
 using Monolith.Attributes;
 
-namespace Monolith.Instances
+namespace Monolith.Nodes
 {
     public class CollisionShape2D : Node2D
     {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Monolith;
 using Monolith.Managers;
-using Monolith.Instances;
+using Monolith.Nodes;
 
-namespace Monolith.Instances
+namespace Monolith.Nodes
 {
     public class Area2D : Node2D
     {

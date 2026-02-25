@@ -3,11 +3,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Graphics;
 using Monolith.Managers;
-using Monolith.Instances;
+using Monolith.Nodes;
 using Monolith.Attributes;
 using Monolith.Util;
 
-namespace Monolith.Instances
+namespace Monolith.Nodes
 {
     public enum LoopAxis
     {

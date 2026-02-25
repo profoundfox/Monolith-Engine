@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using Microsoft.Xna.Framework;
 using Monolith.Geometry;
-using Monolith.Instances;
+using Monolith.Nodes;
 
 namespace Monolith.Util
 {

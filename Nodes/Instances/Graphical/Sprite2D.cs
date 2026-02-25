@@ -1,12 +1,12 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Monolith.Instances;
+using Monolith.Nodes;
 using Monolith.Graphics;
 using Monolith;
 using System;
 using Monolith.Attributes;
 
-namespace Monolith.Instances
+namespace Monolith.Nodes
 {   
 
     public class Sprite2D : Node2D

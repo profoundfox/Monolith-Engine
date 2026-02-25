@@ -3,7 +3,7 @@ using System;
 using Microsoft.Xna.Framework;
 using Monolith.Util;
 
-namespace Monolith.Instances
+namespace Monolith.Nodes
 {
     public class DynamicBody2D : PhysicsBody2D
     {

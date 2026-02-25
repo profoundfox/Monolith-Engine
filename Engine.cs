@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Monolith.Geometry;
 using Monolith.Graphics;
-using Monolith.IO;
+using Monolith.Util;
 using Monolith.Managers;
 
 namespace Monolith

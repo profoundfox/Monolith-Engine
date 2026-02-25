@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Monolith.Attributes;
 using Monolith.Graphics;
 
-namespace Monolith.Instances
+namespace Monolith.Nodes
 {
     public class ParticleEmitter2D : Node2D
     {

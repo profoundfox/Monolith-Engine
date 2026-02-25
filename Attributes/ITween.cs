@@ -1,6 +1,6 @@
 using System;
 
-namespace Monolith.Util
+namespace Monolith.Attributes
 {
     public interface ITween
     {

@@ -1,4 +1,4 @@
-namespace Monolith
+namespace Monolith.Util
 {
     public sealed class EngineTime
     {

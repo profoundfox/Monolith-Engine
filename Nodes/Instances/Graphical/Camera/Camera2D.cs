@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Managers;
 
-namespace Monolith.Instances
+namespace Monolith.Nodes
 {
     public class Camera2D : Node2D
     {

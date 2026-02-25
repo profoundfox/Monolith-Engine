@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Monolith.Instances;
+using Monolith.Nodes;
 
 namespace Monolith.Managers
 {
@@ -73,15 +73,6 @@ namespace Monolith.Managers
             }
 
             instance.OnExit();
-
-            //TBD if should keep like this.
-            if (instance is Node node)
-            {
-                node.GetParent()?.RemoveChild(node);
-
-                foreach (var child in node.Children.ToList())
-                    RemoveInternal(child);
-            }
 
             instance.ClearData();
         }

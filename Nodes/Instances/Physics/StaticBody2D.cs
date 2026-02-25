@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Monolith.Geometry;
 using Monolith.Managers;
 
-namespace Monolith.Instances
+namespace Monolith.Nodes
 {    
     public class StaticBody2D : PhysicsBody2D
     {

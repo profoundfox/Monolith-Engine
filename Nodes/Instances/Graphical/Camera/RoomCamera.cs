@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Monolith.Helpers;
 using Monolith.Util;
 
-namespace Monolith.Instances
+namespace Monolith.Nodes
 {
     public enum CameraSide
     {

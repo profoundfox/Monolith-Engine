@@ -4,7 +4,7 @@ using System.Diagnostics.Tracing;
 using System.Linq;
 using Monolith.Managers;
 
-namespace Monolith.Instances
+namespace Monolith.Nodes
 {
     public class Node : Instance
     {
@@ -30,16 +30,30 @@ namespace Monolith.Instances
         
         public Node() {}
 
+        /// <summary>
+        /// Returns the generic type parent of this node.
+        /// </summary>
+        /// <returns></returns>
         public Node GetParent()
         {
             return parent;
         }
 
+        /// <summary>
+        /// Returns the speficic type parent of this node.
+        /// </summary>
+        /// <typeparam name="TParent"></typeparam>
+        /// <returns></returns>
         public TParent GetParent<TParent>() where TParent : Node
         {
             return parent as TParent;
         }
 
+        /// <summary>
+        /// Sets the parent of this node.
+        /// </summary>
+        /// <param name="newParent"></param>
+        /// <exception cref="Exception"></exception>
         public void SetParent(Node newParent)
         {
             if (newParent == this)
@@ -58,7 +72,13 @@ namespace Monolith.Instances
             OnParentChanged?.Invoke(newParent);
         }
 
-        internal bool WouldCreateCycle(Node newParent)
+        /// <summary>
+        /// Checks if a new parent would create a cycle.
+        /// A - B - A
+        /// </summary>
+        /// <param name="newParent"></param>
+        /// <returns></returns>
+        private bool WouldCreateCycle(Node newParent)
         {
             var p = newParent;
             while (p != null)
@@ -69,6 +89,10 @@ namespace Monolith.Instances
             return false;
         }
 
+        /// <summary>
+        /// Adds a child to this node.
+        /// </summary>
+        /// <param name="child"></param>
         public void AddChild(Node child)
         {
             if (child == null || children.Contains(child))
@@ -79,17 +103,30 @@ namespace Monolith.Instances
             OnChildAdded?.Invoke(child);
         }
 
-
+        /// <summary>
+        /// Gets the first specified child.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public T Get<T>() where T : Node
         {
             return children.OfType<T>().FirstOrDefault();
         }
 
+        /// <summary>
+        /// Gets all specified children.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public IReadOnlyList<T> GetAll<T>() where T : Node
         {
             return children.OfType<T>().ToList();
         }
 
+        /// <summary>
+        /// Removes a child from this node.
+        /// </summary>
+        /// <param name="child"></param>
         public void RemoveChild(Node child)
         {
             if (child == null || !children.Contains(child))
@@ -99,10 +136,18 @@ namespace Monolith.Instances
 
             OnChildRemoved?.Invoke(child);
         }
-
+        
+        /// <summary>
+        /// Clears the parent and children.
+        /// </summary>
         internal override void ClearData()
         {
             base.ClearData();
+
+            GetParent()?.RemoveChild(this);
+
+            foreach (var child in Children.ToList())
+                child.FreeImmediate();
 
             parent = null;
             children.Clear();

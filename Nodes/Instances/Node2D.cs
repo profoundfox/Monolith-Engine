@@ -9,7 +9,7 @@ using Monolith.Managers;
 using Monolith.Attributes;
 using System.IO.Compression;
 
-namespace Monolith.Instances
+namespace Monolith.Nodes
 {
 
     public class Node2D : CanvasNode
