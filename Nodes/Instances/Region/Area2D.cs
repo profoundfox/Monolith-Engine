@@ -7,7 +7,7 @@ using Monolith.Nodes;
 
 namespace Monolith.Nodes
 {
-    public class Area2D : Node2D
+    public class Area2D : CollisionNode2D
     {
         private bool wasInArea2D = false;
 
@@ -19,7 +19,7 @@ namespace Monolith.Nodes
 
         public bool MonitorAreas { get; set; }
         public bool MonitorBodies { get; set; }
-        public CollisionShape2D CollisionShape2D { get; set; }
+        public CollisionShape2D CollisionShape2D { get => Get<CollisionShape2D>(); }
 
         public Area2D() {}
         
@@ -29,13 +29,13 @@ namespace Monolith.Nodes
                 .Where(c => c.GetParent() != this)
                 .Where(c => AcceptedType.Any(t => t.IsAssignableFrom(c.GetParent().GetType())))
                 .FirstOrDefault(c => c.Intersects(CollisionShape2D))
-                ?.GetParent<Node2D>();
+                ?.GetParent<Area2D>();
         }
 
 
         private KinematicBody2D GetOverlappingBody()
         {
-            return Engine.Tree.All
+            return Engine.Tree.GetAll()
                 .Where(a => a != this && typeof(KinematicBody2D).IsAssignableFrom(a.GetType()))
                 .Cast<KinematicBody2D>()
                 .FirstOrDefault(a => CollisionShape2D.Intersects(a.CollisionShape));
@@ -46,7 +46,7 @@ namespace Monolith.Nodes
         public bool AreaEntered(out Node2D overlapping)
         {
             overlapping = GetOverlappingArea();
-
+ 
             bool isInArea2D = overlapping != null;
             bool entered = !wasInArea2D && isInArea2D;
 

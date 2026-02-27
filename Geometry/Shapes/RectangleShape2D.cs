@@ -160,11 +160,9 @@ namespace Monolith.Geometry
         public override bool Equals(object obj) => obj is RectangleShape2D r && Equals(r);
         public override int GetHashCode() => Rect.GetHashCode();
 
-        public void Draw()
+        public void Draw(Color color, int thickness)
         {
-            Color color = Color.Red;
             int depth = 99;
-            int thickness = 1;
 
             Engine.Screen.Call(
                 new TextureDrawCall

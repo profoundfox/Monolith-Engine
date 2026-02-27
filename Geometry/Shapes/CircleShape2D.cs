@@ -154,11 +154,9 @@ namespace Monolith.Geometry
         public override bool Equals(object obj) => obj is CircleShape2D c && Equals(c);
         public override int GetHashCode() => HashCode.Combine(Location, Radius);
 
-        public void Draw()
+        public void Draw(Color color, int thickness)
         {
             int segments = 64;
-            int thickness = 1;
-            Color color = Color.Red;
             int depth = 99;
 
             Vector2 center = new Vector2(Location.X, Location.Y);

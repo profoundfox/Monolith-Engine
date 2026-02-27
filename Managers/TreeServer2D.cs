@@ -13,6 +13,11 @@ namespace Monolith.Managers
         private readonly List<Instance> pendingAdd = new();
         private readonly List<Instance> pendingRemove = new();
 
+        /// <summary>
+        /// Creates a new node and adds it to the tree.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public T Create<T>() 
             where T : Instance, new()
         {
@@ -24,9 +29,20 @@ namespace Monolith.Managers
             return inst;
         }
 
+        /// <summary>
+        /// Queues an instance to be added to this tree.
+        /// </summary>
+        /// <param name="instance"></param>
         internal void QueueAdd(Instance instance) => pendingAdd.Add(instance);
+        /// <summary>
+        /// Queues an intance to be removed from this tree.
+        /// </summary>
+        /// <param name="instance"></param>
         internal void QueueRemove(Instance instance) => pendingRemove.Add(instance);
 
+        /// <summary>
+        /// Flushes all instances.
+        /// </summary>
         private void Flush()
         {
             if(pendingAdd.Count == 0 && pendingRemove.Count == 0)
@@ -41,8 +57,12 @@ namespace Monolith.Managers
                 RemoveInternal(n);
             
             pendingRemove.Clear();
-        }
+        } 
 
+        /// <summary>
+        /// Adds an instance.
+        /// </summary>
+        /// <param name="instance"></param>
         private void AddInternal(Instance instance)
         {
             instances.Add(instance);
@@ -58,6 +78,10 @@ namespace Monolith.Managers
             }
         }
 
+        /// <summary>
+        /// Removes an instance.
+        /// </summary>
+        /// <param name="instance"></param>
         private void RemoveInternal(Instance instance)
         {
             instance.OnExit();
@@ -77,6 +101,10 @@ namespace Monolith.Managers
             instance.ClearData();
         }
 
+        /// <summary>
+        /// Removes an instance without queueing.
+        /// </summary>
+        /// <param name="instance"></param>
         internal void RemoveNow(Instance instance) => RemoveInternal(instance);
 
         /// <summary>
@@ -93,6 +121,10 @@ namespace Monolith.Managers
             byName.Clear();
         }
 
+        /// <summary>
+        /// Updates the instances with a fixed framerate.
+        /// </summary>
+        /// <param name="delta"></param>
         internal void ProcesssUpdate(float delta)
         {
             Flush();
@@ -103,6 +135,10 @@ namespace Monolith.Managers
             }
         }
 
+        /// <summary>
+        /// Updates the instance with a dynamic framerate.
+        /// </summary>
+        /// <param name="delta"></param>
         internal void PhysicsUpdate(float delta)
         {
             Flush();
@@ -113,15 +149,28 @@ namespace Monolith.Managers
             }
         }
 
+        /// <summary>
+        /// Submits calls to the screen manager.
+        /// </summary>
         public void SubmitCalls()
         {
             foreach (var i in instances)
                 i.SubmitCall();
         }
 
+        /// <summary>
+        /// Gets the first instance by name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public Instance Get(string name)
             => GetAll(name).FirstOrDefault();
 
+        /// <summary>
+        /// Gets all instances by name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public IReadOnlyList<Instance> GetAll(string name)
             => string.IsNullOrEmpty(name)
                 ? Array.Empty<Instance>()
@@ -129,13 +178,30 @@ namespace Monolith.Managers
                     ? list
                     : Array.Empty<Instance>();
 
+        /// <summary>
+        /// Gets the first instance by type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public T Get<T>() where T : Instance
             => GetAll<T>().FirstOrDefault();
 
+        /// <summary>
+        /// Gets all instances by type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public IReadOnlyList<T> GetAll<T>() where T : Instance
             => instances.OfType<T>().ToList();
 
-        public IReadOnlyList<Instance> All => instances.AsReadOnly();
+        /// <summary>
+        /// Gets all instacnes
+        /// </summary>
+        /// <returns></returns>
+        public IReadOnlyList<Instance> GetAll()
+        {
+            return instances.AsReadOnly();
+        }
 
     }
 }

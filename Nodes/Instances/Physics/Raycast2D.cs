@@ -17,15 +17,17 @@ namespace Monolith.Nodes
 
         public override void PhysicsUpdate(float delta)
         {
+            base.PhysicsUpdate(delta);
+
             if (Disabled)
                 return;
 
-            Ray.Origin = GlobalTransform.Position;
-
+            Ray.Origin = GlobalPosition;
+            
             Vector2 worldOffset = Vector2.Transform(
                 TargetPosition,
                 Matrix.CreateRotationZ(
-                    MathHelper.ToRadians(GlobalTransform.Rotation)
+                    MathHelper.ToRadians(GlobalRotation)
                 )
             );
 

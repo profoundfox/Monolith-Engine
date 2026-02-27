@@ -240,6 +240,25 @@ namespace Monolith.Graphics
             return data;
         }
 
+        public MTexture CreateWhiteTexture()
+        {
+            MTexture original = this;
+            MTexture whiteTexture = new MTexture(original.Width, original.Height);
+
+            Color[] colorData = new Color[original.Width * original.Height];
+            original.Texture.GetData(colorData);
+
+            for (int i = 0; i < colorData.Length; i++)
+            {
+                colorData[i] = new Color((byte)255, (byte)255, (byte)255, colorData[i].A);
+            }
+
+            whiteTexture.SetData(colorData);
+
+            return whiteTexture;
+        }
+
+
         /// <summary>
         /// Dispose the underlying Texture2D.
         /// </summary>

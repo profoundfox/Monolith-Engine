@@ -24,7 +24,7 @@ namespace Monolith.Geometry
 
         IRegionShape2D Clone();
 
-        void Draw();
+        void Draw(Color color, int thickness);
     }
 
 

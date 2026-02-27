@@ -54,7 +54,6 @@ namespace Monolith.Nodes
         public override void PhysicsUpdate(float delta)
         {
             base.PhysicsUpdate(delta);
-
             CheckOneWay();
         }
 
@@ -75,7 +74,10 @@ namespace Monolith.Nodes
         private void CheckOneWay()
         {
             foreach (KinematicBody2D kb in Engine.Tree.GetAll<KinematicBody2D>())
-            {
+            { 
+                if (kb.CollisionShape == null)
+                    continue; 
+                
                 IRegionShape2D body = kb.CollisionShape.Shape;
 
                 if (!OneWay)

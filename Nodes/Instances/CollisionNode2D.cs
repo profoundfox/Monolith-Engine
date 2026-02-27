@@ -7,29 +7,21 @@ using Monolith.Geometry;
 namespace Monolith.Nodes
 {
    
-    public class PhysicsBody2D : CollisionNode2D, IHashAble
+    public class CollisionNode2D : Node2D
     {
+        public CollisionShape2D CollisionShape { get => Get<CollisionShape2D>(); }
+
         public Rectangle Bounds => CollisionShape.Shape.BoundingBox;
 
-        public PhysicsBody2D() {}
+        public CollisionNode2D() {}
 
         public override void OnEnter()
         {
             base.OnEnter();
-
-            OnChildAdded += (node) =>
-            {
-                Engine.Physics.RegisterBody(this);
-                OnTransformChanged += (transform) =>
-                {
-                    Engine.Physics.NotifyMoved(this);
-                };
-            };
         }
 
         public override void OnExit()
         {
-            Engine.Physics.UnregisterBody(this);
             base.OnExit();
         }
 
