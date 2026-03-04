@@ -13,17 +13,17 @@ namespace Monolith.Nodes
 
         /// <summary>
         /// Returns the camera transform matrix for SpriteBatch.Begin.
-        /// Centers the camera so LocalPosition maps to the screen center.
+        /// Centers the camera so LocalPosition maps to the Canvas center.
         /// </summary>
         public Matrix GetTransform() 
         { 
 
-            Vector2 screenCenter = new Vector2(Engine.Screen.RenderTarget.Width / Zoom.X, Engine.Screen.RenderTarget.Height / Zoom.Y) * 0.5f; 
+            Vector2 CanvasCenter = new Vector2(Engine.Canvas.RenderTarget.Width / Zoom.X, Engine.Canvas.RenderTarget.Height / Zoom.Y) * 0.5f; 
 
             Matrix transform = Matrix.CreateScale(Zoom.X, Zoom.Y, 1f)
                 * Matrix.CreateRotationZ(GlobalTransform.Rotation)
                 * Matrix.CreateTranslation(new Vector3(-GlobalTransform.Position, 0f))
-                * Matrix.CreateTranslation(new Vector3(screenCenter, 0f)); 
+                * Matrix.CreateTranslation(new Vector3(CanvasCenter, 0f)); 
                 
             return transform; 
         }
@@ -32,7 +32,7 @@ namespace Monolith.Nodes
         {
             base.ProcessUpdate(delta);
             
-            Engine.Screen.SetMatrix(GetTransform());
+            Engine.Canvas.SetMatrix(GetTransform());
         }
     }
 }

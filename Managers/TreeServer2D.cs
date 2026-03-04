@@ -150,7 +150,7 @@ namespace Monolith.Managers
         }
 
         /// <summary>
-        /// Submits calls to the screen manager.
+        /// Submits calls to the Canvas manager.
         /// </summary>
         public void SubmitCalls()
         {

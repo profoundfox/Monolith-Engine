@@ -27,7 +27,7 @@ namespace Monolith
         public static TreeServer2D Tree { get; private set; }
         public static TweenManager Tween { get; private set; }
         public static ResourceManager Resource { get; private set; }
-        public static ScreenManager Screen { get; private set; }
+        public static CanvasHandler Canvas { get; private set; }
         public static StageManager Stage { get; private set; }
         public static InputManager Input { get; private set; }
         public static TimerManager Timer { get; private set; }
@@ -76,9 +76,9 @@ namespace Monolith
             SpriteBatch = new SpriteBatch(GraphicsDevice);
             Pixel = new MTexture(1, 1, new[] { Color.White });
 
-            Screen = new ScreenManager(SpriteBatch);
+            Canvas = new CanvasHandler(SpriteBatch);
 
-            Screen.Initialize();
+            Canvas.Initialize();
         }
 
         protected override void LoadContent()
@@ -139,10 +139,10 @@ namespace Monolith
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.SetRenderTarget(Screen.RenderTarget);
+            GraphicsDevice.SetRenderTarget(Canvas.RenderTarget);
             GraphicsDevice.Clear(Color.Black);
 
-            Screen.Flush();
+            Canvas.Flush();
 
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.Clear(Color.Black);
@@ -153,7 +153,7 @@ namespace Monolith
                 SamplerState.PointClamp,
                 effect: PostProcessingShader);
 
-            SpriteBatch.Draw(Screen.RenderTarget, Screen.Destination, Color.White);
+            SpriteBatch.Draw(Canvas.RenderTarget, Canvas.Destination, Color.White);
 
             SpriteBatch.End();
 

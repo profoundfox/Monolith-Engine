@@ -169,7 +169,7 @@ Files
 | /Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Managers/NodeManager.cs                                                          | C#         |        185 |         65 |         51 |        301 |
 | /Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Managers/ResourceManager.cs                                                      | C#         |         46 |         44 |         14 |        104 |
 | /Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Managers/Scene/StageRelative.cs                                                  | C#         |         23 |          0 |          4 |         27 |
-| /Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Managers/ScreenManager.cs                                                        | C#         |        133 |         15 |         38 |        186 |
+| /Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Managers/CanvasHandler.cs                                                        | C#         |        133 |         15 |         38 |        186 |
 | /Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Managers/StageManager.cs                                                         | C#         |        141 |         51 |         38 |        230 |
 | /Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Managers/TimerManager.cs                                                         | C#         |         75 |         18 |         16 |        109 |
 | /Users/nilslauvstad/Documents/Project/Libraries/Monolith-Engine/Managers/TweenManager.cs                                                         | C#         |         53 |         11 |         10 |         74 |

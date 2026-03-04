@@ -56,7 +56,7 @@ namespace Monolith.Nodes
 
             var pos = TargetNode.GlobalPosition;            
 
-            var camera = Engine.Screen.GetWorldViewRectangle();
+            var camera = Engine.Canvas.GetWorldViewRectangle();
 
             CameraSide side = CameraSide.None;
 
@@ -97,7 +97,7 @@ namespace Monolith.Nodes
             Console.WriteLine(dir);
             _dir = dir;
 
-            var camera = Engine.Screen.GetWorldViewRectangle();
+            var camera = Engine.Canvas.GetWorldViewRectangle();
 
             Vector2 targetPos = new Vector2(GlobalPosition.X + camera.Width * dir, GlobalPosition.Y);
 

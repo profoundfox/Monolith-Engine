@@ -86,16 +86,21 @@ namespace Monolith.Nodes
 
                 Vector2 worldTilePos = localTilePos + GlobalTransform.Position;
 
-                tile.Draw(
-                    worldTilePos,
-                    GlobalVisibility.Modulate,
-                    GlobalTransform.Rotation,
-                    Vector2.Zero,
-                    GlobalTransform.Scale,
-                    GlobalMaterial.SpriteEffects,
-                    GlobalMaterial.Shader,
-                    GlobalOrdering.Depth
-                );
+                Engine.Canvas.Call(new TextureDrawCall
+                {
+                    Texture = tile,
+                    Position = worldTilePos,
+                    Color = GlobalVisibility.Modulate,
+                    Rotation = GlobalTransform.Rotation,
+                    Origin = Vector2.Zero,
+                    Scale = GlobalTransform.Scale,
+                    Effects = GlobalMaterial.SpriteEffects,
+                    Depth = GlobalOrdering.Depth,
+                    SpriteBatchConfig = SpriteBatchConfig.Default with
+                    {
+                        Effect = GlobalShader
+                    }
+                });
             }
         }
     }

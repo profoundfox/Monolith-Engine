@@ -13,7 +13,9 @@ namespace Monolith.Graphics
     public class MTexture : IDisposable
     {
         private Texture2D texture2D;
-        private object value;
+
+        private int _width;
+        private int _height;
 
         /// <summary>
         /// Internal texture used for rendering.
@@ -27,75 +29,22 @@ namespace Monolith.Graphics
         public Rectangle? SourceRectangle { get; private set; }
 
         /// <summary>
-        /// World or screen position where the texture is drawn.
+        /// The width and height of this texture.
+        /// Represented as integer coordiantes.
         /// </summary>
-        public Vector2 Position { get; set; }
-
-        /// <summary>
-        /// Tint color applied to the texture.
-        /// </summary>
-        public Color Color { get; set; }
-
-        /// <summary>
-        /// Optional shader effect used when rendering the texture.
-        /// </summary>
-        public Effect Shader { get; set; }
-
-        /// <summary>
-        /// Sprite flipping effects applied during rendering.
-        /// </summary>
-        public SpriteEffects Effects { get; set; }
-
-        /// <summary>
-        /// Rotation of the texture in radians.
-        /// </summary>
-        public float Rotation { get; set; }
-
-        /// <summary>
-        /// Origin point for rotation and scaling, relative to the texture.
-        /// </summary>
-        public Vector2 Origin { get; set; }
-
-        /// <summary>
-        /// Scale factor applied to the texture.
-        /// </summary>
-        public Vector2 Scale { get; set; }
-
-        /// <summary>
-        /// Depth value used for draw order sorting.
-        /// </summary>
-        public int Depth { get; set; }
-
-        /// <summary>
-        /// Width of the rendered texture or source rectangle.
-        /// </summary>
-        public int Width => SourceRectangle?.Width ?? Texture.Width;
-
-        /// <summary>
-        /// Height of the rendered texture or source rectangle.
-        /// </summary>
-        public int Height => SourceRectangle?.Height ?? Texture.Height;
-
-        /// <summary>
-        /// Size of the rendered texture in pixels.
-        /// </summary>
-        public Point Size => new(Width, Height);
+        public Point Bounds
+        {
+            get => new Point
+            (
+                SourceRectangle?.Width ?? Texture.Width,
+                SourceRectangle?.Height ?? Texture.Height
+            );
+        }
 
         /// <summary>
         /// Center point of the rendered texture in local space.
         /// </summary>
-        public Vector2 Center => new(Width / 2f, Height / 2f);
-
-
-        /// <summary>
-        /// The config for spritebatch.
-        /// </summary>
-        public SpriteBatchConfig SpriteBatchConfig { get; set;} = SpriteBatchConfig.Default;
-
-        /// <summary>
-        /// The layer the texture will be drawn at.
-        /// </summary>
-        public DrawLayer Layer { get; set; } = DrawLayer.Middleground;
+        public Vector2 Center => new(Bounds.X / 2f, Bounds.Y / 2f);
 
 
         /// <summary>
@@ -135,18 +84,11 @@ namespace Monolith.Graphics
         /// <param name="texturePath"></param>
         /// <param name="region"></param>
         /// <exception cref="ArgumentNullException"></exception>
-
         public MTexture(string texturePath, Rectangle? region = null)
         {
             Texture2D texture = Engine.Resource.Load<Texture2D>(texturePath);
             Texture = texture ?? throw new ArgumentNullException(nameof(texture));
             SourceRectangle = region;
-        }
-
-        public MTexture(Texture2D texture2D, object value)
-        {
-            this.texture2D = texture2D;
-            this.value = value;
         }
 
         /// <summary>
@@ -160,64 +102,6 @@ namespace Monolith.Graphics
                 region.Offset(parent.X, parent.Y);
             }
             return new MTexture(Texture, region);
-        }
-
-        public void Draw()
-        {
-            Engine.Screen.Call(new TextureDrawCall
-            {
-                Texture = this,
-                Position = Position,
-                SourceRectangle = SourceRectangle,
-                Color = Color,
-                Rotation = Rotation,
-                Origin = Origin,
-                Scale = Scale,
-                Effects = Effects,
-                Effect = Shader,
-                Depth = Depth,
-                SpriteBatchConfig = SpriteBatchConfig
-            }, Layer);
-        }
-
-        public void Draw(Vector2 position)
-        {
-            Engine.Screen.Call(new TextureDrawCall
-            {
-                Texture = this,
-                Position = position,
-                SourceRectangle = SourceRectangle,
-                Color = Color,
-                Rotation = Rotation,
-                Origin = Origin,
-                Scale = Scale,
-                Effects = Effects,
-                Effect = Shader,
-                Depth = Depth,
-                SpriteBatchConfig = SpriteBatchConfig
-            }, Layer);
-        }
-
-        /// <summary>
-        /// Draws the texture with given parameters.
-        /// </summary>  
-        public void Draw(Vector2 position, Color color, float rotation = 0f, Vector2 origin = default, Vector2? scale = null, SpriteEffects effects = SpriteEffects.None, Effect shader = null, int depth = 0, DrawLayer layer = DrawLayer.Middleground)
-        {
-            Engine.Screen.Call(new TextureDrawCall
-            {
-                Texture = this,
-                Position = position,
-                SourceRectangle = SourceRectangle,
-                Color = color,
-                Rotation = rotation,
-                Origin = origin,
-                Scale = scale ?? Vector2.One,
-                Effects = effects,
-                Effect = shader,
-                Depth = depth,
-                SpriteBatchConfig = SpriteBatchConfig
-            }, layer);
-
         }
 
         /// <summary>
@@ -239,25 +123,6 @@ namespace Monolith.Graphics
             Texture.GetData(data);
             return data;
         }
-
-        public MTexture CreateWhiteTexture()
-        {
-            MTexture original = this;
-            MTexture whiteTexture = new MTexture(original.Width, original.Height);
-
-            Color[] colorData = new Color[original.Width * original.Height];
-            original.Texture.GetData(colorData);
-
-            for (int i = 0; i < colorData.Length; i++)
-            {
-                colorData[i] = new Color((byte)255, (byte)255, (byte)255, colorData[i].A);
-            }
-
-            whiteTexture.SetData(colorData);
-
-            return whiteTexture;
-        }
-
 
         /// <summary>
         /// Dispose the underlying Texture2D.

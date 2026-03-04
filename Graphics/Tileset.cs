@@ -46,13 +46,13 @@ namespace Monolith.Graphics
 
             TileWidth = tileWidth;
             TileHeight = tileHeight;
-            Columns = texture.Width / tileWidth;
-            Rows = texture.Height / tileHeight;
+            Columns = texture.Bounds.X / tileWidth;
+            Rows = texture.Bounds.Y / tileHeight;
             Count = Columns * Rows;
 
             _tiles = new MTexture[Count];
 
-            Rectangle baseRect = texture.SourceRectangle ?? new Rectangle(0, 0, texture.Width, texture.Height);
+            Rectangle baseRect = texture.SourceRectangle ?? new Rectangle(0, 0, texture.Bounds.X, texture.Bounds.Y);
 
             for (int i = 0; i < Count; i++)
             {

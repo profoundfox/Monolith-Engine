@@ -36,10 +36,10 @@ namespace Monolith.Nodes
             offset += cameraDelta * MotionScale;
 
             if (LoopAxes.HasFlag(LoopAxis.X))
-                offset.X = Mod(offset.X, Texture.Width);
+                offset.X = Mod(offset.X, Texture.Bounds.X);
 
             if (LoopAxes.HasFlag(LoopAxis.Y))
-                offset.Y = Mod(offset.Y, Texture.Height);
+                offset.Y = Mod(offset.Y, Texture.Bounds.Y);
 
             if (!LoopAxes.HasFlag(LoopAxis.X))
                 offset.X = 0;
@@ -66,17 +66,17 @@ namespace Monolith.Nodes
             if (!GlobalVisibility.Visibile)
                 return;
             
-            Rectangle view = Engine.Screen.GetWorldViewRectangle();
+            Rectangle view = Engine.Canvas.GetWorldViewRectangle();
 
-            int texW = Texture.Width;
-            int texH = Texture.Height;
+            int texW = Texture.Bounds.X;
+            int texH = Texture.Bounds.Y;
 
             Vector2 basePos = new Vector2(
                 LoopAxes.HasFlag(LoopAxis.X)
-                    ? GlobalPosition.X - Mod(GlobalPosition.X - offset.X, Texture.Width)
+                    ? GlobalPosition.X - Mod(GlobalPosition.X - offset.X, Texture.Bounds.X)
                     : GlobalPosition.X,
                 LoopAxes.HasFlag(LoopAxis.Y)
-                    ? GlobalPosition.Y - Mod(GlobalPosition.Y - offset.Y, Texture.Height)
+                    ? GlobalPosition.Y - Mod(GlobalPosition.Y - offset.Y, Texture.Bounds.Y)
                     : GlobalPosition.Y
             );
 
@@ -105,12 +105,14 @@ namespace Monolith.Nodes
                         y * texH + basePos.Y
                     );
 
-                    Texture.Draw(
-                        position: pos,
-                        color: Color.White,
-                        depth: GlobalOrdering.Depth,
-                        layer: DrawLayer.Background
-                    );
+
+                    Engine.Canvas.Call(new TextureDrawCall
+                    {
+                        Texture = this.Texture,
+                        Position = pos,
+                        Color = Color.White,
+                        Depth = GlobalOrdering.Depth,
+                    }, DrawLayer.Background);
                 }
             }
         }

@@ -16,7 +16,7 @@ namespace Monolith.Managers
         UI
     }
 
-    public sealed class ScreenManager
+    public sealed class CanvasHandler
     {
         private readonly Dictionary<SpriteBatchConfig, SpriteBatch> _spriteBatches = new();
         private readonly SpriteBatch _spriteBatch;
@@ -27,11 +27,10 @@ namespace Monolith.Managers
         internal bool IntScaling { get; set; } = true;
         internal Rectangle Destination { get; set; }
 
-        public Matrix Matrix { get => _matrix; }
-
+        public Matrix Matrix => _matrix;
         public RenderTarget2D RenderTarget { get; internal set; }
 
-        public ScreenManager(SpriteBatch spriteBatch)
+        public CanvasHandler(SpriteBatch spriteBatch)
         {
             _spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
 
@@ -41,7 +40,7 @@ namespace Monolith.Managers
         }
 
         /// <summary>
-        /// Initializes the screen, creates a render target.
+        /// Initializes the Canvas, creates a render target.
         /// </summary>
         public void Initialize()
         {
@@ -97,9 +96,9 @@ namespace Monolith.Managers
             foreach (DrawLayer layer in Enum.GetValues(typeof(DrawLayer)))
             {
                 var queue = _queues[layer];
+
                 if (queue.Count == 0)
                     continue;
-                
 
                 groupedQueue.Clear();
 
@@ -126,7 +125,9 @@ namespace Monolith.Managers
                         : Matrix.Identity;
 
                     if (!_spriteBatches.TryGetValue(config, out var sb))
+                    {
                         sb = _spriteBatches[config] = new SpriteBatch(_spriteBatch.GraphicsDevice);
+                    }
 
                     sb.Begin(
                         config.SortMode,
@@ -137,6 +138,7 @@ namespace Monolith.Managers
                         config.Effect,
                         transform
                     );
+
 
                     for (int i = 0; i < calls.Count; i++)
                         calls[i].Draw(sb);

@@ -1,3 +1,4 @@
+using System;
 using System.IO.Compression;
 using System.Reflection.Metadata.Ecma335;
 using Microsoft.Xna.Framework;
@@ -178,7 +179,7 @@ namespace Monolith.Nodes
                 GlobalOrdering = localOrdering;
                 GlobalMaterial = localMaterial;
             }
-
+            
             foreach (var child in Children)
             {
                 if (child is CanvasNode canvasChild)

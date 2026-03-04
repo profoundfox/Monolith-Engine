@@ -17,7 +17,7 @@ namespace Monolith.Nodes
         
         public override void SubmitCall()
         {
-            Engine.Screen.Call(new TextureDrawCall
+            Engine.Canvas.Call(new TextureDrawCall
             {
                 Texture = Texture,
                 Position = GlobalPosition,
@@ -26,8 +26,11 @@ namespace Monolith.Nodes
                 Origin = Texture.Center,
                 Scale = GlobalScale,
                 Effects = GlobalSpriteEffects,
-                Effect = GlobalShader,
-                Depth = GlobalDepth
+                Depth = GlobalDepth,
+                SpriteBatchConfig = SpriteBatchConfig.Default with
+                {
+                    Effect = GlobalShader
+                }
             });
             
         }

@@ -68,7 +68,7 @@ Total : 161 files,  20734 codes, 991 comments, 1339 blanks, all 23064 lines
 | [Managers/NodeManager.cs](/Managers/NodeManager.cs) | C# | 185 | 65 | 51 | 301 |
 | [Managers/ResourceManager.cs](/Managers/ResourceManager.cs) | C# | 46 | 44 | 14 | 104 |
 | [Managers/Scene/StageRelative.cs](/Managers/Scene/StageRelative.cs) | C# | 23 | 0 | 4 | 27 |
-| [Managers/ScreenManager.cs](/Managers/ScreenManager.cs) | C# | 133 | 15 | 38 | 186 |
+| [Managers/CanvasHandler.cs](/Managers/CanvasHandler.cs) | C# | 133 | 15 | 38 | 186 |
 | [Managers/StageManager.cs](/Managers/StageManager.cs) | C# | 141 | 51 | 38 | 230 |
 | [Managers/TimerManager.cs](/Managers/TimerManager.cs) | C# | 75 | 18 | 16 | 109 |
 | [Managers/TweenManager.cs](/Managers/TweenManager.cs) | C# | 53 | 11 | 10 | 74 |

@@ -102,17 +102,21 @@ namespace Monolith.Nodes
             
             if (CurrentAnimation == null) return;
 
-            CurrentFrame.Draw
-            (
-                position: GlobalPosition,
-                color: GlobalModulate,
-                rotation: GlobalRotation,
-                origin: CurrentFrame.Center,
-                scale: GlobalScale,
-                effects: GlobalSpriteEffects,
-                shader: GlobalShader,
-                depth: GlobalDepth
-            );
+            Engine.Canvas.Call(new TextureDrawCall
+            {
+                Texture = CurrentFrame,
+                Position = GlobalPosition,
+                Color = GlobalModulate,
+                Rotation = GlobalRotation,
+                Origin = CurrentFrame.Center,
+                Scale = GlobalScale,
+                Effects = GlobalSpriteEffects,
+                Depth = GlobalDepth,
+                SpriteBatchConfig = SpriteBatchConfig.Default with
+                {
+                    Effect = GlobalShader
+                }
+            });
         }
     }
 }

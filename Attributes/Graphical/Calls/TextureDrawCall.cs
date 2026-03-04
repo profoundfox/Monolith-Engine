@@ -1,8 +1,9 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Graphics;
 
-namespace Monolith.Graphics
+namespace Monolith.Attributes
 {
     public sealed class TextureDrawCall : DrawCallBase
     {
@@ -14,7 +15,10 @@ namespace Monolith.Graphics
             if (Texture?.Texture == null)
                 return;
 
-            Rectangle src = SourceRectangle ?? new Rectangle(0, 0, Texture.Width, Texture.Height);
+            Rectangle src =
+                SourceRectangle
+                ?? Texture.SourceRectangle
+                ?? new Rectangle(0, 0, Texture.Texture.Width, Texture.Texture.Height);
 
             sb.Draw(
                 Texture.Texture,
@@ -27,6 +31,9 @@ namespace Monolith.Graphics
                 Effects,
                 LayerDepth
             );
+
+            Console.WriteLine(src);
+
         }
     }
 }

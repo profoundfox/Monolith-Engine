@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Monolith.Attributes;
 using Monolith.Graphics;
 
-namespace Monolith.Graphics
+namespace Monolith.Attributes
 {
     public abstract class DrawCallBase : IDrawCall
     {
@@ -15,8 +15,6 @@ namespace Monolith.Graphics
         public SpriteEffects Effects { get; init; } = SpriteEffects.None;
 
         public int Depth { get; init; } = 0;
-        public Effect Effect { get; init; } = null;
-        public bool UseCamera { get; init; } = true;
         public SpriteBatchConfig SpriteBatchConfig { get; init; } = SpriteBatchConfig.Default;
 
         int IDrawCall.Depth => Depth;

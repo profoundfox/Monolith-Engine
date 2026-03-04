@@ -49,7 +49,7 @@ namespace Monolith.Graphics
 
         public void SubmitCall()
         {
-            Engine.Screen.Call(new TextureDrawCall
+            Engine.Canvas.Call(new TextureDrawCall
             {
                 Texture = InitialInfo.Texture,
                 Color = _color * _opacity,

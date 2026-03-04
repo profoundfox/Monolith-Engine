@@ -9,8 +9,6 @@ namespace Monolith.Nodes
    
     public class PhysicsBody2D : CollisionNode2D, IHashAble
     {
-        public Rectangle Bounds => CollisionShape.Shape.BoundingBox;
-
         public PhysicsBody2D() {}
 
         public override void OnEnter()

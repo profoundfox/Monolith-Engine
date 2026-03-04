@@ -1,7 +1,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Monolith.Graphics;
 
-namespace Monolith.Graphics
+namespace Monolith.Attributes
 {
     public sealed class FontDrawCall : DrawCallBase
     {

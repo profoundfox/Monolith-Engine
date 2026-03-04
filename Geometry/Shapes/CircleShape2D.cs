@@ -176,7 +176,7 @@ namespace Monolith.Geometry
                 float length = edge.Length();
                 float rotation = MathF.Atan2(edge.Y, edge.X);
 
-                Engine.Screen.Call(
+                Engine.Canvas.Call(
                     new TextureDrawCall
                     {
                         Texture = Engine.Pixel,
