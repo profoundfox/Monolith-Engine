@@ -86,6 +86,13 @@ namespace Monolith.Managers
             );
         }
 
+        public static float ComputeLayerDepth(int depth)
+        {
+            const int min = -100;
+            const int max = 100;
+            return 1f - (depth - min) / (float)(max - min);
+        }
+
         /// <summary>
         /// Flush all queued draws to the SpriteBatch.
         /// </summary>

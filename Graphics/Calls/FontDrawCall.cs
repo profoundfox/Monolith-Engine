@@ -3,10 +3,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Monolith.Attributes;
 using Monolith.Graphics;
 
-namespace Monolith.Attributes
+namespace Monolith.Graphics
 {
-    public abstract class DrawCallBase : IDrawCall
+    public sealed class FontDrawCall : Layered, IDrawCall
     {
+        public required IFont Font { get; init; }
+        public string Text { get; init; }
+
         public Vector2 Position { get; init; } = Vector2.Zero;
         public Color Color { get; init; } = Color.White;
         public float Rotation { get; init; } = 0f;
@@ -14,22 +17,25 @@ namespace Monolith.Attributes
         public Vector2 Scale { get; init; } = Vector2.One;
         public SpriteEffects Effects { get; init; } = SpriteEffects.None;
 
-        public int Depth { get; init; } = 0;
         public SpriteBatchConfig SpriteBatchConfig { get; init; } = SpriteBatchConfig.Default;
 
-        int IDrawCall.Depth => Depth;
-        SpriteBatchConfig IDrawCall.SpriteBatchConfig => SpriteBatchConfig;
-
-        protected float LayerDepth
+        public void Draw(SpriteBatch sb)
         {
-            get
-            {
-                const int min = -100;
-                const int max = 100;
-                return 1f - (Depth - min) / (float)(max - min);
-            }
+            if (Font == null || string.IsNullOrEmpty(Text))
+                return;
+            
+            Font.DrawString(
+                sb,
+                Text,
+                Position,
+                Color,
+                Rotation,
+                Origin,
+                Scale,
+                Effects,
+                InternalDepth
+            );
         }
 
-        public abstract void Draw(SpriteBatch sb);
     }
 }
