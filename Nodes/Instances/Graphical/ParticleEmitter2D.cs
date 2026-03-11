@@ -1,57 +1,90 @@
-using System;
-using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Attributes;
 using Monolith.Graphics;
+using System;
+using System.Collections.Generic;
 
 namespace Monolith.Nodes
 {
     public class ParticleEmitter2D : Node2D
     {
-        public ParticleInfo ParticleInfo { get; set; } = ParticleInfo.Identity;
-        public int EmittedPerSecond { get; set; } = 10;
+        private List<Particle> _particles;
+        private float _timeSinceLastEmission;
 
-        private List<Particle> _particles = new();
-
-        private float _emissionTimer;
-        private float _spawnInterval;
+        public ParticleProperties Properties { get; set; } = ParticleProperties.Identity;
+        public MTexture Texture { get; set; } = Engine.Pixel;
+        public float EmissionRate { get; set; } = 50f;
 
         public ParticleEmitter2D()
         {
-            _spawnInterval = 1f / EmittedPerSecond;
+            _particles = new List<Particle>();
+            _timeSinceLastEmission = 0f;
         }
 
-        public override void OnEnter()
+        private void EmitParticles(float delta)
         {
-            base.OnEnter();
+            _timeSinceLastEmission += delta;
+
+            while (_timeSinceLastEmission >= 1.0f / EmissionRate)
+            {
+                _timeSinceLastEmission -= 1.0f / EmissionRate;
+
+                var particle = new Particle(GlobalPosition, Properties);
+                _particles.Add(particle);
+            }
         }
 
         public override void ProcessUpdate(float delta)
         {
             base.ProcessUpdate(delta);
 
-            _emissionTimer += delta;
+            EmitParticles(delta);
 
-            while (_emissionTimer >= _spawnInterval)
+            for (int i = _particles.Count - 1; i >= 0; i--)
             {
-                _particles.Add(new Particle(GlobalPosition, ParticleInfo));
-                _emissionTimer -= _spawnInterval; 
+                var particle = _particles[i];
+
+                particle.Update(delta);
+
+                if (particle.IsExpired)
+                {
+                    _particles.RemoveAt(i);
+                }
+                else
+                {
+                    _particles[i] = particle;
+                }
             }
-
-            foreach (var p in _particles)
-                p.Update(delta);
-
-            _particles.RemoveAll(p => p.IsFinished);
         }
 
         public override void SubmitCall()
         {
             base.SubmitCall();
 
-            foreach (var p in _particles)
-                p.SubmitCall();
+            foreach (var particle in _particles)
+            { 
+                var drawPosition = particle.Position - GlobalPosition;
+                var particleColor = particle.Properties.Color;
+                var scale = new Vector2(particle.Properties.Size);
+
+
+                Engine.Canvas.Call(new TextureDrawCall
+                {
+                    Texture = Texture,
+                    Position = drawPosition,
+                    Color = particleColor,
+                    Rotation = particle.Properties.Rotation,
+                    Origin = Texture.Center,
+                    Scale = scale,
+                    Effects = GlobalSpriteEffects,
+                    Depth = GlobalDepth,
+                    SpriteBatchConfig = SpriteBatchConfig.Default with
+                    {
+                        Effect = GlobalShader
+                    }
+                });
+            }
         }
-
     }
-
 }

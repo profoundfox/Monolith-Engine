@@ -27,7 +27,6 @@ namespace Monolith.Managers
         internal bool IntScaling { get; set; } = true;
         internal Rectangle Destination { get; set; }
 
-        public Matrix Matrix => _matrix;
         public RenderTarget2D RenderTarget { get; internal set; }
 
         public CanvasHandler(SpriteBatch spriteBatch)
@@ -35,7 +34,7 @@ namespace Monolith.Managers
             _spriteBatch = spriteBatch ?? throw new ArgumentNullException(nameof(spriteBatch));
 
             _queues = new Dictionary<DrawLayer, List<IDrawCall>>();
-            foreach (DrawLayer l in Enum.GetValues(typeof(DrawLayer)))
+            foreach (DrawLayer l in Enum.GetValues<DrawLayer>())
                 _queues[l] = new List<IDrawCall>();
         }
 
@@ -84,13 +83,6 @@ namespace Monolith.Managers
                 (int)(bottomRight.X - topLeft.X),
                 (int)(bottomRight.Y - topLeft.Y)
             );
-        }
-
-        public static float ComputeLayerDepth(int depth)
-        {
-            const int min = -100;
-            const int max = 100;
-            return 1f - (depth - min) / (float)(max - min);
         }
 
         /// <summary>

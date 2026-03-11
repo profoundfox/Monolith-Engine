@@ -7,59 +7,48 @@ using Monolith.Managers;
 
 namespace Monolith.Graphics
 {
-    public class Particle
+    public struct Particle
     {
-        public ParticleInfo InitialInfo { get; private set; }
-        public int Depth;
-    
-        private Vector2 _position;
-        private float _lifespanLeft;
-        private float _lifespanAmount;
-        private Color _color;
-        private float _opacity;
+        public Vector2 Position;
+        public ParticleProperties Properties;
+        public float TimeAlive;
 
-        public bool IsFinished { get; private set; }
+        private static Random rnd;
 
-        public Particle(Vector2 pos, ParticleInfo info)
+        public Particle(Vector2 position, ParticleProperties properties)
         {
-            InitialInfo = info;
+            Position = position;
+            Properties = properties;
 
-            _position = pos;
-            _lifespanLeft = info.Lifespan;
-            _lifespanAmount = 1f;
-            _color = info.ColorStart;
-            _opacity = info.OpacityStart;
+            rnd = new();
         }
 
         public void Update(float deltaTime)
         {
-            _lifespanLeft -= deltaTime;
-            if (_lifespanLeft <= 0f)
+            TimeAlive += deltaTime;
+
+            Properties.Velocity += Properties.Acceleration * deltaTime;
+            Position += Properties.Velocity * deltaTime;
+
+            Properties.Alpha = MathHelper.Clamp(1f - (TimeAlive / Properties.LifeSpan), 0f, 1f);
+
+            if (TimeAlive == 0f) 
             {
-                IsFinished = true;
-                return;
+                Properties.Size += (float)(rnd.NextDouble() - 0.5f) * Properties.SizeRandomness;
             }
 
-            _lifespanAmount = MathHelper.Clamp(_lifespanLeft / InitialInfo.Lifespan, 0, 1);
-            _color = Color.Lerp(InitialInfo.ColorEnd, InitialInfo.ColorStart, _lifespanAmount);
-            _opacity = MathHelper.Clamp(MathHelper.Lerp(InitialInfo.OpacityEnd, InitialInfo.OpacityStart, _lifespanAmount), 0, 1);
+            float normalizedTime = TimeAlive / Properties.LifeSpan;
 
-            _position.Y += 1;
-        }
+            Properties.Size = Properties.InitialSize * (1f + Properties.SizeGrowthFactor * normalizedTime);
 
-        public void SubmitCall()
-        {
-            Engine.Canvas.Call(new TextureDrawCall
+            if (normalizedTime > 0)
             {
-                Texture = InitialInfo.Texture,
-                Color = _color * _opacity,
-                Rotation = 0f,
-                Origin = Vector2.Zero,
-                Scale = Vector2.One,
-                Depth = Depth,
-                Position = _position
-            },
-            DrawLayer.UI);
+                Properties.Size *= (1f - (float)Math.Exp(-normalizedTime * Properties.SizeDecayFactor));
+            }
+
+            Properties.Color = Color.Lerp(Color.White, Color.Red, normalizedTime);
         }
+
+        public bool IsExpired => TimeAlive >= Properties.LifeSpan;
     }
 }
