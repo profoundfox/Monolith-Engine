@@ -19,7 +19,6 @@ namespace Monolith.Nodes
 
         public bool MonitorAreas { get; set; }
         public bool MonitorBodies { get; set; }
-        public CollisionShape2D CollisionShape2D { get => Get<CollisionShape2D>(); }
 
         public Area2D() {}
         
@@ -28,7 +27,7 @@ namespace Monolith.Nodes
             return Engine.Tree.GetAll<CollisionShape2D>()
                 .Where(c => c.GetParent() != this)
                 .Where(c => AcceptedType.Any(t => t.IsAssignableFrom(c.GetParent().GetType())))
-                .FirstOrDefault(c => c.Intersects(CollisionShape2D))
+                .FirstOrDefault(c => c.Intersects(CollisionShape))
                 ?.GetParent<Area2D>();
         }
 
@@ -38,7 +37,7 @@ namespace Monolith.Nodes
             return Engine.Tree.GetAll()
                 .Where(a => a != this && typeof(KinematicBody2D).IsAssignableFrom(a.GetType()))
                 .Cast<KinematicBody2D>()
-                .FirstOrDefault(a => CollisionShape2D.Intersects(a.CollisionShape));
+                .FirstOrDefault(a => CollisionShape.Intersects(a.CollisionShape));
         }
 
 

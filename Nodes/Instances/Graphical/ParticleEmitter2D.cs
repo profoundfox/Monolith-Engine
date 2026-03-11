@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Attributes;
 using Monolith.Graphics;
+using Monolith.Helpers;
 using System;
 using System.Collections.Generic;
 
@@ -9,53 +10,80 @@ namespace Monolith.Nodes
 {
     public class ParticleEmitter2D : Node2D
     {
-        private List<Particle> _particles;
-        private float _timeSinceLastEmission;
+        private readonly List<Particle> _particles = [];
+        
+        private float _intervalLeft;
 
-        public ParticleProperties Properties { get; set; } = ParticleProperties.Identity;
-        public MTexture Texture { get; set; } = Engine.Pixel;
-        public float EmissionRate { get; set; } = 50f;
-
+        public EmitterProperties Properties { get; set; } = EmitterProperties.Identity;
+        
         public ParticleEmitter2D()
         {
-            _particles = new List<Particle>();
-            _timeSinceLastEmission = 0f;
+            _intervalLeft = Properties.Interval;
         }
 
-        private void EmitParticles(float delta)
+        private void Spawn(Vector2 pos)
         {
-            _timeSinceLastEmission += delta;
+            ParticleProperties d = Properties.ParticleProperties;
 
-            while (_timeSinceLastEmission >= 1.0f / EmissionRate)
+            d.Lifespan = MathM.RandomFloat(Properties.LifespanMin, Properties.LifespanMax);
+            d.Speed = MathM.RandomFloat(Properties.SpeedMin, Properties.SpeedMax);
+            d.Angle = MathM.RandomFloat(
+                Properties.Angle - Properties.AngleVariance,
+                Properties.Angle + Properties.AngleVariance);
+
+            Particle p = new(pos, d);
+            _particles.Add(p);
+        } 
+
+        /// <summary>
+        /// Emits the particle at the emitter's positon and with the default count.
+        /// </summary>
+        public void Emit()
+        {
+            Emit(GlobalPosition, Properties.EmitCount);
+        }
+
+        /// <summary>
+        /// Emits the particle at the emitter's position with the specified count.
+        /// </summary>
+        /// <param name="count"></param>
+        public void Emit(int count)
+        {
+            Emit(GlobalPosition, count);
+        }
+
+        /// <summary>
+        /// Emits the particles with a specified position and count.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="count"></param>
+        public void Emit(Vector2 position, int count = 1)
+        {
+            for (int i = 0; i < count; i++)
             {
-                _timeSinceLastEmission -= 1.0f / EmissionRate;
-
-                var particle = new Particle(GlobalPosition, Properties);
-                _particles.Add(particle);
+                Spawn(position);
             }
         }
-
+        
         public override void ProcessUpdate(float delta)
         {
             base.ProcessUpdate(delta);
 
-            EmitParticles(delta);
+            _intervalLeft -= delta;
 
-            for (int i = _particles.Count - 1; i >= 0; i--)
+            while (_intervalLeft <= 0f)
             {
-                var particle = _particles[i];
+                _intervalLeft += Properties.Interval;
 
-                particle.Update(delta);
-
-                if (particle.IsExpired)
-                {
-                    _particles.RemoveAt(i);
-                }
-                else
-                {
-                    _particles[i] = particle;
-                }
+                Emit();
             }
+
+            foreach (var particle in _particles)
+            {
+                particle.Update(delta);
+            }
+
+            _particles.RemoveAll(p => p.isFinished);
         }
 
         public override void SubmitCall()
@@ -63,27 +91,8 @@ namespace Monolith.Nodes
             base.SubmitCall();
 
             foreach (var particle in _particles)
-            { 
-                var drawPosition = particle.Position - GlobalPosition;
-                var particleColor = particle.Properties.Color;
-                var scale = new Vector2(particle.Properties.Size);
-
-
-                Engine.Canvas.Call(new TextureDrawCall
-                {
-                    Texture = Texture,
-                    Position = drawPosition,
-                    Color = particleColor,
-                    Rotation = particle.Properties.Rotation,
-                    Origin = Texture.Center,
-                    Scale = scale,
-                    Effects = GlobalSpriteEffects,
-                    Depth = GlobalDepth,
-                    SpriteBatchConfig = SpriteBatchConfig.Default with
-                    {
-                        Effect = GlobalShader
-                    }
-                });
+            {
+                particle.Draw();
             }
         }
     }

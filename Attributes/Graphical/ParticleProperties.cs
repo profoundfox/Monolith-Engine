@@ -1,42 +1,46 @@
 
 using Microsoft.Xna.Framework;
+using Monolith.Graphics;
 
-namespace Monolith.Graphics
+namespace Monolith.Attributes
 {
-    public record struct ParticleProperties
+   public record struct ParticleProperties
     {
-        public Vector2 Velocity;
-        public Vector2 Acceleration;
-        public float LifeSpan;
-        public float InitialSize;
-        public float SizeRandomness;
-        public float SizeGrowthFactor;
-        public float SizeDecayFactor;
-        public float Size;
-        public Color Color;
-        public float Rotation;
-        public float Alpha;
+        public MTexture Texture { get; set; }
+        public float Lifespan { get; set; }
+        public Color ColorStart { get; set; }
+        public Color ColorEnd { get; set; }
+        public float OpacityStart { get; set; }
+        public float OpacityEnd { get; set; }
+        public float SizeStart { get; set; }
+        public float SizeEnd { get; set; }
+        public float Speed { get; set; }
+        public float Angle { get; set; }
 
-        public static readonly ParticleProperties Identity = new
-        (
-            velocity: new Vector2(0, 50), acceleration: new Vector2(0f, 0f),
-            lifeSpan: 2.0f, initialSize: 10, sizeRandomness: 0f, 
-            sizeGrowthFactor: 0f, sizeDecayFactor: 0f, color: Color.White, rotation: 0f, alpha: 1f
+        public static readonly ParticleProperties Identity = new(
+            texture: Engine.Pixel, lifespan: 2f, colorStart: Color.Yellow, 
+            colorEnd: Color.Red, opacityStart: 1f, 
+            opacityEnd: 0f, sizeStart: 32f, sizeEnd: 4f, 
+            speed: 100f, angle: 0f
         );
 
-        public ParticleProperties(Vector2 velocity, Vector2 acceleration, float lifeSpan, float initialSize, float sizeRandomness, float sizeGrowthFactor, float sizeDecayFactor, Color color, float rotation, float alpha)
+        public ParticleProperties(
+            MTexture texture, float lifespan, 
+            Color colorStart, Color colorEnd, float opacityStart, 
+            float opacityEnd, float sizeStart, float sizeEnd, 
+            float speed, float angle)
         {
-            Velocity = velocity;
-            Acceleration = acceleration;
-            LifeSpan = lifeSpan;
-            InitialSize = initialSize;
-            SizeRandomness = sizeRandomness;
-            SizeGrowthFactor = sizeGrowthFactor;
-            SizeDecayFactor = sizeDecayFactor;
-            Size = initialSize;
-            Color = color;
-            Rotation = rotation;
-            Alpha = alpha;
+            Texture = texture;
+            Lifespan = lifespan;
+            ColorStart = colorStart;
+            ColorEnd = colorEnd;
+            OpacityStart = opacityStart;
+            OpacityEnd = opacityEnd;
+            SizeStart = sizeStart;
+            SizeEnd = sizeEnd;
+            Speed = speed;
+            Angle = angle;
         }
     }
+
 }

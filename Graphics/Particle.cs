@@ -7,48 +7,68 @@ using Monolith.Managers;
 
 namespace Monolith.Graphics
 {
-    public struct Particle
+    public class Particle
     {
-        public Vector2 Position;
-        public ParticleProperties Properties;
-        public float TimeAlive;
+        private readonly ParticleProperties _data;
+        private Vector2 _position;
+        private float _lifespanLeft;
+        private float _lifespanAmount;
+        private Color _color;
+        private float _opacity;
+        public bool isFinished = false;
+        private float _scale;
+        private Vector2 _origin;
+        private Vector2 _direction;
 
-        private static Random rnd;
-
-        public Particle(Vector2 position, ParticleProperties properties)
+        public Particle(Vector2 pos, ParticleProperties data)
         {
-            Position = position;
-            Properties = properties;
+            _data = data;
+            _lifespanLeft = data.Lifespan;
+            _lifespanAmount = 1f;
+            _position = pos;
+            _color = data.ColorStart;
+            _opacity = data.OpacityStart;
+            _origin = new(_data.Texture.Bounds.X / 2, _data.Texture.Bounds.Y / 2);
 
-            rnd = new();
+            if (data.Speed != 0)
+            {
+                _data.Angle = MathHelper.ToRadians(_data.Angle);
+                _direction = new Vector2((float)Math.Sin(_data.Angle), -(float)Math.Cos(_data.Angle));
+            }
+            else
+            {
+                _direction = Vector2.Zero;
+            }
         }
 
-        public void Update(float deltaTime)
+        public void Update(float delta)
         {
-            TimeAlive += deltaTime;
-
-            Properties.Velocity += Properties.Acceleration * deltaTime;
-            Position += Properties.Velocity * deltaTime;
-
-            Properties.Alpha = MathHelper.Clamp(1f - (TimeAlive / Properties.LifeSpan), 0f, 1f);
-
-            if (TimeAlive == 0f) 
+            _lifespanLeft -= delta;
+            if (_lifespanLeft <= 0f)
             {
-                Properties.Size += (float)(rnd.NextDouble() - 0.5f) * Properties.SizeRandomness;
+                isFinished = true;
+                return;
             }
 
-            float normalizedTime = TimeAlive / Properties.LifeSpan;
-
-            Properties.Size = Properties.InitialSize * (1f + Properties.SizeGrowthFactor * normalizedTime);
-
-            if (normalizedTime > 0)
-            {
-                Properties.Size *= (1f - (float)Math.Exp(-normalizedTime * Properties.SizeDecayFactor));
-            }
-
-            Properties.Color = Color.Lerp(Color.White, Color.Red, normalizedTime);
+            _lifespanAmount = MathHelper.Clamp(_lifespanLeft / _data.Lifespan, 0, 1);
+            _color = Color.Lerp(_data.ColorEnd, _data.ColorStart, _lifespanAmount);
+            _opacity = MathHelper.Clamp(MathHelper.Lerp(_data.OpacityEnd, _data.OpacityStart, _lifespanAmount), 0, 1);
+            _scale = MathHelper.Lerp(_data.SizeEnd, _data.SizeStart, _lifespanAmount) / _data.Texture.Bounds.X;
+            _position += _direction * _data.Speed * delta;
         }
 
-        public bool IsExpired => TimeAlive >= Properties.LifeSpan;
+        public void Draw()
+        {
+            Engine.Canvas.Call(new TextureDrawCall
+            {
+                Texture = _data.Texture,
+                Position = _position,
+                Color = _color * _opacity,
+                Rotation = 0f,
+                Origin = _origin,
+                Scale = new Vector2(_scale)
+            });
+        }
     }
+
 }
