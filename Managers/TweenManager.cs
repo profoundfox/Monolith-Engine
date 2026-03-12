@@ -63,7 +63,7 @@ namespace Monolith.Managers
         {
             for (int i = _tweens.Count - 1; i >= 0; i--)
             {
-                _tweens[i].Update();
+                _tweens[i].Update(deltaTime);
                 if (_tweens[i].IsComplete())
                     _tweens.RemoveAt(i);
             }

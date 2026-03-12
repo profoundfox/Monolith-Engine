@@ -57,11 +57,11 @@ namespace Monolith.Util
             callbackAction = action;
         }
 
-        public void Update()
+        public void Update(float delta)
         {
             if (!isRunning) return;
 
-            elapsedTime += Engine.DeltaTime;
+            elapsedTime += delta;
 
             float t = MathHelper.Clamp(elapsedTime / Duration, 0f, 1f);
             float eased = EasingFunction(t);

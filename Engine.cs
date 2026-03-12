@@ -37,8 +37,6 @@ namespace Monolith
         private int _fpsFrames;
         private double _fpsTimer;
 
-        public static float DeltaTime { get; private set; }
-
         public Engine()
         {
             if (Instance != null)
@@ -61,7 +59,7 @@ namespace Monolith
         {
             GraphicsDevice = base.GraphicsDevice;
 
-            EngineTime = new EngineTime(1f / 60f);
+            EngineTime = new EngineTime(TimeSpan.FromSeconds(1.0 / 60.0));
 
             Resource = new ResourceManager();
             Tween = new TweenManager();
@@ -103,28 +101,27 @@ namespace Monolith
 
         protected override void Update(GameTime gameTime)
         {
-            float frameDelta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            DeltaTime = frameDelta;
+            TimeSpan frameDelta = gameTime.ElapsedGameTime;
 
             int physicsSteps = EngineTime.Update(frameDelta);
 
             Input.Update(gameTime);
 
-            Tween.Update(frameDelta);
+            Tween.Update((float)frameDelta.TotalSeconds);
 
             for (int i = 0; i < physicsSteps; i++)
             {
                 Timer.PhysicsUpdate(EngineTime.FixedDelta);
-                Stage.PhysicsUpdate(EngineTime.FixedDelta);
+                Stage.PhysicsUpdate((float)EngineTime.FixedDelta.TotalSeconds);
             }
 
-            Stage.ProcessUpdate(EngineTime.FrameDelta);
+            Stage.ProcessUpdate((float)EngineTime.FrameDelta.TotalSeconds);
             Stage.SubmitCallCurrentStage();
 
             if (Input.Keyboard.IsKeyDown(Keys.Escape))
                 Exit();
 
-            _fpsTimer += frameDelta;
+            _fpsTimer += (float)frameDelta.TotalSeconds;
             _fpsFrames++;
             if (_fpsTimer >= 1.0)
             {

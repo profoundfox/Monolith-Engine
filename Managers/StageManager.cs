@@ -152,7 +152,7 @@ namespace Monolith.Managers
         /// <summary>
         /// Queues freezing the current stage for a duration
         /// </summary>
-        public void QueueFreezeCurrentStageFor(float duration)
+        public void QueueFreezeCurrentStageFor(TimeSpan duration)
         {
             QueueFreezeCurrentStage();
             Engine.Timer.Wait(duration, UnfreezeCurrentStage);

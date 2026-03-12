@@ -66,8 +66,11 @@ namespace Monolith.Graphics
                 Color = _color * _opacity,
                 Rotation = 0f,
                 Origin = _origin,
-                Scale = new Vector2(_scale)
+                Scale = new Vector2(_scale),
+                Depth = 99,
             });
+
+            Console.WriteLine(_position);
         }
     }
 

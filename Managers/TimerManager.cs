@@ -15,14 +15,15 @@ namespace Monolith.Managers
         /// <summary>
         /// Add a one-shot timer in seconds.
         /// </summary>
-        public void Wait(float seconds, Action callback)
+        public void Wait(TimeSpan time, Action callback)
         {
-            if (seconds < 0) throw new ArgumentOutOfRangeException(nameof(seconds));
+            if (time < TimeSpan.Zero)
+                throw new ArgumentOutOfRangeException(nameof(time));
 
             timers.Add(new Timer
             {
-                TimeLeft = seconds,
-                Interval = seconds,
+                TimeLeft = time,
+                Interval = time,
                 Callback = callback,
                 Repeat = false
             });
@@ -31,9 +32,10 @@ namespace Monolith.Managers
         /// <summary>
         /// Add a repeating timer in seconds.
         /// </summary>
-        public void Repeat(float interval, Action callback)
-        {
-            if (interval <= 0) throw new ArgumentOutOfRangeException(nameof(interval));
+        public void Repeat(TimeSpan interval, Action callback)
+        {  
+            if (interval < TimeSpan.Zero)
+                throw new ArgumentOutOfRangeException(nameof(interval));
 
             timers.Add(new Timer
             {
@@ -42,19 +44,22 @@ namespace Monolith.Managers
                 Callback = callback,
                 Repeat = true
             });
+
+            
         }
 
         /// <summary>
         /// Add a cancelable timer. Returns an action that cancels it.
         /// </summary>
-        public Action WaitCancelable(float seconds, Action callback)
+        public Action WaitCancelable(TimeSpan time, Action callback)
         {
-            if (seconds < 0) throw new ArgumentOutOfRangeException(nameof(seconds));
+            if (time < TimeSpan.Zero)
+                throw new ArgumentOutOfRangeException(nameof(time));
 
             var timer = new Timer
             {
-                TimeLeft = seconds,
-                Interval = seconds,
+                TimeLeft = time,
+                Interval = time,
                 Callback = callback,
                 Repeat = false
             };
@@ -67,7 +72,7 @@ namespace Monolith.Managers
         /// <summary>
         /// Update all timers. Call this every frame from Game.Update().
         /// </summary>
-        public void PhysicsUpdate(float deltaTime)
+        public void PhysicsUpdate(TimeSpan deltaTime)
         {
             for (int i = timers.Count - 1; i >= 0; i--)
             {
@@ -79,15 +84,15 @@ namespace Monolith.Managers
                     continue;
                 }
 
-                t.TimeLeft -= Engine.DeltaTime;
+                t.TimeLeft -= deltaTime;
 
-                if (t.TimeLeft <= 0f)
+                if (t.TimeLeft <= TimeSpan.Zero)
                 {
                     t.Callback?.Invoke();
 
                     if (t.Repeat)
                     {
-                        t.TimeLeft = t.Interval;
+                        t.TimeLeft += t.Interval;
                     }
                     else
                     {

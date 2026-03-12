@@ -1,20 +1,22 @@
+using System;
+
 namespace Monolith.Util
 {
     public sealed class EngineTime
     {
-        public float FixedDelta { get; }
-        public float FrameDelta { get; private set; }
+        public TimeSpan FixedDelta { get; }
+        public TimeSpan FrameDelta { get; private set; }
         public float Alpha { get; private set; }
 
-        private float _accumulator;
+        private TimeSpan _accumulator;
         private const int MaxSteps = 5;
 
-        public EngineTime(float fixedDelta)
+        public EngineTime(TimeSpan fixedDelta)
         {
             FixedDelta = fixedDelta;
         }
 
-        public int Update(float frameDelta)
+        public int Update(TimeSpan frameDelta)
         {
             FrameDelta = frameDelta;
             _accumulator += frameDelta;
@@ -27,9 +29,9 @@ namespace Monolith.Util
             }
 
             if (steps == MaxSteps)
-                _accumulator = 0f;
+                _accumulator = TimeSpan.Zero;
 
-            Alpha = _accumulator / FixedDelta;
+            Alpha = (float)(_accumulator.TotalMilliseconds / FixedDelta.TotalMilliseconds);
             return steps;
         }
     }

@@ -4,7 +4,7 @@ namespace Monolith.Attributes
 {
     public interface ITween
     {
-        void Update();
+        void Update(float delta);
         bool IsComplete();
     }
 }
