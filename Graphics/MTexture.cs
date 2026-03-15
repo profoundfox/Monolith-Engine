@@ -7,16 +7,11 @@ using Monolith.Attributes;
 namespace Monolith.Graphics
 {
     /// <summary>
-    /// Represents a texture or a rectangular region (sprite) of a texture.
+    /// Represents a texture or a rectangular region of a texture.
     /// Can be created from scratch or as a subregion of an existing texture.
     /// </summary>
     public class MTexture : IDisposable
     {
-        private Texture2D texture2D;
-
-        private int _width;
-        private int _height;
-
         /// <summary>
         /// Internal texture used for rendering.
         /// </summary>
@@ -29,13 +24,14 @@ namespace Monolith.Graphics
         public Rectangle? SourceRectangle { get; private set; }
 
         /// <summary>
-        /// The width and height of this texture.
+        /// The bounds of this texture.
         /// Represented as integer coordiantes.
         /// </summary>
-        public Point Bounds
+        public Rectangle Bounds
         {
-            get => new Point
-            (
+            get => new Rectangle(
+                0,
+                0,
                 SourceRectangle?.Width ?? Texture.Width,
                 SourceRectangle?.Height ?? Texture.Height
             );
@@ -44,7 +40,7 @@ namespace Monolith.Graphics
         /// <summary>
         /// Center point of the rendered texture in local space.
         /// </summary>
-        public Vector2 Center => new(Bounds.X / 2f, Bounds.Y / 2f);
+        public Vector2 Center => new(Bounds.Width / 2f, Bounds.Height / 2f);
 
 
         /// <summary>

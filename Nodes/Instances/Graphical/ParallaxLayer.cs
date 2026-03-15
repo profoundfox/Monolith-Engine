@@ -36,10 +36,10 @@ namespace Monolith.Nodes
             offset += cameraDelta * MotionScale;
 
             if (LoopAxes.HasFlag(LoopAxis.X))
-                offset.X = Mod(offset.X, Texture.Bounds.X);
+                offset.X = Mod(offset.X, Texture.Bounds.Width);
 
             if (LoopAxes.HasFlag(LoopAxis.Y))
-                offset.Y = Mod(offset.Y, Texture.Bounds.Y);
+                offset.Y = Mod(offset.Y, Texture.Bounds.Height);
 
             if (!LoopAxes.HasFlag(LoopAxis.X))
                 offset.X = 0;
@@ -68,15 +68,15 @@ namespace Monolith.Nodes
             
             Rectangle view = Engine.Canvas.GetWorldViewRectangle();
 
-            int texW = Texture.Bounds.X;
-            int texH = Texture.Bounds.Y;
+            int texW = Texture.Bounds.Width;
+            int texH = Texture.Bounds.Height;
 
             Vector2 basePos = new Vector2(
                 LoopAxes.HasFlag(LoopAxis.X)
-                    ? GlobalPosition.X - Mod(GlobalPosition.X - offset.X, Texture.Bounds.X)
+                    ? GlobalPosition.X - Mod(GlobalPosition.X - offset.X, Texture.Bounds.Width)
                     : GlobalPosition.X,
                 LoopAxes.HasFlag(LoopAxis.Y)
-                    ? GlobalPosition.Y - Mod(GlobalPosition.Y - offset.Y, Texture.Bounds.Y)
+                    ? GlobalPosition.Y - Mod(GlobalPosition.Y - offset.Y, Texture.Bounds.Height)
                     : GlobalPosition.Y
             );
 

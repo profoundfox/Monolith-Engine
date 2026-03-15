@@ -12,14 +12,14 @@ namespace Monolith.Attributes
 
     public static class Properties
     {
-        public static T SetProperties<T>(this T node, Action<T> config)
+        public static T SetProperties<T>(this T inst, Action<T> config)
             where T : Instance
         {
-            config(node);
-            return node;
+            config(inst);
+            return inst;
         }
 
-        public static T SetPropertiesDynamic<T>(this T node, Dictionary<string, object> values)
+        public static T SetPropertiesDynamic<T>(this T inst, Dictionary<string, object> values)
             where T : Instance
         {
             var type = typeof(T);
@@ -27,9 +27,9 @@ namespace Monolith.Attributes
             {
                 var prop = type.GetProperty(kv.Key);
                 if (prop != null && prop.CanWrite)
-                    prop.SetValue(node, kv.Value);
+                    prop.SetValue(inst, kv.Value);
             }
-            return node;
+            return inst;
         }
     }
 }
