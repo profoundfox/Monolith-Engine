@@ -69,8 +69,6 @@ namespace Monolith.Graphics
                 Scale = new Vector2(_scale),
                 Depth = 99,
             });
-
-            Console.WriteLine(_position);
         }
     }
 

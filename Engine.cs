@@ -25,7 +25,6 @@ namespace Monolith
         public static EngineTime EngineTime { get; private set; }
 
         public static TreeServer2D Tree { get; private set; }
-        public static TweenManager Tween { get; private set; }
         public static ResourceManager Resource { get; private set; }
         public static CanvasHandler Canvas { get; private set; }
         public static StageManager Stage { get; private set; }
@@ -62,7 +61,6 @@ namespace Monolith
             EngineTime = new EngineTime(TimeSpan.FromSeconds(1.0 / 60.0));
 
             Resource = new ResourceManager();
-            Tween = new TweenManager();
             Stage = new StageManager();
             Tree = new TreeServer2D();
             Physics = new PhysicsServer2D();
@@ -106,8 +104,6 @@ namespace Monolith
             int physicsSteps = EngineTime.Update(frameDelta);
 
             Input.Update(gameTime);
-
-            Tween.Update((float)frameDelta.TotalSeconds);
 
             for (int i = 0; i < physicsSteps; i++)
             {

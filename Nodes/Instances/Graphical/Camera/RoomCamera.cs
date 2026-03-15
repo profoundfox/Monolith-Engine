@@ -94,7 +94,6 @@ namespace Monolith.Nodes
 
         private void ShiftRoom(int dir)
         {
-            Console.WriteLine(dir);
             _dir = dir;
 
             var camera = Engine.Canvas.GetWorldViewRectangle();
@@ -106,7 +105,7 @@ namespace Monolith.Nodes
                 action?.Invoke();
 
 
-            var cameraXTween = Engine.Tween.CreateTween(t => LocalPosition = t, GlobalPosition, targetPos, 0.5f, Vector2.Lerp, EasingFunctions.Linear);
+            var cameraXTween = Engine.Tree.CreateTween(t => LocalPosition = t, GlobalPosition, targetPos, 0.5f, Vector2.Lerp, EasingFunctions.Linear);
 
             cameraXTween.SetCallbackAction
             (

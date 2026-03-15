@@ -6,7 +6,7 @@ using Monolith.Attributes;
 
 namespace Monolith.Util
 {
-    public class Tween<T> : ITween
+    public class Tween<T> : Instance
     {
         public float Duration { get; private set; }
         public Func<float, float> EasingFunction { get; private set; }
@@ -40,9 +40,6 @@ namespace Monolith.Util
             _lerpFunc = lerpFunc;
             EasingFunction = easingFunction;
             
-
-            Engine.Tween.AddTween(this);
-
             Start();
         }
 
@@ -56,9 +53,11 @@ namespace Monolith.Util
         {
             callbackAction = action;
         }
-
-        public void Update(float delta)
+        
+        public override void ProcessUpdate(float delta)
         {
+            base.ProcessUpdate(delta); 
+        
             if (!isRunning) return;
 
             elapsedTime += delta;
@@ -72,6 +71,7 @@ namespace Monolith.Util
                 isComplete = true;
                 isRunning = false;
                 callbackAction?.Invoke();
+                FreeImmediate();
             }
         }
 

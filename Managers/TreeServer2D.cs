@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Monolith.Helpers;
 using Monolith.Nodes;
+using Monolith.Util;
 
 namespace Monolith.Managers
 {
@@ -28,6 +30,31 @@ namespace Monolith.Managers
 
             return inst;
         }
+
+        public Tween<T> CreateTween<T>
+        (
+            Action<T> setter,
+            T start,
+            T end,
+            float duration,
+            Func<T, T, float, T> lerpFunc,
+            Func<float, float> easingFunction = null)
+        {
+            if (easingFunction == null)
+                easingFunction = EasingFunctions.Linear;
+
+            var tween = new Tween<T>(
+                start,
+                end,
+                duration,
+                lerpFunc,
+                setter,
+                easingFunction
+            );
+
+            return tween;
+        }
+
 
         /// <summary>
         /// Queues an instance to be added to this tree.
