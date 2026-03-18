@@ -2,7 +2,7 @@ using System;
 
 namespace Monolith.Helpers
 {
-    public static class MathM
+    public static class MonolithMath
     {
         public static Random Random { get; set; } = new();
 

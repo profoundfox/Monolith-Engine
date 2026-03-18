@@ -9,7 +9,29 @@ namespace Monolith.Nodes
     {
         public Vector2 Zoom { get; set; } = Vector2.One;
 
-        public Camera2D() {}
+        public Rectangle Bounds
+        {
+            get
+            {
+                float width = Engine.Canvas.RenderTarget.Width / Zoom.X;
+                float height = Engine.Canvas.RenderTarget.Height / Zoom.Y;
+
+                float left = GlobalTransform.Position.X - width * 0.5f;
+                float top = GlobalTransform.Position.Y - height * 0.5f;
+
+                return new Rectangle(
+                    (int)left,
+                    (int)top,
+                    (int)width,
+                    (int)height
+                );
+            }
+        }
+
+        public Camera2D()
+        {
+            Engine.Canvas.SetMatrix(GetTransform());
+        }
 
         /// <summary>
         /// Returns the camera transform matrix for SpriteBatch.Begin.
@@ -17,7 +39,6 @@ namespace Monolith.Nodes
         /// </summary>
         public Matrix GetTransform() 
         { 
-
             Vector2 CanvasCenter = new Vector2(Engine.Canvas.RenderTarget.Width / Zoom.X, Engine.Canvas.RenderTarget.Height / Zoom.Y) * 0.5f; 
 
             Matrix transform = Matrix.CreateScale(Zoom.X, Zoom.Y, 1f)
@@ -31,6 +52,8 @@ namespace Monolith.Nodes
         public override void ProcessUpdate(float delta)
         {
             base.ProcessUpdate(delta);
+
+            Console.WriteLine($"Camera position: {GlobalTransform.Position}");
             
             Engine.Canvas.SetMatrix(GetTransform());
         }

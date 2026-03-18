@@ -25,9 +25,9 @@ namespace Monolith.Nodes
         {
             ParticleProperties d = Properties.ParticleProperties;
 
-            d.Lifespan = MathM.RandomFloat(Properties.LifespanMin, Properties.LifespanMax);
-            d.Speed = MathM.RandomFloat(Properties.SpeedMin, Properties.SpeedMax);
-            d.Angle = MathM.RandomFloat(
+            d.Lifespan = MonolithMath.RandomFloat(Properties.LifespanMin, Properties.LifespanMax);
+            d.Speed = MonolithMath.RandomFloat(Properties.SpeedMin, Properties.SpeedMax);
+            d.Angle = MonolithMath.RandomFloat(
                 Properties.Angle - Properties.AngleVariance,
                 Properties.Angle + Properties.AngleVariance);
 

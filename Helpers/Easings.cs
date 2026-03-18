@@ -12,7 +12,6 @@ namespace Monolith.Helpers
         const float c3 = c1 + 1f;
         const float c2 = c1 * 1.525f;
         const float c4 = (float)(2f * Math.PI) / 3f;
-        const float c5 = (float)(2f * Math.PI) / 4.5f;
 
 
         #region Linear
