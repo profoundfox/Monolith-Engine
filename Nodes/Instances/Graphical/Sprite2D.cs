@@ -17,6 +17,9 @@ namespace Monolith.Nodes
         
         public override void SubmitCall()
         {
+            if (Texture == null)
+                return; 
+            
             Engine.Canvas.Call(new TextureDrawCall
             {
                 Texture = Texture,

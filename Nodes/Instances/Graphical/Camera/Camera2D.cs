@@ -52,8 +52,6 @@ namespace Monolith.Nodes
         public override void ProcessUpdate(float delta)
         {
             base.ProcessUpdate(delta);
-
-            Console.WriteLine($"Camera position: {GlobalTransform.Position}");
             
             Engine.Canvas.SetMatrix(GetTransform());
         }

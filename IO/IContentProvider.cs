@@ -11,23 +11,12 @@ namespace Monolith.IO
 {
     public interface IContentProvider
     {
-        Texture2D LoadTexture(string path);
-        SpriteFont LoadFont(string path);
-
-        SoundEffect LoadSound(string path);
-        Song LoadMusic(string path);
-
-        string LoadText(string path);
         T LoadJson<T>(string path);
-
-        Effect LoadEffect(string path);
-        byte[] LoadRaw(string path);
 
         T Load<T>(string path); 
 
         void Unload(string path);
         void ClearCache();
-        void ReloadAll();
     }
 
 

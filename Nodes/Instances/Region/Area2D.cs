@@ -22,7 +22,7 @@ namespace Monolith.Nodes
 
         public Area2D() {}
         
-        private Node2D GetOverlappingArea()
+        private Area2D GetOverlappingArea()
         {
             return Engine.Tree.GetAll<CollisionShape2D>()
                 .Where(c => c.GetParent() != this)
@@ -32,17 +32,17 @@ namespace Monolith.Nodes
         }
 
 
-        private KinematicBody2D GetOverlappingBody()
+        private PhysicsBody2D GetOverlappingBody()
         {
             return Engine.Tree.GetAll()
-                .Where(a => a != this && typeof(KinematicBody2D).IsAssignableFrom(a.GetType()))
-                .Cast<KinematicBody2D>()
+                .Where(a => a != this && typeof(PhysicsBody2D).IsAssignableFrom(a.GetType()))
+                .Cast<PhysicsBody2D>()
                 .FirstOrDefault(a => CollisionShape.Intersects(a.CollisionShape));
         }
 
 
             
-        public bool AreaEntered(out Node2D overlapping)
+        public bool AreaEntered(out Area2D overlapping)
         {
             overlapping = GetOverlappingArea();
  
@@ -58,7 +58,7 @@ namespace Monolith.Nodes
             return AreaEntered(out _);
         }
             
-        public bool AreaExited(out Node2D overlapping)
+        public bool AreaExited(out Area2D overlapping)
         {
             overlapping = GetOverlappingArea();
 
@@ -75,7 +75,7 @@ namespace Monolith.Nodes
         }
 
 
-        public bool AreaInside(out Node2D overlapping)
+        public bool AreaInside(out Area2D overlapping)
         {
             overlapping = GetOverlappingArea();
             return overlapping != null;
@@ -86,7 +86,7 @@ namespace Monolith.Nodes
             return AreaInside(out _);
         }
 
-        public bool BodyEntered(out KinematicBody2D overlapping)
+        public bool BodyEntered(out PhysicsBody2D overlapping)
         {
             overlapping = GetOverlappingBody();
 
@@ -102,7 +102,7 @@ namespace Monolith.Nodes
             return BodyEntered(out _);
         }
 
-        public bool BodyExited(out KinematicBody2D overlapping)
+        public bool BodyExited(out PhysicsBody2D overlapping)
         {
             overlapping = GetOverlappingBody();
 
@@ -118,7 +118,7 @@ namespace Monolith.Nodes
             return BodyExited(out _);
         }
 
-        public bool BodyInside(out KinematicBody2D overlapping)
+        public bool BodyInside(out PhysicsBody2D overlapping)
         {
             overlapping = GetOverlappingBody();
             return overlapping != null;

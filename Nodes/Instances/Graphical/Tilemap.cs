@@ -11,11 +11,13 @@ namespace Monolith.Nodes
 {    
     public class Tilemap : Node2D
     {
-        private int[] _tiles;
+        private int[,] _tiles;
 
         public Tileset Tileset { get; set; }
 
         private int rows;
+        private int columns;
+
         public int Rows
         {
             get => rows;
@@ -26,7 +28,6 @@ namespace Monolith.Nodes
             }
         }
 
-        private int columns;
         public int Columns
         {
             get => columns;
@@ -37,82 +38,66 @@ namespace Monolith.Nodes
             }
         }
 
-        private int count;
-        public int Count { get => count; }
-
-        public List<int> Data { get; set; }
+        public int IndexOffset { get; set; } = 0;
 
         public Tilemap() {}
 
         private void Rebuild()
         {
-            if (Columns <= 0 || Rows <= 0)
+            if (columns <= 0 || rows <= 0)
                 return;
 
-            count = Columns * Rows;
+            _tiles = new int[columns, rows];
 
-            _tiles = new int[Count];
-
-            for (int i = 0; i < Count; i++)
-                _tiles[i] = -1;
-
-            ApplyData();
-        }
-
-        private void ApplyData()
-        {
-            if (_tiles == null || Data == null)
-                return;
-
-            int max = Math.Min(Data.Count, Count);
-
-            for (int i = 0; i < max; i++)
+            for (int y = 0; y < rows; y++)
             {
-                int tile = Data[i];
-
-                _tiles[i] = tile == 0 ? -1 : tile;
+                for (int x = 0; x < columns; x++)
+                {
+                    _tiles[x, y] = -1;
+                }
             }
         }
 
-        public MTexture GetTile(int index)
+        public MTexture GetTile(int column, int row)
         {
-            if (_tiles == null || index < 0 || index >= Count)
+            if (_tiles == null ||
+                column < 0 || column >= columns ||
+                row < 0 || row >= rows)
                 return null;
 
-            int tileIndex = _tiles[index];
-
+            int tileIndex = _tiles[column, row] + IndexOffset;
             if (tileIndex < 0)
                 return null;
 
             return Tileset.GetTile(tileIndex);
         }
 
-        public MTexture GetTile(int column, int row)
+        public void SetTile(int column, int row, int tileIndex)
         {
-            return GetTile(row * Columns + column);
+            if (_tiles == null ||
+                column < 0 || column >= columns ||
+                row < 0 || row >= rows)
+                return;
+
+            _tiles[column, row] = tileIndex - IndexOffset;
         }
 
-        private void SetTile(int index, int tilesetID)
+        public void SetData(int[,] data)
         {
-            _tiles[index] = tilesetID;
-        }
+            if (data == null)
+                return;
 
-        private void SetTile(int column, int row, int tilesetID)
-        {
-            SetTile(row * Columns + column, tilesetID);
-        }
+            int w = data.GetLength(0);
+            int h = data.GetLength(1);
 
-        public void SetData(Rectangle size, List<int> tileData)
-        {   
-            for (int row = 0; row < size.Y; row++)
-            {
-                for (int col = 0; col < size.X; col++)
-                {
-                    int index = row * size.X + col;
-                    int tile = (index >= 0 && index < tileData.Count) ? tileData[index] : 0;
-                    SetTile(col, row, tile);
-                }
-            }
+            Columns = w;
+            Rows = h;
+
+            _tiles = new int[Columns, Rows];
+
+            for (int y = 0; y < Rows; y++)
+                for (int x = 0; x < Columns; x++)
+                    _tiles[x, y] = data[x, y] - IndexOffset;
         }
 
         public override void SubmitCall()
@@ -122,40 +107,41 @@ namespace Monolith.Nodes
             if (_tiles == null || Tileset == null)
                 return;
 
-            for (int i = 0; i < Count; i++)
+            for (int y = 0; y < rows; y++)
             {
-                int tileSetIndex = _tiles[i];
-
-                if (tileSetIndex < 0)
-                    continue;
-
-                MTexture tile = Tileset.GetTile(tileSetIndex);
-
-                int x = i % Columns;
-                int y = i / Columns;
-
-               Vector2 localTilePos = new Vector2(
-                    x * Tileset.TileWidth,
-                    y * Tileset.TileHeight
-                );
-
-                Vector2 worldTilePos = localTilePos + GlobalTransform.Position;
-
-                Engine.Canvas.Call(new TextureDrawCall
+                for (int x = 0; x < columns; x++)
                 {
-                    Texture = tile,
-                    Position = worldTilePos,
-                    Color = GlobalVisibility.Modulate,
-                    Rotation = GlobalTransform.Rotation,
-                    Origin = Vector2.Zero,
-                    Scale = GlobalTransform.Scale,
-                    Effects = GlobalMaterial.SpriteEffects,
-                    Depth = GlobalOrdering.Depth,
-                    SpriteBatchConfig = SpriteBatchConfig.Default with
+                    int tileSetIndex = _tiles[x, y];
+                    if (tileSetIndex < 0)
+                        continue;
+
+                    MTexture tile = Tileset.GetTile(tileSetIndex);
+
+
+                    Vector2 localTilePos = new Vector2(
+                        x * Tileset.TileWidth,
+                        y * Tileset.TileHeight
+                    );
+
+
+                    Vector2 worldTilePos = localTilePos + GlobalPosition;
+
+                    Engine.Canvas.Call(new TextureDrawCall
                     {
-                        Effect = GlobalShader
-                    }
-                });
+                        Texture = tile,
+                        Position = worldTilePos,
+                        Color = GlobalVisibility.Modulate,
+                        Rotation = GlobalTransform.Rotation,
+                        Origin = Vector2.Zero,
+                        Scale = GlobalTransform.Scale,
+                        Effects = GlobalMaterial.SpriteEffects,
+                        Depth = GlobalOrdering.Depth,
+                        SpriteBatchConfig = SpriteBatchConfig.Default with
+                        {
+                            Effect = GlobalShader
+                        }
+                    });
+                }
             }
         }
     }
