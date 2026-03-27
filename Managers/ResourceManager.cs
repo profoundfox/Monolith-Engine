@@ -7,7 +7,7 @@ namespace Monolith.Managers
     {
         private IContentProvider Provider { get; set; }
 
-        internal string ContentRoot { get; set; } = "Content";
+        public string ContentRoot { get; set; } = "Content";
 
         public ResourceManager()
         {
