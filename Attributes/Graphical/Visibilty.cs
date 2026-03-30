@@ -1,6 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
-using Monolith.Helpers;
+using Monolith.Tools;
 
 namespace Monolith.Attributes
 {
@@ -22,7 +22,7 @@ namespace Monolith.Attributes
         {
             return new Visibility(
                 parent.Visibile && child.Visibile,
-                ColorHelper.Multiply(parent.Modulate, child.Modulate)
+                ColorExtension.Multiply(parent.Modulate, child.Modulate)
             );
         }
 

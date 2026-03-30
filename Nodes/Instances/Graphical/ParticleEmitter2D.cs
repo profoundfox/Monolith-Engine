@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Attributes;
 using Monolith.Graphics;
-using Monolith.Helpers;
+using Monolith.Tools;
 using System;
 using System.Collections.Generic;
 
@@ -25,9 +25,9 @@ namespace Monolith.Nodes
         {
             ParticleProperties d = Properties.ParticleProperties;
 
-            d.Lifespan = MonolithMath.RandomFloat(Properties.LifespanMin, Properties.LifespanMax);
-            d.Speed = MonolithMath.RandomFloat(Properties.SpeedMin, Properties.SpeedMax);
-            d.Angle = MonolithMath.RandomFloat(
+            d.Lifespan = MathE.RandomFloat(Properties.LifespanMin, Properties.LifespanMax);
+            d.Speed = MathE.RandomFloat(Properties.SpeedMin, Properties.SpeedMax);
+            d.Angle = MathE.RandomFloat(
                 Properties.Angle - Properties.AngleVariance,
                 Properties.Angle + Properties.AngleVariance);
 

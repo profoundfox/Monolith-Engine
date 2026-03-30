@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 
-namespace Monolith.Helpers
+namespace Monolith.Tools
 {
-    public static class PathHelper
+    public static class PathTools
     {
         public static string Base => AppContext.BaseDirectory;
 

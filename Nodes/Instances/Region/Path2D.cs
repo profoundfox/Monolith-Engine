@@ -9,6 +9,9 @@ namespace Monolith.Nodes
     public class Path2D : Node2D
     {
         public List<Vector2> Path { get; private set; }
+
+        public Node2D Target { get; set; }
+
         public float Speed { get; set; } = 100f;
 
         private int currentTargetIndex = 0;
@@ -21,14 +24,14 @@ namespace Monolith.Nodes
 
         public void SetPath(params Vector2[] path)
         {
-            Path = path.ToList();   
+            Path = path.ToList();
         }
 
         public void AddPath(params Vector2[] path)
         {
             Path.AddRange(path.ToList());
         }
-
+        
         public override void ProcessUpdate(float delta)
         {
             base.ProcessUpdate(delta);
@@ -47,10 +50,10 @@ namespace Monolith.Nodes
             }
             else
             {
-                segmentProcess = 1f;
+                segmentProcess = MathHelper.Clamp(segmentProcess, 0f, 1f);
             }
 
-            LocalPosition = Vector2.Lerp(start, end, segmentProcess);
+            Target.LocalPosition = Vector2.Lerp(start, end, segmentProcess);
 
             if (segmentProcess >= 1f)
             {

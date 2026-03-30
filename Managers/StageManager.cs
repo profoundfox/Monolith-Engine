@@ -11,7 +11,7 @@ using Monolith.Util;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Monolith.Helpers;
+using Monolith.Tools;
 
 namespace Monolith.Managers
 {

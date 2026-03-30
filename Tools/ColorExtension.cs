@@ -1,9 +1,9 @@
 
 using Microsoft.Xna.Framework;
 
-namespace Monolith.Helpers
+namespace Monolith.Tools
 {
-    public class ColorHelper
+    public class ColorExtension
     {
         public static Color GetOppositeColor(Color original)
         {

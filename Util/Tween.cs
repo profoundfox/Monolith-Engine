@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
-using Monolith.Helpers;
+using Monolith.Tools;
 using Monolith.Attributes;
 
 namespace Monolith.Util

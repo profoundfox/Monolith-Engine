@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Monolith.Helpers
+namespace Monolith.Tools
 {
-    public class DictionaryHelper
+    public class DictionaryExtension
     {
         public static Dictionary<TKey, List<TValue>> CloneDictionaryOfLists<TKey, TValue>(
             Dictionary<TKey, List<TValue>> original,

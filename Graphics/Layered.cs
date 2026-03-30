@@ -22,7 +22,7 @@ namespace Monolith.Graphics
         public int Depth
         {    
             get => _depth;
-            set => _depth = Math.Clamp(value, -Min, Max);
+            set => _depth = Math.Clamp(value, Min, Max);
         }
 
         /// <summary>

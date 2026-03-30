@@ -2,24 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Monolith.Tools;
 
 namespace Monolith.Geometry
 {
     public static class AStar
     {
-        private static readonly Point[] directions =
+        public static List<Point> GetPath(Point start, Point goal)
         {
-            new Point(-1, 0),
-            new Point(1, 0),
-            new Point(0, 1),
-            new Point(0, -1),
-
-            new Point(-1, -1),
-            new Point(-1, 1),
-            new Point(1, -1),
-            new Point(1, 1)
-        };
-
+            throw new NotImplementedException();
+        }
         public static List<Point> GetPath(int[,] grid, Point start, Point goal)
         {
             var allCells = new Dictionary<Point, Cell>();
@@ -47,10 +39,10 @@ namespace Monolith.Geometry
                     return GetPath(currentCell);
                 }
 
-                foreach (var direction in directions)
+                foreach (var direction in CordTools.Directions)
                 {
                     Point newLocation = currentCell.Location + direction;
-                    if (IsValidLocation(newLocation, grid))
+                    if (newLocation.IsValidLocation(grid))
                     {
 
                         Cell neighbor;
@@ -71,7 +63,7 @@ namespace Monolith.Geometry
                             Point p1 = new Point(currentCell.Location.X + direction.X, currentCell.Location.Y);
                             Point p2 = new Point(currentCell.Location.X, currentCell.Location.Y + direction.Y);
 
-                            if (!IsValidLocation(p1, grid) || !IsValidLocation(p2, grid))
+                            if (!p1.IsValidLocation(grid) || !p2.IsValidLocation(grid))
                                 continue;
                         }
 
@@ -95,17 +87,6 @@ namespace Monolith.Geometry
             int dx = Math.Abs(a.Location.X - b.Location.X);
             int dy = Math.Abs(a.Location.Y - b.Location.Y);
             return 14 * Math.Min(dx, dy) + 10 * (Math.Max(dx, dy) - Math.Min(dx, dy));
-        }
-
-        private static bool IsValidLocation(Point location, int[,] grid)
-        {
-            int x = location.X;
-            int y = location.Y;
-
-            return x >= 0 && y >= 0
-                && x < grid.GetLength(1)
-                && y < grid.GetLength(0) 
-                && grid[y, x] == 0;
         }
 
         private static List<Point> GetPath(Cell goal)

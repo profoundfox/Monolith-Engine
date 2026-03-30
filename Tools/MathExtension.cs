@@ -1,8 +1,8 @@
 using System;
 
-namespace Monolith.Helpers
+namespace Monolith.Tools
 {
-    public static class MonolithMath
+    public static class MathE
     {
         public static Random Random { get; set; } = new();
 

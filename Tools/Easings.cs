@@ -1,6 +1,6 @@
 using System;
 
-namespace Monolith.Helpers
+namespace Monolith.Tools
 {
     /// <summary>
     /// Provides a collection of easing functions used to interpolate values over time.
