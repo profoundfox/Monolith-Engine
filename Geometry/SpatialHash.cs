@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 
 namespace Monolith.Geometry
@@ -9,6 +10,7 @@ namespace Monolith.Geometry
     public class SpatialHash<T> where T : IHashAble
     {
         private readonly Dictionary<Point, List<T>> _cells = new();
+        private readonly HashSet<T> _queryCache = new();
         private float _cellSize;
 
         public SpatialHash(float cellSize = 64f)
@@ -34,9 +36,9 @@ namespace Monolith.Geometry
         private IEnumerable<Point> GetCellsForBounds(Rectangle bounds)
         {
             int minX = (int)Math.Floor(bounds.Left / _cellSize);
-            int maxX = (int)Math.Floor(bounds.Right / _cellSize);
+            int maxX = (int)Math.Floor((bounds.Right - 0.001f) / _cellSize);
             int minY = (int)Math.Floor(bounds.Top / _cellSize);
-            int maxY = (int)Math.Floor(bounds.Bottom / _cellSize);
+            int maxY = (int)Math.Floor((bounds.Bottom - 0.001f) / _cellSize);
 
             for (int x = minX; x <= maxX; x++)
                 for (int y = minY; y <= maxY; y++)
@@ -68,8 +70,13 @@ namespace Monolith.Geometry
         {
             foreach(var cell in GetCellsForBounds(obj.Bounds))
             {
-                if (!_cells.TryGetValue(cell, out var list))
+                if (_cells.TryGetValue(cell, out var list))
+                {
                     list.Remove(obj);
+
+                    if (list.Count == 0)
+                        _cells.Remove(cell);
+                }
             }
         }
 
@@ -94,15 +101,16 @@ namespace Monolith.Geometry
         /// <returns></returns>
         public List<T> Query(Rectangle bounds)
         {
-            var results = new HashSet<T>();
-            foreach(var cell in GetCellsForBounds(bounds))
+            _queryCache.Clear();
+
+            foreach (var cell in GetCellsForBounds(bounds))
             {
                 if (_cells.TryGetValue(cell, out var list))
-                    foreach(var obj in list)
-                        results.Add(obj);
+                    foreach (var obj in list)
+                        _queryCache.Add(obj);
             }
 
-            return new List<T>(results);
+            return _queryCache.ToList();
         }
 
         /// <summary>
@@ -112,10 +120,27 @@ namespace Monolith.Geometry
         /// <param name="oldBounds"></param>
         public void Update(T obj, Rectangle oldBounds)
         {
-            RemoveFromOldCells(obj, oldBounds);
-            Insert(obj);
+            var oldCells = GetCellsForBounds(oldBounds).ToHashSet();
+            var newCells = GetCellsForBounds(obj.Bounds).ToHashSet();
+
+            foreach (var cell in oldCells.Except(newCells))
+            {
+                if (_cells.TryGetValue(cell, out var list))
+                    list.Remove(obj);
+            }
+
+            foreach (var cell in newCells.Except(oldCells))
+            {
+                if (!_cells.TryGetValue(cell, out var list))
+                {
+                    list = new List<T>();
+                    _cells[cell] = list;
+                }
+                list.Add(obj);
+            }
         }
     }
+    
 
     public interface IHashAble
     {

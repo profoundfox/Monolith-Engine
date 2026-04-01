@@ -25,6 +25,8 @@ namespace Monolith.Nodes
         public void SetPath(params Vector2[] path)
         {
             Path = path.ToList();
+            currentTargetIndex = 0;
+            segmentProcess = 0f;
         }
 
         public void AddPath(params Vector2[] path)
@@ -56,10 +58,11 @@ namespace Monolith.Nodes
             Target.LocalPosition = Vector2.Lerp(start, end, segmentProcess);
 
             if (segmentProcess >= 1f)
-            {
-                segmentProcess = 0f;
-                currentTargetIndex++;
-            }
+                {
+                    Target.LocalPosition = end;
+                    segmentProcess = 0f;
+                    currentTargetIndex++;
+                }
 
         }
     }

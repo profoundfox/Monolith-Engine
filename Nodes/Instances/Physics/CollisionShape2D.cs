@@ -16,14 +16,22 @@ namespace Monolith.Nodes
 
         public int Width
         {
-            get => Shape.Width;
-            set => Shape.Width = value;
+            get => Shape?.Width ?? 0;
+            set
+            {
+                if (Shape != null)
+                    Shape.Width = value;
+            }
         }
 
         public int Height
         {
-            get => Shape.Height;
-            set => Shape.Height = value;
+            get => Shape?.Height ?? 0;
+            set
+            {
+                if (Shape != null)
+                    Shape.Height = value;
+            }
         }
 
         public CollisionShape2D() {}
@@ -39,7 +47,12 @@ namespace Monolith.Nodes
 
             _onTransformChanged = delegate(Transform2D newTransform)
             {
-                Shape.Location = newTransform.Position.ToPoint();
+                if (Shape != null)
+                {
+                    Shape.Location = newTransform.Position.ToPoint();
+                }
+                if (GetParent() is StaticBody2D)
+                    Console.WriteLine($"Collision: {Shape.BoundingBox}");
             };
 
             OnTransformChanged += _onTransformChanged;
@@ -48,7 +61,9 @@ namespace Monolith.Nodes
         public override void OnExit()
         {
             base.OnExit();
-            OnTransformChanged -= _onTransformChanged;
+
+            if (_onTransformChanged != null)
+                OnTransformChanged -= _onTransformChanged;
         }
 
         public override void PhysicsUpdate(float delta)
@@ -57,38 +72,34 @@ namespace Monolith.Nodes
             CheckOneWay();
         }
 
-        public AABB GetAABB()
+       public AABB GetAABB()
         {
             if (Shape == null || Disabled)
                 return new AABB(GlobalPosition, GlobalPosition);
 
-            Vector2 localMin = Shape.Location.ToVector2();
-            Vector2 localMax = localMin + new Vector2(Shape.Width, Shape.Height);
-
-            Vector2 worldMin = GlobalPosition + localMin;
-            Vector2 worldMax = GlobalPosition + localMax;
+            Vector2 worldMin = Shape.Location.ToVector2();
+            Vector2 worldMax = worldMin + new Vector2(Shape.Width, Shape.Height);
 
             return new AABB(worldMin, worldMax);
         }
 
         private void CheckOneWay()
         {
+            if (!OneWay || Shape == null)
+                return;
+
             foreach (KinematicBody2D kb in Engine.Tree.GetAll<KinematicBody2D>())
             { 
-                if (kb.CollisionShape == null)
+                if (kb.CollisionShape?.Shape == null)
                     continue; 
                 
                 IRegionShape2D body = kb.CollisionShape.Shape;
-
-                if (!OneWay)
-                    continue;
 
                 if (kb.Velocity.Y < 0)
                 {
                     Disabled = true;
                 }
-
-                else if(!Shape.Intersects(body))
+                else if (!Shape.Intersects(body))
                 {
                     Disabled = false;
                 }
@@ -97,25 +108,23 @@ namespace Monolith.Nodes
 
         public bool Contains(Point p)
         {
-            if (!Disabled)
-            {
+            if (!Disabled && Shape != null)
                 return Shape.Contains(p);
-            }
+
             return false;
         }
 
         public bool Contains(CollisionShape2D other)
         {
-            if (!Disabled && other != null)
-            {
+            if (!Disabled && other?.Shape != null && Shape != null)
                 return Shape.Contains(other.Shape);
-            }
+
             return false;
         }
 
         public bool Intersects(CollisionShape2D other)
         {
-            if (Disabled || other == null)
+            if (Disabled || other?.Shape == null || Shape == null)
                 return false;
 
             return Shape.Intersects(other.Shape);
@@ -123,28 +132,25 @@ namespace Monolith.Nodes
 
         public bool IntersectsAt(Vector2 offset, CollisionShape2D other)
         {
-            if (Disabled || other == null || other.Disabled)
+            if (Disabled || other?.Shape == null || other.Disabled || Shape == null)
                 return false;
 
             return Shape.IntersectsAt(offset.ToPoint(), other.Shape);
         }
 
-
         public bool Contains(IRegionShape2D other)
         {
-            if (!Disabled)
-            {
+            if (!Disabled && Shape != null && other != null)
                 return Shape.Contains(other);
-            }
+
             return false;
         }
 
         public bool Intersects(IRegionShape2D other)
         {
-            if (!Disabled)
-            {
+            if (!Disabled && Shape != null && other != null)
                 return Shape.Intersects(other);
-            }
+
             return false;
         }
 
@@ -153,29 +159,22 @@ namespace Monolith.Nodes
             hitPoint = Vector2.Zero;
             distance = float.MaxValue;
 
-            if (!Disabled)
-            {
+            if (!Disabled && Shape != null)
                 return Shape.RayIntersect(rayOrigin, rayDir, maxLength, out hitPoint, out distance);
-            }
 
             return false;
         }
 
         public CollisionShape2D Clone()
         {
-            IRegionShape2D clonedShape = null;
-            if (Shape != null)
-            {
-                clonedShape = Shape.Clone();
-            }
+            IRegionShape2D clonedShape = Shape?.Clone();
             
-            var clone = new CollisionShape2D()
+            return new CollisionShape2D()
             {
                 Disabled = this.Disabled,
-                OneWay = this.OneWay
+                OneWay = this.OneWay,
+                Shape = clonedShape
             };
-
-            return clone;
         }
     }
 }

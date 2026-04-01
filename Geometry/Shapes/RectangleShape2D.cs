@@ -10,7 +10,6 @@ namespace Monolith.Geometry
     {
         public Rectangle Rect;
 
-
         public RectangleShape2D(int width, int height)
         {
             Rect = new Rectangle(0, 0, width, height);

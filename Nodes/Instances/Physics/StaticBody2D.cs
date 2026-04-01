@@ -11,6 +11,11 @@ namespace Monolith.Nodes
     {
         public StaticBody2D() {}
 
+        public override void OnEnter()
+        {
+            base.OnEnter();
+        }
+
         public override void PhysicsUpdate(float delta)
         {
             base.PhysicsUpdate(delta);

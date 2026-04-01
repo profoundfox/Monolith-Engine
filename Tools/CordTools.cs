@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Monolith.Geometry;
@@ -75,6 +76,25 @@ namespace Monolith.Tools
             }
             
             return safeCord;
+        }
+
+        public static void Write(this int[,] data, string filePath)
+        {
+            int rows = data.GetLength(0);
+            int cols = data.GetLength(1);
+
+            using (StreamWriter sw = new StreamWriter(filePath))
+            {
+                for (int i = 0; i < rows; i++)
+                {
+                    string[] row = new string[cols];
+                    for (int j = 0; j < cols; j++)
+                    {
+                        row[j] = data[i, j].ToString();
+                    }
+                    sw.WriteLine(string.Join(",", row));
+                }
+            }
         }
 
         public static int[,] CreateNavGrid(Rectangle area, int tileWidth, int tileHeight)

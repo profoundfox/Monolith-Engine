@@ -77,21 +77,26 @@ namespace Monolith.Nodes
                     Velocity = new Vector2(0, Velocity.Y);
                     break;
                 }
+                bool nearWall = false;
+                Vector2 nearWallNormal = Vector2.Zero;
+
                 if (CollisionShape.IntersectsAt(new Vector2(WALL_TOLERANCE, 0), other.CollisionShape))
                 {
-                    _isOnWall = true;
-                    WallNormal = new Vector2(-1, 0);
+                    nearWall = true;
+                    nearWallNormal = new Vector2(-1, 0);
+                }
+                else if (CollisionShape.IntersectsAt(new Vector2(-WALL_TOLERANCE, 0), other.CollisionShape))
+                {
+                    nearWall = true;
+                    nearWallNormal = new Vector2(1, 0);
                 }
 
-                if (_isOnWall) break;
-
-                if (CollisionShape.IntersectsAt(new Vector2(-WALL_TOLERANCE, 0), other.CollisionShape))
+                if (nearWall && movement.X != 0)
                 {
                     _isOnWall = true;
-                    WallNormal = new Vector2(1, 0);
+                    WallNormal = nearWallNormal;
+                    break;
                 }
-
-                if (_isOnWall) break;
             }
 
             Vector2 verticalMovement = new Vector2(0, movement.Y);
@@ -122,7 +127,8 @@ namespace Monolith.Nodes
                     break;
                 }
 
-                if (CollisionShape.IntersectsAt(new Vector2(0, FLOOR_TOLERANCE), other.CollisionShape))
+                if (movement.Y >= 0 &&
+                    CollisionShape.IntersectsAt(new Vector2(0, FLOOR_TOLERANCE), other.CollisionShape))
                 {
                     _isOnFloor = true;
                     _floorShape = other.CollisionShape;
@@ -141,8 +147,8 @@ namespace Monolith.Nodes
             {
                 if (CollisionShape.Intersects(other.CollisionShape))
                 {
-                    Rectangle a = CollisionShape.Shape.BoundingBox;
-                    Rectangle b = other.CollisionShape.Shape.BoundingBox;
+                    Rectangle a = this.Bounds;
+                    Rectangle b = other.Bounds;
 
                     float moveRight = b.Right - a.Left;
                     float moveLeft = a.Right - b.Left;

@@ -8,10 +8,6 @@ namespace Monolith.Geometry
 {
     public static class AStar
     {
-        public static List<Point> GetPath(Point start, Point goal)
-        {
-            throw new NotImplementedException();
-        }
         public static List<Point> GetPath(int[,] grid, Point start, Point goal)
         {
             var allCells = new Dictionary<Point, Cell>();

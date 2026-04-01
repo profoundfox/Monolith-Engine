@@ -121,6 +121,7 @@ namespace Monolith.Nodes
 
             OnTransformChanged?.Invoke(GlobalTransform);
 
+
             foreach (var child in Children)
             {
                 if (child is Node2D c2d)

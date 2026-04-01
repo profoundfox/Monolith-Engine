@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -40,9 +41,9 @@ namespace Monolith.Managers
         {
             if (!_bounds.TryGetValue(body, out var oldBounds))
                 return;
-            
+                        
             var newBounds = body.Bounds;
-
+ 
             if (newBounds != oldBounds)
             {
                 _broadphase.Update(body, oldBounds);

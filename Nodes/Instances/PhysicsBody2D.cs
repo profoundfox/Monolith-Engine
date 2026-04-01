@@ -17,17 +17,23 @@ namespace Monolith.Nodes
 
             OnChildAdded += (node) =>
             {
-                Engine.Physics.RegisterBody(this);
-                OnTransformChanged += (transform) =>
-                {
-                    Engine.Physics.NotifyMoved(this);
-                };
+                if (node is CollisionShape2D)
+                    Engine.Physics.RegisterBody(this);
+            };
+
+            OnTransformChanged += (transform) =>
+            {   
+                Engine.Physics.NotifyMoved(this);
+
+                if (this is StaticBody2D)
+                    Console.WriteLine($"PhysicsBody: {Bounds}");
             };
         }
 
         public override void OnExit()
         {
             Engine.Physics.UnregisterBody(this);
+            
             base.OnExit();
         }
 
