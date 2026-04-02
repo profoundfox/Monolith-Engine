@@ -9,12 +9,12 @@ namespace Monolith.Tools
     {
         public static RectangleShape2D ToShape(this Rectangle normRect)
         {
-            return new RectangleShape2D(normRect);
+            return new RectangleShape2D(normRect.Width, normRect.Height);
         }
 
-        public static Rectangle ToRectangle(this IRegionShape2D shape)
+        public static Rectangle ToRectangle(this IShape2D shape, Point location)
         {
-            return new Rectangle(shape.BoundingBox.X, shape.BoundingBox.Y, shape.BoundingBox.Width, shape.BoundingBox.Height);
+            return new Rectangle(location.X, location.Y, (int)shape.Size.Width, (int)shape.Size.Height);
         }
 
         public static Rectangle Snap(this Rectangle rect, int tileWidth, int tileHeight)

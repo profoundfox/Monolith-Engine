@@ -60,13 +60,13 @@ namespace Monolith.Nodes
 
             CameraSide side = CameraSide.None;
 
-            if (pos.X + shape.Width > camera.Right)
+            if (pos.X + shape.Size.Width > camera.Right)
                 side = CameraSide.Right;
             else if (pos.X < camera.Left)
                 side = CameraSide.Left;
             else if (pos.Y < camera.Top)
                 side = CameraSide.Top;
-            else if (pos.Y + shape.Height > camera.Bottom)
+            else if (pos.Y + shape.Size.Height > camera.Bottom)
                 side = CameraSide.Bottom;
 
             if (!_entered)

@@ -26,7 +26,7 @@ namespace Monolith.Geometry
         public bool HasHit => _hasHit;
         public Vector2 HitPoint => _hitPoint;
 
-        public bool CheckIntersections(IEnumerable<IRegionShape2D> shapes)
+        public bool CheckIntersections(IEnumerable<IShape2D> shapes)
         {
             _hasHit = false;
             float closest = float.MaxValue;

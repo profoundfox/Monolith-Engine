@@ -114,7 +114,7 @@ namespace Monolith.Tools
                 if (shape == null)
                     continue;
 
-                var snapShape = shape.Shape.ToRectangle().Snap(tileWidth, tileHeight);
+                var snapShape = shape.Shape.ToRectangle(shape.GlobalPosition.ToPoint()).Snap(tileWidth, tileHeight);
 
                 int startX = snapShape.X / tileWidth;
                 int endX   = (snapShape.X + snapShape.Width) / tileWidth;
