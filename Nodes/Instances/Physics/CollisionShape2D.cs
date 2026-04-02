@@ -12,7 +12,7 @@ namespace Monolith.Nodes
         public bool OneWay { get; set; }
         public IShape2D Shape { get; set; }
 
-        public float Width
+        public int Width
         {
             get => Shape?.Size.Width ?? 0;
             set
@@ -22,7 +22,7 @@ namespace Monolith.Nodes
             }
         }
 
-        public float Height
+        public int Height
         {
             get => Shape?.Size.Height ?? 0;
             set
@@ -67,7 +67,7 @@ namespace Monolith.Nodes
                 {
                     Disabled = true;
                 }
-                else if (!Shape.Intersect(body, GlobalPosition, kb.GlobalPosition))
+                else if (!Shape.Intersect(body, GlobalPosition.ToPoint(), kb.GlobalPosition.ToPoint()))
                 {
                     Disabled = false;
                 }
@@ -79,7 +79,7 @@ namespace Monolith.Nodes
             if (Disabled || other?.Shape == null || Shape == null)
                 return false;
 
-            return Shape.Intersect(other.Shape, GlobalPosition, other.GlobalPosition);
+            return Shape.Intersect(other.Shape, GlobalPosition.ToPoint(), other.GlobalPosition.ToPoint());
         }
 
         public bool IntersectsAt(Vector2 offset, CollisionShape2D other)
@@ -87,28 +87,17 @@ namespace Monolith.Nodes
             if (Disabled || other?.Shape == null || other.Disabled || Shape == null)
                 return false;
 
-            return Shape.IntersectsAt(offset, other.Shape, GlobalPosition, other.GlobalPosition);
+            return Shape.IntersectsAt(offset.ToPoint(), other.Shape, GlobalPosition.ToPoint(), other.GlobalPosition.ToPoint());
         }
 
         public bool Contains(Vector2 position)
         {
             if (!Disabled && Shape != null)
-                return Shape.Contains(position, GlobalPosition);
+                return Shape.Contains(position.ToPoint(), GlobalPosition.ToPoint());
 
             return false;
         }
 
-
-        public bool RayIntersect(Vector2 rayOrigin, Vector2 rayDir, float maxLength, out Vector2 hitPoint, out float distance)
-        {
-            hitPoint = Vector2.Zero;
-            distance = float.MaxValue;
-
-            if (!Disabled && Shape != null)
-                return Shape.RayIntersect(rayOrigin, rayDir, maxLength, out hitPoint, out distance);
-
-            return false;
-        }
 
         public CollisionShape2D Clone()
         {

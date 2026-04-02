@@ -15,6 +15,9 @@ namespace Monolith.Nodes
         {
             base.OnEnter();
 
+            if (CollisionShape != null)
+                Engine.Physics.RegisterBody(this);
+
             OnChildAdded += (node) =>
             {
                 if (node is CollisionShape2D)

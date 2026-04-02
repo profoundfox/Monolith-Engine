@@ -11,16 +11,14 @@ namespace Monolith.Nodes
     {
         public CollisionShape2D CollisionShape { get => Get<CollisionShape2D>(); }
 
-        public Rectangle Bounds
+        public Rectangle Bounds 
         {
             get
             {
-                return new Rectangle(
-                    (int)GlobalPosition.X,
-                    (int)GlobalPosition.Y,
-                    (int)CollisionShape.Width,
-                    (int)CollisionShape.Height
-                );
+                if (CollisionShape == null)
+                    return Rectangle.Empty;
+                
+                return CollisionShape.Shape.GetAABB(GlobalPosition.ToPoint());
             }
         }
 

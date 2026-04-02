@@ -34,17 +34,17 @@ namespace Monolith.Geometry
             foreach (var shape in shapes)
             {
                 if (shape.RayIntersect(
-                    Origin,
-                    Direction,
+                    Origin.ToPoint(),
+                    Direction.ToPoint(),
                     Length,
-                    out Vector2 hit,
+                    out Point hit,
                     out float distance))
                 {
                     if (distance < closest)
                     {
                         closest = distance;
                         _hasHit = true;
-                        _hitPoint = hit;
+                        _hitPoint = hit.ToVector2();
                     }
                 }
             }

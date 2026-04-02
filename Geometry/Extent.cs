@@ -2,10 +2,10 @@ namespace Monolith.Geometry
 {
     public struct Extent
     {
-        public float Width { get; set; }
-        public float Height { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
 
-        public Extent(float width, float height)
+        public Extent(int width, int height)
         {
             Width = width;
             Height = height;

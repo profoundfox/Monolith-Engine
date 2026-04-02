@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Monolith.Geometry
 {
-    public static class ShapeTools
+    public static class Intersection
     {
-        public static bool RectangleIntersectWithCircle(Vector2 rectPos, RectangleShape2D rect, Vector2 circlePos, CircleShape2D circle)
+        public static bool RectangleIntersectWithCircle(Point rectPos, RectangleShape2D rect, Point circlePos, CircleShape2D circle)
         {
             float closestX = Math.Clamp(circlePos.X, rectPos.X, rectPos.X + rect.Width);
             float closestY = Math.Clamp(circlePos.Y, rectPos.Y, rectPos.Y + rect.Height);

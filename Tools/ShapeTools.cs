@@ -14,7 +14,7 @@ namespace Monolith.Tools
 
         public static Rectangle ToRectangle(this IShape2D shape, Point location)
         {
-            return new Rectangle(location.X, location.Y, (int)shape.Size.Width, (int)shape.Size.Height);
+            return new Rectangle(location.X, location.Y, shape.Size.Width, shape.Size.Height);
         }
 
         public static Rectangle Snap(this Rectangle rect, int tileWidth, int tileHeight)

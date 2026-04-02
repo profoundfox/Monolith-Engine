@@ -35,9 +35,6 @@ namespace Monolith.Nodes
 
             Vector2 movement = Velocity * delta;
 
-            // Debug: Log initial position and velocity
-            Console.WriteLine($"Before Move: Position: {LocalPosition}, Velocity: {Velocity}, Movement: {movement}");
-
             if (_isOnFloor && _floorShape != null)
             {
                 Vector2 platformDelta = _floorShape.GlobalTransform.Position - _lastFloorGlobalPosition;
@@ -80,7 +77,6 @@ namespace Monolith.Nodes
                     Velocity = new Vector2(0, Velocity.Y);
                     break;
                 }
-
                 bool nearWall = false;
                 Vector2 nearWallNormal = Vector2.Zero;
 
@@ -115,9 +111,6 @@ namespace Monolith.Nodes
                     if (movement.Y > 0)
                     {
                         float penetration = (GlobalPosition.Y + CollisionShape.Height) - other.GlobalPosition.Y;
-                        // Debug: Log penetration for upward movement
-                        Console.WriteLine($"Penetration (Upward): {penetration}, Position: {LocalPosition}, Velocity: {Velocity}");
-
                         LocalPosition -= new Vector2(0, penetration);
                         _isOnFloor = true;
                         _floorShape = other.CollisionShape;
@@ -126,9 +119,6 @@ namespace Monolith.Nodes
                     else if (movement.Y < 0)
                     {
                         float penetration = other.GlobalPosition.Y + other.CollisionShape.Height - GlobalPosition.Y;
-                        // Debug: Log penetration for downward movement
-                        Console.WriteLine($"Penetration (Downward): {penetration}, Position: {LocalPosition}, Velocity: {Velocity}");
-
                         LocalPosition += new Vector2(0, penetration);
                         _isOnRoof = true;
                     }
@@ -140,9 +130,6 @@ namespace Monolith.Nodes
                 if (movement.Y >= 0 &&
                     CollisionShape.IntersectsAt(new Vector2(0, FLOOR_TOLERANCE), other.CollisionShape))
                 {
-                    // Debug: Log when floor tolerance is hit
-                    Console.WriteLine($"Floor Tolerance Hit: Position: {LocalPosition}, Movement: {movement.Y}");
-
                     _isOnFloor = true;
                     _floorShape = other.CollisionShape;
                     _lastFloorGlobalPosition = _floorShape.GlobalTransform.Position;
@@ -150,9 +137,6 @@ namespace Monolith.Nodes
 
                 if (_isOnFloor) break;
             }
-
-            // Debug: Log final position after move and collision resolution
-            Console.WriteLine($"After Move: Position: {LocalPosition}, Velocity: {Velocity}");
         }
 
         private void ResolveStaticPenetration()
@@ -173,9 +157,6 @@ namespace Monolith.Nodes
 
                     float minX = Math.Min(moveRight, moveLeft);
                     float minY = Math.Min(moveDown, moveUp);
-
-                    // Debug: Log resolution of static penetration
-                    Console.WriteLine($"Resolving Static Penetration: MinX: {minX}, MinY: {minY}");
 
                     if (minX < minY)
                     {
