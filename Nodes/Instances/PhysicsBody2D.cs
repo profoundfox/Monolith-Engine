@@ -27,9 +27,6 @@ namespace Monolith.Nodes
             OnTransformChanged += (transform) =>
             {   
                 Engine.Physics.NotifyMoved(this);
-
-                if (this is StaticBody2D)
-                    Console.WriteLine($"PhysicsBody: {Bounds}");
             };
         }
 

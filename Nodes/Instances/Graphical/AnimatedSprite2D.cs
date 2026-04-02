@@ -100,7 +100,7 @@ namespace Monolith.Nodes
         {
             base.SubmitCall();
             
-            if (CurrentAnimation == null) return;
+            if (CurrentAnimation == null || GlobalVisible == false) return;
 
             Engine.Canvas.Call(new TextureDrawCall
             {
