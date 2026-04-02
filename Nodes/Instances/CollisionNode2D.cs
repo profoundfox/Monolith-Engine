@@ -17,7 +17,7 @@ namespace Monolith.Nodes
             {
                 if (CollisionShape == null)
                     return Rectangle.Empty;
-                
+
                 return CollisionShape.Shape.GetAABB(GlobalPosition.ToPoint());
             }
         }
