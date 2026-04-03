@@ -36,9 +36,9 @@ namespace Monolith.Geometry
         private IEnumerable<Point> GetCellsForBounds(Rectangle bounds)
         {
             int minX = (int)Math.Floor(bounds.Left / _cellSize);
-            int maxX = (int)Math.Floor((bounds.Right - 0.001f) / _cellSize);
+            int maxX = (int)Math.Floor(bounds.Right / _cellSize);
             int minY = (int)Math.Floor(bounds.Top / _cellSize);
-            int maxY = (int)Math.Floor((bounds.Bottom - 0.001f) / _cellSize);
+            int maxY = (int)Math.Floor(bounds.Bottom / _cellSize);
 
             for (int x = minX; x <= maxX; x++)
                 for (int y = minY; y <= maxY; y++)
