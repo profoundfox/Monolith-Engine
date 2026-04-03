@@ -15,7 +15,9 @@ namespace Monolith.Geometry
         public Vector2 TargetOffset { get; set; }
 
         public Vector2 Direction =>
-            Vector2.Normalize(TargetOffset);
+            TargetOffset == Vector2.Zero
+                ? Vector2.Zero
+                : Vector2.Normalize(TargetOffset);
 
         public float Length =>
             TargetOffset.Length();
@@ -26,25 +28,26 @@ namespace Monolith.Geometry
         public bool HasHit => _hasHit;
         public Vector2 HitPoint => _hitPoint;
 
-        public bool CheckIntersections(IEnumerable<IShape2D> shapes)
+        public bool CheckIntersections(IEnumerable<(IShape2D shape, Vector2 position)> shapes)
         {
             _hasHit = false;
             float closest = float.MaxValue;
 
-            foreach (var shape in shapes)
+            foreach (var (shape, position) in shapes)
             {
                 if (shape.RayIntersect(
-                    Origin.ToPoint(),
-                    Direction.ToPoint(),
+                    Origin,
+                    Direction,
                     Length,
-                    out Point hit,
+                    position,
+                    out Vector2 hit,
                     out float distance))
                 {
                     if (distance < closest)
                     {
                         closest = distance;
                         _hasHit = true;
-                        _hitPoint = hit.ToVector2();
+                        _hitPoint = hit;
                     }
                 }
             }

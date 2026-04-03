@@ -111,50 +111,61 @@ namespace Monolith.Geometry
                    point.Y >= minY && point.Y <= maxY;
         }
 
-        public bool RayIntersect(Point rayOrigin, Point rayDir, float maxLength, out Point hitPoint, out float distance)
+        public bool RayIntersect(
+            Vector2 rayOrigin,
+            Vector2 rayDir,
+            float maxLength,
+            Vector2 position,
+            out Vector2 hitPoint,
+            out float distance)
         {
-            hitPoint = new Point();
-            distance = 0;
+            hitPoint = Vector2.Zero;
+            distance = 0f;
 
-            Rectangle r = GetAABB(new Point(0, 0));
+            Rectangle r = GetAABB(position.ToPoint());
 
             float tmin = 0f;
             float tmax = maxLength;
 
-            if (rayDir.X == 0)
-            {
-                if (rayOrigin.X < r.Left || rayOrigin.X > r.Right)
-                    return false;
-            }
-            else
+            if (rayDir.X != 0f)
             {
                 float inv = 1f / rayDir.X;
                 float t1 = (r.Left - rayOrigin.X) * inv;
                 float t2 = (r.Right - rayOrigin.X) * inv;
+
                 if (t1 > t2) (t1, t2) = (t2, t1);
-                tmin = Math.Max(tmin, t1);
-                tmax = Math.Min(tmax, t2);
+
+                tmin = MathF.Max(tmin, t1);
+                tmax = MathF.Min(tmax, t2);
+
                 if (tmin > tmax) return false;
             }
-
-            if (rayDir.Y == 0)
+            else if (rayOrigin.X < r.Left || rayOrigin.X > r.Right)
             {
-                if (rayOrigin.Y < r.Top || rayOrigin.Y > r.Bottom)
-                    return false;
+                return false;
             }
-            else
+
+            if (rayDir.Y != 0f)
             {
                 float inv = 1f / rayDir.Y;
                 float t1 = (r.Top - rayOrigin.Y) * inv;
                 float t2 = (r.Bottom - rayOrigin.Y) * inv;
+
                 if (t1 > t2) (t1, t2) = (t2, t1);
-                tmin = Math.Max(tmin, t1);
-                tmax = Math.Min(tmax, t2);
+
+                tmin = MathF.Max(tmin, t1);
+                tmax = MathF.Min(tmax, t2);
+
                 if (tmin > tmax) return false;
             }
+            else if (rayOrigin.Y < r.Top || rayOrigin.Y > r.Bottom)
+            {
+                return false;
+            }
 
-            distance = (int)tmin;
-            hitPoint = new Point(rayOrigin.X + (int)(rayDir.X * tmin), rayOrigin.Y + (int)(rayDir.Y * tmin));
+            distance = tmin;
+            hitPoint = rayOrigin + rayDir * tmin;
+
             return true;
         }
 

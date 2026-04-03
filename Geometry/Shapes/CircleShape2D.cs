@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 
 namespace Monolith.Geometry
@@ -73,11 +74,40 @@ namespace Monolith.Geometry
             return Intersect(otherShape, thisPosition + offset, otherPosition);
         }
 
-        public bool RayIntersect(Point rayOrigin, Point rayDir, float maxLength, out Point hitPoint, out float distance)
+        public bool RayIntersect(
+            Vector2 rayOrigin,
+            Vector2 rayDir,
+            float maxLength,
+            Vector2 position,
+            out Vector2 hitPoint,
+            out float distance)
         {
-            hitPoint = new Point();
-            distance = 0;
-            return false;
+            hitPoint = Vector2.Zero;
+            distance = 0f;
+
+            Vector2 m = rayOrigin - position;
+            float b = Vector2.Dot(m, rayDir);
+            float c = Vector2.Dot(m, m) - Radius * Radius;
+ 
+            if (c > 0f && b > 0f)
+                return false;
+
+            float discr = b * b - c;
+            if (discr < 0f)
+                return false;
+
+            float t = -b - MathF.Sqrt(discr);
+
+            if (t < 0f)
+                t = 0f;
+
+            if (t > maxLength)
+                return false;
+
+            distance = t;
+            hitPoint = rayOrigin + rayDir * t;
+
+            return true;
         }
     }
 }

@@ -126,23 +126,29 @@ namespace Monolith.Tools
                 {
                     for (int x = startX; x < endX; x++)
                     {
-                        grid[y, x] = 1;
+                        var p = new Point(x, y);
+                        if (p.IsInBounds(grid))
+                        {
+                            grid[y, x] = 1;
+                        }
                     }
                 }
             }
 
             return grid;
         }
-
+       
         public static bool IsValidLocation(this Point location, int[,] grid)
         {
-            int x = location.X;
-            int y = location.Y;
-
-            return x >= 0 && y >= 0
-                && x < grid.GetLength(1)
-                && y < grid.GetLength(0) 
-                && grid[y, x] == 0;
+            return location.IsInBounds(grid) && grid[location.Y, location.X] == 0;
+        }
+                
+        public static bool IsInBounds(this Point location, int[,] grid)
+        {
+            return location.X >= 0 &&
+                location.Y >= 0 &&
+                location.X < grid.GetLength(1) &&
+                location.Y < grid.GetLength(0);
         }
     }
 }

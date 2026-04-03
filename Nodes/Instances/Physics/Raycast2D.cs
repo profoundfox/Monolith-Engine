@@ -36,9 +36,8 @@ namespace Monolith.Nodes
             var shapes = Engine.Tree
                 .GetAll<CollisionShape2D>()
                 .Where(cs => cs.Shape != null)
-                .Select(cs => cs.Shape)
+                .Select(cs => (cs.Shape, cs.GlobalPosition))
                 .ToList();
-
 
             Ray.CheckIntersections(shapes);
         }
