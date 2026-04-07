@@ -12,40 +12,65 @@ namespace Monolith.Managers
     {
         private readonly List<Timer> timers = new();
 
-        /// <summary>
-        /// Add a one-shot timer in seconds.
-        /// </summary>
+        public void WaitFrames(int frames, Action callback)
+        {
+            if (frames <= 0) throw new ArgumentOutOfRangeException(nameof(frames));
+
+            timers.Add(new Timer
+            {
+                FramesLeft = frames,
+                Callback = callback,
+                Repeat = false,
+                UseUnscaledTime = false
+            });
+        }
+
         public void Wait(TimeSpan time, Action callback)
         {
-            if (time < TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(time));
-
             timers.Add(new Timer
             {
                 TimeLeft = time,
                 Interval = time,
                 Callback = callback,
-                Repeat = false
+                Repeat = false,
+                UseUnscaledTime = false
             });
         }
 
-        /// <summary>
-        /// Add a repeating timer in seconds.
-        /// </summary>
-        public void Repeat(TimeSpan interval, Action callback)
-        {  
-            if (interval < TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(interval));
+        public void WaitUnscaled(TimeSpan time, Action callback)
+        {
+            timers.Add(new Timer
+            {
+                TimeLeft = time,
+                Interval = time,
+                Callback = callback,
+                Repeat = false,
+                UseUnscaledTime = true
+            });
+        }
 
+        public void Repeat(TimeSpan interval, Action callback)
+        {
             timers.Add(new Timer
             {
                 TimeLeft = interval,
                 Interval = interval,
                 Callback = callback,
-                Repeat = true
+                Repeat = true,
+                UseUnscaledTime = false
             });
+        }
 
-            
+        public void RepeatUnscaled(TimeSpan interval, Action callback)
+        {
+            timers.Add(new Timer
+            {
+                TimeLeft = interval,
+                Interval = interval,
+                Callback = callback,
+                Repeat = true,
+                UseUnscaledTime = true
+            });
         }
 
         /// <summary>
@@ -72,7 +97,7 @@ namespace Monolith.Managers
         /// <summary>
         /// Update all timers. Call this every frame from Game.Update().
         /// </summary>
-        public void PhysicsUpdate(TimeSpan deltaTime)
+        public void PhysicsUpdate(TimeSpan scaledDelta, TimeSpan unscaledDelta)
         {
             for (int i = timers.Count - 1; i >= 0; i--)
             {
@@ -84,20 +109,28 @@ namespace Monolith.Managers
                     continue;
                 }
 
-                t.TimeLeft -= deltaTime;
+                if (t.FramesLeft > 0)
+                {
+                    t.FramesLeft--;
+                    if (t.FramesLeft == 0)
+                    {
+                        t.Callback?.Invoke();
+                        timers.RemoveAt(i);
+                    }
+                    continue;
+                }
+
+                TimeSpan dt = t.UseUnscaledTime ? unscaledDelta : scaledDelta;
+                t.TimeLeft -= dt;
 
                 if (t.TimeLeft <= TimeSpan.Zero)
                 {
                     t.Callback?.Invoke();
 
                     if (t.Repeat)
-                    {
                         t.TimeLeft += t.Interval;
-                    }
                     else
-                    {
                         timers.RemoveAt(i);
-                    }
                 }
             }
         }

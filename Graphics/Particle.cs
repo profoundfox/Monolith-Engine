@@ -1,4 +1,3 @@
-
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,71 +6,114 @@ using Monolith.Managers;
 
 namespace Monolith.Graphics
 {
+    public record struct ParticleInfo
+    {
+        public Vector2 Position { get; set; }
+        public float LifespanLeft { get; set; }
+        public float LifespanAmount { get; set; }
+        public Color Color { get; set; }
+        public float Opacity { get; set; }
+        public bool IsFinished { get; set; }
+        public float Scale { get; set; }
+        public Vector2 Origin { get; set; }
+        public Vector2 Direction { get; set; }
+    }
+
     public class Particle
     {
-        private readonly ParticleProperties _data;
-        private Vector2 _position;
-        private float _lifespanLeft;
-        private float _lifespanAmount;
-        private Color _color;
-        private float _opacity;
-        public bool isFinished = false;
-        private float _scale;
-        private Vector2 _origin;
-        private Vector2 _direction;
+        private readonly ParticleProperties _initialData;
+        private ParticleInfo _info;
+
+        public ParticleProperties InitialData
+        {
+            get => _initialData;
+        }
+
+        public ParticleInfo Info
+        {
+            get => _info;
+        }
 
         public Particle(Vector2 pos, ParticleProperties data)
         {
-            _data = data;
-            _lifespanLeft = data.Lifespan;
-            _lifespanAmount = 1f;
-            _position = pos;
-            _color = data.ColorStart;
-            _opacity = data.OpacityStart;
-            _origin = new(_data.Texture.Bounds.Width / 2, _data.Texture.Bounds.Height / 2);
+            _initialData = data;
 
-            if (data.Speed != 0)
+            _info.LifespanLeft = _initialData.Lifespan;
+            _info.LifespanAmount = 1f;
+            _info.Position = pos;
+            _info.Color = _initialData.ColorStart;
+            _info.Opacity = _initialData.OpacityStart;
+            _info.Origin = new(
+                _initialData.Texture.Bounds.Width / 2,
+                _initialData.Texture.Bounds.Height / 2
+            );
+
+            if (_initialData.Speed != 0)
             {
-                _direction = new Vector2(
-                    (float)Math.Sin(_data.Angle),
-                    (float)Math.Cos(_data.Angle)
+                _info.Direction = new Vector2(
+                    (float)Math.Sin(_initialData.Angle),
+                    (float)Math.Cos(_initialData.Angle)
                 );
             }
             else
             {
-                _direction = Vector2.Zero;
+                _info.Direction = Vector2.Zero;
             }
         }
 
         public void Update(float delta)
         {
-            _lifespanLeft -= delta;
-            if (_lifespanLeft <= 0f)
+            _info.LifespanLeft -= delta;
+
+            if (_info.LifespanLeft <= 0f)
             {
-                isFinished = true;
+                _info.IsFinished = true;
                 return;
             }
 
-            _lifespanAmount = MathHelper.Clamp(_lifespanLeft / _data.Lifespan, 0, 1);
-            _color = Color.Lerp(_data.ColorEnd, _data.ColorStart, _lifespanAmount);
-            _opacity = MathHelper.Clamp(MathHelper.Lerp(_data.OpacityEnd, _data.OpacityStart, _lifespanAmount), 0, 1);
-            _scale = MathHelper.Lerp(_data.SizeEnd, _data.SizeStart, _lifespanAmount) / _data.Texture.Bounds.Width;
-            _position += _direction * _data.Speed * delta;
+            _info.LifespanAmount = MathHelper.Clamp(
+                _info.LifespanLeft / _initialData.Lifespan,
+                0,
+                1
+            );
+
+            _info.Color = Color.Lerp(
+                _initialData.ColorEnd,
+                _initialData.ColorStart,
+                _info.LifespanAmount
+            );
+
+            _info.Opacity = MathHelper.Clamp(
+                MathHelper.Lerp(
+                    _initialData.OpacityEnd,
+                    _initialData.OpacityStart,
+                    _info.LifespanAmount
+                ),
+                0,
+                1
+            );
+
+            _info.Scale = MathHelper.Lerp(
+                _initialData.SizeEnd,
+                _initialData.SizeStart,
+                _info.LifespanAmount
+            ) / _initialData.Texture.Bounds.Width;
+
+            _info.Position += _info.Direction * _initialData.Speed * delta;
         }
 
         public void Draw()
         {
             Engine.Canvas.Call(new TextureDrawCall
             {
-                Texture = _data.Texture,
-                Position = _position,
-                Color = _color * _opacity,
+                Texture = _initialData.Texture,
+                Position = _info.Position,
+                Color = _info.Color * _info.Opacity,
                 Rotation = 0f,
-                Origin = _origin,
-                Scale = new Vector2(_scale),
+                Origin = _info.Origin,
+                Scale = new Vector2(_info.Scale),
                 Depth = 99,
             });
         }
     }
-
 }

@@ -8,8 +8,14 @@ namespace Monolith.Util
     {
         public TimeSpan TimeLeft;
         public TimeSpan Interval;
+        
         public Action Callback;
+
         public bool Repeat;
         public bool Cancelled;
+
+        public bool UseUnscaledTime;
+
+        public int FramesLeft;
     }
 }

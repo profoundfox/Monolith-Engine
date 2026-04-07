@@ -24,6 +24,8 @@ namespace Monolith
         public static MTexture Pixel { get; private set; }
         public static EngineTime EngineTime { get; private set; }
 
+        public static Preferences Prefs { get; set; }
+
         public static TreeServer2D Tree { get; private set; }
         public static ResourceManager Resource { get; private set; }
         public static CanvasHandler Canvas { get; private set; }
@@ -48,7 +50,7 @@ namespace Monolith
                 PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height
             };
             Graphics.ApplyChanges();
-
+            
             Window.AllowUserResizing = true;
             IsFixedTimeStep = false;
             Graphics.SynchronizeWithVerticalRetrace = true;
@@ -60,6 +62,7 @@ namespace Monolith
 
             EngineTime = new EngineTime(TimeSpan.FromSeconds(1.0 / 60.0));
 
+            Prefs = new Preferences();
             Resource = new ResourceManager();
             Stage = new StageManager();
             Tree = new TreeServer2D();
@@ -104,17 +107,18 @@ namespace Monolith
             int physicsSteps = EngineTime.Update(frameDelta);
 
             Input.Update(gameTime);
+            Timer.PhysicsUpdate(EngineTime.FrameDelta, frameDelta);
 
             for (int i = 0; i < physicsSteps; i++)
             {
-                Timer.PhysicsUpdate(EngineTime.FixedDelta);
                 Stage.PhysicsUpdate((float)EngineTime.FixedDelta.TotalSeconds);
             }
 
             Stage.ProcessUpdate((float)EngineTime.FrameDelta.TotalSeconds);
             Stage.SubmitCallCurrentStage();
 
-            if (Input.Keyboard.IsKeyDown(Keys.Escape))
+
+            if (Input.Keyboard.IsKeyDown(Keys.Escape) || Input.CurrentGamePad.WasButtonJustPressed(Buttons.Start))
                 Exit();
 
             _fpsTimer += (float)frameDelta.TotalSeconds;
@@ -133,7 +137,7 @@ namespace Monolith
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.SetRenderTarget(Canvas.RenderTarget);
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
 
             Canvas.Flush();
 

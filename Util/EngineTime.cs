@@ -6,6 +6,9 @@ namespace Monolith.Util
     {
         public TimeSpan FixedDelta { get; }
         public TimeSpan FrameDelta { get; private set; }
+
+        public float TimeScale { get; set; } = 1f;
+
         public float Alpha { get; private set; }
 
         private TimeSpan _accumulator;
@@ -16,10 +19,20 @@ namespace Monolith.Util
             FixedDelta = fixedDelta;
         }
 
-        public int Update(TimeSpan frameDelta)
+        public int Update(TimeSpan rawDelta)
         {
-            FrameDelta = frameDelta;
-            _accumulator += frameDelta;
+            if (TimeScale == 0f)
+            {
+                FrameDelta = TimeSpan.Zero;
+            }
+            else
+            {
+                FrameDelta = TimeSpan.FromTicks(
+                    (long)(rawDelta.Ticks * TimeScale)
+                );
+            }
+
+            _accumulator += FrameDelta;
 
             int steps = 0;
             while (_accumulator >= FixedDelta && steps < MaxSteps)

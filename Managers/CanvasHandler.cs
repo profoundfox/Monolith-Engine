@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Monolith.Attributes;
+using Monolith.Geometry;
 
 namespace Monolith.Managers
 {
@@ -23,7 +24,7 @@ namespace Monolith.Managers
         private readonly Dictionary<DrawLayer, List<IDrawCall>> _queues;
         private Matrix _matrix = Matrix.Identity;
 
-        internal Point RenderSize { get; set; } = new Point(640, 360);
+        internal Extent RenderSize { get; set; } = new Extent(640, 360);
         internal bool IntScaling { get; set; } = true;
         internal Rectangle Destination { get; set; }
 
@@ -155,8 +156,8 @@ namespace Monolith.Managers
 
             RenderTarget = new RenderTarget2D(
                 Engine.GraphicsDevice,
-                RenderSize.X,
-                RenderSize.Y,
+                RenderSize.Width,
+                RenderSize.Height,
                 false,
                 SurfaceFormat.Color,
                 DepthFormat.None);
@@ -167,14 +168,14 @@ namespace Monolith.Managers
             var pp = Engine.GraphicsDevice.PresentationParameters;
 
             float scale = Math.Min(
-                pp.BackBufferWidth / (float)RenderSize.X,
-                pp.BackBufferHeight / (float)RenderSize.Y);
+                pp.BackBufferWidth / (float)RenderSize.Width,
+                pp.BackBufferHeight / (float)RenderSize.Height);
 
             if (IntScaling)
                 scale = Math.Max(1, MathF.Floor(scale));
 
-            int w = (int)(RenderSize.X * scale);
-            int h = (int)(RenderSize.Y * scale);
+            int w = (int)(RenderSize.Width * scale);
+            int h = (int)(RenderSize.Height * scale);
 
             int x = (pp.BackBufferWidth - w) / 2;
             int y = (pp.BackBufferHeight - h) / 2;

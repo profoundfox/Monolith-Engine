@@ -16,6 +16,8 @@ namespace Monolith.Nodes
 
         public EmitterProperties Properties { get; set; } = EmitterProperties.Identity;
         
+        public IReadOnlyList<Particle> Particles => _particles;
+
         public ParticleEmitter2D()
         {
             _intervalLeft = Properties.Interval;
@@ -83,7 +85,7 @@ namespace Monolith.Nodes
                 particle.Update(delta);
             }
 
-            _particles.RemoveAll(p => p.isFinished);
+            _particles.RemoveAll(p => p.Info.IsFinished);
         }
 
         public override void SubmitCall()
