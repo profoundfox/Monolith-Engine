@@ -14,21 +14,28 @@ namespace Monolith.Nodes
 
         public override void OnEnter()
         {
-            base.OnEnter();
-
-            if (!CollisionShapes.IsEmpty())
-                Engine.Physics.RegisterBody(this);
-
             OnChildAdded += (node) =>
             {
-                if (node is CollisionShape2D)
-                    Engine.Physics.RegisterBody(this);
+                if (node is not CollisionShape2D)
+                    return;
+                
+                Engine.Physics.RegisterBody(this);
+                Engine.Physics.NotifyMoved(this);
             };
 
             OnTransformChanged += (transform) =>
             {   
                 Engine.Physics.NotifyMoved(this);
             };
+    
+
+            base.OnEnter();
+
+            if (!CollisionShapes.IsEmpty())
+            {
+                Engine.Physics.RegisterBody(this);
+                Engine.Physics.NotifyMoved(this);
+            }
         }
 
         public override void OnExit()

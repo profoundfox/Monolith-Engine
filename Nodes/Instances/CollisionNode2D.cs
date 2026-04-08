@@ -28,7 +28,7 @@ namespace Monolith.Nodes
                 var b = new List<Rectangle>();
 
                 foreach (var c in CollisionShapes)
-                    b.Add(c.Shape.GetAABB(GlobalPosition.ToPoint()));
+                    b.Add(c.Shape.GetAABB(c.GlobalPosition.ToPoint()));
                 
                 return b;
             }

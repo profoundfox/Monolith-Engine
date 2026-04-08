@@ -11,11 +11,6 @@ namespace Monolith.Nodes
     {
         private bool wasInArea2D = false;
 
-        private static readonly Type[] AcceptedType = 
-        {
-            typeof(Area2D),
-            typeof(KinematicBody2D),
-        };
 
         public bool MonitorAreas { get; set; }
         public bool MonitorBodies { get; set; }
@@ -26,7 +21,6 @@ namespace Monolith.Nodes
         {
             return Engine.Tree.GetAll<CollisionNode2D>()
                 .Where(c => c.GetParent() != this)
-                .Where(c => AcceptedType.Any(t => t.IsAssignableFrom(c.GetParent().GetType())))
                 .FirstOrDefault(c => c.Intersects(this))
                 ?.GetParent<Area2D>();
         }
