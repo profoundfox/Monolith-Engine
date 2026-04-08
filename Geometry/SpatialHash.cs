@@ -42,9 +42,9 @@ namespace Monolith.Geometry
             foreach (var bounds in boundsList)
             {
                 int minX = (int)Math.Floor(bounds.Left / _cellSize);
-                int maxX = (int)Math.Floor((bounds.Right - 1) / _cellSize);
+                int maxX = (int)Math.Floor(bounds.Right / _cellSize);
                 int minY = (int)Math.Floor(bounds.Top / _cellSize);
-                int maxY = (int)Math.Floor((bounds.Bottom - 1) / _cellSize);
+                int maxY = (int)Math.Floor(bounds.Bottom  / _cellSize);
 
                 for (int x = minX; x <= maxX; x++)
                 {
