@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO.Compression;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Monolith.Geometry;
@@ -11,20 +12,25 @@ namespace Monolith.Nodes
    
     public class CollisionNode2D : Node2D
     {
-        public CollisionShape2D CollisionShape { get => Get<CollisionShape2D>(); }
+        public IReadOnlyList<CollisionShape2D> CollisionShapes { get => GetAll<CollisionShape2D>(); }
 
         public int MaxLayer { get; set; } = int.MaxValue;
 
         public List<int> Layers { get; private set; }
 
-        public Rectangle Bounds 
+        public List<Rectangle> Bounds 
         {
             get
             {
-                if (CollisionShape == null)
-                    return Rectangle.Empty;
+                if (CollisionShapes.Count == 0)
+                    return [Rectangle.Empty];
 
-                return CollisionShape.Shape.GetAABB(GlobalPosition.ToPoint());
+                var b = new List<Rectangle>();
+
+                foreach (var c in CollisionShapes)
+                    b.Add(c.Shape.GetAABB(GlobalPosition.ToPoint()));
+                
+                return b;
             }
         }
 
@@ -64,6 +70,41 @@ namespace Monolith.Nodes
             Layers.RemoveAll(item => layers.Contains(item));
 
             return finVals;
+        }
+
+        private bool IsValid(CollisionShape2D shape)
+        {
+            return shape.Disabled == false && shape?.Shape != null; 
+        }
+
+        public bool Intersects(CollisionNode2D other)
+        {
+            return this.CollisionShapes.Any(
+                myShape => other.CollisionShapes.Any(
+                    otherShape => myShape.Intersects(otherShape)
+                     && IsValid(myShape) && IsValid(otherShape)
+                ));
+        }
+
+        public bool IntersectsAt(Vector2 offset, CollisionNode2D other)
+        {
+            return this.CollisionShapes.Any(
+                myShape => other.CollisionShapes.Any(
+                    otherShape => myShape.IntersectsAt(offset, otherShape)
+                     && IsValid(myShape) && IsValid(otherShape)
+                ));
+        }
+
+        public bool Contains(Vector2 position)
+        {
+            if (!Disabled && Shape != null)
+                return Shape.Contains(position.ToPoint(), GlobalPosition.ToPoint());
+
+            return this.CollisionShapes.Any(
+                myShape => other.CollisionShapes.Any(
+                    otherShape => myShape.IntersectsAt(offset, otherShape)
+                     && IsValid(myShape) && IsValid(otherShape)
+                ));
         }
 
         public override void OnEnter()

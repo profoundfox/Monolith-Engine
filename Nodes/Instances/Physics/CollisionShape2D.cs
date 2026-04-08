@@ -50,28 +50,10 @@ namespace Monolith.Nodes
             //CheckOneWay();
         }
 
-
         private void CheckOneWay()
         {
             if (!OneWay || Shape == null)
                 return;
-
-            foreach (KinematicBody2D kb in Engine.Tree.GetAll<KinematicBody2D>())
-            { 
-                if (kb.CollisionShape?.Shape == null)
-                    continue; 
-                
-                IShape2D body = kb.CollisionShape.Shape;
-
-                if (kb.Velocity.Y < 0)
-                {
-                    Disabled = true;
-                }
-                else if (!Shape.Intersect(body, GlobalPosition.ToPoint(), kb.GlobalPosition.ToPoint()))
-                {
-                    Disabled = false;
-                }
-            }
         }
 
         public bool Intersects(CollisionShape2D other)
