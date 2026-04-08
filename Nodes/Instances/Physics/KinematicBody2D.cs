@@ -13,9 +13,9 @@ namespace Monolith.Nodes
         public bool IsOnWall => _isOnWall;
         public bool IsOnRoof => _isOnRoof;
 
-        private CollisionShape2D _floorShape;
-        private CollisionShape2D _wallShape;
-        
+        private CollisionNode2D _floorBody;
+        private CollisionNode2D _wallBody;
+
         private Vector2 _lastWallGlobalPosition;
         private Vector2 _lastFloorGlobalPosition;
 
@@ -30,23 +30,25 @@ namespace Monolith.Nodes
 
         private void Move(float delta)
         {
-            if (CollisionShape == null)
+            if (CollisionShapes.Count == 0)
                 return;
 
             Vector2 movement = Velocity * delta;
 
-            if (_isOnFloor && _floorShape != null)
+            // Follow moving platform (floor)
+            if (_isOnFloor && _floorBody != null)
             {
-                Vector2 platformDelta = _floorShape.GlobalTransform.Position - _lastFloorGlobalPosition;
+                Vector2 platformDelta = _floorBody.GlobalPosition - _lastFloorGlobalPosition;
                 LocalPosition += platformDelta;
-                _lastFloorGlobalPosition = _floorShape.GlobalTransform.Position;
+                _lastFloorGlobalPosition = _floorBody.GlobalPosition;
             }
 
-            if (_isOnWall && _wallShape != null)
+            // Follow moving wall
+            if (_isOnWall && _wallBody != null)
             {
-                Vector2 wallDelta = _wallShape.GlobalTransform.Position - _lastWallGlobalPosition;
+                Vector2 wallDelta = _wallBody.GlobalPosition - _lastWallGlobalPosition;
                 LocalPosition += wallDelta;
-                _lastWallGlobalPosition = _wallShape.GlobalTransform.Position;
+                _lastWallGlobalPosition = _wallBody.GlobalPosition;
             }
 
             ResolveStaticPenetration();
@@ -55,9 +57,10 @@ namespace Monolith.Nodes
             _isOnRoof = false;
             _isOnWall = false;
             WallNormal = Vector2.Zero;
-            _floorShape = null;
-            _wallShape = null;
+            _floorBody = null;
+            _wallBody = null;
 
+            // --- Horizontal ---
             Vector2 horizontalMovement = new Vector2(movement.X, 0);
             LocalPosition += horizontalMovement;
 
@@ -65,11 +68,11 @@ namespace Monolith.Nodes
 
             foreach (var other in nearby.Where(b => b != this))
             {
-                if (CollisionShape.Intersects(other.CollisionShape))
+                if (this.Intersects(other))
                 {
                     _isOnWall = true;
-                    _wallShape = other.CollisionShape;
-                    _lastWallGlobalPosition = _wallShape.GlobalTransform.Position;
+                    _wallBody = other;
+                    _lastWallGlobalPosition = other.GlobalPosition;
 
                     WallNormal = movement.X > 0 ? new Vector2(-1, 0) : new Vector2(1, 0);
 
@@ -77,15 +80,16 @@ namespace Monolith.Nodes
                     Velocity = new Vector2(0, Velocity.Y);
                     break;
                 }
+
                 bool nearWall = false;
                 Vector2 nearWallNormal = Vector2.Zero;
 
-                if (CollisionShape.IntersectsAt(new Vector2(WALL_TOLERANCE, 0), other.CollisionShape))
+                if (this.IntersectsAt(new Vector2(WALL_TOLERANCE, 0), other))
                 {
                     nearWall = true;
                     nearWallNormal = new Vector2(-1, 0);
                 }
-                else if (CollisionShape.IntersectsAt(new Vector2(-WALL_TOLERANCE, 0), other.CollisionShape))
+                else if (this.IntersectsAt(new Vector2(-WALL_TOLERANCE, 0), other))
                 {
                     nearWall = true;
                     nearWallNormal = new Vector2(1, 0);
@@ -99,6 +103,7 @@ namespace Monolith.Nodes
                 }
             }
 
+            // --- Vertical ---
             Vector2 verticalMovement = new Vector2(0, movement.Y);
             LocalPosition += verticalMovement;
 
@@ -106,20 +111,19 @@ namespace Monolith.Nodes
 
             foreach (var other in nearby.Where(b => b != this))
             {
-                if (CollisionShape.Intersects(other.CollisionShape))
+                if (this.Intersects(other))
                 {
                     if (movement.Y > 0)
                     {
-                        float penetration = (GlobalPosition.Y + CollisionShape.Height) - other.GlobalPosition.Y;
-                        LocalPosition -= new Vector2(0, penetration);
+                        ResolveVerticalPenetration(other, true);
+
                         _isOnFloor = true;
-                        _floorShape = other.CollisionShape;
-                        _lastFloorGlobalPosition = _floorShape.GlobalTransform.Position;
+                        _floorBody = other;
+                        _lastFloorGlobalPosition = other.GlobalPosition;
                     }
                     else if (movement.Y < 0)
                     {
-                        float penetration = other.GlobalPosition.Y + other.CollisionShape.Height - GlobalPosition.Y;
-                        LocalPosition += new Vector2(0, penetration);
+                        ResolveVerticalPenetration(other, false);
                         _isOnRoof = true;
                     }
 
@@ -127,15 +131,33 @@ namespace Monolith.Nodes
                     break;
                 }
 
-                if (movement.Y >= 0 &&
-                    CollisionShape.IntersectsAt(new Vector2(0, FLOOR_TOLERANCE), other.CollisionShape))
+                if (movement.Y >= 0 && this.IntersectsAt(new Vector2(0, FLOOR_TOLERANCE), other))
                 {
                     _isOnFloor = true;
-                    _floorShape = other.CollisionShape;
-                    _lastFloorGlobalPosition = _floorShape.GlobalTransform.Position;
+                    _floorBody = other;
+                    _lastFloorGlobalPosition = other.GlobalPosition;
+                    break;
                 }
+            }
+        }
 
-                if (_isOnFloor) break;
+        private void ResolveVerticalPenetration(CollisionNode2D other, bool fromTop)
+        {
+            foreach (var a in this.Bounds)
+            foreach (var b in other.Bounds)
+            {
+                if (!a.Intersects(b)) continue;
+
+                if (fromTop)
+                {
+                    float penetration = (a.Bottom - b.Top);
+                    LocalPosition -= new Vector2(0, penetration);
+                }
+                else
+                {
+                    float penetration = (b.Bottom - a.Top);
+                    LocalPosition += new Vector2(0, penetration);
+                }
             }
         }
 
@@ -145,10 +167,12 @@ namespace Monolith.Nodes
 
             foreach (var other in nearby.Where(b => b != this))
             {
-                if (CollisionShape.Intersects(other.CollisionShape))
+                if (!this.Intersects(other)) continue;
+
+                foreach (var a in this.Bounds)
+                foreach (var b in other.Bounds)
                 {
-                    Rectangle a = this.Bounds;
-                    Rectangle b = other.Bounds;
+                    if (!a.Intersects(b)) continue;
 
                     float moveRight = b.Right - a.Left;
                     float moveLeft = a.Right - b.Left;

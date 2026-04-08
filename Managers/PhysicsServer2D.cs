@@ -11,7 +11,7 @@ namespace Monolith.Managers
     public class PhysicsServer2D
     {
         private readonly SpatialHash<PhysicsBody2D> _broadphase;
-        private readonly Dictionary<PhysicsBody2D, Rectangle> _bounds = new();
+        private readonly Dictionary<PhysicsBody2D, List<Rectangle>> _bounds = new();
         
         public PhysicsServer2D()
         {
@@ -51,7 +51,7 @@ namespace Monolith.Managers
             }
         }
     
-        public List<PhysicsBody2D> Query(Rectangle area)
+        public List<PhysicsBody2D> Query(List<Rectangle> area)
         {
             return _broadphase.Query(area);
         }

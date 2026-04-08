@@ -106,30 +106,34 @@ namespace Monolith.Tools
 
             int[,] grid = new int[gridHeight, gridWidth];
 
-            var nearby = Engine.Physics.Query(usableArea);
+            var nearby = Engine.Physics.Query([usableArea]);
 
             foreach (var body in nearby)
             {
-                var shape = body.CollisionShape;
-                if (shape == null)
-                    continue;
+                var shapes = body.CollisionShapes;
 
-                var snapShape = shape.Shape.ToRectangle(shape.GlobalPosition.ToPoint()).Snap(tileWidth, tileHeight);
-
-                int startX = snapShape.X / tileWidth;
-                int endX   = (snapShape.X + snapShape.Width) / tileWidth;
-
-                int startY = snapShape.Y / tileHeight;
-                int endY   = (snapShape.Y + snapShape.Height) / tileHeight;
-
-                for (int y = startY; y < endY; y++)
+                foreach (var shape in shapes)
                 {
-                    for (int x = startX; x < endX; x++)
+                    if (shape == null)
+                        continue;
+
+                    var snapShape = shape.Shape.ToRectangle(shape.GlobalPosition.ToPoint()).Snap(tileWidth, tileHeight);
+
+                    int startX = snapShape.X / tileWidth;
+                    int endX   = (snapShape.X + snapShape.Width) / tileWidth;
+
+                    int startY = snapShape.Y / tileHeight;
+                    int endY   = (snapShape.Y + snapShape.Height) / tileHeight;
+
+                    for (int y = startY; y < endY; y++)
                     {
-                        var p = new Point(x, y);
-                        if (p.IsInBounds(grid))
+                        for (int x = startX; x < endX; x++)
                         {
-                            grid[y, x] = 1;
+                            var p = new Point(x, y);
+                            if (p.IsInBounds(grid))
+                            {
+                                grid[y, x] = 1;
+                            }
                         }
                     }
                 }

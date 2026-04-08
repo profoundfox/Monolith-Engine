@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Monolith.Geometry;
+using Monolith.Tools;
 
 namespace Monolith.Nodes
 {
@@ -15,7 +16,7 @@ namespace Monolith.Nodes
         {
             base.OnEnter();
 
-            if (CollisionShape != null)
+            if (!CollisionShapes.IsEmpty())
                 Engine.Physics.RegisterBody(this);
 
             OnChildAdded += (node) =>

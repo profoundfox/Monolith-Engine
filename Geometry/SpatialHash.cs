@@ -19,16 +19,6 @@ namespace Monolith.Geometry
         }
 
         /// <summary>
-        /// Gets the cell coordinates of a Vector2.
-        /// </summary>
-        /// <param name="position"></param>
-        /// <returns></returns>
-        private Point GetWorldCoords(Vector2 position)
-        {
-            return Vector2.Floor(position / _cellSize).ToPoint();
-        }
-
-        /// <summary>
         /// Gets the cell a rectangle intersects.
         /// </summary>
         /// <param name="bounds"></param>
@@ -43,6 +33,29 @@ namespace Monolith.Geometry
             for (int x = minX; x <= maxX; x++)
                 for (int y = minY; y <= maxY; y++)
                     yield return new Point(x, y);
+        }
+
+        private IEnumerable<Point> GetCellsForBounds(IEnumerable<Rectangle> boundsList)
+        {
+            var seen = new HashSet<Point>();
+
+            foreach (var bounds in boundsList)
+            {
+                int minX = (int)Math.Floor(bounds.Left / _cellSize);
+                int maxX = (int)Math.Floor((bounds.Right - 1) / _cellSize);
+                int minY = (int)Math.Floor(bounds.Top / _cellSize);
+                int maxY = (int)Math.Floor((bounds.Bottom - 1) / _cellSize);
+
+                for (int x = minX; x <= maxX; x++)
+                {
+                    for (int y = minY; y <= maxY; y++)
+                    {
+                        var p = new Point(x, y);
+                        if (seen.Add(p))
+                            yield return p;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -85,7 +98,7 @@ namespace Monolith.Geometry
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="oldBounds"></param>
-        private void RemoveFromOldCells(T obj, Rectangle oldBounds)
+        private void RemoveFromOldCells(T obj, List<Rectangle> oldBounds)
         {
             foreach(var cell in GetCellsForBounds(oldBounds))
             {
@@ -99,7 +112,7 @@ namespace Monolith.Geometry
         /// </summary>
         /// <param name="bounds"></param>
         /// <returns></returns>
-        public List<T> Query(Rectangle bounds)
+        public List<T> Query(List<Rectangle> bounds)
         {
             _queryCache.Clear();
 
@@ -118,7 +131,7 @@ namespace Monolith.Geometry
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="oldBounds"></param>
-        public void Update(T obj, Rectangle oldBounds)
+        public void Update(T obj, List<Rectangle> oldBounds)
         {
             var oldCells = GetCellsForBounds(oldBounds).ToHashSet();
             var newCells = GetCellsForBounds(obj.Bounds).ToHashSet();
@@ -144,6 +157,6 @@ namespace Monolith.Geometry
 
     public interface IHashAble
     {
-        Rectangle Bounds { get; }
+        List<Rectangle> Bounds { get; }
     }
 }

@@ -12,7 +12,7 @@ namespace Monolith.Nodes
    
     public class CollisionNode2D : Node2D
     {
-        public IReadOnlyList<CollisionShape2D> CollisionShapes { get => GetAll<CollisionShape2D>(); }
+        public List<CollisionShape2D> CollisionShapes { get => GetAll<CollisionShape2D>().ToList(); }
 
         public int MaxLayer { get; set; } = int.MaxValue;
 
@@ -97,14 +97,8 @@ namespace Monolith.Nodes
 
         public bool Contains(Vector2 position)
         {
-            if (!Disabled && Shape != null)
-                return Shape.Contains(position.ToPoint(), GlobalPosition.ToPoint());
-
             return this.CollisionShapes.Any(
-                myShape => other.CollisionShapes.Any(
-                    otherShape => myShape.IntersectsAt(offset, otherShape)
-                     && IsValid(myShape) && IsValid(otherShape)
-                ));
+                c => c.Shape.Contains(position.ToPoint(), GlobalPosition.ToPoint()) && IsValid(c));
         }
 
         public override void OnEnter()
