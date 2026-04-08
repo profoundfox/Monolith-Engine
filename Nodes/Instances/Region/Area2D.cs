@@ -41,7 +41,6 @@ namespace Monolith.Nodes
         }
 
 
-            
         public bool AreaEntered(out Area2D overlapping)
         {
             overlapping = GetOverlappingArea();
