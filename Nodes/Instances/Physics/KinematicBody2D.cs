@@ -23,7 +23,7 @@ namespace Monolith.Nodes
         private bool _isOnFloor = false;
         private bool _isOnRoof = false;
 
-        const float FLOOR_TOLERANCE = 8f;
+        const float FLOOR_TOLERANCE = 2f;
         const float WALL_TOLERANCE = 2f;
 
         public KinematicBody2D() {}
