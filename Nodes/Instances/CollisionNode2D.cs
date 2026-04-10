@@ -141,7 +141,7 @@ namespace Monolith.Nodes
         ///<param name="position"> </param>
         public bool Contains(Vector2 position)
         {
-            return this.CollisionShapes.Any(
+            return CollisionShapes.Any(
                 c => c.Shape.Contains(position.ToPoint(), Transform.Global.Position.ToPoint()) && IsValid(c));
         }
 

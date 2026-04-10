@@ -63,7 +63,10 @@ namespace Monolith.Nodes
         /// </summary>
         public Node2D()
         {
-            Transform = new(Transform2D.Identity);
+            Transform = new(Transform2D.Identity)
+            {
+                OnChanged = UpdateGlobalTransform
+            };
 
             UpdateGlobalTransform();
             OnParentChanged += (node) =>
