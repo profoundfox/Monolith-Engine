@@ -56,9 +56,7 @@ namespace Monolith.Nodes
             lastCameraPos = camera.Transform.Global.Position;
 
             foreach (var child in GetAll<ParallaxLayer>())
-            {
                 child.ApplyCameraDelta(camDelta);
-            }
         }
 
         public override void SubmitCall()
