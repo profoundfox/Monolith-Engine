@@ -6,7 +6,10 @@ namespace Monolith.Managers
     public class ResourceManager
     {
         private IContentProvider Provider { get; set; }
-
+         
+        /// <summary>
+        /// The root path of content.
+        /// </summary>
         public string ContentRoot { get; set; } = "Content";
 
         public ResourceManager()

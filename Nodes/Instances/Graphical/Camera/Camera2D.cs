@@ -16,8 +16,8 @@ namespace Monolith.Nodes
                 float width = Engine.Canvas.RenderTarget.Width / Zoom.X;
                 float height = Engine.Canvas.RenderTarget.Height / Zoom.Y;
 
-                float left = GlobalTransform.Position.X - width * 0.5f;
-                float top = GlobalTransform.Position.Y - height * 0.5f;
+                float left = Transform.Global.Position.X - width * 0.5f;
+                float top = Transform.Global.Position.Y - height * 0.5f;
 
                 return new Rectangle(
                     (int)left,
@@ -42,8 +42,8 @@ namespace Monolith.Nodes
             Vector2 CanvasCenter = new Vector2(Engine.Canvas.RenderTarget.Width / Zoom.X, Engine.Canvas.RenderTarget.Height / Zoom.Y) * 0.5f; 
 
             Matrix transform = Matrix.CreateScale(Zoom.X, Zoom.Y, 1f)
-                * Matrix.CreateRotationZ(GlobalTransform.Rotation)
-                * Matrix.CreateTranslation(new Vector3(-GlobalTransform.Position, 0f))
+                * Matrix.CreateRotationZ(Transform.Global.Rotation)
+                * Matrix.CreateTranslation(new Vector3(-Transform.Global.Position, 0f))
                 * Matrix.CreateTranslation(new Vector3(CanvasCenter, 0f)); 
                 
             return transform; 

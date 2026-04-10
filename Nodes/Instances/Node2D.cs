@@ -13,31 +13,18 @@ namespace Monolith.Nodes
 {
 
     public class Node2D : CanvasNode
-    {
-        private Transform2D _localTransform = Transform2D.Identity;
-
-        /// <summary>
-        /// The self contained transform of this node.
-        /// </summary>
-        public Transform2D LocalTransform
-        {
-            get => _localTransform;
-            set
-            {
-                _localTransform = value;
-                UpdateGlobalTransform();
-            }
-        }
+    {        
+        public Dual<Transform2D> Transform { get; private set; }
 
         /// <summary>
         /// The self contained position of this node, updates child nodes' position.
         /// </summary>
         public Vector2 LocalPosition
         {
-            get => LocalTransform.Position;
+            get => Transform.Local.Position;
             set
             {
-                LocalTransform = LocalTransform with { Position = value };
+                Transform.Local = Transform.Local with { Position = value };
             }
         }
 
@@ -46,10 +33,10 @@ namespace Monolith.Nodes
         /// </summary>
         public float LocalRotation
         {
-            get => LocalTransform.Rotation;
+            get => Transform.Local.Rotation;
             set
             {
-                LocalTransform = LocalTransform with { Rotation = value };
+                Transform.Local = Transform.Local with { Rotation = value };
             }
         }
 
@@ -58,34 +45,13 @@ namespace Monolith.Nodes
         /// </summary>
         public Vector2 LocalScale
         {
-            get => LocalTransform.Scale;
+            get => Transform.Local.Scale;
             set
             {
-                LocalTransform = LocalTransform with { Scale = value };
+                Transform.Local = Transform.Local with { Scale = value };
             }
         }
     
-
-        /// <summary>
-        /// The transform relative to the parent.
-        /// </summary>
-        public Transform2D GlobalTransform { get; private set; }
-
-        /// <summary>
-        /// The position relative to the parent.
-        /// </summary>
-        public Vector2 GlobalPosition => GlobalTransform.Position;
-
-        /// <summary>
-        /// The rotation reltaive to the parent.
-        /// </summary>
-        public float GlobalRotation => GlobalTransform.Rotation;
-
-        /// <summary>
-        /// The scale relative to the parent.
-        /// </summary>
-        public Vector2 GlobalScale => GlobalTransform.Scale;
-
         /// <summary>
         /// Signal for when the transform changes.
         /// </summary>
@@ -97,6 +63,8 @@ namespace Monolith.Nodes
         /// </summary>
         public Node2D()
         {
+            Transform = new(Transform2D.Identity);
+
             UpdateGlobalTransform();
             OnParentChanged += (node) =>
             {
@@ -112,14 +80,14 @@ namespace Monolith.Nodes
         {
             if (GetParent() is Node2D parent2D)
             {
-                GlobalTransform = Transform2D.Combine(parent2D.GlobalTransform, _localTransform);
+                Transform.Global = Transform2D.Combine(parent2D.Transform.Global, Transform.Local);
             }
             else
             {
-                GlobalTransform = _localTransform;
+                Transform.Global = Transform.Local;
             }
 
-            OnTransformChanged?.Invoke(GlobalTransform);
+            OnTransformChanged?.Invoke(Transform.Global);
 
 
             foreach (var child in Children)

@@ -17,7 +17,11 @@ namespace Monolith.Managers
         {
             _broadphase = new SpatialHash<PhysicsBody2D>();
         }
-
+        
+        /// <summary>
+        /// Registers a physics body to the server.
+        /// </summary>
+        /// <param name="body">The body in question.</param>
         public void RegisterBody(PhysicsBody2D body)
         {
             if (_bounds.ContainsKey(body))
@@ -28,6 +32,10 @@ namespace Monolith.Managers
             _broadphase.Insert(body);
         }
 
+        ///<summary>
+        /// Unregisters a body from the server, this effectively disables other bodies searching for it.
+        ///</summary>
+        ///<param name="body"> </param>
         public void UnregisterBody(PhysicsBody2D body)
         {
             if (_bounds.TryGetValue(body, out var oldBounds))

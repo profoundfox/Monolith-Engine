@@ -23,16 +23,16 @@ namespace Monolith.Nodes
             Engine.Canvas.Call(new TextureDrawCall
             {
                 Texture = Texture,
-                Position = GlobalPosition,
-                Color = GlobalModulate,
-                Rotation = GlobalRotation,
+                Position = Transform.Global.Position,
+                Color = Visibility.Global.Modulate,
+                Rotation = Transform.Global.Rotation,
                 Origin = Texture.Center,
-                Scale = GlobalScale,
-                Effects = GlobalSpriteEffects,
-                Depth = GlobalDepth,
+                Scale = Transform.Global.Scale,
+                Effects = Material.Global.SpriteEffects,
+                Depth = Ordering.Global.Depth,
                 SpriteBatchConfig = SpriteBatchConfig.Default with
                 {
-                    Effect = GlobalShader
+                    Effect = Material.Global.Shader
                 }
             });
             

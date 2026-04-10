@@ -35,20 +35,18 @@ namespace Monolith.Nodes
 
             Vector2 movement = Velocity * delta;
 
-            // Follow moving platform (floor)
             if (_isOnFloor && _floorBody != null)
             {
-                Vector2 platformDelta = _floorBody.GlobalPosition - _lastFloorGlobalPosition;
+                Vector2 platformDelta = _floorBody.Transform.Global.Position - _lastFloorGlobalPosition;
                 LocalPosition += platformDelta;
-                _lastFloorGlobalPosition = _floorBody.GlobalPosition;
+                _lastFloorGlobalPosition = _floorBody.Transform.Global.Position;
             }
 
-            // Follow moving wall
             if (_isOnWall && _wallBody != null)
             {
-                Vector2 wallDelta = _wallBody.GlobalPosition - _lastWallGlobalPosition;
+                Vector2 wallDelta = _wallBody.Transform.Global.Position - _lastWallGlobalPosition;
                 LocalPosition += wallDelta;
-                _lastWallGlobalPosition = _wallBody.GlobalPosition;
+                _lastWallGlobalPosition = _wallBody.Transform.Global.Position;
             }
 
             ResolveStaticPenetration();
@@ -60,7 +58,6 @@ namespace Monolith.Nodes
             _floorBody = null;
             _wallBody = null;
 
-            // --- Horizontal ---
             Vector2 horizontalMovement = new Vector2(movement.X, 0);
             LocalPosition += horizontalMovement;
 
@@ -72,7 +69,7 @@ namespace Monolith.Nodes
                 {
                     _isOnWall = true;
                     _wallBody = other;
-                    _lastWallGlobalPosition = other.GlobalPosition;
+                    _lastWallGlobalPosition = other.Transform.Global.Position;
 
                     WallNormal = movement.X > 0 ? new Vector2(-1, 0) : new Vector2(1, 0);
 
@@ -103,7 +100,6 @@ namespace Monolith.Nodes
                 }
             }
 
-            // --- Vertical ---
             Vector2 verticalMovement = new Vector2(0, movement.Y);
             LocalPosition += verticalMovement;
 
@@ -119,7 +115,7 @@ namespace Monolith.Nodes
 
                         _isOnFloor = true;
                         _floorBody = other;
-                        _lastFloorGlobalPosition = other.GlobalPosition;
+                        _lastFloorGlobalPosition = other.Transform.Global.Position;
                     }
                     else if (movement.Y < 0)
                     {
@@ -135,7 +131,7 @@ namespace Monolith.Nodes
                 {
                     _isOnFloor = true;
                     _floorBody = other;
-                    _lastFloorGlobalPosition = other.GlobalPosition;
+                    _lastFloorGlobalPosition = other.Transform.Global.Position;
                     break;
                 }
             }

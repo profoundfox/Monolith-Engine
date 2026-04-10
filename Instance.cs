@@ -5,9 +5,9 @@ using System.Linq;
 namespace Monolith
 {   
     /// <summary>
-    /// The absolute class for an object that has a life cycle.
+    /// The absolute absract class for an object that has a life cycle.
     /// </summary>
-    public class Instance
+    public abstract class Instance
     {
         private string name;            
 

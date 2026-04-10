@@ -7,11 +7,12 @@ namespace Monolith.Managers
 {
     /// <summary>
     /// Supports one-shot timers, repeating timers, and frame-based timing.
+    /// TODO: Merge with Tree, make cleaner.
     /// </summary>
     public class TimerManager
     {
         private readonly List<Timer> timers = new();
-
+        
         public void WaitFrames(int frames, Action callback)
         {
             if (frames <= 0) throw new ArgumentOutOfRangeException(nameof(frames));

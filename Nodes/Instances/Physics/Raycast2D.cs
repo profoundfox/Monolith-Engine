@@ -22,12 +22,12 @@ namespace Monolith.Nodes
             if (Disabled)
                 return;
 
-            Ray.Origin = GlobalPosition;
+            Ray.Origin = Transform.Global.Position;
             
             Vector2 worldOffset = Vector2.Transform(
                 TargetPosition,
                 Matrix.CreateRotationZ(
-                    MathHelper.ToRadians(GlobalRotation)
+                    MathHelper.ToRadians(Transform.Global.Rotation)
                 )
             );
 
@@ -36,7 +36,7 @@ namespace Monolith.Nodes
             var shapes = Engine.Tree
                 .GetAll<CollisionShape2D>()
                 .Where(cs => cs.Shape != null)
-                .Select(cs => (cs.Shape, cs.GlobalPosition))
+                .Select(cs => (cs.Shape, cs.Transform.Global.Position))
                 .ToList();
 
             Ray.CheckIntersections(shapes);

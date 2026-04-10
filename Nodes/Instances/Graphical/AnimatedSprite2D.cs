@@ -100,21 +100,21 @@ namespace Monolith.Nodes
         {
             base.SubmitCall();
             
-            if (CurrentAnimation == null || GlobalVisible == false) return;
+            if (CurrentAnimation == null || Visibility.Global.Visibile == false) return;
 
             Engine.Canvas.Call(new TextureDrawCall
             {
                 Texture = CurrentFrame,
-                Position = GlobalPosition,
-                Color = GlobalModulate,
-                Rotation = GlobalRotation,
+                Position = Transform.Global.Position,
+                Color = Visibility.Global.Modulate,
+                Rotation = Transform.Global.Rotation,
                 Origin = CurrentFrame.Center,
-                Scale = GlobalScale,
-                Effects = GlobalSpriteEffects,
-                Depth = GlobalDepth,
+                Scale = Transform.Global.Scale,
+                Effects = Material.Global.SpriteEffects,
+                Depth = Ordering.Global.Depth,
                 SpriteBatchConfig = SpriteBatchConfig.Default with
                 {
-                    Effect = GlobalShader
+                    Effect = Material.Global.Shader
                 }
             });
         }

@@ -18,8 +18,6 @@ namespace Monolith.Managers
     public partial class StageManager
     {
         public readonly Stack<Stage> Stages = new();
-        private bool _stageFrozen;
-        private bool _pendingFreeze;
 
         private static readonly Dictionary<string, Type> _stageTypes = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(a => a.GetTypes())
@@ -49,7 +47,6 @@ namespace Monolith.Managers
         private void StageIntervention()
         {
             ClearStageData();
-            _stageFrozen = false;
         }
 
         /// <summary>
@@ -112,63 +109,13 @@ namespace Monolith.Managers
             return Stages.Count > 0 ? Stages.Peek() : null;
         }
 
-        /// <summary>
-        /// Freezes the current stage at the end of the frame
-        /// </summary>
-        public void QueueFreezeCurrentStage()
-        {
-            _pendingFreeze = true;
-        }
-
-        /// <summary>
-        /// Freezes the current stage immediately
-        /// </summary>
-        public void FreezeCurrentStage()
-        {
-            _stageFrozen = true;
-        }
-
-        /// <summary>
-        /// Unfreezes the current stage
-        /// </summary>
-        public void UnfreezeCurrentStage()
-        {
-            _stageFrozen = false;
-            _pendingFreeze = false;
-        }
-
-        /// <summary>
-        /// Applies pending freeze at the end of the update cycle
-        /// </summary>
-        private void ApplyPendingFreeze()
-        {
-            if (_pendingFreeze)
-            {
-                _stageFrozen = true;
-                _pendingFreeze = false;
-            }
-        }
-
-        /// <summary>
-        /// Queues freezing the current stage for a duration
-        /// </summary>
-        public void QueueFreezeCurrentStageFor(TimeSpan duration)
-        {
-            QueueFreezeCurrentStage();
-            Engine.Timer.Wait(duration, UnfreezeCurrentStage);
-        }
 
         public void ProcessUpdate(float deltaTime)
         {
             if (IsStackEmpty())
                 return;
 
-            if (!_stageFrozen)
-            {
-                GetCurrentStage()?.ProcessUpdate(deltaTime);
-            }
-            
-            ApplyPendingFreeze();
+            GetCurrentStage()?.ProcessUpdate(deltaTime);
         }
 
         /// <summary>
@@ -178,13 +125,8 @@ namespace Monolith.Managers
         {
             if (IsStackEmpty())
                 return;
-
-            if (!_stageFrozen)
-            {
-                GetCurrentStage()?.PhysicsUpdate(deltaTime);
-            }
             
-            ApplyPendingFreeze();
+            GetCurrentStage()?.PhysicsUpdate(deltaTime);
         }
 
         public void SubmitCallCurrentStage()
@@ -192,12 +134,7 @@ namespace Monolith.Managers
             if (IsStackEmpty())
                 return;
 
-            if (!_stageFrozen)
-            {
-                GetCurrentStage()?.SubmitCall();
-            }
-            
-            ApplyPendingFreeze();
+               GetCurrentStage()?.SubmitCall();
         }
 
         /// <summary>

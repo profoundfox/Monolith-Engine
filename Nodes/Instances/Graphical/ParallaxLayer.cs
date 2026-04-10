@@ -52,8 +52,8 @@ namespace Monolith.Nodes
             base.ProcessUpdate(delta);
 
             var camera = Engine.Tree.Get<Camera2D>();
-            Vector2 camDelta = camera.GlobalPosition - lastCameraPos;
-            lastCameraPos = camera.GlobalPosition;
+            Vector2 camDelta = camera.Transform.Global.Position - lastCameraPos;
+            lastCameraPos = camera.Transform.Global.Position;
 
             foreach (var child in GetAll<ParallaxLayer>())
             {
@@ -63,7 +63,7 @@ namespace Monolith.Nodes
 
         public override void SubmitCall()
         {
-            if (!GlobalVisibility.Visibile)
+            if (!Visibility.Global.Visibile)
                 return;
             
             Rectangle view = Engine.Canvas.GetWorldViewRectangle();
@@ -73,11 +73,11 @@ namespace Monolith.Nodes
 
             Vector2 basePos = new Vector2(
                 LoopAxes.HasFlag(LoopAxis.X)
-                    ? GlobalPosition.X - Mod(GlobalPosition.X - offset.X, Texture.Bounds.Width)
-                    : GlobalPosition.X,
+                    ? Transform.Global.Position.X - Mod(Transform.Global.Position.X - offset.X, Texture.Bounds.Width)
+                    : Transform.Global.Position.X,
                 LoopAxes.HasFlag(LoopAxis.Y)
-                    ? GlobalPosition.Y - Mod(GlobalPosition.Y - offset.Y, Texture.Bounds.Height)
-                    : GlobalPosition.Y
+                    ? Transform.Global.Position.Y - Mod(Transform.Global.Position.Y - offset.Y, Texture.Bounds.Height)
+                    : Transform.Global.Position.Y
             );
 
             int startX = LoopAxes.HasFlag(LoopAxis.X)
@@ -111,7 +111,7 @@ namespace Monolith.Nodes
                         Texture = this.Texture,
                         Position = pos,
                         Color = Color.White,
-                        Depth = GlobalOrdering.Depth,
+                        Depth = Ordering.Global.Depth,
                     }, DrawLayer.Background);
                 }
             }

@@ -1,9 +1,8 @@
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Monolith.Geometry;
+
 using Monolith.Graphics;
 using Monolith.Util;
 using Monolith.Managers;

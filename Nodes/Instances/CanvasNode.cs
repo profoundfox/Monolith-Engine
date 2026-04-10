@@ -9,32 +9,22 @@ namespace Monolith.Nodes
 {
     public class CanvasNode : Node
     {
-        private Visibility localVisibility = Visibility.Identity;
-        private Ordering localOrdering = Ordering.Identity;
-        private Material localMaterial = Material.Identity;
+    
+        public Dual<Visibility> Visibility { get; private set; }
+        
+        public Dual<Ordering> Ordering { get; private set; }
 
-        /// <summary>
-        /// The self contained visibility of this node.
-        /// </summary>
-        public Visibility LocalVisibility
-        {
-            get => localVisibility;
-            set
-            {
-                localVisibility = value;
-                UpdateAttributes();
-            }
-        }
+        public Dual<Material> Material { get; private set; }
 
         /// <summary>
         /// The self contained visibility of this node. 
         /// </summary>
         public bool LocalVisible
         {
-            get => LocalVisibility.Visibile;
-            set
+          get => Visibility.Local.Visibile;
+          set
             {
-                LocalVisibility = LocalVisibility with { Visibile = value };
+                Visibility.Local = Visibility.Local with { Visibile = value };
             }
         }
 
@@ -43,23 +33,10 @@ namespace Monolith.Nodes
         /// </summary>
         public Color LocalModulate
         {
-            get => LocalVisibility.Modulate;
+            get => Visibility.Local.Modulate;
             set
             {
-                LocalVisibility = LocalVisibility with { Modulate = value };
-            }
-        }
-
-        /// <summary>
-        /// The self contained ordering of this node.
-        /// </summary>
-        public Ordering LocalOrdering
-        {
-            get => localOrdering;
-            set
-            {
-                localOrdering = value;
-                UpdateAttributes();
+                Visibility.Local = Visibility.Local with { Modulate = value };
             }
         }
 
@@ -68,23 +45,10 @@ namespace Monolith.Nodes
         /// </summary>
         public int LocalDepth
         {
-            get => LocalOrdering.Depth;
+            get => Ordering.Local.Depth;
             set
             {
-                LocalOrdering = LocalOrdering with { Depth = value };
-            }
-        }
-
-        /// <summary>
-        /// The self contained material of this node.
-        /// </summary>
-        public Material LocalMaterial
-        {
-            get => localMaterial;
-            set
-            {
-                localMaterial = value;
-                UpdateAttributes();
+                Ordering.Local = Ordering.Local with { Depth = value };
             }
         }
 
@@ -93,10 +57,10 @@ namespace Monolith.Nodes
         /// </summary>
         public Effect LocalShader
         {
-            get => LocalMaterial.Shader;
+            get => Material.Local.Shader;
             set
             {
-                LocalMaterial = LocalMaterial with { Shader = value };
+                Material.Local = Material.Local with { Shader = value };
             }
         }
 
@@ -105,56 +69,23 @@ namespace Monolith.Nodes
         /// </summary>
         public SpriteEffects LocalSpriteEffects
         {
-            get => LocalMaterial.SpriteEffects;
+            get => Material.Local.SpriteEffects;
             set
             {
-                LocalMaterial = LocalMaterial with { SpriteEffects = value };
+                Material.Local = Material.Local with { SpriteEffects = value };
             }
         }
 
-        /// <summary>
-        /// The combined visibility after inheriting from parents.
-        /// </summary>
-        public Visibility GlobalVisibility { get; private set; }
-
-        /// <summary>
-        /// The visibility relative to the parent.
-        /// </summary>
-        public bool GlobalVisible => GlobalVisibility.Visibile;
-
-        /// <summary>
-        /// The modulate relative to the parent.
-        /// </summary>
-        public Color GlobalModulate => GlobalVisibility.Modulate;
-
-        /// <summary>
-        /// The combined ordering after inheriting from parents.
-        /// </summary>
-        public Ordering GlobalOrdering { get; private set; }
-
-        /// <summary>
-        /// The depth relative to the parent.
-        /// </summary>
-        public int GlobalDepth => GlobalOrdering.Depth;
-
-        /// <summary>
-        /// The combined material after inheriting from parents.
-        /// </summary>
-        public Material GlobalMaterial { get; private set; }
-
-        /// <summary>
-        /// The shader relative to the parent.
-        /// </summary>
-        public Effect GlobalShader => GlobalMaterial.Shader;
-
-        /// <summary>
-        /// The global sprite effects relative to the parent.
-        /// </summary>
-        public SpriteEffects GlobalSpriteEffects => GlobalMaterial.SpriteEffects;
-
-
         public CanvasNode()
         {
+            Visibility = new Dual<Visibility>(Attributes.Visibility.Identity);
+            Ordering = new Dual<Ordering>(Attributes.Ordering.Identity);
+            Material = new Dual<Material>(Attributes.Material.Identity);
+
+            Visibility.OnChanged = UpdateAttributes;
+            Ordering.OnChanged = UpdateAttributes;
+            Material.OnChanged = UpdateAttributes;
+
             UpdateAttributes();
             OnParentChanged += (node) =>
             {
@@ -167,19 +98,19 @@ namespace Monolith.Nodes
         /// </summary>
         private void UpdateAttributes()
         {
-            if (GetParent() is CanvasNode parentCanvas)
+            if (GetParent() is CanvasNode parent)
             {
-                GlobalVisibility = Visibility.Combine(parentCanvas.GlobalVisibility, localVisibility);
-                GlobalOrdering = Ordering.Combine(parentCanvas.GlobalOrdering, localOrdering);
-                GlobalMaterial = Material.Combine(parentCanvas.GlobalMaterial, localMaterial);
+                Visibility.Global = Attributes.Visibility.Combine(parent.Visibility.Global, Visibility.Local);
+                Ordering.Global = Attributes.Ordering.Combine(parent.Ordering.Global, Ordering.Local);
+                Material.Global = Attributes.Material.Combine(parent.Material.Global, Material.Local);
             }
             else
             {
-                GlobalVisibility = localVisibility;
-                GlobalOrdering = localOrdering;
-                GlobalMaterial = localMaterial;
+                Visibility.Global = Visibility.Local;
+                Ordering.Global = Ordering.Local;
+                Material.Global = Material.Local;
             }
-            
+
             foreach (var child in Children)
             {
                 if (child is CanvasNode canvasChild)

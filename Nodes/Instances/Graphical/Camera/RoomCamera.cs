@@ -54,7 +54,7 @@ namespace Monolith.Nodes
             var targetShape = TargetNode.Get<CollisionShape2D>();
             var shape = targetShape.Shape;
 
-            var pos = TargetNode.GlobalPosition;            
+            var pos = TargetNode.Transform.Global.Position;            
 
             var camera = Engine.Canvas.GetWorldViewRectangle();
 
@@ -98,14 +98,14 @@ namespace Monolith.Nodes
 
             var camera = Engine.Canvas.GetWorldViewRectangle();
 
-            Vector2 targetPos = new Vector2(GlobalPosition.X + camera.Width * dir, GlobalPosition.Y);
+            Vector2 targetPos = new Vector2(Transform.Global.Position.X + camera.Width * dir, Transform.Global.Position.Y);
 
 
             foreach (var action in TransitionStarted)
                 action?.Invoke();
 
 
-            var cameraXTween = Engine.Tree.CreateTween(t => LocalPosition = t, GlobalPosition, targetPos, 0.5f, Vector2.Lerp, EasingFunctions.Linear);
+            var cameraXTween = Engine.Tree.CreateTween(t => LocalPosition = t, Transform.Global.Position, targetPos, 0.5f, Vector2.Lerp, EasingFunctions.Linear);
 
             cameraXTween.SetCallbackAction
             (

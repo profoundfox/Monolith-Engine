@@ -42,7 +42,7 @@ namespace Monolith.Nodes
         /// </summary>
         public void Emit()
         {
-            Emit(GlobalPosition, Properties.EmitCount);
+            Emit(Transform.Global.Position, Properties.EmitCount);
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Monolith.Nodes
         /// <param name="count"></param>
         public void Emit(int count)
         {
-            Emit(GlobalPosition, count);
+            Emit(Transform.Global.Position, count);
         }
 
         /// <summary>

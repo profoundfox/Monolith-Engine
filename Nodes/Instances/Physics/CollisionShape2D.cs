@@ -61,7 +61,7 @@ namespace Monolith.Nodes
             if (Disabled || other?.Shape == null || Shape == null)
                 return false;
 
-            return Shape.Intersect(other.Shape, GlobalPosition.ToPoint(), other.GlobalPosition.ToPoint());
+            return Shape.Intersect(other.Shape, Transform.Global.Position.ToPoint(), other.Transform.Global.Position.ToPoint());
         }
 
         public bool IntersectsAt(Vector2 offset, CollisionShape2D other)
@@ -69,13 +69,13 @@ namespace Monolith.Nodes
             if (Disabled || other?.Shape == null || other.Disabled || Shape == null)
                 return false;
 
-            return Shape.IntersectsAt(offset.ToPoint(), other.Shape, GlobalPosition.ToPoint(), other.GlobalPosition.ToPoint());
+            return Shape.IntersectsAt(offset.ToPoint(), other.Shape, Transform.Global.Position.ToPoint(), other.Transform.Global.Position.ToPoint());
         }
 
         public bool Contains(Vector2 position)
         {
             if (!Disabled && Shape != null)
-                return Shape.Contains(position.ToPoint(), GlobalPosition.ToPoint());
+                return Shape.Contains(position.ToPoint(), Transform.Global.Position.ToPoint());
 
             return false;
         }
