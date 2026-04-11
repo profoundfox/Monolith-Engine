@@ -12,7 +12,7 @@ namespace Monolith.Geometry
         private readonly Dictionary<Point, List<T>> _cells = new();
         private readonly HashSet<T> _queryCache = new();
         private float _cellSize;
-
+        
         public SpatialHash(float cellSize = 64f)
         {
             _cellSize = cellSize;

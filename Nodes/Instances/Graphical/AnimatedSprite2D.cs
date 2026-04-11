@@ -10,7 +10,7 @@ namespace Monolith.Nodes
     public class AnimatedSprite2D : Node2D
     {
         private int _currentFrame = 0;
-        private float _elapsed = 0f;
+        private TimeSpan _elapsed = TimeSpan.Zero;
         private bool _finished = false;
 
         public Dictionary<string, Animation> Atlas { get; set; } = new Dictionary<string, Animation>();
@@ -32,7 +32,7 @@ namespace Monolith.Nodes
             {
                 CurrentAnimation = target;
                 _currentFrame = 0;
-                _elapsed = 0f;
+                _elapsed = TimeSpan.Zero;
                 _finished = false;
                 IsLooping = isLooping;
             }
@@ -47,7 +47,7 @@ namespace Monolith.Nodes
             {
                 CurrentAnimation = animation;
                 _currentFrame = 0;
-                _elapsed = 0f;
+                _elapsed = TimeSpan.Zero;
                 _finished = false;
                 IsLooping = isLooping;
             }
@@ -62,7 +62,7 @@ namespace Monolith.Nodes
         {
             _finished = false;
             _currentFrame = 0;
-            _elapsed = 0f;
+            _elapsed = TimeSpan.Zero;
         }
 
         public override void ProcessUpdate(float delta)
@@ -72,7 +72,7 @@ namespace Monolith.Nodes
             if (_finished || CurrentAnimation == null)
                 return;
 
-            _elapsed += delta;
+            _elapsed += Engine.EngineTime.FrameDelta;
 
             while (_elapsed >= CurrentAnimation.Delay)
             {

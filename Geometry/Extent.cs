@@ -30,9 +30,9 @@ namespace Monolith.Geometry
         }
         
         ///<summary>
-        /// Creates a new extent with unified parameters for <see cref="Width"> and <see cref="Height">
+        /// Creates a new extent with unified parameters for <see cref="Width"/> and <see cref="Height"/>
         ///</summary>
-        ///<param name="unified">The unified value which both <see cref="Width"> and <see cref="Height">
+        ///<param name="unified">The unified value which both <see cref="Width"/> and <see cref="Height"/> are set to.</param>
         public Extent(int unified)
         {
           Width = unified;
@@ -42,7 +42,7 @@ namespace Monolith.Geometry
         ///<summary>
         /// Creates a new extent with a point as the reference type.
         ///</summary>
-        ///<param name="value">The point; the X value sets <see cref="Width"> and Y sets <see cref="Height">.</param>
+        ///<param name="value">The point; the X value sets <see cref="Width"/> and Y sets <see cref="Height">.</param>
         public Extent(Point value)
         {
           Width = value.X;
@@ -87,7 +87,7 @@ namespace Monolith.Geometry
         }
         
         ///<summary>
-        /// Chcks if left is not equal to the right.
+        /// Checks if left is not equal to the right.
         ///</summary>
         ///<param name="left">The left extent.</param>
         ///<param name="right">The right exten.</param>
