@@ -21,7 +21,7 @@ namespace Monolith
         public static BitmapFont BitmapFont { get; private set; }
         public static Effect PostProcessingShader { get; set; }
         public static MTexture Pixel { get; private set; }
-        public static EngineTime EngineTime { get; private set; }
+        public static EngineTime Time { get; private set; }
 
         public static Preferences Prefs { get; set; }
 
@@ -59,7 +59,7 @@ namespace Monolith
         {
             GraphicsDevice = base.GraphicsDevice;
 
-            EngineTime = new EngineTime(TimeSpan.FromSeconds(1.0 / 60.0));
+            Time = new EngineTime(TimeSpan.FromSeconds(1.0 / 60.0));
 
             Prefs = new Preferences();
             Resource = new ResourceManager();
@@ -103,17 +103,17 @@ namespace Monolith
         {
             TimeSpan frameDelta = gameTime.ElapsedGameTime;
 
-            int physicsSteps = EngineTime.Update(frameDelta);
+            int physicsSteps = Time.Update(frameDelta);
 
             Input.Update(gameTime);
-            Timer.PhysicsUpdate(EngineTime.FrameDelta, frameDelta);
+            Timer.PhysicsUpdate(Time.FrameDelta, frameDelta);
 
             for (int i = 0; i < physicsSteps; i++)
             {
-                Stage.PhysicsUpdate((float)EngineTime.FixedDelta.TotalSeconds);
+                Stage.PhysicsUpdate((float)Time.FixedDelta.TotalSeconds);
             }
 
-            Stage.ProcessUpdate((float)EngineTime.FrameDelta.TotalSeconds);
+            Stage.ProcessUpdate((float)Time.FrameDelta.TotalSeconds);
             Stage.SubmitCallCurrentStage();
 
 

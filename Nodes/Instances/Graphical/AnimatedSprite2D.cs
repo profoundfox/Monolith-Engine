@@ -72,7 +72,7 @@ namespace Monolith.Nodes
             if (_finished || CurrentAnimation == null)
                 return;
 
-            _elapsed += Engine.EngineTime.FrameDelta;
+            _elapsed += Engine.Time.FrameDelta;
 
             while (_elapsed >= CurrentAnimation.Delay)
             {
