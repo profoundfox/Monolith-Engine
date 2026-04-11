@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Monolith.Managers;
 
 namespace Monolith.Nodes
 {
+    ///<summary>
+    /// WIP, prob not going to end up in final product.
+    /// </summary>
     public readonly struct Cluster<T>
     {
         private readonly IReadOnlyList<T> _items;

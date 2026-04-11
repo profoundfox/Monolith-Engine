@@ -7,7 +7,9 @@ using Monolith.Tools;
 
 namespace Monolith.Nodes
 {
-   
+    ///<summary>
+    /// The class for all bodies which posses phsyics and are required to be queued from the server.
+    ///</summary>
     public class PhysicsBody2D : CollisionNode2D, IHashAble
     {
         public PhysicsBody2D() {}
