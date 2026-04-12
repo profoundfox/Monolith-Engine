@@ -147,6 +147,20 @@ namespace Monolith.Managers
             instances.Clear();
             byName.Clear();
         }
+        
+
+        internal void Update(TimeContext context, int steps)
+        {
+            for (int i = 0; i < steps; i++)
+            {
+                Engine.Stage.PhysicsUpdate((float)context.FixedDelta.TotalSeconds);
+            }
+
+            Engine.Stage.ProcessUpdate((float)context.FrameDelta.TotalSeconds);
+            Engine.Stage.SubmitCallCurrentStage();
+
+
+        }
 
         /// <summary>
         /// Updates the instances with a fixed framerate.

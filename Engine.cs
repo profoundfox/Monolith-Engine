@@ -21,10 +21,10 @@ namespace Monolith
         public static BitmapFont BitmapFont { get; private set; }
         public static Effect PostProcessingShader { get; set; }
         public static MTexture Pixel { get; private set; }
-        public static EngineTime Time { get; private set; }
 
         public static Preferences Prefs { get; set; }
 
+        public static TimeOwner Time { get; private set; }
         public static TreeServer2D Tree { get; private set; }
         public static ResourceManager Resource { get; private set; }
         public static CanvasHandler Canvas { get; private set; }
@@ -59,7 +59,7 @@ namespace Monolith
         {
             GraphicsDevice = base.GraphicsDevice;
 
-            Time = new EngineTime(TimeSpan.FromSeconds(1.0 / 60.0));
+            Time = new TimeOwner(TimeSpan.FromSeconds(1.0 / 60.0));
 
             Prefs = new Preferences();
             Resource = new ResourceManager();
@@ -105,17 +105,12 @@ namespace Monolith
 
             int physicsSteps = Time.Update(frameDelta);
 
+            var context = Time.GetContext();
+
             Input.Update(gameTime);
-            Timer.PhysicsUpdate(Time.FrameDelta, frameDelta);
-
-            for (int i = 0; i < physicsSteps; i++)
-            {
-                Stage.PhysicsUpdate((float)Time.FixedDelta.TotalSeconds);
-            }
-
-            Stage.ProcessUpdate((float)Time.FrameDelta.TotalSeconds);
-            Stage.SubmitCallCurrentStage();
-
+            Timer.PhysicsUpdate(context.FrameDelta, frameDelta);
+            
+            Tree.Update(context, physicsSteps);
 
             if (Input.Keyboard.IsKeyDown(Keys.Escape) || Input.CurrentGamePad.WasButtonJustPressed(Buttons.Start))
                 Exit();
