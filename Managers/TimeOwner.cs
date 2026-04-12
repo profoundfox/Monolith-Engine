@@ -22,12 +22,12 @@ namespace Monolith.Managers
 
         private readonly List<DelayedAction> _delayedActions = new();
 
-        public void After(TimeSpan delay, Action callback)
+        public void After(TimeSpan delay, Action callback, bool ignoreTimeScale)
         {
             if (callback == null)
                 return;
 
-            _delayedActions.Add(new DelayedAction(delay, callback));
+            _delayedActions.Add(new DelayedAction(delay, callback, ignoreTimeScale));
         }
 
         public int Update(TimeSpan rawDelta)
@@ -58,15 +58,13 @@ namespace Monolith.Managers
 
             Alpha = _accumulator.Ticks / (float)_fixedDelta.Ticks;
 
-            // -------------------------
-            // PROCESS DELAYED ACTIONS
-            // -------------------------
-
             for (int i = _delayedActions.Count - 1; i >= 0; i--)
             {
                 var action = _delayedActions[i];
 
-                action.Remaining -= _frameDelta;
+                var delta = action.IgnoreTimeScale ? rawDelta : _frameDelta;
+
+                action.Remaining -= delta;
 
                 if (action.Remaining <= TimeSpan.Zero)
                 {

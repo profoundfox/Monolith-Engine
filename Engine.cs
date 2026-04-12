@@ -30,7 +30,6 @@ namespace Monolith
         public static CanvasHandler Canvas { get; private set; }
         public static StageManager Stage { get; private set; }
         public static InputManager Input { get; private set; }
-        public static TimerManager Timer { get; private set; }
         public static PhysicsServer2D Physics { get; private set; }
 
         public static float FPS { get; private set; }
@@ -66,7 +65,6 @@ namespace Monolith
             Stage = new StageManager();
             Tree = new TreeServer2D();
             Physics = new PhysicsServer2D();
-            Timer = new TimerManager();
             Input = new InputManager();
 
             base.Initialize();
