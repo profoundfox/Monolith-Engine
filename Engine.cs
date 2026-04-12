@@ -108,7 +108,6 @@ namespace Monolith
             var context = Time.GetContext();
 
             Input.Update(gameTime);
-            Timer.PhysicsUpdate(context.FrameDelta, frameDelta);
             
             Tree.Update(context, physicsSteps);
 

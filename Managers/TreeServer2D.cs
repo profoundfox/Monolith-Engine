@@ -15,6 +15,8 @@ namespace Monolith.Managers
         private readonly List<Instance> pendingAdd = new();
         private readonly List<Instance> pendingRemove = new();
 
+        private readonly Queue<Action> continuations = new();
+
         /// <summary>
         /// Creates a new node and adds it to the tree.
         /// </summary>
@@ -150,7 +152,7 @@ namespace Monolith.Managers
         
 
         internal void Update(TimeContext context, int steps)
-        {
+        {  
             for (int i = 0; i < steps; i++)
             {
                 Engine.Stage.PhysicsUpdate((float)context.FixedDelta.TotalSeconds);
@@ -159,7 +161,10 @@ namespace Monolith.Managers
             Engine.Stage.ProcessUpdate((float)context.FrameDelta.TotalSeconds);
             Engine.Stage.SubmitCallCurrentStage();
 
-
+            while (continuations.Count > 0)
+            {
+                continuations.Dequeue()?.Invoke();
+            }
         }
 
         /// <summary>
@@ -197,6 +202,12 @@ namespace Monolith.Managers
         {
             foreach (var i in instances)
                 i.SubmitCall();
+        }
+
+        internal void Post(Action action)
+        {
+            if (action == null) return;
+            continuations.Enqueue(action);
         }
 
         /// <summary>

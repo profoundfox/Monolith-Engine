@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Monolith.Util;
 
 namespace Monolith.Managers
@@ -19,9 +20,19 @@ namespace Monolith.Managers
             _fixedDelta = fixedDelta;
         }
 
+        private readonly List<DelayedAction> _delayedActions = new();
+
+        public void After(TimeSpan delay, Action callback)
+        {
+            if (callback == null)
+                return;
+
+            _delayedActions.Add(new DelayedAction(delay, callback));
+        }
+
         public int Update(TimeSpan rawDelta)
         {
-            if (TimeScale == 0.0)
+            if (TimeScale == 0.0f)
             {
                 _frameDelta = TimeSpan.Zero;
             }
@@ -45,7 +56,24 @@ namespace Monolith.Managers
             if (steps == MaxSteps)
                 _accumulator = TimeSpan.Zero;
 
-            Alpha = _accumulator.Ticks / _fixedDelta.Ticks;
+            Alpha = _accumulator.Ticks / (float)_fixedDelta.Ticks;
+
+            // -------------------------
+            // PROCESS DELAYED ACTIONS
+            // -------------------------
+
+            for (int i = _delayedActions.Count - 1; i >= 0; i--)
+            {
+                var action = _delayedActions[i];
+
+                action.Remaining -= _frameDelta;
+
+                if (action.Remaining <= TimeSpan.Zero)
+                {
+                    action.Callback?.Invoke();
+                    _delayedActions.RemoveAt(i);
+                }
+            }
 
             return steps;
         }
