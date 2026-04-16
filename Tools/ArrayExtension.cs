@@ -22,7 +22,7 @@ namespace Monolith.Tools
         {
             return list.Select(x => Math.Clamp(x, min, max)).ToArray();
         }
-        
+
         public static bool IsEmpty<T>(this ICollection<T> collection)
         {
             return collection.Count == 0;

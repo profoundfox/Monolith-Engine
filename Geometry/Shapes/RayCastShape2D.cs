@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Monolith.Graphics;
-using Monolith.Tools;
 using Monolith.Managers;
-using Monolith.Attributes;
+using Monolith.Params;
 
 namespace Monolith.Geometry
 {
@@ -64,12 +62,15 @@ namespace Monolith.Geometry
             Engine.Canvas.Call(
                 new TextureDrawCall
                 {
-                    Position = Origin,
+                    Params = CanvasParams.Identity with
+                    {
+                        Position = Origin,
+                        Color = color,
+                        Scale = new Vector2(Length, thickness),
+                        Rotation = MathF.Atan2(Direction.Y, Direction.X),
+                        Origin = new Vector2(0f, 0.5f)
+                    },
                     Texture = Engine.Pixel,
-                    Color = color,
-                    Scale = new Vector2(Length, thickness),
-                    Rotation = MathF.Atan2(Direction.Y, Direction.X),
-                    Origin = new Vector2(0f, 0.5f),
                     Depth = depth
                 },
                 DrawLayer.Middleground
@@ -80,11 +81,13 @@ namespace Monolith.Geometry
                 Engine.Canvas.Call(
                     new TextureDrawCall
                     {
-                        Position = HitPoint,
+                        Params = CanvasParams.Identity with
+                        {
+                            Position = HitPoint,
+                            Color = Color.Blue,
+                            Scale = new Vector2(4, 4)
+                        },
                         Texture = Engine.Pixel,
-                        Color = Color.Blue,
-                        Scale = new Vector2(4, 4),
-                        Origin = new Vector2(0.5f),
                         Depth = depth + 1
                     },
                     DrawLayer.Middleground

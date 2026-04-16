@@ -88,7 +88,7 @@ namespace Monolith.Geometry
             Vector2 m = rayOrigin - position;
             float b = Vector2.Dot(m, rayDir);
             float c = Vector2.Dot(m, m) - Radius * Radius;
- 
+
             if (c > 0f && b > 0f)
                 return false;
 

@@ -28,25 +28,25 @@ namespace Monolith.Geometry
             Width = width;
             Height = height;
         }
-        
+
         ///<summary>
         /// Creates a new extent with unified parameters for <see cref="Width"/> and <see cref="Height"/>
         ///</summary>
         ///<param name="unified">The unified value which both <see cref="Width"/> and <see cref="Height"/> are set to.</param>
         public Extent(int unified)
         {
-          Width = unified;
-          Height = unified;
+            Width = unified;
+            Height = unified;
         }
-        
+
         ///<summary>
         /// Creates a new extent with a point as the reference type.
         ///</summary>
         ///<param name="value">The point; the X value sets <see cref="Width"/> and Y sets <see cref="Height">.</param>
         public Extent(Point value)
         {
-          Width = value.X;
-          Height = value.Y;
+            Width = value.X;
+            Height = value.Y;
         }
 
         ///<summary>
@@ -58,7 +58,7 @@ namespace Monolith.Geometry
         {
             return Width == other.Width && Height == other.Height;
         }
-        
+
         ///<summary>
         /// Checks if this is equal to another specified object.
         ///</summary>
@@ -67,7 +67,7 @@ namespace Monolith.Geometry
         {
             return obj is Extent other && Equals(other);
         }
-        
+
         ///<summary>
         /// Turns this extent into a unique hashcode based on the width and height.
         ///</summary>
@@ -75,7 +75,7 @@ namespace Monolith.Geometry
         {
             return HashCode.Combine(Width, Height);
         }
-        
+
         ///<summary>
         /// Checks if left is equal to right.
         ///</summary>
@@ -85,7 +85,7 @@ namespace Monolith.Geometry
         {
             return left.Equals(right);
         }
-        
+
         ///<summary>
         /// Checks if left is not equal to the right.
         ///</summary>
@@ -95,7 +95,7 @@ namespace Monolith.Geometry
         {
             return !left.Equals(right);
         }
-        
+
         ///<summary>
         /// Turns this into a printable string.
         ///</summary>

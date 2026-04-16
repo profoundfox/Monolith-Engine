@@ -13,7 +13,7 @@ namespace Monolith.Input
 
     public class InputAction
     {
-        public InputType Type { get;}
+        public InputType Type { get; }
         public Keys Key { get; }
         public Buttons Button { get; }
         public MouseButton MouseButton { get; }

@@ -5,7 +5,7 @@ using System.Reflection;
 
 using Monolith.IO;
 using Monolith.Graphics;
-using Monolith.Nodes;
+using Monolith.Hierarchy;
 using Monolith.Geometry;
 using Monolith.Util;
 
@@ -37,7 +37,7 @@ namespace Monolith.Managers
             StageIntervention();
 
             Stages.Push(stage);
-     
+
             stage.OnEnter();
         }
 
@@ -75,7 +75,7 @@ namespace Monolith.Managers
             Stage targetStage = GetStageFromString(stageName);
             if (targetStage == null)
                 throw new InvalidOperationException($"Stage '{stageName}' not found.");
-        
+
             AddStage(targetStage);
         }
 
@@ -125,7 +125,7 @@ namespace Monolith.Managers
         {
             if (IsStackEmpty())
                 return;
-            
+
             GetCurrentStage()?.PhysicsUpdate(deltaTime);
         }
 
@@ -134,7 +134,7 @@ namespace Monolith.Managers
             if (IsStackEmpty())
                 return;
 
-               GetCurrentStage()?.SubmitCall();
+            GetCurrentStage()?.SubmitCall();
         }
 
         /// <summary>

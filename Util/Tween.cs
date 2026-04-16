@@ -2,7 +2,6 @@ using System;
 using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
 using Monolith.Tools;
-using Monolith.Attributes;
 
 namespace Monolith.Util
 {
@@ -39,7 +38,7 @@ namespace Monolith.Util
             OnUpdate = onUpdate;
             _lerpFunc = lerpFunc;
             EasingFunction = easingFunction;
-            
+
             Start();
         }
 
@@ -53,11 +52,11 @@ namespace Monolith.Util
         {
             callbackAction = action;
         }
-        
+
         public override void ProcessUpdate(float delta)
         {
-            base.ProcessUpdate(delta); 
-        
+            base.ProcessUpdate(delta);
+
             if (!isRunning) return;
 
             elapsedTime += delta;

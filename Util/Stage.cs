@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using Microsoft.Xna.Framework;
 using Monolith.Geometry;
-using Monolith.Nodes;
+using Monolith.Hierarchy;
 
 namespace Monolith.Util
 {
     public class Stage
     {
-        public virtual void OnEnter() {}
+        public virtual void OnEnter() { }
         public virtual void PhysicsUpdate(float deltaTime)
         {
             Engine.Tree.PhysicsUpdate(deltaTime);
@@ -22,6 +22,6 @@ namespace Monolith.Util
         {
             Engine.Tree.SubmitCalls();
         }
-        public virtual void OnExit() {}
+        public virtual void OnExit() { }
     }
 }

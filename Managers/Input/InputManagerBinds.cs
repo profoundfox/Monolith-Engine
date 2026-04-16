@@ -4,7 +4,7 @@ using Monolith.Tools;
 using Monolith.Input;
 using Microsoft.Xna.Framework.Input;
 
-namespace Monolith.Managers 
+namespace Monolith.Managers
 {
     public partial class InputManager
     {
@@ -14,7 +14,7 @@ namespace Monolith.Managers
 
             AddBind(name, inputActions);
         }
-        
+
         /// <summary>
         /// Adds a bind to the dictionary with a given name.
         /// </summary>
@@ -24,7 +24,7 @@ namespace Monolith.Managers
                 existing.AddRange(inputActions.Select(a => a.Clone()));
             else
                 Binds[actionName] = inputActions.Select(a => a.Clone()).ToList();
-            
+
             if (!InitialBinds.TryGetValue(actionName, out _))
             {
                 InitialBinds.Add(

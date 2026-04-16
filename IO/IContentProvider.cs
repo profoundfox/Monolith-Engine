@@ -13,7 +13,7 @@ namespace Monolith.IO
     {
         T LoadJson<T>(string path);
 
-        T Load<T>(string path); 
+        T Load<T>(string path);
 
         void Unload(string path);
         void ClearCache();

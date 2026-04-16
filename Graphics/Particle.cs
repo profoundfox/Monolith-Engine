@@ -1,8 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Monolith.Attributes;
-using Monolith.Managers;
+using Monolith.Params;
 
 namespace Monolith.Graphics
 {
@@ -21,10 +19,10 @@ namespace Monolith.Graphics
 
     public class Particle
     {
-        private readonly ParticleProperties _initialData;
+        private readonly ParticleParams _initialData;
         private ParticleInfo _info;
 
-        public ParticleProperties InitialData
+        public ParticleParams InitialData
         {
             get => _initialData;
         }
@@ -34,7 +32,7 @@ namespace Monolith.Graphics
             get => _info;
         }
 
-        public Particle(Vector2 pos, ParticleProperties data)
+        public Particle(Vector2 pos, ParticleParams data)
         {
             _initialData = data;
 
@@ -107,12 +105,15 @@ namespace Monolith.Graphics
             Engine.Canvas.Call(new TextureDrawCall
             {
                 Texture = _initialData.Texture,
-                Position = _info.Position,
-                Color = _info.Color * _info.Opacity,
-                Rotation = 0f,
-                Origin = _info.Origin,
-                Scale = new Vector2(_info.Scale),
-                Depth = 99,
+                Params = CanvasParams.Identity with
+                {
+                    Position = _info.Position,
+                    Color = _info.Color * _info.Opacity,
+                    Rotation = 0f,
+                    Origin = _info.Origin,
+                    Scale = new Vector2(_info.Scale),
+                },
+                Depth = 99
             });
         }
     }

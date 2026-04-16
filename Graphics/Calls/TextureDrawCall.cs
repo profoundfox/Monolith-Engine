@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Monolith.Attributes;
+using Monolith.Params;
 
 namespace Monolith.Graphics
 {
@@ -10,14 +10,9 @@ namespace Monolith.Graphics
         public required MTexture Texture { get; init; }
         public Rectangle? SourceRectangle { get; init; }
 
-        public Vector2 Position { get; init; } = Vector2.Zero;
-        public Color Color { get; init; } = Color.White;
-        public float Rotation { get; init; } = 0f;
-        public Vector2 Origin { get; init; } = Vector2.Zero;
-        public Vector2 Scale { get; init; } = Vector2.One;
-        public SpriteEffects Effects { get; init; } = SpriteEffects.None;
+        public CanvasParams Params { get; set; } = CanvasParams.Identity;
 
-        public SpriteBatchConfig SpriteBatchConfig { get; init; } = SpriteBatchConfig.Default;
+        public SpriteBatchParams BatchParams { get; init; } = SpriteBatchParams.Default;
 
         public void Draw(SpriteBatch sb)
         {
@@ -31,13 +26,13 @@ namespace Monolith.Graphics
 
             sb.Draw(
                 Texture.Texture,
-                Position,
+                Params.Position,
                 src,
-                Color,
-                Rotation,
-                Origin,
-                Scale,
-                Effects,
+                Params.Color,
+                Params.Rotation,
+                Params.Origin,
+                Params.Scale,
+                Params.Effects,
                 InternalDepth
             );
         }

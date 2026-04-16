@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Monolith.Geometry;
-using Monolith.Nodes;
+using Monolith.Hierarchy;
 
 namespace Monolith.Tools
 {
@@ -59,7 +59,7 @@ namespace Monolith.Tools
         }
 
         public static Point FindNearestSafeTile(this Point unsafeTile, int[,] grid)
-        {  
+        {
             if (unsafeTile.IsValidLocation(grid))
                 return unsafeTile;
 
@@ -74,7 +74,7 @@ namespace Monolith.Tools
                     break;
                 }
             }
-            
+
             return safeCord;
         }
 
@@ -120,10 +120,10 @@ namespace Monolith.Tools
                     var snapShape = shape.Shape.ToRectangle(shape.Transform.Global.Position.ToPoint()).Snap(tileWidth, tileHeight);
 
                     int startX = snapShape.X / tileWidth;
-                    int endX   = (snapShape.X + snapShape.Width) / tileWidth;
+                    int endX = (snapShape.X + snapShape.Width) / tileWidth;
 
                     int startY = snapShape.Y / tileHeight;
-                    int endY   = (snapShape.Y + snapShape.Height) / tileHeight;
+                    int endY = (snapShape.Y + snapShape.Height) / tileHeight;
 
                     for (int y = startY; y < endY; y++)
                     {
@@ -141,12 +141,12 @@ namespace Monolith.Tools
 
             return grid;
         }
-       
+
         public static bool IsValidLocation(this Point location, int[,] grid)
         {
             return location.IsInBounds(grid) && grid[location.Y, location.X] == 0;
         }
-                
+
         public static bool IsInBounds(this Point location, int[,] grid)
         {
             return location.X >= 0 &&

@@ -20,7 +20,7 @@ namespace Monolith.Graphics
         /// The depth, reperesented in integer values.
         /// </summary>
         public int Depth
-        {    
+        {
             get => _depth;
             set => _depth = Math.Clamp(value, Min, Max);
         }

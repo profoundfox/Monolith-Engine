@@ -18,13 +18,13 @@ namespace Monolith.Geometry
         /// The width and height of this rectangle.
         ///</summary>
         Extent Size { get; set; }
-        
+
         ///<summary>
         /// Gets the axis aligned bounding box of this shape.
         ///</summary>
         ///<param name="position"> </param>
         Rectangle GetAABB(Point position);
-        
+
         ///<summary>
         /// Checks if this shape intersects with another specified shape.
         ///</summary>
@@ -32,7 +32,7 @@ namespace Monolith.Geometry
         ///<param name="thisPosition">The position of this shape.</param>
         ///<param name="otherPosition">The position of the other shape.</param>
         bool Intersect(IShape2D otherShape, Point thisPosition, Point otherPosition);
-        
+
         ///<summary>
         /// Checks if this shape contains a specified point.
         ///</summary>
@@ -48,7 +48,7 @@ namespace Monolith.Geometry
         ///<param name="thisPosition">The non offset position of this shape.</param>
         ///<param name="otherPosition">The non offset position of the other shape.</param>
         bool IntersectsAt(Point offset, IShape2D otherShape, Point thisPosition, Point otherPosition);
-        
+
         bool RayIntersect(
             Vector2 rayOrigin,
             Vector2 rayDir,
@@ -57,7 +57,7 @@ namespace Monolith.Geometry
             out Vector2 hitPoint,
             out float distance
         );
-        
+
         ///<summary>
         /// Clones this shape.
         ///</summary>

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using Monolith.Graphics;
 using Monolith.Util;
 using Monolith.Managers;
+using Monolith.Params;
 
 namespace Monolith
 {
@@ -48,14 +49,18 @@ namespace Monolith
                 PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height
             };
             Graphics.ApplyChanges();
-            
+
             Window.AllowUserResizing = true;
+
             IsFixedTimeStep = false;
             Graphics.SynchronizeWithVerticalRetrace = true;
         }
 
         protected override void Initialize()
         {
+
+            ClassDBInitializer.Initialize(typeof(Engine).Assembly);
+
             GraphicsDevice = base.GraphicsDevice;
 
             Time = new TimeOwner(TimeSpan.FromSeconds(1.0 / 60.0));
@@ -106,7 +111,7 @@ namespace Monolith
             var context = Time.GetContext();
 
             Input.Update(gameTime);
-            
+
             Tree.Update(context, physicsSteps);
 
             if (Input.Keyboard.IsKeyDown(Keys.Escape) || Input.CurrentGamePad.WasButtonJustPressed(Buttons.Start))

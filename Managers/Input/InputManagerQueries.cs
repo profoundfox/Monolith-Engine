@@ -4,7 +4,7 @@ using System.Numerics;
 using Monolith.Input;
 
 namespace Monolith.Managers
-{   
+{
     public partial class InputManager
     {
 
@@ -84,7 +84,7 @@ namespace Monolith.Managers
 
             return null;
         }
-        
+
 
         /// <summary>
         /// Checks if an action was just released this frame.
@@ -142,7 +142,7 @@ namespace Monolith.Managers
         {
             int xAxis = GetAxis(xNegativeAction, xPositiveAction);
             int yAxis = GetAxis(yNegativeAction, yPositiveAction);
-            
+
             return new Vector2(xAxis, yAxis);
         }
     }

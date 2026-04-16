@@ -14,7 +14,7 @@ namespace Monolith.Graphics
             _font = font ?? throw new System.ArgumentNullException(nameof(font));
         }
 
-        // --- Properties mirrored from SpriteFont ---
+        // --- Params mirrored from SpriteFont ---
         public IReadOnlyList<char> Characters => _font.Characters;
         public char? DefaultCharacter
         {

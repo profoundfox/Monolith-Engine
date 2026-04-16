@@ -12,7 +12,7 @@ namespace Monolith.Geometry
         private readonly Dictionary<Point, List<T>> _cells = new();
         private readonly HashSet<T> _queryCache = new();
         private float _cellSize;
-        
+
         public SpatialHash(float cellSize = 64f)
         {
             _cellSize = cellSize;
@@ -44,7 +44,7 @@ namespace Monolith.Geometry
                 int minX = (int)Math.Floor(bounds.Left / _cellSize);
                 int maxX = (int)Math.Floor(bounds.Right / _cellSize);
                 int minY = (int)Math.Floor(bounds.Top / _cellSize);
-                int maxY = (int)Math.Floor(bounds.Bottom  / _cellSize);
+                int maxY = (int)Math.Floor(bounds.Bottom / _cellSize);
 
                 for (int x = minX; x <= maxX; x++)
                 {
@@ -64,7 +64,7 @@ namespace Monolith.Geometry
         /// <param name="obj"></param>
         public void Insert(T obj)
         {
-            foreach(var cell in GetCellsForBounds(obj.Bounds))
+            foreach (var cell in GetCellsForBounds(obj.Bounds))
             {
                 if (!_cells.TryGetValue(cell, out var list))
                 {
@@ -81,7 +81,7 @@ namespace Monolith.Geometry
         /// <param name="obj"></param>
         public void Remove(T obj)
         {
-            foreach(var cell in GetCellsForBounds(obj.Bounds))
+            foreach (var cell in GetCellsForBounds(obj.Bounds))
             {
                 if (_cells.TryGetValue(cell, out var list))
                 {
@@ -100,7 +100,7 @@ namespace Monolith.Geometry
         /// <param name="oldBounds"></param>
         private void RemoveFromOldCells(T obj, List<Rectangle> oldBounds)
         {
-            foreach(var cell in GetCellsForBounds(oldBounds))
+            foreach (var cell in GetCellsForBounds(oldBounds))
             {
                 if (_cells.TryGetValue(cell, out var list))
                     list.Remove(obj);
@@ -153,7 +153,7 @@ namespace Monolith.Geometry
             }
         }
     }
-    
+
 
     public interface IHashAble
     {

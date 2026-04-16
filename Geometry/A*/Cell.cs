@@ -6,7 +6,7 @@ namespace Monolith.Geometry
     {
         public Point Location { get; set; }
         public Cell Parent { get; set; }
-        public int H { get; set;}
+        public int H { get; set; }
         public int G { get; set; }
         public int F => G + H;
 

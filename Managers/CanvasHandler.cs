@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Monolith.Attributes;
+using Monolith.Params;
 using Monolith.Geometry;
 
 namespace Monolith.Managers
@@ -19,7 +19,7 @@ namespace Monolith.Managers
 
     public sealed class CanvasHandler
     {
-        private readonly Dictionary<SpriteBatchConfig, SpriteBatch> _spriteBatches = new();
+        private readonly Dictionary<SpriteBatchParams, SpriteBatch> _spriteBatches = new();
         private readonly SpriteBatch _spriteBatch;
         private readonly Dictionary<DrawLayer, List<IDrawCall>> _queues;
         private Matrix _matrix = Matrix.Identity;
@@ -53,7 +53,7 @@ namespace Monolith.Managers
         /// Updates the camera transform used for non-UI layers.
         /// </summary>
         public void SetMatrix(Matrix transform) => _matrix = transform;
-        
+
 
         /// <summary>
         /// Queues a call directly.
@@ -91,7 +91,7 @@ namespace Monolith.Managers
         /// </summary>
         public void Flush()
         {
-            var groupedQueue = new Dictionary<SpriteBatchConfig, List<IDrawCall>>();
+            var groupedQueue = new Dictionary<SpriteBatchParams, List<IDrawCall>>();
 
             foreach (DrawLayer layer in Enum.GetValues(typeof(DrawLayer)))
             {
@@ -104,10 +104,10 @@ namespace Monolith.Managers
 
                 foreach (var call in queue)
                 {
-                    if (!groupedQueue.TryGetValue(call.SpriteBatchConfig, out var list))
+                    if (!groupedQueue.TryGetValue(call.BatchParams, out var list))
                     {
                         list = new List<IDrawCall>();
-                        groupedQueue[call.SpriteBatchConfig] = list;
+                        groupedQueue[call.BatchParams] = list;
                     }
                     list.Add(call);
                 }

@@ -3,13 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Monolith
-{   
+{
     /// <summary>
     /// The absolute absract class for an object that has a life cycle.
     /// </summary>
     public abstract class Instance
     {
-        private string name;            
+        private string name;
+
+        ///<summary>
+        /// Action for when a dynamic setter fails.
+        ///</summary>
+        public Action<string, object> OnSetFallback;
+        
+
+        ///<summary>
+        /// Action for when a dynamic getter fails.
+        ///</summary>
+        public Action<string> OnFallback; 
 
         public Instance()
         {
@@ -33,7 +44,7 @@ namespace Monolith
         {
             Engine.Tree.QueueRemove(this);
         }
-        
+
         /// <summary>
         /// Immediatley removes this instance.
         /// </summary>
@@ -50,14 +61,14 @@ namespace Monolith
             name = null;
         }
 
-        public virtual void OnEnter() {}
+        public virtual void OnEnter() { }
 
-        public virtual void ProcessUpdate(float dt) {}
+        public virtual void ProcessUpdate(float dt) { }
 
-        public virtual void PhysicsUpdate(float dt) {}
+        public virtual void PhysicsUpdate(float dt) { }
 
-        public virtual void SubmitCall() {}
+        public virtual void SubmitCall() { }
 
-        public virtual void OnExit() {}
+        public virtual void OnExit() { }
     }
 }

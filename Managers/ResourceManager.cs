@@ -6,7 +6,7 @@ namespace Monolith.Managers
     public class ResourceManager
     {
         private IContentProvider Provider { get; set; }
-         
+
         /// <summary>
         /// The root path of content.
         /// </summary>
@@ -15,7 +15,7 @@ namespace Monolith.Managers
         public ResourceManager()
         {
             Engine.Instance.Content.RootDirectory = ContentRoot;
-            
+
             Provider = new PipelineLoader();
         }
 

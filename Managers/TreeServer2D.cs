@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Monolith.Tools;
-using Monolith.Nodes;
+using Monolith.Hierarchy;
 using Monolith.Util;
 
 namespace Monolith.Managers
@@ -22,7 +22,7 @@ namespace Monolith.Managers
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T Create<T>() 
+        public T Create<T>()
             where T : Instance, new()
         {
             var inst = new T();
@@ -74,19 +74,19 @@ namespace Monolith.Managers
         /// </summary>
         private void Flush()
         {
-            if(pendingAdd.Count == 0 && pendingRemove.Count == 0)
+            if (pendingAdd.Count == 0 && pendingRemove.Count == 0)
                 return;
-            
-            foreach(var n in pendingAdd)
+
+            foreach (var n in pendingAdd)
                 AddInternal(n);
 
             pendingAdd.Clear();
 
             foreach (var n in pendingRemove.ToList())
                 RemoveInternal(n);
-            
+
             pendingRemove.Clear();
-        } 
+        }
 
         /// <summary>
         /// Adds an instance.
@@ -96,7 +96,7 @@ namespace Monolith.Managers
         {
             instances.Add(instance);
 
-            if(!string.IsNullOrEmpty(instance.GetName()))
+            if (!string.IsNullOrEmpty(instance.GetName()))
             {
                 if (!byName.TryGetValue(instance.GetName(), out var list))
                 {
@@ -114,14 +114,14 @@ namespace Monolith.Managers
         private void RemoveInternal(Instance instance)
         {
             instance.OnExit();
-            
+
             instances.Remove(instance);
 
-            if(!string.IsNullOrEmpty(instance.GetName()) 
+            if (!string.IsNullOrEmpty(instance.GetName())
                 && byName.TryGetValue(instance.GetName(), out var list))
             {
                 list.Remove(instance);
-                if(list.Count == 0) 
+                if (list.Count == 0)
                     byName.Remove(instance.GetName());
             }
 
@@ -149,10 +149,10 @@ namespace Monolith.Managers
             instances.Clear();
             byName.Clear();
         }
-        
+
 
         internal void Update(TimeContext context, int steps)
-        {  
+        {
             for (int i = 0; i < steps; i++)
             {
                 Engine.Stage.PhysicsUpdate((float)context.FixedDelta.TotalSeconds);

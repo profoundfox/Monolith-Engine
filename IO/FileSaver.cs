@@ -146,7 +146,7 @@ namespace Monolith.IO
                 }
                 catch (Exception ex)
                 {
-                    
+
                     Console.WriteLine($"Failed to load field {field.Name}: {ex.Message}");
                 }
             }

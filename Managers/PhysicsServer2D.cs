@@ -4,7 +4,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Xna.Framework;
 using Monolith.Geometry;
-using Monolith.Nodes;
+using Monolith.Hierarchy;
 
 namespace Monolith.Managers
 {
@@ -12,12 +12,12 @@ namespace Monolith.Managers
     {
         private readonly SpatialHash<PhysicsBody2D> _broadphase;
         private readonly Dictionary<PhysicsBody2D, List<Rectangle>> _bounds = new();
-        
+
         public PhysicsServer2D()
         {
             _broadphase = new SpatialHash<PhysicsBody2D>();
         }
-        
+
         /// <summary>
         /// Registers a physics body to the server.
         /// </summary>
@@ -42,23 +42,23 @@ namespace Monolith.Managers
             {
                 _broadphase.Remove(body);
                 _bounds.Remove(body);
-            } 
+            }
         }
 
         public void NotifyMoved(PhysicsBody2D body)
         {
             if (!_bounds.TryGetValue(body, out var oldBounds))
                 return;
-                        
+
             var newBounds = body.Bounds;
- 
+
             if (newBounds != oldBounds)
             {
                 _broadphase.Update(body, oldBounds);
                 _bounds[body] = newBounds;
             }
         }
-    
+
         public List<PhysicsBody2D> Query(List<Rectangle> area)
         {
             return _broadphase.Query(area);

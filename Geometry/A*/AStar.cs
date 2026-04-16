@@ -19,7 +19,7 @@ namespace Monolith.Geometry
 
             Cell startCell = new Cell(start);
             allCells[start] = startCell;
-            var openList = new List<Cell> { startCell };   
+            var openList = new List<Cell> { startCell };
 
             startCell.G = 0;
             startCell.H = Heuristic(startCell, new Cell(goal));

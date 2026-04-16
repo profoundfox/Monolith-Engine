@@ -8,11 +8,11 @@ namespace Monolith.Util
     {
         event Action<IState, string> TransitionRequested;
         void OnEnter();
-        
+
         void Update(float delta);
         void OnExit();
     }
-    
+
     public abstract class State : IState
     {
         public event Action<IState, string> TransitionRequested;
@@ -23,7 +23,7 @@ namespace Monolith.Util
         }
 
         public virtual void OnEnter() { }
-        public virtual void Update(float delta) {}
+        public virtual void Update(float delta) { }
         public virtual void OnExit() { }
     }
 }
