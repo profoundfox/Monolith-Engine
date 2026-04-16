@@ -29,26 +29,19 @@ namespace Monolith.Params
         RegisterType(t);
       }
     }
-
+    
     private static void RegisterType(Type type)
     {
-      var map = new Dictionary<string, PropertyMeta>();
+        var map = new Dictionary<string, PropertyMeta>();
 
-      var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+        foreach (var prop in type.GetProperties())
+        {
+            if (!prop.IsDefined(typeof(ExportAttribute), true))
+                continue;
 
-      foreach (var prop in props)
-      {
-        if (!prop.IsDefined(typeof(ExportAttribute), inherit: true))
-          continue;
+            map[prop.Name] = BuildProperty(prop);
+        }
 
-        if (!prop.CanRead || !prop.CanWrite)
-          continue;
-
-        map[prop.Name] = BuildProperty(prop);
-
-      }
-
-      if (map.Count > 0)
         ClassDB.Register(type, map);
     }
 
@@ -62,13 +55,10 @@ namespace Monolith.Params
     }
 
     private static Func<object, object> CreateGetter(PropertyInfo prop)
-    {
-      return (obj) => prop.GetValue(obj);
-    }
+      => (obj) => prop.GetValue(obj);
 
     private static Action<object, object> CreateSetter(PropertyInfo prop)
-    {
-      return (obj, value) => prop.SetValue(obj, value);
-    }
+      => (obj, value) => prop.SetValue(obj, value);
+    
   }
 }
