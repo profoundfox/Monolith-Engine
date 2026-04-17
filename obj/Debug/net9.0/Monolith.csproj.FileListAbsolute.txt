@@ -11,3 +11,16 @@
 /Users/nilslauvstad/Git/Monolith-Engine/obj/Debug/net9.0/refint/Monolith.dll
 /Users/nilslauvstad/Git/Monolith-Engine/obj/Debug/net9.0/Monolith.pdb
 /Users/nilslauvstad/Git/Monolith-Engine/obj/Debug/net9.0/ref/Monolith.dll
+/Users/nilslauvstad/Git/Monolith/bin/Debug/net9.0/Monolith.deps.json
+/Users/nilslauvstad/Git/Monolith/bin/Debug/net9.0/Monolith.dll
+/Users/nilslauvstad/Git/Monolith/bin/Debug/net9.0/Monolith.pdb
+/Users/nilslauvstad/Git/Monolith/obj/Debug/net9.0/Monolith.csproj.AssemblyReference.cache
+/Users/nilslauvstad/Git/Monolith/obj/Debug/net9.0/Monolith.GeneratedMSBuildEditorConfig.editorconfig
+/Users/nilslauvstad/Git/Monolith/obj/Debug/net9.0/Monolith.AssemblyInfoInputs.cache
+/Users/nilslauvstad/Git/Monolith/obj/Debug/net9.0/Monolith.AssemblyInfo.cs
+/Users/nilslauvstad/Git/Monolith/obj/Debug/net9.0/Monolith.csproj.CoreCompileInputs.cache
+/Users/nilslauvstad/Git/Monolith/obj/Debug/net9.0/Monolith.sourcelink.json
+/Users/nilslauvstad/Git/Monolith/obj/Debug/net9.0/Monolith.dll
+/Users/nilslauvstad/Git/Monolith/obj/Debug/net9.0/refint/Monolith.dll
+/Users/nilslauvstad/Git/Monolith/obj/Debug/net9.0/Monolith.pdb
+/Users/nilslauvstad/Git/Monolith/obj/Debug/net9.0/ref/Monolith.dll

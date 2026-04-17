@@ -59,7 +59,7 @@ namespace Monolith
         protected override void Initialize()
         {
 
-            ClassDBInitializer.Initialize(typeof(Engine).Assembly);
+            ClassDB.Initialize(typeof(Engine).Assembly);
 
             GraphicsDevice = base.GraphicsDevice;
 

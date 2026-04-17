@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ErsbppDwK98=",
+  "dgSpecHash": "9a8RRdCutbs=",
   "success": true,
-  "projectFilePath": "/Users/nilslauvstad/Git/Monolith-Engine/Monolith.csproj",
+  "projectFilePath": "/Users/nilslauvstad/Git/Monolith/Monolith.csproj",
   "expectedPackageFiles": [
     "/Users/nilslauvstad/.nuget/packages/monogame.framework.desktopgl/3.8.4.1/monogame.framework.desktopgl.3.8.4.1.nupkg.sha512",
     "/Users/nilslauvstad/.nuget/packages/monogame.library.openal/1.24.3.2/monogame.library.openal.1.24.3.2.nupkg.sha512",
