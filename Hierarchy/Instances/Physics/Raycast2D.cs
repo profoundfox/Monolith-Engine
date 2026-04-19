@@ -4,44 +4,44 @@ using Monolith.Geometry;
 
 namespace Monolith.Hierarchy
 {
-    public class RayCast2D : Node2D
+  public class RayCast2D : Node2D
+  {
+    public Vector2 TargetPosition { get; set; } = new Vector2(0, 50);
+
+    public bool Disabled { get; set; }
+
+    public readonly RayCastShape2D Ray = new RayCastShape2D();
+
+    public RayCast2D() { }
+
+    public override void PhysicsUpdate(float delta)
     {
-        public Vector2 TargetPosition { get; set; } = new Vector2(0, 50);
+      base.PhysicsUpdate(delta);
 
-        public bool Disabled { get; set; }
+      if (Disabled)
+        return;
 
-        public readonly RayCastShape2D Ray = new RayCastShape2D();
+      Ray.Origin = Transform.Global.Position;
 
-        public RayCast2D() { }
+      Vector2 worldOffset = Vector2.Transform(
+          TargetPosition,
+          Matrix.CreateRotationZ(
+              MathHelper.ToRadians(Transform.Global.Rotation)
+          )
+      );
 
-        public override void PhysicsUpdate(float delta)
-        {
-            base.PhysicsUpdate(delta);
+      Ray.TargetOffset = worldOffset;
 
-            if (Disabled)
-                return;
+      var shapes = Engine.Tree
+          .GetAll<CollisionShape2D>()
+          .Where(cs => cs.Shape != null)
+          .Select(cs => (cs.Shape, cs.Transform.Global.Position))
+          .ToList();
 
-            Ray.Origin = Transform.Global.Position;
-
-            Vector2 worldOffset = Vector2.Transform(
-                TargetPosition,
-                Matrix.CreateRotationZ(
-                    MathHelper.ToRadians(Transform.Global.Rotation)
-                )
-            );
-
-            Ray.TargetOffset = worldOffset;
-
-            var shapes = Engine.Tree
-                .GetAll<CollisionShape2D>()
-                .Where(cs => cs.Shape != null)
-                .Select(cs => (cs.Shape, cs.Transform.Global.Position))
-                .ToList();
-
-            Ray.CheckIntersections(shapes);
-        }
-
-        public bool IsColliding => Ray.HasHit;
-        public Vector2 CollisionPoint => Ray.HitPoint;
+      Ray.CheckIntersections(shapes);
     }
+
+    public bool IsColliding => Ray.HasHit;
+    public Vector2 CollisionPoint => Ray.HitPoint;
+  }
 }

@@ -9,118 +9,118 @@ using Monolith.Util;
 
 namespace Monolith.Hierarchy
 {
-    public enum LoopAxis
+  public enum LoopAxis
+  {
+    None = 0,
+    X = 1 << 0,
+    Y = 1 << 1,
+    Both = X | Y
+  }
+
+  /// <summary>
+  /// Represents a single infinite scrolling parallax layer.
+  /// </summary>
+  public class ParallaxLayer : Node2D
+  {
+    public MTexture Texture { get; set; }
+    public Vector2 MotionScale { get; set; } = Vector2.One;
+    public LoopAxis LoopAxes { get; set; } = LoopAxis.Both;
+
+    private Vector2 lastCameraPos;
+    private Vector2 offset;
+
+    public ParallaxLayer() { }
+
+    public void ApplyCameraDelta(Vector2 cameraDelta)
     {
-        None = 0,
-        X = 1 << 0,
-        Y = 1 << 1,
-        Both = X | Y
+      offset += cameraDelta * MotionScale;
+
+      if (LoopAxes.HasFlag(LoopAxis.X))
+        offset.X = Mod(offset.X, Texture.Bounds.Width);
+
+      if (LoopAxes.HasFlag(LoopAxis.Y))
+        offset.Y = Mod(offset.Y, Texture.Bounds.Height);
+
+      if (!LoopAxes.HasFlag(LoopAxis.X))
+        offset.X = 0;
+      if (!LoopAxes.HasFlag(LoopAxis.Y))
+        offset.Y = 0;
     }
 
-    /// <summary>
-    /// Represents a single infinite scrolling parallax layer.
-    /// </summary>
-    public class ParallaxLayer : Node2D
+    public override void ProcessUpdate(float delta)
     {
-        public MTexture Texture { get; set; }
-        public Vector2 MotionScale { get; set; } = Vector2.One;
-        public LoopAxis LoopAxes { get; set; } = LoopAxis.Both;
+      base.ProcessUpdate(delta);
 
-        private Vector2 lastCameraPos;
-        private Vector2 offset;
+      var camera = Engine.Tree.Get<Camera2D>();
+      Vector2 camDelta = camera.Transform.Global.Position - lastCameraPos;
+      lastCameraPos = camera.Transform.Global.Position;
 
-        public ParallaxLayer() { }
+      foreach (var child in GetAll<ParallaxLayer>())
+        child.ApplyCameraDelta(camDelta);
+    }
 
-        public void ApplyCameraDelta(Vector2 cameraDelta)
+    public override void SubmitCall()
+    {
+      if (!Visibility.Global.Visibile)
+        return;
+
+      Rectangle view = Engine.Canvas.GetWorldViewRectangle();
+
+      int texW = Texture.Bounds.Width;
+      int texH = Texture.Bounds.Height;
+
+      Vector2 basePos = new Vector2(
+          LoopAxes.HasFlag(LoopAxis.X)
+              ? Transform.Global.Position.X - Mod(Transform.Global.Position.X - offset.X, Texture.Bounds.Width)
+              : Transform.Global.Position.X,
+          LoopAxes.HasFlag(LoopAxis.Y)
+              ? Transform.Global.Position.Y - Mod(Transform.Global.Position.Y - offset.Y, Texture.Bounds.Height)
+              : Transform.Global.Position.Y
+      );
+
+      int startX = LoopAxes.HasFlag(LoopAxis.X)
+          ? (int)Math.Floor((double)view.Left / texW) - 1
+          : 0;
+
+      int startY = LoopAxes.HasFlag(LoopAxis.Y)
+          ? (int)Math.Floor((double)view.Top / texH) - 1
+          : 0;
+
+      int endX = LoopAxes.HasFlag(LoopAxis.X)
+          ? (int)Math.Ceiling((double)view.Right / texW) + 1
+          : 1;
+
+      int endY = LoopAxes.HasFlag(LoopAxis.Y)
+          ? (int)Math.Ceiling((double)view.Bottom / texH) + 1
+          : 1;
+
+      for (int y = startY; y < endY; y++)
+      {
+        for (int x = startX; x < endX; x++)
         {
-            offset += cameraDelta * MotionScale;
+          Vector2 pos = new(
+              x * texW + basePos.X,
+              y * texH + basePos.Y
+          );
 
-            if (LoopAxes.HasFlag(LoopAxis.X))
-                offset.X = Mod(offset.X, Texture.Bounds.Width);
 
-            if (LoopAxes.HasFlag(LoopAxis.Y))
-                offset.Y = Mod(offset.Y, Texture.Bounds.Height);
-
-            if (!LoopAxes.HasFlag(LoopAxis.X))
-                offset.X = 0;
-            if (!LoopAxes.HasFlag(LoopAxis.Y))
-                offset.Y = 0;
-        }
-
-        public override void ProcessUpdate(float delta)
-        {
-            base.ProcessUpdate(delta);
-
-            var camera = Engine.Tree.Get<Camera2D>();
-            Vector2 camDelta = camera.Transform.Global.Position - lastCameraPos;
-            lastCameraPos = camera.Transform.Global.Position;
-
-            foreach (var child in GetAll<ParallaxLayer>())
-                child.ApplyCameraDelta(camDelta);
-        }
-
-        public override void SubmitCall()
-        {
-            if (!Visibility.Global.Visibile)
-                return;
-
-            Rectangle view = Engine.Canvas.GetWorldViewRectangle();
-
-            int texW = Texture.Bounds.Width;
-            int texH = Texture.Bounds.Height;
-
-            Vector2 basePos = new Vector2(
-                LoopAxes.HasFlag(LoopAxis.X)
-                    ? Transform.Global.Position.X - Mod(Transform.Global.Position.X - offset.X, Texture.Bounds.Width)
-                    : Transform.Global.Position.X,
-                LoopAxes.HasFlag(LoopAxis.Y)
-                    ? Transform.Global.Position.Y - Mod(Transform.Global.Position.Y - offset.Y, Texture.Bounds.Height)
-                    : Transform.Global.Position.Y
-            );
-
-            int startX = LoopAxes.HasFlag(LoopAxis.X)
-                ? (int)Math.Floor((double)view.Left / texW) - 1
-                : 0;
-
-            int startY = LoopAxes.HasFlag(LoopAxis.Y)
-                ? (int)Math.Floor((double)view.Top / texH) - 1
-                : 0;
-
-            int endX = LoopAxes.HasFlag(LoopAxis.X)
-                ? (int)Math.Ceiling((double)view.Right / texW) + 1
-                : 1;
-
-            int endY = LoopAxes.HasFlag(LoopAxis.Y)
-                ? (int)Math.Ceiling((double)view.Bottom / texH) + 1
-                : 1;
-
-            for (int y = startY; y < endY; y++)
+          Engine.Canvas.Call(new TextureDrawCall
+          {
+            Texture = this.Texture,
+            Params = CanvasParams.Identity with
             {
-                for (int x = startX; x < endX; x++)
-                {
-                    Vector2 pos = new(
-                        x * texW + basePos.X,
-                        y * texH + basePos.Y
-                    );
-
-
-                    Engine.Canvas.Call(new TextureDrawCall
-                    {
-                        Texture = this.Texture,
-                        Params = CanvasParams.Identity with
-                        {
-                            Position = pos,
-                            Color = Color.White
-                        },
-                        Depth = Ordering.Global.Depth,
-                    }, DrawLayer.Background);
-                }
-            }
+              Position = pos,
+              Color = Color.White
+            },
+            Depth = Ordering.Global.Depth,
+          }, DrawLayer.Background);
         }
-
-        private static float Mod(float x, float m)
-        {
-            return (x % m + m) % m;
-        }
+      }
     }
+
+    private static float Mod(float x, float m)
+    {
+      return (x % m + m) % m;
+    }
+  }
 }

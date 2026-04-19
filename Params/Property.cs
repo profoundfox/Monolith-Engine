@@ -7,14 +7,14 @@ using Monolith.Tools;
 
 namespace Monolith.Params
 {
-    public interface IProperty<TSelf>
-        where TSelf : struct
-    {
-        static abstract TSelf Combine(in TSelf parent, in TSelf child);
-    } 
+  public interface IProperty<TSelf>
+      where TSelf : struct
+  {
+    static abstract TSelf Combine(in TSelf parent, in TSelf child);
+  }
 
-    public static class Params
-    {
+  public static class Params
+  {
 
     ///<summary>
     /// Direcyly sets properties within an instance.
@@ -52,13 +52,13 @@ namespace Monolith.Params
       if (props != null && props.TryGetValue(name, out var meta))
       {
         meta.Set(inst, value);
-        return inst; 
+        return inst;
       }
-      
+
       inst.OnSetFallback?.Invoke(name, value);
       return inst;
     }
-    
+
     ///<summary>
     /// Dynamically gets a property from its name.
     ///</summary>

@@ -1,0 +1,15 @@
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+tab_width = 2
+
+[*.cs]
+indent_style = space
+indent_size = 2
+tab_width = 2
+
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_indent_labels = flush_left

@@ -2,10 +2,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Monolith.Input
 {
-    public class ButtonArrays
+  public class ButtonArrays
+  {
+    public static readonly Buttons[] AllGamePadButtons = new[]
     {
-        public static readonly Buttons[] AllGamePadButtons = new[]
-        {
             Buttons.A,
             Buttons.B,
             Buttons.X,
@@ -23,8 +23,8 @@ namespace Monolith.Input
             Buttons.DPadRight
         };
 
-        public static readonly MouseButton[] AllMouseButtons = new[]
-        {
+    public static readonly MouseButton[] AllMouseButtons = new[]
+    {
             MouseButton.Left,
             MouseButton.Middle,
             MouseButton.None,
@@ -33,5 +33,5 @@ namespace Monolith.Input
             MouseButton.XButton2,
         };
 
-    }
+  }
 }

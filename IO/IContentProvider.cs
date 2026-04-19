@@ -9,15 +9,15 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Monolith.IO
 {
-    public interface IContentProvider
-    {
-        T LoadJson<T>(string path);
+  public interface IContentProvider
+  {
+    T LoadJson<T>(string path);
 
-        T Load<T>(string path);
+    T Load<T>(string path);
 
-        void Unload(string path);
-        void ClearCache();
-    }
+    void Unload(string path);
+    void ClearCache();
+  }
 
 
 }

@@ -6,14 +6,14 @@ using Monolith.Params;
 
 namespace Monolith.Graphics
 {
-    public interface IDrawCall
-    {
-        CanvasParams Params { get; }
+  public interface IDrawCall
+  {
+    CanvasParams Params { get; }
 
-        SpriteBatchParams BatchParams { get; }
+    SpriteBatchParams BatchParams { get; }
 
-        int Depth { get; }
+    int Depth { get; }
 
-        void Draw(SpriteBatch sb);
-    }
+    void Draw(SpriteBatch sb);
+  }
 }

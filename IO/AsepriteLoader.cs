@@ -9,54 +9,54 @@ using Monolith.Graphics;
 
 namespace Monolith.IO
 {
-    public static class AsepriteLoader
+  public static class AsepriteLoader
+  {
+    public static Dictionary<string, Animation> LoadAnimations(
+        MTexture source, string jsonPath)
     {
-        public static Dictionary<string, Animation> LoadAnimations(
-            MTexture source, string jsonPath)
+      string json = File.ReadAllText(jsonPath);
+
+      var data = JsonSerializer.Deserialize<AsepriteData>(json);
+
+      List<AsepriteFrame> frames = data.frames
+          .OrderBy(f =>
+          {
+            var match = Regex.Match(f.Key, @"(\d+)(?=\.)");
+            return match.Success ? int.Parse(match.Value) : 0;
+          })
+          .Select(f => f.Value)
+          .ToList();
+
+      Dictionary<string, Animation> animations = new();
+
+      foreach (var tag in data.meta.frameTags)
+      {
+        List<MTexture> animFrames = new();
+        List<int> durations = new();
+
+        for (int i = tag.from; i <= tag.to; i++)
         {
-            string json = File.ReadAllText(jsonPath);
+          var f = frames[i];
 
-            var data = JsonSerializer.Deserialize<AsepriteData>(json);
+          Rectangle rect = new Rectangle(
+              f.frame.x, f.frame.y,
+              f.frame.w, f.frame.h);
 
-            List<AsepriteFrame> frames = data.frames
-                .OrderBy(f =>
-                {
-                    var match = Regex.Match(f.Key, @"(\d+)(?=\.)");
-                    return match.Success ? int.Parse(match.Value) : 0;
-                })
-                .Select(f => f.Value)
-                .ToList();
+          animFrames.Add(source.CreateSubTexture(rect));
 
-            Dictionary<string, Animation> animations = new();
-
-            foreach (var tag in data.meta.frameTags)
-            {
-                List<MTexture> animFrames = new();
-                List<int> durations = new();
-
-                for (int i = tag.from; i <= tag.to; i++)
-                {
-                    var f = frames[i];
-
-                    Rectangle rect = new Rectangle(
-                        f.frame.x, f.frame.y,
-                        f.frame.w, f.frame.h);
-
-                    animFrames.Add(source.CreateSubTexture(rect));
-
-                    durations.Add(f.duration);
-                }
-
-                TimeSpan speedMs = TimeSpan.FromMilliseconds((int)durations.Average());
-
-                animations[tag.name] = new Animation
-                {
-                    Frames = animFrames,
-                    Delay = speedMs
-                };
-            }
-
-            return animations;
+          durations.Add(f.duration);
         }
+
+        TimeSpan speedMs = TimeSpan.FromMilliseconds((int)durations.Average());
+
+        animations[tag.name] = new Animation
+        {
+          Frames = animFrames,
+          Delay = speedMs
+        };
+      }
+
+      return animations;
     }
+  }
 }

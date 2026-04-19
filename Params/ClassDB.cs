@@ -7,7 +7,7 @@ namespace Monolith.Params
   public static class ClassDB
   {
     private static readonly Dictionary<Type, Dictionary<string, PropertyMeta>> _types = new();
-    
+
     ///<summary>
     /// Registers all properties in the current assembly.
     ///</summary>
@@ -28,7 +28,7 @@ namespace Monolith.Params
     {
       _types[t] = properties;
     }
-    
+
     ///<summary>
     /// Gets the properties accessible from a specified type. 
     ///</summary>
@@ -41,24 +41,24 @@ namespace Monolith.Params
       _types.TryGetValue(type, out var result);
       return result;
     }
-    
+
     ///<summary>
     /// Registers a type.
     ///</summary>
     ///<param name="type">The type in question</param>
     private static void RegisterType(Type type)
     {
-        var map = new Dictionary<string, PropertyMeta>();
+      var map = new Dictionary<string, PropertyMeta>();
 
-        foreach (var prop in type.GetProperties())
-        {
-            if (!prop.IsDefined(typeof(ExportAttribute), true))
-                continue;
+      foreach (var prop in type.GetProperties())
+      {
+        if (!prop.IsDefined(typeof(ExportAttribute), true))
+          continue;
 
-            map[prop.Name] = BuildProperty(prop);
-        }
+        map[prop.Name] = BuildProperty(prop);
+      }
 
-        ClassDB.Register(type, map);
+      ClassDB.Register(type, map);
     }
 
     ///<summary>
@@ -73,7 +73,7 @@ namespace Monolith.Params
         Set = CreateSetter(prop)
       };
     }
-    
+
     private static Func<object, object> CreateGetter(PropertyInfo prop)
       => (obj) => prop.GetValue(obj);
 

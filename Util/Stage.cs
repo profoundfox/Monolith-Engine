@@ -7,21 +7,21 @@ using Monolith.Hierarchy;
 
 namespace Monolith.Util
 {
-    public class Stage
+  public class Stage
+  {
+    public virtual void OnEnter() { }
+    public virtual void PhysicsUpdate(float deltaTime)
     {
-        public virtual void OnEnter() { }
-        public virtual void PhysicsUpdate(float deltaTime)
-        {
-            Engine.Tree.PhysicsUpdate(deltaTime);
-        }
-        public virtual void ProcessUpdate(float deltaTime)
-        {
-            Engine.Tree.ProcesssUpdate(deltaTime);
-        }
-        public virtual void SubmitCall()
-        {
-            Engine.Tree.SubmitCalls();
-        }
-        public virtual void OnExit() { }
+      Engine.Tree.PhysicsUpdate(deltaTime);
     }
+    public virtual void ProcessUpdate(float deltaTime)
+    {
+      Engine.Tree.ProcesssUpdate(deltaTime);
+    }
+    public virtual void SubmitCall()
+    {
+      Engine.Tree.SubmitCalls();
+    }
+    public virtual void OnExit() { }
+  }
 }

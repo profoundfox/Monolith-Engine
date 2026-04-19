@@ -5,77 +5,77 @@ using Monolith.Tools;
 
 namespace Monolith.Util
 {
-    public class Tween<T> : Instance
+  public class Tween<T> : Instance
+  {
+    public float Duration { get; private set; }
+    public Func<float, float> EasingFunction { get; private set; }
+    public Action<T> OnUpdate { get; private set; }
+
+    private Action callbackAction;
+    private float elapsedTime = 0f;
+    private bool isRunning = false;
+    private bool isComplete = false;
+    private readonly Func<T, T, float, T> _lerpFunc;
+    private readonly T _start;
+    private readonly T _end;
+
+    internal Tween
+    (
+        T start,
+        T end,
+        float duration,
+        Func<T, T, float, T> lerpFunc,
+        Action<T> onUpdate,
+        Func<float, float> easingFunction = null
+    )
     {
-        public float Duration { get; private set; }
-        public Func<float, float> EasingFunction { get; private set; }
-        public Action<T> OnUpdate { get; private set; }
+      if (easingFunction == null)
+        easingFunction = EasingFunctions.Linear;
 
-        private Action callbackAction;
-        private float elapsedTime = 0f;
-        private bool isRunning = false;
-        private bool isComplete = false;
-        private readonly Func<T, T, float, T> _lerpFunc;
-        private readonly T _start;
-        private readonly T _end;
+      _start = start;
+      _end = end;
+      Duration = duration;
+      OnUpdate = onUpdate;
+      _lerpFunc = lerpFunc;
+      EasingFunction = easingFunction;
 
-        internal Tween
-        (
-            T start,
-            T end,
-            float duration,
-            Func<T, T, float, T> lerpFunc,
-            Action<T> onUpdate,
-            Func<float, float> easingFunction = null
-        )
-        {
-            if (easingFunction == null)
-                easingFunction = EasingFunctions.Linear;
-
-            _start = start;
-            _end = end;
-            Duration = duration;
-            OnUpdate = onUpdate;
-            _lerpFunc = lerpFunc;
-            EasingFunction = easingFunction;
-
-            Start();
-        }
-
-        public void Start()
-        {
-            elapsedTime = 0f;
-            isRunning = true;
-        }
-
-        public void SetCallbackAction(Action action)
-        {
-            callbackAction = action;
-        }
-
-        public override void ProcessUpdate(float delta)
-        {
-            base.ProcessUpdate(delta);
-
-            if (!isRunning) return;
-
-            elapsedTime += delta;
-
-            float t = MathHelper.Clamp(elapsedTime / Duration, 0f, 1f);
-            float eased = EasingFunction(t);
-            OnUpdate?.Invoke(_lerpFunc(_start, _end, eased));
-
-            if (t >= 1f)
-            {
-                isComplete = true;
-                isRunning = false;
-                callbackAction?.Invoke();
-                FreeImmediate();
-            }
-        }
-
-        public bool IsRunning() => isRunning;
-        public bool IsComplete() => isComplete;
+      Start();
     }
+
+    public void Start()
+    {
+      elapsedTime = 0f;
+      isRunning = true;
+    }
+
+    public void SetCallbackAction(Action action)
+    {
+      callbackAction = action;
+    }
+
+    public override void ProcessUpdate(float delta)
+    {
+      base.ProcessUpdate(delta);
+
+      if (!isRunning) return;
+
+      elapsedTime += delta;
+
+      float t = MathHelper.Clamp(elapsedTime / Duration, 0f, 1f);
+      float eased = EasingFunction(t);
+      OnUpdate?.Invoke(_lerpFunc(_start, _end, eased));
+
+      if (t >= 1f)
+      {
+        isComplete = true;
+        isRunning = false;
+        callbackAction?.Invoke();
+        FreeImmediate();
+      }
+    }
+
+    public bool IsRunning() => isRunning;
+    public bool IsComplete() => isComplete;
+  }
 
 }

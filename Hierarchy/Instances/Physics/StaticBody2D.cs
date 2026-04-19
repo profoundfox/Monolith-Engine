@@ -7,20 +7,20 @@ using Monolith.Managers;
 
 namespace Monolith.Hierarchy
 {
-    public class StaticBody2D : PhysicsBody2D
+  public class StaticBody2D : PhysicsBody2D
+  {
+    public StaticBody2D() { }
+
+    public override void OnEnter()
     {
-        public StaticBody2D() { }
-
-        public override void OnEnter()
-        {
-            base.OnEnter();
-        }
-
-        public override void PhysicsUpdate(float delta)
-        {
-            base.PhysicsUpdate(delta);
-        }
-
+      base.OnEnter();
     }
+
+    public override void PhysicsUpdate(float delta)
+    {
+      base.PhysicsUpdate(delta);
+    }
+
+  }
 
 }

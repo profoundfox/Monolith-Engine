@@ -7,132 +7,132 @@ using Monolith.Util;
 
 namespace Monolith.Hierarchy
 {
-    public enum CameraSide
+  public enum CameraSide
+  {
+    None,
+    Left,
+    Right,
+    Top,
+    Bottom
+  }
+
+  public class RoomCamera : Camera2D
+  {
+    private bool _entered;
+    private int _dir;
+
+    public Node2D TargetNode { get; set; }
+
+    public List<Action> TransitionStarted { get; set; } = new();
+    public List<Action> TransitionEnded { get; set; } = new();
+
+    public RoomCamera() { }
+
+    public override void OnEnter()
     {
-        None,
-        Left,
-        Right,
-        Top,
-        Bottom
+      base.OnEnter();
+
+      if (TargetNode is KinematicBody2D)
+      {
+        TransitionStarted.Add(LockBody);
+        TransitionEnded.Add(UnlockBody);
+      }
     }
 
-    public class RoomCamera : Camera2D
+    public override void OnExit()
     {
-        private bool _entered;
-        private int _dir;
+      base.OnExit();
+    }
 
-        public Node2D TargetNode { get; set; }
+    public override void ProcessUpdate(float delta)
+    {
+      base.ProcessUpdate(delta);
 
-        public List<Action> TransitionStarted { get; set; } = new();
-        public List<Action> TransitionEnded { get; set; } = new();
+      if (TargetNode == null || TargetNode.Get<CollisionShape2D>() == null)
+        return;
 
-        public RoomCamera() { }
+      var targetShape = TargetNode.Get<CollisionShape2D>();
+      var shape = targetShape.Shape;
 
-        public override void OnEnter()
+      var pos = TargetNode.Transform.Global.Position;
+
+      var camera = Engine.Canvas.GetWorldViewRectangle();
+
+      CameraSide side = CameraSide.None;
+
+      if (pos.X + shape.Size.Width > camera.Right)
+        side = CameraSide.Right;
+      else if (pos.X < camera.Left)
+        side = CameraSide.Left;
+      else if (pos.Y < camera.Top)
+        side = CameraSide.Top;
+      else if (pos.Y + shape.Size.Height > camera.Bottom)
+        side = CameraSide.Bottom;
+
+      if (!_entered)
+      {
+        switch (side)
         {
-            base.OnEnter();
-
-            if (TargetNode is KinematicBody2D)
-            {
-                TransitionStarted.Add(LockBody);
-                TransitionEnded.Add(UnlockBody);
-            }
+          case CameraSide.Left:
+            ShiftRoom(-1);
+            break;
+          case CameraSide.Right:
+            ShiftRoom(1);
+            break;
         }
+      }
 
-        public override void OnExit()
-        {
-            base.OnExit();
-        }
-
-        public override void ProcessUpdate(float delta)
-        {
-            base.ProcessUpdate(delta);
-
-            if (TargetNode == null || TargetNode.Get<CollisionShape2D>() == null)
-                return;
-
-            var targetShape = TargetNode.Get<CollisionShape2D>();
-            var shape = targetShape.Shape;
-
-            var pos = TargetNode.Transform.Global.Position;
-
-            var camera = Engine.Canvas.GetWorldViewRectangle();
-
-            CameraSide side = CameraSide.None;
-
-            if (pos.X + shape.Size.Width > camera.Right)
-                side = CameraSide.Right;
-            else if (pos.X < camera.Left)
-                side = CameraSide.Left;
-            else if (pos.Y < camera.Top)
-                side = CameraSide.Top;
-            else if (pos.Y + shape.Size.Height > camera.Bottom)
-                side = CameraSide.Bottom;
-
-            if (!_entered)
-            {
-                switch (side)
-                {
-                    case CameraSide.Left:
-                        ShiftRoom(-1);
-                        break;
-                    case CameraSide.Right:
-                        ShiftRoom(1);
-                        break;
-                }
-            }
-
-            _entered = side != CameraSide.None;
-        }
+      _entered = side != CameraSide.None;
+    }
 
 
 
-        public override void SubmitCall()
-        {
-            base.SubmitCall();
-        }
+    public override void SubmitCall()
+    {
+      base.SubmitCall();
+    }
 
-        private void ShiftRoom(int dir)
-        {
-            _dir = dir;
+    private void ShiftRoom(int dir)
+    {
+      _dir = dir;
 
-            var camera = Engine.Canvas.GetWorldViewRectangle();
+      var camera = Engine.Canvas.GetWorldViewRectangle();
 
-            Vector2 targetPos = new Vector2(Transform.Global.Position.X + camera.Width * dir, Transform.Global.Position.Y);
-
-
-            foreach (var action in TransitionStarted)
-                action?.Invoke();
+      Vector2 targetPos = new Vector2(Transform.Global.Position.X + camera.Width * dir, Transform.Global.Position.Y);
 
 
-            var cameraXTween = Engine.Tree.CreateTween(t => LocalPosition = t, Transform.Global.Position, targetPos, 0.5f, Vector2.Lerp, EasingFunctions.Linear);
+      foreach (var action in TransitionStarted)
+        action?.Invoke();
 
-            cameraXTween.SetCallbackAction
-            (
-                () =>
-                {
-                    foreach (var action in TransitionEnded)
-                        action?.Invoke();
-                }
-            );
 
-        }
+      var cameraXTween = Engine.Tree.CreateTween(t => LocalPosition = t, Transform.Global.Position, targetPos, 0.5f, Vector2.Lerp, EasingFunctions.Linear);
 
-        private void LockBody()
-        {
-            if (TargetNode is KinematicBody2D body)
-            {
-                body.Offset(5 * _dir, 0);
-            }
-        }
-
-        private void UnlockBody()
-        {
-            if (TargetNode is KinematicBody2D body)
-            {
-
-            }
-        }
+      cameraXTween.SetCallbackAction
+      (
+          () =>
+          {
+            foreach (var action in TransitionEnded)
+              action?.Invoke();
+          }
+      );
 
     }
+
+    private void LockBody()
+    {
+      if (TargetNode is KinematicBody2D body)
+      {
+        body.Offset(5 * _dir, 0);
+      }
+    }
+
+    private void UnlockBody()
+    {
+      if (TargetNode is KinematicBody2D body)
+      {
+
+      }
+    }
+
+  }
 }

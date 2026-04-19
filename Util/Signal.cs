@@ -1,7 +1,7 @@
 namespace Monolith.Util
 {
-    public class Signal
-    {
+  public class Signal
+  {
 
-    }
+  }
 }
