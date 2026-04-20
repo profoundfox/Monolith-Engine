@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Monolith.Runtime;
 using Monolith.Tools;
-using Monolith.Hierarchy;
 using Monolith.Util;
 
 namespace Monolith.Managers
 {
-  public class TreeServer2D
+  public class TreeServer2D : Instance
   {
     private readonly List<Instance> instances = new();
     private readonly Dictionary<string, List<Instance>> byName = new();
@@ -17,25 +17,35 @@ namespace Monolith.Managers
     private readonly List<Instance> pendingRemove = new();
 
     private readonly Queue<Action> continuations = new();
-
-    /// <summary>
-    /// Creates a new node and adds it to the tree.
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    
+    ///<summary>
+    /// Wrapper for creating an <see cref="Instance"/>. 
+    ///</summary>
+    ///<remarks>
+    /// It is highly encouraged to use this as the only method of created instances,
+    /// to ensure the engine has control over the order of operations.
+    ///</remarks>
+    ///<returns>The instance which has been created, so it can be continually modfied.</returns>
     public T Create<T>()
         where T : Instance, new()
     {
       var inst = new T();
+        
+      QueueAdd(inst);
 
       Flush();
-      inst.OnEnter();
+
+      if (inst is IEnter instEnter)
+       instEnter.OnEnter();
 
       return inst;
     }
-
-    public Tween<T> CreateTween<T>
-    (
+    
+    ///<summary>
+    /// Wrapper for creating a <see cref="Tween{T}"/>
+    ///</summary>
+    ///<returns> The tween which has been created, so it can be continually modified.</returns>
+    public Tween<T> CreateTween<T>(
         Action<T> setter,
         T start,
         T end,
@@ -43,19 +53,23 @@ namespace Monolith.Managers
         Func<T, T, float, T> lerpFunc,
         Func<float, float> easingFunction = null)
     {
-      if (easingFunction == null)
-        easingFunction = EasingFunctions.Linear;
+        if (setter == null)
+            throw new ArgumentNullException(nameof(setter));
 
-      var tween = new Tween<T>(
-          start,
-          end,
-          duration,
-          lerpFunc,
-          setter,
-          easingFunction
-      );
+        if (lerpFunc == null)
+            throw new ArgumentNullException(nameof(lerpFunc));
 
-      return tween;
+        if (easingFunction == null)
+            easingFunction = EasingFunctions.Linear;
+
+        return new Tween<T>(
+            start,
+            end,
+            duration,
+            lerpFunc,
+            setter,
+            easingFunction
+        );
     }
 
 
@@ -97,12 +111,12 @@ namespace Monolith.Managers
     {
       instances.Add(instance);
 
-      if (!string.IsNullOrEmpty(instance.GetName()))
+      if (!string.IsNullOrEmpty(instance.Name))
       {
-        if (!byName.TryGetValue(instance.GetName(), out var list))
+        if (!byName.TryGetValue(instance.Name, out var list))
         {
           list = new List<Instance>();
-          byName[instance.GetName()] = list;
+          byName[instance.Name] = list;
         }
         list.Add(instance);
       }
@@ -114,19 +128,21 @@ namespace Monolith.Managers
     /// <param name="instance"></param>
     private void RemoveInternal(Instance instance)
     {
-      instance.OnExit();
+      if (instance is IExit i)
+        i.OnExit();
 
       instances.Remove(instance);
 
-      if (!string.IsNullOrEmpty(instance.GetName())
-          && byName.TryGetValue(instance.GetName(), out var list))
+      if (!string.IsNullOrEmpty(instance.Name)
+          && byName.TryGetValue(instance.Name, out var list))
       {
         list.Remove(instance);
         if (list.Count == 0)
-          byName.Remove(instance.GetName());
+          byName.Remove(instance.Name);
       }
-
-      instance.OnExit();
+      
+      if (instance is IExit i2)
+        i2.OnExit();
 
       instance.ClearData();
     }
@@ -175,7 +191,7 @@ namespace Monolith.Managers
     internal void ProcesssUpdate(float delta)
     {
       Flush();
-      foreach (var i in instances.ToList())
+      foreach (IProcess i in instances.ToList())
       {
         i.ProcessUpdate(delta);
         Flush();
@@ -189,7 +205,7 @@ namespace Monolith.Managers
     internal void PhysicsUpdate(float delta)
     {
       Flush();
-      foreach (var i in instances.ToList())
+      foreach (IPhysicsUpdate i in instances.ToList())
       {
         i.PhysicsUpdate(delta);
         Flush();
@@ -201,7 +217,7 @@ namespace Monolith.Managers
     /// </summary>
     public void SubmitCalls()
     {
-      foreach (var i in instances)
+      foreach (ICall i in instances)
         i.SubmitCall();
     }
 

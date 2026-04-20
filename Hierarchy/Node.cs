@@ -3,10 +3,16 @@ using System.Collections.Generic;
 using System.Diagnostics.Tracing;
 using System.Linq;
 using Monolith.Managers;
+using Monolith.Runtime;
 
 namespace Monolith.Hierarchy
 {
-  public class Node : Instance
+  public class Node : Instance, 
+    IEnter, 
+    IPhysicsUpdate,
+    IProcess, 
+    ICall, 
+    IExit
   {
     private readonly List<Node> children = new();
     private Node parent;
@@ -157,41 +163,26 @@ namespace Monolith.Hierarchy
     /// <summary>
     /// Called when the node enters the tree.
     /// </summary>
-    public override void OnEnter()
-    {
-      base.OnEnter();
-    }
+    public virtual void OnEnter() {}
 
     /// <summary>
     /// Called when the node exits the tree.
     /// </summary>
-    public override void OnExit()
-    {
-      base.OnExit();
-    }
+    public virtual void OnExit() {}
 
     /// <summary>
     /// Called every frame.
     /// </summary>
-    public override void ProcessUpdate(float delta)
-    {
-      base.ProcessUpdate(delta);
-    }
+    public virtual void ProcessUpdate(float delta) {}
 
     /// <summary>
     /// Called every physics tick.
     /// </summary>
-    public override void PhysicsUpdate(float delta)
-    {
-      base.PhysicsUpdate(delta);
-    }
+    public virtual void PhysicsUpdate(float delta) {}
 
     /// <summary>
     /// Called when submitting draw calls.
     /// </summary>
-    public override void SubmitCall()
-    {
-      base.SubmitCall();
-    }
+    public virtual void SubmitCall() {}
   }
 }

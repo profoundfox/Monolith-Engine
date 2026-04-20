@@ -1,11 +1,12 @@
 using System;
 using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
+using Monolith.Runtime;
 using Monolith.Tools;
 
 namespace Monolith.Util
 {
-  public class Tween<T> : Instance
+  public class Tween<T> : Instance, IProcess
   {
     public float Duration { get; private set; }
     public Func<float, float> EasingFunction { get; private set; }
@@ -53,10 +54,8 @@ namespace Monolith.Util
       callbackAction = action;
     }
 
-    public override void ProcessUpdate(float delta)
+    public void ProcessUpdate(float delta)
     {
-      base.ProcessUpdate(delta);
-
       if (!isRunning) return;
 
       elapsedTime += delta;
