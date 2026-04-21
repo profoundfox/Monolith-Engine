@@ -7,7 +7,7 @@ using Monolith.Util;
 
 namespace Monolith.Managers
 {
-  public class TreeServer2D : Instance
+  public class TreeServer2D : Loop
   {
     private readonly List<Instance> instances = new();
     private readonly Dictionary<string, List<Instance>> byName = new();
@@ -16,7 +16,6 @@ namespace Monolith.Managers
     private readonly List<Instance> pendingAdd = new();
     private readonly List<Instance> pendingRemove = new();
 
-    private readonly Queue<Action> continuations = new();
     
     ///<summary>
     /// Wrapper for creating an <see cref="Instance"/>. 
@@ -166,68 +165,34 @@ namespace Monolith.Managers
       instances.Clear();
       byName.Clear();
     }
+    
 
-
-    internal void Update(TimeContext context, int steps)
+    public override void ProcessUpdate(TimeSpan delta)
     {
-      for (int i = 0; i < steps; i++)
-      {
-        PhysicsUpdate((float)context.FixedDelta.TotalSeconds);
-        Engine.Stage.PhysicsUpdate((float)context.FixedDelta.TotalSeconds);
-      }
       
-      ProcesssUpdate((float)context.FrameDelta.TotalSeconds);
-      Engine.Stage.ProcessUpdate((float)context.FrameDelta.TotalSeconds);
-      SubmitCalls();
-      Engine.Stage.SubmitCallCurrentStage();
-
-      while (continuations.Count > 0)
-      {
-        continuations.Dequeue()?.Invoke();
-      }
-    }
-
-    /// <summary>
-    /// Updates the instances with a fixed framerate.
-    /// </summary>
-    /// <param name="delta"></param>
-    internal void ProcesssUpdate(float delta)
-    {
       Flush();
       foreach (IProcess i in instances.ToList())
       {
-        i.ProcessUpdate(delta);
+        i.ProcessUpdate((float)delta.TotalSeconds);
+        Flush();
+      }
+
+      foreach (ICall i in instances.ToList())
+      {
+        i.SubmitCall();
         Flush();
       }
     }
 
-    /// <summary>
-    /// Updates the instance with a dynamic framerate.
-    /// </summary>
-    /// <param name="delta"></param>
-    internal void PhysicsUpdate(float delta)
+    public override void PhysicsUpdate(TimeSpan delta)
     {
+      
       Flush();
       foreach (IPhysicsUpdate i in instances.ToList())
       {
-        i.PhysicsUpdate(delta);
+        i.PhysicsUpdate((float)delta.TotalSeconds);
         Flush();
       }
-    }
-
-    /// <summary>
-    /// Submits calls to the Canvas manager.
-    /// </summary>
-    public void SubmitCalls()
-    {
-      foreach (ICall i in instances)
-        i.SubmitCall();
-    }
-
-    internal void Post(Action action)
-    {
-      if (action == null) return;
-      continuations.Enqueue(action);
     }
 
     /// <summary>

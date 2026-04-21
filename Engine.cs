@@ -112,7 +112,7 @@ namespace Monolith
 
       Input.Update(gameTime);
 
-      Tree.Update(context, physicsSteps);
+      Tree.Update(context, physicsSteps); 
 
       if (Input.Keyboard.IsKeyDown(Keys.Escape) || Input.CurrentGamePad.WasButtonJustPressed(Buttons.Start))
         Exit();
