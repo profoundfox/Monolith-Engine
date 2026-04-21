@@ -172,10 +172,13 @@ namespace Monolith.Managers
     {
       for (int i = 0; i < steps; i++)
       {
+        PhysicsUpdate((float)context.FixedDelta.TotalSeconds);
         Engine.Stage.PhysicsUpdate((float)context.FixedDelta.TotalSeconds);
       }
-
+      
+      ProcesssUpdate((float)context.FrameDelta.TotalSeconds);
       Engine.Stage.ProcessUpdate((float)context.FrameDelta.TotalSeconds);
+      SubmitCalls();
       Engine.Stage.SubmitCallCurrentStage();
 
       while (continuations.Count > 0)
