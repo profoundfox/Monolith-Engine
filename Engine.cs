@@ -7,6 +7,7 @@ using Monolith.Graphics;
 using Monolith.Util;
 using Monolith.Managers;
 using Monolith.Params;
+using Monolith.Hierarchy;
 
 namespace Monolith
 {
@@ -26,10 +27,10 @@ namespace Monolith
     public static Preferences Prefs { get; set; }
 
     public static TimeOwner Time { get; private set; }
-    public static TreeServer2D Tree { get; private set; }
+    public static Registry Registry { get; private set; }
     public static ResourceManager Resource { get; private set; }
     public static CanvasHandler Canvas { get; private set; }
-    public static StageManager Stage { get; private set; }
+    public static SceneTree Tree { get; private set; }
     public static InputManager Input { get; private set; }
     public static PhysicsServer2D Physics { get; private set; }
 
@@ -67,8 +68,8 @@ namespace Monolith
 
       Prefs = new Preferences();
       Resource = new ResourceManager();
-      Stage = new StageManager();
-      Tree = new TreeServer2D();
+      Registry = new Registry();
+      Tree = new SceneTree(Registry.Create<Node>());
       Physics = new PhysicsServer2D();
       Input = new InputManager();
 
@@ -112,7 +113,7 @@ namespace Monolith
 
       Input.Update(gameTime);
 
-      Tree.Update(context, physicsSteps); 
+      Registry.Update(context, physicsSteps); 
 
       if (Input.Keyboard.IsKeyDown(Keys.Escape) || Input.CurrentGamePad.WasButtonJustPressed(Buttons.Start))
         Exit();

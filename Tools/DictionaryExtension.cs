@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -10,11 +12,12 @@ namespace Monolith.Tools
     public static Dictionary<TKey, List<TValue>> CloneDictionaryOfLists<TKey, TValue>(
           Dictionary<TKey, List<TValue>> original,
           Func<TValue, TValue> cloneFunc)
+        where TKey : notnull
     {
-      return original.ToDictionary(
-          kvp => kvp.Key,
-          kvp => kvp.Value.Select(cloneFunc).ToList()
-      );
+        return original.ToDictionary(
+            kvp => kvp.Key,
+            kvp => kvp.Value!.Select(cloneFunc).ToList()
+        );
     }
 
 

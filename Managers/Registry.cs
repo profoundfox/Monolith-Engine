@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Monolith.Hierarchy;
 using Monolith.Runtime;
 using Monolith.Tools;
 using Monolith.Util;
 
 namespace Monolith.Managers
 {
-  public class TreeServer2D : Loop
+  public class Registry : Loop
   {
     private readonly List<Instance> instances = new();
     private readonly Dictionary<string, List<Instance>> byName = new();
@@ -15,8 +16,7 @@ namespace Monolith.Managers
 
     private readonly List<Instance> pendingAdd = new();
     private readonly List<Instance> pendingRemove = new();
-
-    
+  
     ///<summary>
     /// Wrapper for creating an <see cref="Instance"/>. 
     ///</summary>

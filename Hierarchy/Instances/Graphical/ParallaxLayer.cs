@@ -51,7 +51,7 @@ namespace Monolith.Hierarchy
     {
       base.ProcessUpdate(delta);
 
-      var camera = Engine.Tree.Get<Camera2D>();
+      var camera = Engine.Registry.Get<Camera2D>();
       Vector2 camDelta = camera.Transform.Global.Position - lastCameraPos;
       lastCameraPos = camera.Transform.Global.Position;
 

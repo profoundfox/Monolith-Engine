@@ -13,7 +13,7 @@ namespace Monolith.Util
     ///<param name="ignoreTimeScale">Wether this timer should obey to timescale standards.</param>
     public static void Span(TimeSpan time, Action then, bool ignoreTimeScale = false)
     {
-      Engine.Time.After(time, () => Engine.Tree.Post(then), ignoreTimeScale);
+      Engine.Time.After(time, () => Engine.Registry.Post(then), ignoreTimeScale);
     }
 
     ///<summary>
@@ -35,7 +35,7 @@ namespace Monolith.Util
       {
         if (condition())
         {
-          Engine.Tree.Post(then);
+          Engine.Registry.Post(then);
         }
         else
         {

@@ -32,7 +32,7 @@ namespace Monolith.Hierarchy
 
       Ray.TargetOffset = worldOffset;
 
-      var shapes = Engine.Tree
+      var shapes = Engine.Registry
           .GetAll<CollisionShape2D>()
           .Where(cs => cs.Shape != null)
           .Select(cs => (cs.Shape, cs.Transform.Global.Position))

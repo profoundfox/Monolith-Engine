@@ -40,22 +40,22 @@ namespace Monolith
     }
     
     ///<summary>
-    /// Queues this instance to be removed from <see cref="TreeServer2D"/>.
+    /// Queues this instance to be removed from <see cref="Registry"/>.
     ///</summary>
     ///<remarks>
     /// It will be removed at the end of this frame.
     ///</remarks>
     public void QueueFree()
     {
-      Engine.Tree.QueueRemove(this);
+      Engine.Registry.QueueRemove(this);
     }
 
     ///<summary>
-    /// Immediately removes this instance from <see cref="TreeServer2D">.
+    /// Immediately removes this instance from <see cref="Registry">.
     ///</summary>
     public void FreeImmediate()
     {
-      Engine.Tree.RemoveNow(this);
+      Engine.Registry.RemoveNow(this);
     }
     
     ///<summary>
