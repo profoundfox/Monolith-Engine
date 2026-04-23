@@ -19,7 +19,7 @@ namespace Monolith.Hierarchy
 
     private Area2D GetOverlappingArea()
     {
-      return Engine.Registry.GetAll<CollisionNode2D>()
+      return Engine.Table.GetAll<CollisionNode2D>()
           .Where(c => c.GetParent() != this)
           .FirstOrDefault(c => c.Intersects(this))
           ?.GetParent<Area2D>();
@@ -28,7 +28,7 @@ namespace Monolith.Hierarchy
 
     private PhysicsBody2D GetOverlappingBody()
     {
-      return Engine.Registry.GetAll()
+      return Engine.Table.GetAll()
           .Where(a => a != this && typeof(PhysicsBody2D).IsAssignableFrom(a.GetType()))
           .Cast<PhysicsBody2D>()
           .FirstOrDefault(Intersects);

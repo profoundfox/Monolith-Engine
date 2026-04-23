@@ -40,22 +40,22 @@ namespace Monolith
     }
     
     ///<summary>
-    /// Queues this instance to be removed from <see cref="Registry"/>.
+    /// Queues this instance to be removed from <see cref="Table"/>.
     ///</summary>
     ///<remarks>
     /// It will be removed at the end of this frame.
     ///</remarks>
     public void QueueFree()
     {
-      Engine.Registry.QueueRemove(this);
+      Engine.Table.QueueRemove(this);
     }
 
     ///<summary>
-    /// Immediately removes this instance from <see cref="Registry">.
+    /// Immediately removes this instance from <see cref="Table">.
     ///</summary>
     public void FreeImmediate()
     {
-      Engine.Registry.RemoveNow(this);
+      Engine.Table.RemoveNow(this);
     }
     
     ///<summary>

@@ -27,7 +27,7 @@ namespace Monolith
     public static Preferences Prefs { get; set; }
 
     public static TimeOwner Time { get; private set; }
-    public static Registry Registry { get; private set; }
+    public static InstanceTable Table { get; private set; }
     public static ResourceManager Resource { get; private set; }
     public static CanvasHandler Canvas { get; private set; }
     public static SceneTree Tree { get; private set; }
@@ -68,8 +68,8 @@ namespace Monolith
 
       Prefs = new Preferences();
       Resource = new ResourceManager();
-      Registry = new Registry();
-      Tree = new SceneTree(Registry.Create<Node>());
+      Table = new InstanceTable();
+      Tree = new SceneTree(Table.Create<Node>());
       Physics = new PhysicsServer2D();
       Input = new InputManager();
 
@@ -113,7 +113,7 @@ namespace Monolith
 
       Input.Update(gameTime);
 
-      Registry.Update(context, physicsSteps); 
+      Table.Update(context, physicsSteps); 
 
       if (Input.Keyboard.IsKeyDown(Keys.Escape) || Input.CurrentGamePad.WasButtonJustPressed(Buttons.Start))
         Exit();

@@ -20,7 +20,7 @@ namespace Monolith.Params
     /// Direcyly sets properties within an instance.
     ///<para>Example:</para>
     ///<code>
-    /// var node = Engine.Registry.Create&lt;Node&gt;().Set(n =&gt; { });
+    /// var node = Engine.Table.Create&lt;Node&gt;().Set(n =&gt; { });
     ///</code>
     ///</summary>
     ///<param name="inst">A reference to the instance.</param

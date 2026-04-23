@@ -8,7 +8,7 @@ using Monolith.Util;
 
 namespace Monolith.Managers
 {
-  public class Registry : Loop
+  public class InstanceTable : Loop
   {
     private readonly List<Instance> instances = new();
     private readonly Dictionary<string, List<Instance>> byName = new();
