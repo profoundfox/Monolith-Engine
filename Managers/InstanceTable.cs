@@ -155,7 +155,7 @@ namespace Monolith.Managers
     /// <summary>
     /// Frees and removes all nodes immediately.
     /// </summary>
-    public void DumpAllInstances()
+    public void Clear()
     {
       foreach (var instance in instances.ToList())
       {

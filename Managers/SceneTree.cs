@@ -41,13 +41,18 @@ namespace Monolith.Managers
 
     public void ReloadCurrentScene()
     {
-      if (_scene == null)
-        return;
-      
-      var type = _scene.GetType();
-      var newScene = (Node)Activator.CreateInstance(type);
+        if (_scene == null)
+            return;
 
-      SetScene(newScene);
+        ClearOverlays();
+
+        var oldScene = _scene;
+
+        oldScene.OnExit();
+
+        Engine.Table.Clear();
+
+        oldScene.OnEnter();
     }
 
     public void PushOverlay(Node overlay)
