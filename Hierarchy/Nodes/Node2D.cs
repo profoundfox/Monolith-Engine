@@ -19,6 +19,7 @@ namespace Monolith.Hierarchy
     /// <summary>
     /// The self contained position of this node, updates child nodes' position.
     /// </summary>
+    [Export]
     public Vector2 LocalPosition
     {
       get => Transform.Local.Position;

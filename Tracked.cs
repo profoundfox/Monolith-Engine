@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using Monolith.Managers;
 using Monolith.Params;
+using Monolith.Runtime;
 
 namespace Monolith
 {
@@ -21,7 +22,10 @@ namespace Monolith
     [Export]
     public string Name { get; set; }
 
-    public Tracked() {}
+    public Tracked()
+    {
+      Engine.Index.QueueAdd(this);
+    }
     
     ///<summary>
     /// Queues this instance to be removed from <see cref="Index"/>.

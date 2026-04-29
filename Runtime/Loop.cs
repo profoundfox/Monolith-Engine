@@ -5,7 +5,7 @@ using Monolith.Util;
 
 namespace Monolith.Runtime
 {
-  public abstract class Loop : Tracked
+  public abstract class Loop : Object 
   {
       private readonly Queue<Action> continuations = new();
 

@@ -30,12 +30,7 @@ namespace Monolith.Managers
     {
       var inst = new T();
         
-      QueueAdd(inst);
-
-      Flush();
-
-      if (inst is IEnter instEnter)
-       instEnter.OnEnter();
+      //AddTracked(inst);
 
       return inst;
     }
@@ -70,7 +65,16 @@ namespace Monolith.Managers
             easingFunction
         );
     }
+    
+    internal void AddTracked(Tracked tracked)
+    {
+      QueueAdd(tracked);
 
+      Flush();
+
+      if (tracked is IEnter instEnter)
+       instEnter.OnEnter();
+    }
 
     /// <summary>
     /// Queues an instance to be added to this tree.
@@ -86,20 +90,29 @@ namespace Monolith.Managers
     /// <summary>
     /// Flushes all instances.
     /// </summary>
-    private void Flush()
+    internal void Flush()
     {
       if (pendingAdd.Count == 0 && pendingRemove.Count == 0)
         return;
-
-      foreach (var n in pendingAdd)
-        AddInternal(n);
-
+      var toAdd = pendingAdd.ToList();
       pendingAdd.Clear();
 
-      foreach (var n in pendingRemove.ToList())
-        RemoveInternal(n);
+      foreach (var n in toAdd)
+      {
+        AddInternal(n);
+      }
 
+      foreach (var n in toAdd)
+      {
+        if (n is IEnter enter)
+          enter.OnEnter();
+      }
+
+      var toRemove = pendingRemove.ToList();
       pendingRemove.Clear();
+
+      foreach (var n in toRemove)
+        RemoveInternal(n);
     }
 
     /// <summary>
@@ -140,9 +153,6 @@ namespace Monolith.Managers
           byName.Remove(instance.Name);
       }
       
-      if (instance is IExit i2)
-        i2.OnExit();
-
       instance.ClearData();
     }
 
