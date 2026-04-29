@@ -16,7 +16,7 @@ namespace Monolith.Managers
 
     private readonly List<Tracked> pendingAdd = new();
     private readonly List<Tracked> pendingRemove = new();
-  
+
     ///<summary>
     /// Wrapper for creating an <see cref="Tracked"/>. 
     ///</summary>
@@ -29,12 +29,12 @@ namespace Monolith.Managers
         where T : Tracked, new()
     {
       var inst = new T();
-        
+
       //AddTracked(inst);
 
       return inst;
     }
-    
+
     ///<summary>
     /// Wrapper for creating a <see cref="Tween{T}"/>
     ///</summary>
@@ -47,25 +47,25 @@ namespace Monolith.Managers
         Func<T, T, float, T> lerpFunc,
         Func<float, float> easingFunction = null)
     {
-        if (setter == null)
-            throw new ArgumentNullException(nameof(setter));
+      if (setter == null)
+        throw new ArgumentNullException(nameof(setter));
 
-        if (lerpFunc == null)
-            throw new ArgumentNullException(nameof(lerpFunc));
+      if (lerpFunc == null)
+        throw new ArgumentNullException(nameof(lerpFunc));
 
-        if (easingFunction == null)
-            easingFunction = EasingFunctions.Linear;
+      if (easingFunction == null)
+        easingFunction = EasingFunctions.Linear;
 
-        return new Tween<T>(
-            start,
-            end,
-            duration,
-            lerpFunc,
-            setter,
-            easingFunction
-        );
+      return new Tween<T>(
+          start,
+          end,
+          duration,
+          lerpFunc,
+          setter,
+          easingFunction
+      );
     }
-    
+
     internal void AddTracked(Tracked tracked)
     {
       QueueAdd(tracked);
@@ -73,7 +73,7 @@ namespace Monolith.Managers
       Flush();
 
       if (tracked is IEnter instEnter)
-       instEnter.OnEnter();
+        instEnter.OnEnter();
     }
 
     /// <summary>
@@ -152,7 +152,7 @@ namespace Monolith.Managers
         if (list.Count == 0)
           byName.Remove(instance.Name);
       }
-      
+
       instance.ClearData();
     }
 
@@ -175,11 +175,11 @@ namespace Monolith.Managers
       instances.Clear();
       byName.Clear();
     }
-    
+
 
     public override void ProcessUpdate(TimeSpan delta)
     {
-      
+
       Flush();
       foreach (IProcess i in instances.ToList())
       {
@@ -196,7 +196,7 @@ namespace Monolith.Managers
 
     public override void PhysicsUpdate(TimeSpan delta)
     {
-      
+
       Flush();
       foreach (IPhysicsUpdate i in instances.ToList())
       {

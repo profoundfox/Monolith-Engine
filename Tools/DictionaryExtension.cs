@@ -14,10 +14,10 @@ namespace Monolith.Tools
           Func<TValue, TValue> cloneFunc)
         where TKey : notnull
     {
-        return original.ToDictionary(
-            kvp => kvp.Key,
-            kvp => kvp.Value!.Select(cloneFunc).ToList()
-        );
+      return original.ToDictionary(
+          kvp => kvp.Key,
+          kvp => kvp.Value!.Select(cloneFunc).ToList()
+      );
     }
 
 

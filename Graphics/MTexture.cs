@@ -26,11 +26,11 @@ namespace Monolith.Graphics
     /// The bounds of this texture.
     /// Represented as integer coordiantes.
     /// </summary>
-    public Extent Bounds 
+    public Extent Bounds
     {
       get => new Extent
       (
-          SourceRectangle?.Width ?? Texture.Width, 
+          SourceRectangle?.Width ?? Texture.Width,
           SourceRectangle?.Height ?? Texture.Height
       );
     }

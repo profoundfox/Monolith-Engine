@@ -11,7 +11,7 @@ namespace Monolith.Input
     MouseButton
   }
 
-  public class InputAction
+  public class InputAction : Object
   {
     public InputType Type { get; }
     public Keys Key { get; }

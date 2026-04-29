@@ -26,7 +26,7 @@ namespace Monolith
     {
       Engine.Index.QueueAdd(this);
     }
-    
+
     ///<summary>
     /// Queues this instance to be removed from <see cref="Index"/>.
     ///</summary>
@@ -45,10 +45,10 @@ namespace Monolith
     {
       Engine.Index.RemoveNow(this);
     }
-    
+
     ///<summary>
     /// Removes all data associated with this instance.
     ///</summary>
-    internal virtual void ClearData() {}
+    internal virtual void ClearData() { }
   }
 }

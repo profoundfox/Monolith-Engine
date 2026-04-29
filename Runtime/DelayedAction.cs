@@ -17,7 +17,7 @@ namespace Monolith.Util
     /// The action which will be called once finished.
     ///</summary>
     public Action Callback;
-    
+
     ///<summary>
     /// A toggle for whether <see cref="TimeOwner.TimeScale"/> should be ignored.
     ///</summary>

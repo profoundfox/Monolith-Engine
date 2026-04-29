@@ -1,16 +1,25 @@
 using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Monolith.Params;
 
 namespace Monolith.Hierarchy
 {
   public class KinematicBody2D : PhysicsBody2D
   {
+    [Export]
     public Vector2 Velocity = Vector2.Zero;
-    public Vector2 WallNormal { get; private set; } = Vector2.Zero;
 
+    [Export]
+    public Vector2 WallNormal { get; private set; } = Vector2.Zero;
+    
+    [Export]
     public bool IsOnFloor => _isOnFloor;
+
+    [Export]
     public bool IsOnWall => _isOnWall;
+
+    [Export]
     public bool IsOnRoof => _isOnRoof;
 
     private CollisionNode2D _floorBody;

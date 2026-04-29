@@ -12,7 +12,7 @@ namespace Monolith.Tools
     {
       if (base64String.Contains(",")) base64String = base64String.Split(',')[1];
       byte[] imageBytes = Convert.FromBase64String(base64String);
-      
+
       Texture2D texture;
 
       using (MemoryStream ms = new MemoryStream(imageBytes))
@@ -27,7 +27,7 @@ namespace Monolith.Tools
       {
         Color p = pixels[i];
         float alpha = p.A / 255f;
-        
+
         pixels[i] = new Color(
             (byte)(p.R * alpha),
             (byte)(p.G * alpha),

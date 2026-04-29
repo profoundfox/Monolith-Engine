@@ -13,7 +13,7 @@ namespace Monolith.Managers
 
     public SceneTree(Node root)
     {
-      _root = root ?? throw new ArgumentNullException(nameof(root)); 
+      _root = root ?? throw new ArgumentNullException(nameof(root));
     }
 
     public Node CurrentScene => _scene;
@@ -40,18 +40,18 @@ namespace Monolith.Managers
 
     public void ReloadCurrentScene()
     {
-        if (_scene == null)
-            return;
+      if (_scene == null)
+        return;
 
-        ClearOverlays();
+      ClearOverlays();
 
-        var oldScene = _scene;
+      var oldScene = _scene;
 
-        oldScene.OnExit();
+      oldScene.OnExit();
 
-        Engine.Index.Clear();
+      Engine.Index.Clear();
 
-        oldScene.OnEnter();
+      oldScene.OnEnter();
     }
 
     public void PushOverlay(Node overlay)
@@ -77,8 +77,8 @@ namespace Monolith.Managers
 
     public void ClearOverlays()
     {
-      while (_overlays.Count > 0);
-        PopOverlay();
+      while (_overlays.Count > 0) ;
+      PopOverlay();
     }
 
   }

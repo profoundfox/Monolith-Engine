@@ -20,7 +20,7 @@ namespace Monolith
 
     private static int _nextId = 0;
     private readonly int _id;
-   
+
     public Object()
     {
       _id = Interlocked.Increment(ref _nextId);
@@ -44,7 +44,7 @@ namespace Monolith
     {
       return _id;
     }
-    
+
     ///<summary>
     ///
     ///</summary>
