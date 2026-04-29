@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Monolith.Params;
 
 namespace Monolith.Hierarchy
 {
   public class Path2D : Node2D
   {
+    [Export]
     public List<Vector2> Path { get; private set; }
-
+    [Export]
     public Node2D Target { get; set; }
 
+    [Export]
     public float Speed { get; set; } = 100f;
 
     private int currentTargetIndex = 0;

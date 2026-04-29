@@ -2,13 +2,16 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Monolith.Managers;
+using Monolith.Params;
 
 namespace Monolith.Hierarchy
 {
   public class Camera2D : Node2D
   {
+    [Export]
     public Vector2 Zoom { get; set; } = Vector2.One;
 
+    [Export]
     public Rectangle Bounds
     {
       get

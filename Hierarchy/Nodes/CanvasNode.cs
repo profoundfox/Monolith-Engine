@@ -10,15 +10,19 @@ namespace Monolith.Hierarchy
   public class CanvasNode : Node
   {
 
+    [Export]
     public Dual<Visibility> Visibility { get; private set; }
 
+    [Export]
     public Dual<Ordering> Ordering { get; private set; }
 
+    [Export]
     public Dual<Material> Material { get; private set; }
 
     /// <summary>
     /// The self contained visibility of this node. 
     /// </summary>
+    [Export]
     public bool LocalVisible
     {
       get => Visibility.Local.Visibile;
@@ -31,6 +35,7 @@ namespace Monolith.Hierarchy
     /// <summary>
     /// The self contained modulate of this node.
     /// </summary>
+    [Export]
     public Color LocalModulate
     {
       get => Visibility.Local.Modulate;
@@ -43,6 +48,7 @@ namespace Monolith.Hierarchy
     /// <summary>
     /// The self contained depth of this node.
     /// </summary>
+    [Export]
     public int LocalDepth
     {
       get => Ordering.Local.Depth;
@@ -55,6 +61,7 @@ namespace Monolith.Hierarchy
     /// <summary>
     /// The self contained shader of this node.
     /// </summary>
+    [Export]
     public Effect LocalShader
     {
       get => Material.Local.Shader;
@@ -67,6 +74,7 @@ namespace Monolith.Hierarchy
     /// <summary>
     /// The self contained sprite effects of this node.
     /// </summary>
+    [Export]
     public SpriteEffects LocalSpriteEffects
     {
       get => Material.Local.SpriteEffects;

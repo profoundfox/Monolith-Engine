@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Monolith.Geometry;
+using Monolith.Params;
 using Monolith.Tools;
 
 namespace Monolith.Hierarchy
@@ -17,18 +18,21 @@ namespace Monolith.Hierarchy
     ///<summary>
     /// The max layer.
     ///</summary>
+    [Export]
     public int MaxLayer { get; set; } = 30;
 
     ///<summary>
     /// The layers for this collision node; used while checking intersection.
     /// If shapes share one or more layers they can intersect, zero layered shapes intersect with eachother.
     ///</summary>
+    [Export]
     public List<int> Layers { get; private set; }
 
     ///<summary>
     /// The bounds of this node's shapes, represented in the form of a rectangle.
     /// e.g a circle's bounds are the top, bottom, left and right.
     ///</summary>
+    [Export]
     public List<Rectangle> Bounds
     {
       get

@@ -22,8 +22,11 @@ namespace Monolith.Hierarchy
   /// </summary>
   public class ParallaxLayer : Node2D
   {
+    [Export]
     public MTexture Texture { get; set; }
+    [Export]
     public Vector2 MotionScale { get; set; } = Vector2.One;
+    [Export]
     public LoopAxis LoopAxes { get; set; } = LoopAxis.Both;
 
     private Vector2 lastCameraPos;

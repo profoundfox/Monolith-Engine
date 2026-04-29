@@ -14,8 +14,10 @@ namespace Monolith.Hierarchy
 
     private float _intervalLeft;
 
+    [Export]
     public EmitterParams Params { get; set; } = EmitterParams.Identity;
 
+    [Export]
     public IReadOnlyList<Particle> Particles => _particles;
 
     public ParticleEmitter2D()

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Monolith.Params;
 using Monolith.Tools;
 using Monolith.Util;
 
@@ -21,9 +22,12 @@ namespace Monolith.Hierarchy
     private bool _entered;
     private int _dir;
 
+    [Export]
     public Node2D TargetNode { get; set; }
 
+    [Export]
     public List<Action> TransitionStarted { get; set; } = new();
+    [Export]
     public List<Action> TransitionEnded { get; set; } = new();
 
     public RoomCamera() { }

@@ -11,6 +11,7 @@ namespace Monolith.Hierarchy
 
   public class Sprite2D : Node2D
   {
+    [Export]
     public MTexture Texture { get; set; }
 
     public Sprite2D() { }

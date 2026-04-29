@@ -13,11 +13,13 @@ namespace Monolith.Hierarchy
   {
     private int[,] _tiles;
 
+    [Export]
     public Tileset Tileset { get; set; }
 
     private int rows;
     private int columns;
 
+    [Export]
     public int Rows
     {
       get => rows;
@@ -28,6 +30,7 @@ namespace Monolith.Hierarchy
       }
     }
 
+    [Export]
     public int Columns
     {
       get => columns;
@@ -38,6 +41,7 @@ namespace Monolith.Hierarchy
       }
     }
 
+    [Export]
     public int IndexOffset { get; set; } = 0;
 
     public Tilemap() { }

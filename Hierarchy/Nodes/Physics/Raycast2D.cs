@@ -1,15 +1,19 @@
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Monolith.Geometry;
+using Monolith.Params;
 
 namespace Monolith.Hierarchy
 {
   public class RayCast2D : Node2D
   {
+    [Export]
     public Vector2 TargetPosition { get; set; } = new Vector2(0, 50);
 
+    [Export]
     public bool Disabled { get; set; }
 
+    [Export]
     public readonly RayCastShape2D Ray = new RayCastShape2D();
 
     public RayCast2D() { }

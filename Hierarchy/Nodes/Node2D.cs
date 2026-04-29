@@ -28,10 +28,11 @@ namespace Monolith.Hierarchy
         Transform.Local = Transform.Local with { Position = value };
       }
     }
-
+    
     /// <summary>
     /// The self contained rotation of this node, updates child node's rotation.
     /// </summary>
+    [Export]
     public float LocalRotation
     {
       get => Transform.Local.Rotation;
@@ -40,10 +41,11 @@ namespace Monolith.Hierarchy
         Transform.Local = Transform.Local with { Rotation = value };
       }
     }
-
+    
     /// <summary>
     /// The self contained scale of this node, updates child node's scale.
     /// </summary>
+    [Export]
     public Vector2 LocalScale
     {
       get => Transform.Local.Scale;

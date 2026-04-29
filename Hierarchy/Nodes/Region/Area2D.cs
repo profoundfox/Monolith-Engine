@@ -4,6 +4,7 @@ using System.Linq;
 using Monolith;
 using Monolith.Managers;
 using Monolith.Hierarchy;
+using Monolith.Params;
 
 namespace Monolith.Hierarchy
 {
@@ -12,7 +13,9 @@ namespace Monolith.Hierarchy
     private bool wasInArea2D = false;
 
 
+    [Export]
     public bool MonitorAreas { get; set; }
+    [Export]
     public bool MonitorBodies { get; set; }
 
     public Area2D() { }

@@ -13,12 +13,17 @@ namespace Monolith.Hierarchy
     private TimeSpan _elapsed = TimeSpan.Zero;
     private bool _finished = false;
 
+    [Export]
     public Dictionary<string, Animation> Atlas { get; set; } = new Dictionary<string, Animation>();
+    [Export]
     public Animation CurrentAnimation { get; private set; }
+    [Export]
     public bool IsLooping { get; set; } = false;
 
+    [Export]
     public bool IsFinished => _finished;
 
+    [Export]
     public MTexture CurrentFrame => CurrentAnimation?.Frames[_currentFrame];
 
     public AnimatedSprite2D() { }

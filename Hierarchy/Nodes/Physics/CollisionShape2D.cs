@@ -8,10 +8,14 @@ namespace Monolith.Hierarchy
 {
   public class CollisionShape2D : Node2D
   {
+    [Export]
     public bool Disabled { get; set; }
+    [Export]
     public bool OneWay { get; set; }
+    [Export]
     public IShape2D Shape { get; set; }
 
+    [Export]
     public int Width
     {
       get => Shape?.Size.Width ?? 0;
@@ -22,6 +26,7 @@ namespace Monolith.Hierarchy
       }
     }
 
+    [Export]
     public int Height
     {
       get => Shape?.Size.Height ?? 0;

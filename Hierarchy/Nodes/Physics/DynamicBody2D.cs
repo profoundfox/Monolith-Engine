@@ -1,12 +1,14 @@
 
 using System;
 using Microsoft.Xna.Framework;
+using Monolith.Params;
 using Monolith.Util;
 
 namespace Monolith.Hierarchy
 {
   public class DynamicBody2D : PhysicsBody2D
   {
+    [Export]
     public Vector2 Velocity;
 
     public DynamicBody2D() { }
