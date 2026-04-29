@@ -105,7 +105,7 @@ namespace Monolith.Hierarchy
         action?.Invoke();
 
 
-      var cameraXTween = Engine.Table.CreateTween(t => LocalPosition = t, Transform.Global.Position, targetPos, 0.5f, Vector2.Lerp, EasingFunctions.Linear);
+      var cameraXTween = Engine.Index.CreateTween(t => LocalPosition = t, Transform.Global.Position, targetPos, 0.5f, Vector2.Lerp, EasingFunctions.Linear);
 
       cameraXTween.SetCallbackAction
       (

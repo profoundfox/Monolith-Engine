@@ -7,7 +7,7 @@ using Monolith.Runtime;
 
 namespace Monolith.Hierarchy
 {
-  public class Node : Instance, 
+  public class Node : Tracked, 
     IEnter, 
     IPhysicsUpdate,
     IProcess, 

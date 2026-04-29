@@ -54,7 +54,7 @@ namespace Monolith.IO
       {
         try
         {
-          result = Engine.Instance.Content.Load<T>(path);
+          result = Engine.Tracked.Content.Load<T>(path);
         }
         catch
         {
@@ -77,7 +77,7 @@ namespace Monolith.IO
     /// <returns></returns>
     public string LoadText(string path)
     {
-      return Engine.Instance.Content.Load<string>(path);
+      return Engine.Tracked.Content.Load<string>(path);
     }
 
     /// <summary>
@@ -92,7 +92,7 @@ namespace Monolith.IO
       return JsonSerializer.Deserialize<T>(json)!;
     }
 
-    [Obsolete("Unloading does not work with the Instance.Content pipeline", false)]
+    [Obsolete("Unloading does not work with the Tracked.Content pipeline", false)]
     public void Unload(string path)
     {
       Console.WriteLine("You cannot unload individual items with the pipeline.");
@@ -104,7 +104,7 @@ namespace Monolith.IO
     public void ClearCache()
     {
       _cache.Clear();
-      Engine.Instance.Content.Unload();
+      Engine.Tracked.Content.Unload();
     }
   }
 }

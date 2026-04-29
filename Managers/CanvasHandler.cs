@@ -17,7 +17,7 @@ namespace Monolith.Managers
     UI
   }
 
-  public sealed class CanvasHandler
+  public sealed class CanvasHandler : Object
   {
     private readonly Dictionary<SpriteBatchParams, SpriteBatch> _spriteBatches = new();
     private readonly SpriteBatch _spriteBatch;
@@ -45,7 +45,7 @@ namespace Monolith.Managers
     public void Initialize()
     {
       CreateRenderTarget();
-      Engine.Instance.Window.ClientSizeChanged += (_, _) => UpdateTransform();
+      Engine.Tracked.Window.ClientSizeChanged += (_, _) => UpdateTransform();
       UpdateTransform();
     }
 

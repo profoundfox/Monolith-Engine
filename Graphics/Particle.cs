@@ -17,7 +17,7 @@ namespace Monolith.Graphics
     public Vector2 Direction { get; set; }
   }
 
-  public class Particle
+  public class Particle : Object
   {
     private readonly ParticleParams _initialData;
     private ParticleInfo _info;

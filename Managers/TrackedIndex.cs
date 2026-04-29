@@ -8,17 +8,17 @@ using Monolith.Util;
 
 namespace Monolith.Managers
 {
-  public class InstanceTable : Loop
+  public class TrackedIndex : Loop
   {
-    private readonly List<Instance> instances = new();
-    private readonly Dictionary<string, List<Instance>> byName = new();
+    private readonly List<Tracked> instances = new();
+    private readonly Dictionary<string, List<Tracked>> byName = new();
 
 
-    private readonly List<Instance> pendingAdd = new();
-    private readonly List<Instance> pendingRemove = new();
+    private readonly List<Tracked> pendingAdd = new();
+    private readonly List<Tracked> pendingRemove = new();
   
     ///<summary>
-    /// Wrapper for creating an <see cref="Instance"/>. 
+    /// Wrapper for creating an <see cref="Tracked"/>. 
     ///</summary>
     ///<remarks>
     /// It is highly encouraged to use this as the only method of created instances,
@@ -26,7 +26,7 @@ namespace Monolith.Managers
     ///</remarks>
     ///<returns>The instance which has been created, so it can be continually modfied.</returns>
     public T Create<T>()
-        where T : Instance, new()
+        where T : Tracked, new()
     {
       var inst = new T();
         
@@ -76,12 +76,12 @@ namespace Monolith.Managers
     /// Queues an instance to be added to this tree.
     /// </summary>
     /// <param name="instance"></param>
-    internal void QueueAdd(Instance instance) => pendingAdd.Add(instance);
+    internal void QueueAdd(Tracked instance) => pendingAdd.Add(instance);
     /// <summary>
     /// Queues an intance to be removed from this tree.
     /// </summary>
     /// <param name="instance"></param>
-    internal void QueueRemove(Instance instance) => pendingRemove.Add(instance);
+    internal void QueueRemove(Tracked instance) => pendingRemove.Add(instance);
 
     /// <summary>
     /// Flushes all instances.
@@ -106,7 +106,7 @@ namespace Monolith.Managers
     /// Adds an instance.
     /// </summary>
     /// <param name="instance"></param>
-    private void AddInternal(Instance instance)
+    private void AddInternal(Tracked instance)
     {
       instances.Add(instance);
 
@@ -114,7 +114,7 @@ namespace Monolith.Managers
       {
         if (!byName.TryGetValue(instance.Name, out var list))
         {
-          list = new List<Instance>();
+          list = new List<Tracked>();
           byName[instance.Name] = list;
         }
         list.Add(instance);
@@ -125,7 +125,7 @@ namespace Monolith.Managers
     /// Removes an instance.
     /// </summary>
     /// <param name="instance"></param>
-    private void RemoveInternal(Instance instance)
+    private void RemoveInternal(Tracked instance)
     {
       if (instance is IExit i)
         i.OnExit();
@@ -150,7 +150,7 @@ namespace Monolith.Managers
     /// Removes an instance without queueing.
     /// </summary>
     /// <param name="instance"></param>
-    internal void RemoveNow(Instance instance) => RemoveInternal(instance);
+    internal void RemoveNow(Tracked instance) => RemoveInternal(instance);
 
     /// <summary>
     /// Frees and removes all nodes immediately.
@@ -200,7 +200,7 @@ namespace Monolith.Managers
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public Instance Get(string name)
+    public Tracked Get(string name)
         => GetAll(name).FirstOrDefault();
 
     /// <summary>
@@ -208,19 +208,19 @@ namespace Monolith.Managers
     /// </summary>
     /// <param name="name"></param>
     /// <returns></returns>
-    public IReadOnlyList<Instance> GetAll(string name)
+    public IReadOnlyList<Tracked> GetAll(string name)
         => string.IsNullOrEmpty(name)
-            ? Array.Empty<Instance>()
+            ? Array.Empty<Tracked>()
             : byName.TryGetValue(name, out var list)
                 ? list
-                : Array.Empty<Instance>();
+                : Array.Empty<Tracked>();
 
     /// <summary>
     /// Gets the first instance by type.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public T Get<T>() where T : Instance
+    public T Get<T>() where T : Tracked
         => GetAll<T>().FirstOrDefault();
 
     /// <summary>
@@ -228,14 +228,14 @@ namespace Monolith.Managers
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public IReadOnlyList<T> GetAll<T>() where T : Instance
+    public IReadOnlyList<T> GetAll<T>() where T : Tracked
         => instances.OfType<T>().ToList();
 
     /// <summary>
     /// Gets all instacnes
     /// </summary>
     /// <returns></returns>
-    public IReadOnlyList<Instance> GetAll()
+    public IReadOnlyList<Tracked> GetAll()
     {
       return instances.AsReadOnly();
     }

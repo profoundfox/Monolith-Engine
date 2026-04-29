@@ -8,7 +8,7 @@ using Monolith.Hierarchy;
 
 namespace Monolith.Managers
 {
-  public class PhysicsServer2D
+  public class PhysicsServer2D : Object
   {
     private readonly SpatialHash<PhysicsBody2D> _broadphase;
     private readonly Dictionary<PhysicsBody2D, List<Rectangle>> _bounds = new();
@@ -35,7 +35,7 @@ namespace Monolith.Managers
     ///<summary>
     /// Unregisters a body from the server, this effectively disables other bodies searching for it.
     ///</summary>
-    ///<param name="body"> </param>
+    ///<param name="body">The body in question.</param>
     public void UnregisterBody(PhysicsBody2D body)
     {
       if (_bounds.TryGetValue(body, out var oldBounds))

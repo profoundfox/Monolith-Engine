@@ -1,12 +1,13 @@
 using System;
 using System.Runtime.CompilerServices;
 using Microsoft.Xna.Framework;
+using Monolith.Hierarchy;
 using Monolith.Runtime;
 using Monolith.Tools;
 
 namespace Monolith.Util
 {
-  public class Tween<T> : Instance, IProcess
+  public class Tween<T> : Tracked, IProcess
   {
     public float Duration { get; private set; }
     public Func<float, float> EasingFunction { get; private set; }

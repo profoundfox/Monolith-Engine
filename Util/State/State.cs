@@ -13,7 +13,7 @@ namespace Monolith.Util
     void OnExit();
   }
 
-  public abstract class State : IState
+  public abstract class State : Object, IState
   {
     public event Action<IState, string> TransitionRequested;
 

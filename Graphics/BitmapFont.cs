@@ -7,13 +7,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Monolith.Graphics
 {
-  public sealed class BitmapFont : IFont
+  public sealed class BitmapFont : Object, IFont
   {
     public Texture2D Texture { get; }
     public int CharWidth { get; }
     public int CharHeight { get; }
 
-    readonly Dictionary<char, int> map = new();
+    public Dictionary<char, int> Map = new();
+
     readonly int columns;
 
     public BitmapFont(Texture2D texture, int charWidth, int charHeight)
@@ -27,12 +28,12 @@ namespace Monolith.Graphics
     public void AddMap(string charOrder)
     {
       for (int i = 0; i < charOrder.Length; i++)
-        map[charOrder[i]] = i;
+        Map[charOrder[i]] = i;
     }
 
     public bool TryGetSource(char c, out Rectangle source)
     {
-      if (!map.TryGetValue(c, out int index))
+      if (!Map.TryGetValue(c, out int index))
       {
         source = default;
         return false;
@@ -70,7 +71,7 @@ namespace Monolith.Graphics
           continue;
         }
 
-        if (map.ContainsKey(c))
+        if (Map.ContainsKey(c))
           currentLineWidth += CharWidth;
       }
 

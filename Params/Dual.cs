@@ -3,9 +3,9 @@ using System;
 namespace Monolith.Params
 {
   ///<summary>
-  /// 
+  /// A property which has two instances, one global and one local. 
   ///</summary>
-  public class Dual<T>
+  public class Dual<T> : Object
   {
     private T local;
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Monolith.Graphics
 {
-  public class MonoFont : IFont
+  public class MonoFont : Object, IFont
   {
     private readonly SpriteFont _font;
 
@@ -14,7 +14,6 @@ namespace Monolith.Graphics
       _font = font ?? throw new System.ArgumentNullException(nameof(font));
     }
 
-    // --- Params mirrored from SpriteFont ---
     public IReadOnlyList<char> Characters => _font.Characters;
     public char? DefaultCharacter
     {

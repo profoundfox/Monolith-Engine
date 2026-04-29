@@ -4,9 +4,8 @@ using Monolith.Hierarchy;
 
 namespace Monolith.Managers
 {
-  public class SceneTree
+  public class SceneTree : Object
   {
-
     private readonly Node _root;
 
     private Node _scene;
@@ -50,7 +49,7 @@ namespace Monolith.Managers
 
         oldScene.OnExit();
 
-        Engine.Table.Clear();
+        Engine.Index.Clear();
 
         oldScene.OnEnter();
     }

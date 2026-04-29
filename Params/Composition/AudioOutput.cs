@@ -2,7 +2,7 @@ using System;
 
 namespace Monolith.Params
 {
-  public class AudioOutput
+  public class AudioOutput : Object
   {
     ///<summary>
     /// The max value which is allowed.

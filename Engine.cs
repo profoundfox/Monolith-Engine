@@ -13,7 +13,7 @@ namespace Monolith
 {
   public class Engine : Game
   {
-    public static Engine Instance { get; set; }
+    public static Engine Tracked { get; set; }
 
     public static GraphicsDeviceManager Graphics { get; private set; }
     public static new GraphicsDevice GraphicsDevice { get; private set; }
@@ -27,7 +27,7 @@ namespace Monolith
     public static Preferences Prefs { get; set; }
 
     public static TimeOwner Time { get; private set; }
-    public static InstanceTable Table { get; private set; }
+    public static TrackedIndex Index { get; private set; }
     public static ResourceManager Resource { get; private set; }
     public static CanvasHandler Canvas { get; private set; }
     public static SceneTree Tree { get; private set; }
@@ -40,10 +40,10 @@ namespace Monolith
 
     public Engine()
     {
-      if (Instance != null)
+      if (Tracked != null)
         throw new InvalidOperationException("Only one Engine instance can exist.");
 
-      Instance = this;
+      Tracked = this;
       Graphics = new GraphicsDeviceManager(this)
       {
         PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width,
@@ -68,8 +68,8 @@ namespace Monolith
 
       Prefs = new Preferences();
       Resource = new ResourceManager();
-      Table = new InstanceTable();
-      Tree = new SceneTree(Table.Create<Node>());
+      Index = new TrackedIndex();
+      Tree = new SceneTree(Index.Create<Node>());
       Physics = new PhysicsServer2D();
       Input = new InputManager();
 
@@ -113,7 +113,7 @@ namespace Monolith
 
       Input.Update(gameTime);
 
-      Table.Update(context, physicsSteps); 
+      Index.Update(context, physicsSteps); 
 
       if (Input.Keyboard.IsKeyDown(Keys.Escape) || Input.CurrentGamePad.WasButtonJustPressed(Buttons.Start))
         Exit();
@@ -154,6 +154,6 @@ namespace Monolith
       base.Draw(gameTime);
     }
 
-    public static void Quit() => Instance.Exit();
+    public static void Quit() => Tracked.Exit();
   }
 }

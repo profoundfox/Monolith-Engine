@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Monolith.Hierarchy;
 using Monolith.Util;
 
 namespace Monolith.Runtime
 {
-  public abstract class Loop : Instance
+  public abstract class Loop : Tracked
   {
       private readonly Queue<Action> continuations = new();
 

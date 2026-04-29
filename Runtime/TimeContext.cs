@@ -2,7 +2,7 @@ using System;
 
 namespace Monolith.Runtime
 {
-  public readonly struct TimeContext
+  public readonly struct TimeContext 
   {
     public TimeSpan FrameDelta { get; }
     public TimeSpan FixedDelta { get; }

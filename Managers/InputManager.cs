@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Monolith.Managers
 {
-  public partial class InputManager
+  public partial class InputManager : Object
   {
     public KeyboardInfo Keyboard { get; private set; }
     public MouseInfo Mouse { get; private set; }

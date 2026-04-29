@@ -6,7 +6,7 @@ namespace Monolith.Util
   ///<summary>
   /// A struct keeping information for a timer.
   ///</summary>
-  internal class DelayedAction
+  public class DelayedAction : Object
   {
     ///<summary>
     /// The time remaining, represented as <see cref="TimeSpan"/>.

@@ -4,7 +4,6 @@ namespace Monolith.Util
 {
   public static class Await
   {
-
     ///<summary>
     /// Waits for a span of time then calls an action.
     ///</summary>
@@ -13,7 +12,7 @@ namespace Monolith.Util
     ///<param name="ignoreTimeScale">Wether this timer should obey to timescale standards.</param>
     public static void Span(TimeSpan time, Action then, bool ignoreTimeScale = false)
     {
-      Engine.Time.After(time, () => Engine.Table.Post(then), ignoreTimeScale);
+      Engine.Time.After(time, () => Engine.Index.Post(then), ignoreTimeScale);
     }
 
     ///<summary>
@@ -35,7 +34,7 @@ namespace Monolith.Util
       {
         if (condition())
         {
-          Engine.Table.Post(then);
+          Engine.Index.Post(then);
         }
         else
         {

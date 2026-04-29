@@ -15,7 +15,7 @@ namespace Monolith.Prefs
 
     public void Apply()
     {
-      Engine.Instance.Window.Title = title;
+      Engine.Tracked.Window.Title = title;
     }
   }
 }

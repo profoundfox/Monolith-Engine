@@ -3,7 +3,7 @@ using Monolith.IO;
 
 namespace Monolith.Managers
 {
-  public class ResourceManager
+  public class ResourceManager : Object
   {
     private IContentProvider Provider { get; set; }
 
@@ -14,7 +14,7 @@ namespace Monolith.Managers
 
     public ResourceManager()
     {
-      Engine.Instance.Content.RootDirectory = ContentRoot;
+      Engine.Tracked.Content.RootDirectory = ContentRoot;
 
       Provider = new PipelineLoader();
     }

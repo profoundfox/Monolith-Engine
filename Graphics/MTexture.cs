@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Monolith.Geometry;
 
 namespace Monolith.Graphics
 {
@@ -8,7 +9,7 @@ namespace Monolith.Graphics
   /// Represents a texture or a rectangular region of a texture.
   /// Can be created from scratch or as a subregion of an existing texture.
   /// </summary>
-  public class MTexture : IDisposable
+  public class MTexture : Object, IDisposable
   {
     /// <summary>
     /// Internal texture used for rendering.
@@ -25,12 +26,11 @@ namespace Monolith.Graphics
     /// The bounds of this texture.
     /// Represented as integer coordiantes.
     /// </summary>
-    public Rectangle Bounds
+    public Extent Bounds 
     {
-      get => new Rectangle(
-          0,
-          0,
-          SourceRectangle?.Width ?? Texture.Width,
+      get => new Extent
+      (
+          SourceRectangle?.Width ?? Texture.Width, 
           SourceRectangle?.Height ?? Texture.Height
       );
     }

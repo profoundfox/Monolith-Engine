@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace Monolith.Util
 {
-  public class StateController
+  public class StateController : Object
   {
     public Dictionary<string, IState> _states = new Dictionary<string, IState>(StringComparer.OrdinalIgnoreCase);
     private IState _currentState;
