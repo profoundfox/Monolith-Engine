@@ -35,6 +35,26 @@ namespace Monolith
     }
 
     ///<summary>
+    /// Checks if left is equal to right.
+    ///</summary>
+    ///<param name="left">The left extent.</param>
+    ///<param name="right">The right extent.</param>
+    public static bool operator ==(Object left, Object right)
+    {
+      return left.Equals(right);
+    }
+
+    ///<summary>
+    /// Checks if left is not equal to the right.
+    ///</summary>
+    ///<param name="left">The left extent.</param>
+    ///<param name="right">The right exten.</param>
+    public static bool operator !=(Object left, Object right)
+    {
+      return !left.Equals(right);
+    }
+
+    ///<summary>
     /// Gets the unique id of this object.
     ///</summary>
     ///<remarks>

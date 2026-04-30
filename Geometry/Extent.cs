@@ -78,25 +78,6 @@ namespace Monolith.Geometry
       return HashCode.Combine(Width, Height);
     }
 
-    ///<summary>
-    /// Checks if left is equal to right.
-    ///</summary>
-    ///<param name="left">The left extent.</param>
-    ///<param name="right">The right extent.</param>
-    public static bool operator ==(Extent left, Extent right)
-    {
-      return left.Equals(right);
-    }
-
-    ///<summary>
-    /// Checks if left is not equal to the right.
-    ///</summary>
-    ///<param name="left">The left extent.</param>
-    ///<param name="right">The right exten.</param>
-    public static bool operator !=(Extent left, Extent right)
-    {
-      return !left.Equals(right);
-    }
 
     ///<summary>
     /// Turns this into a printable string.
