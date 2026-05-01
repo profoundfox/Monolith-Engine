@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 
 namespace Monolith.Geometry
 {
-  public class Cell
+  public class Cell : BaseObject
   {
     public Point Location { get; set; }
     public Cell Parent { get; set; }

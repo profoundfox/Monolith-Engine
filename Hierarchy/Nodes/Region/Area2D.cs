@@ -1,128 +1,92 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Monolith;
-using Monolith.Managers;
-using Monolith.Hierarchy;
 using Monolith.Params;
 
 namespace Monolith.Hierarchy
 {
   public class Area2D : CollisionNode2D
   {
-    private bool wasInArea2D = false;
-
+    [Export]
+    public bool MonitorAreas { get; set; } = true;
 
     [Export]
-    public bool MonitorAreas { get; set; }
-    [Export]
-    public bool MonitorBodies { get; set; }
+    public bool MonitorBodies { get; set; } = true;
 
-    public Area2D() { }
+    private HashSet<Area2D> _previousAreas = new();
+    private HashSet<Area2D> _currentAreas = new();
 
-    private Area2D GetOverlappingArea()
-    {
-      return Engine.Index.GetAll<CollisionNode2D>()
-          .Where(c => c.GetParent() != this)
-          .FirstOrDefault(c => c.Intersects(this))
-          ?.GetParent<Area2D>();
-    }
+    private HashSet<PhysicsBody2D> _previousBodies = new();
+    private HashSet<PhysicsBody2D> _currentBodies = new();
 
-
-    private PhysicsBody2D GetOverlappingBody()
+    private IEnumerable<Area2D> GetOverlappingAreas()
     {
       return Engine.Index.GetAll()
-          .Where(a => a != this && typeof(PhysicsBody2D).IsAssignableFrom(a.GetType()))
-          .Cast<PhysicsBody2D>()
-          .FirstOrDefault(Intersects);
+        .Where(a => a != this && a is Area2D area && Intersects(area))
+        .Cast<Area2D>();
     }
 
-
-    public bool AreaEntered(out Area2D overlapping)
+    private IEnumerable<PhysicsBody2D> GetOverlappingBodies()
     {
-      overlapping = GetOverlappingArea();
-
-      bool isInArea2D = overlapping != null;
-      bool entered = !wasInArea2D && isInArea2D;
-
-      wasInArea2D = isInArea2D;
-      return entered;
+      return Engine.Index.GetAll()
+        .Where(a => a != this && a is PhysicsBody2D body && Intersects(body))
+        .Cast<PhysicsBody2D>();
     }
 
-    public bool AreaEntered()
+    private HashSet<Area2D> SnapshotAreas()
     {
-      return AreaEntered(out _);
+      return GetOverlappingAreas().ToHashSet();
     }
 
-    public bool AreaExited(out Area2D overlapping)
+    private HashSet<PhysicsBody2D> SnapshotBodies()
     {
-      overlapping = GetOverlappingArea();
-
-      bool isInArea2D = overlapping != null;
-      bool exited = wasInArea2D && !isInArea2D;
-
-      wasInArea2D = isInArea2D;
-      return exited;
+      return GetOverlappingBodies().ToHashSet();
     }
 
-    public bool AreaExited()
+    public override void _Process(float delta)
     {
-      return AreaExited(out _);
+      base._Process(delta);
+
+      if (MonitorAreas)
+      {
+        _previousAreas = _currentAreas;
+        _currentAreas = SnapshotAreas();
+      }
+
+      if (MonitorBodies)
+      {
+        _previousBodies = _currentBodies;
+        _currentBodies = SnapshotBodies();
+      }
     }
 
+    public IEnumerable<Area2D> AreasEntered() => _currentAreas.Except(_previousAreas);
 
-    public bool AreaInside(out Area2D overlapping)
+    public IEnumerable<Area2D> AreasExited() => _previousAreas.Except(_currentAreas);
+
+    public IEnumerable<Area2D> AreasInside() => _currentAreas;
+
+
+    public bool IsInsideAnyArea() => _currentAreas.Count > 0;
+
+
+    public IEnumerable<PhysicsBody2D> BodiesEntered() => _currentBodies.Except(_previousBodies);
+
+    public IEnumerable<PhysicsBody2D> BodiesExited() => _previousBodies.Except(_currentBodies);
+
+    public IEnumerable<PhysicsBody2D> BodiesInside() => _currentBodies;
+
+
+    public bool IsInsideAnyBody() => _currentBodies.Count > 0;
+
+    public Area2D GetAnyArea()
     {
-      overlapping = GetOverlappingArea();
-      return overlapping != null;
+      return _currentAreas.FirstOrDefault();
     }
 
-    public bool AreaInside()
+    public PhysicsBody2D GetAnyBody()
     {
-      return AreaInside(out _);
-    }
-
-    public bool BodyEntered(out PhysicsBody2D overlapping)
-    {
-      overlapping = GetOverlappingBody();
-
-      bool isInBody2D = overlapping != null;
-      bool entered = !wasInArea2D && isInBody2D;
-
-      wasInArea2D = isInBody2D;
-      return entered;
-    }
-
-    public bool BodyEntered()
-    {
-      return BodyEntered(out _);
-    }
-
-    public bool BodyExited(out PhysicsBody2D overlapping)
-    {
-      overlapping = GetOverlappingBody();
-
-      bool isInBody2D = overlapping != null;
-      bool exited = wasInArea2D && !isInBody2D;
-
-      wasInArea2D = isInBody2D;
-      return exited;
-    }
-
-    public bool BodyExited()
-    {
-      return BodyExited(out _);
-    }
-
-    public bool BodyInside(out PhysicsBody2D overlapping)
-    {
-      overlapping = GetOverlappingBody();
-      return overlapping != null;
-    }
-
-    public bool BodyInside()
-    {
-      return BodyInside(out _);
+      return _currentBodies.FirstOrDefault();
     }
   }
 }
