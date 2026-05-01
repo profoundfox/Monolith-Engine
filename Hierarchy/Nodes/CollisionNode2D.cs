@@ -149,29 +149,29 @@ namespace Monolith.Hierarchy
           c => c.Shape.Contains(position.ToPoint(), Transform.Global.Position.ToPoint()) && IsValid(c));
     }
 
-    public override void OnEnter()
+    public override void _EnterTree()
     {
-      base.OnEnter();
+      base._EnterTree();
     }
 
-    public override void OnExit()
+    public override void _ExitTree()
     {
-      base.OnExit();
+      base._ExitTree();
     }
 
-    public override void PhysicsUpdate(float delta)
+    public override void _PhysicsUpdate(float delta)
     {
-      base.PhysicsUpdate(delta);
+      base._PhysicsUpdate(delta);
     }
 
-    public override void ProcessUpdate(float delta)
+    public override void _Process(float delta)
     {
-      base.ProcessUpdate(delta);
+      base._Process(delta);
     }
 
-    public override void SubmitCall()
+    public override void _SubmitCall()
     {
-      base.SubmitCall();
+      base._SubmitCall();
     }
   }
 }

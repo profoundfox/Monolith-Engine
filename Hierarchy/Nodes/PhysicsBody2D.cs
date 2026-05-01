@@ -14,7 +14,7 @@ namespace Monolith.Hierarchy
   {
     public PhysicsBody2D() { }
 
-    public override void OnEnter()
+    public override void _EnterTree()
     {
       OnChildAdded += (node) =>
       {
@@ -31,7 +31,7 @@ namespace Monolith.Hierarchy
       };
 
 
-      base.OnEnter();
+      base._EnterTree();
 
       if (!CollisionShapes.IsEmpty())
       {
@@ -40,26 +40,26 @@ namespace Monolith.Hierarchy
       }
     }
 
-    public override void OnExit()
+    public override void _ExitTree()
     {
       Engine.Physics.UnregisterBody(this);
 
-      base.OnExit();
+      base._ExitTree();
     }
 
-    public override void PhysicsUpdate(float delta)
+    public override void _PhysicsUpdate(float delta)
     {
-      base.PhysicsUpdate(delta);
+      base._PhysicsUpdate(delta);
     }
 
-    public override void ProcessUpdate(float delta)
+    public override void _Process(float delta)
     {
-      base.ProcessUpdate(delta);
+      base._Process(delta);
     }
 
-    public override void SubmitCall()
+    public override void _SubmitCall()
     {
-      base.SubmitCall();
+      base._SubmitCall();
     }
   }
 }

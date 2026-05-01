@@ -72,8 +72,8 @@ namespace Monolith.Managers
 
       Flush();
 
-      if (tracked is IEnter instEnter)
-        instEnter.OnEnter();
+      if (tracked is IEnterTree instEnter)
+        instEnter._EnterTree();
     }
 
     /// <summary>
@@ -104,8 +104,8 @@ namespace Monolith.Managers
 
       foreach (var n in toAdd)
       {
-        if (n is IEnter enter)
-          enter.OnEnter();
+        if (n is IEnterTree enter)
+          enter._EnterTree();
       }
 
       var toRemove = pendingRemove.ToList();
@@ -140,8 +140,8 @@ namespace Monolith.Managers
     /// <param name="instance"></param>
     private void RemoveInternal(Tracked instance)
     {
-      if (instance is IExit i)
-        i.OnExit();
+      if (instance is IExitTree i)
+        i._ExitTree();
 
       instances.Remove(instance);
 
@@ -177,30 +177,30 @@ namespace Monolith.Managers
     }
 
 
-    public override void ProcessUpdate(TimeSpan delta)
+    public override void _Process(TimeSpan delta)
     {
 
       Flush();
       foreach (IProcess i in instances.ToList())
       {
-        i.ProcessUpdate((float)delta.TotalSeconds);
+        i._Process((float)delta.TotalSeconds);
         Flush();
       }
 
       foreach (ICall i in instances.ToList())
       {
-        i.SubmitCall();
+        i._SubmitCall();
         Flush();
       }
     }
 
-    public override void PhysicsUpdate(TimeSpan delta)
+    public override void _PhysicsUpdate(TimeSpan delta)
     {
 
       Flush();
       foreach (IPhysicsUpdate i in instances.ToList())
       {
-        i.PhysicsUpdate((float)delta.TotalSeconds);
+        i._PhysicsUpdate((float)delta.TotalSeconds);
         Flush();
       }
     }

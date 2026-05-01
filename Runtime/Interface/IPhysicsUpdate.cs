@@ -3,6 +3,6 @@ namespace Monolith.Runtime
 {
   public interface IPhysicsUpdate
   {
-    void PhysicsUpdate(float delta);
+    void _PhysicsUpdate(float delta);
   }
 }

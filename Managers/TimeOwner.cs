@@ -5,7 +5,7 @@ using Monolith.Util;
 
 namespace Monolith.Managers
 {
-  public sealed class TimeOwner : Object
+  public sealed class TimeOwner : BaseObject
   {
     private readonly TimeSpan _fixedDelta;
     private TimeSpan _frameDelta;

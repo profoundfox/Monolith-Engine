@@ -8,7 +8,7 @@ namespace Monolith.Tools
 {
   public static class GraphicsE
   {
-    public static MTexture LoadBase64Premultiplied(this string base64String)
+    public static MTexture LoadBaseObject64Premultiplied(this string base64String)
     {
       if (base64String.Contains(",")) base64String = base64String.Split(',')[1];
       byte[] imageBytes = Convert.FromBase64String(base64String);

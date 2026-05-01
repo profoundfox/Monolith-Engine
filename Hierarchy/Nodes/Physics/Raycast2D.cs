@@ -18,9 +18,9 @@ namespace Monolith.Hierarchy
 
     public RayCast2D() { }
 
-    public override void PhysicsUpdate(float delta)
+    public override void _PhysicsUpdate(float delta)
     {
-      base.PhysicsUpdate(delta);
+      base._PhysicsUpdate(delta);
 
       if (Disabled)
         return;

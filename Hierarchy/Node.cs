@@ -8,11 +8,11 @@ using Monolith.Runtime;
 namespace Monolith.Hierarchy
 {
   public class Node : Tracked,
-    IEnter,
+    IEnterTree,
     IPhysicsUpdate,
     IProcess,
     ICall,
-    IExit
+    IExitTree
   {
     private readonly List<Node> children = new();
     private Node parent;
@@ -163,26 +163,26 @@ namespace Monolith.Hierarchy
     /// <summary>
     /// Called when the node enters the tree.
     /// </summary>
-    public virtual void OnEnter() { }
+    public virtual void _EnterTree() { }
 
     /// <summary>
     /// Called when the node exits the tree.
     /// </summary>
-    public virtual void OnExit() { }
+    public virtual void _ExitTree() { }
 
     /// <summary>
     /// Called every frame.
     /// </summary>
-    public virtual void ProcessUpdate(float delta) { }
+    public virtual void _Process(float delta) { }
 
     /// <summary>
     /// Called every physics tick.
     /// </summary>
-    public virtual void PhysicsUpdate(float delta) { }
+    public virtual void _PhysicsUpdate(float delta) { }
 
     /// <summary>
     /// Called when submitting draw calls.
     /// </summary>
-    public virtual void SubmitCall() { }
+    public virtual void _SubmitCall() { }
   }
 }

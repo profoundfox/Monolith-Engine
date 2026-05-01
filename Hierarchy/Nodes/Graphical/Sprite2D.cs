@@ -16,7 +16,7 @@ namespace Monolith.Hierarchy
 
     public Sprite2D() { }
 
-    public override void SubmitCall()
+    public override void _SubmitCall()
     {
       if (Texture == null)
         return;

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Monolith.Graphics
 {
-  public class MonoFont : Object, IFont
+  public class MonoFont : BaseObject, IFont
   {
     private readonly SpriteFont _font;
 

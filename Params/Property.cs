@@ -26,7 +26,7 @@ namespace Monolith.Params
     ///<param name="inst">A reference to the object.</param
     ///<param name="config">The configuration.</param>
     public static T Set<T>(this T inst, Action<T> config)
-      where T : Object
+      where T : BaseObject
     {
       config(inst);
       return inst;
@@ -45,7 +45,7 @@ namespace Monolith.Params
     ///<param name="name">The name of the property which will be changed.</param>
     ///<param name="value">The new value.</param>
     public static T Set<T>(this T inst, string name, object value)
-      where T : Object
+      where T : BaseObject
     {
       var props = ClassDB.Get(typeof(T));
 
@@ -71,7 +71,7 @@ namespace Monolith.Params
     ///<param name="inst">A reference to the object.</param>
     ///<param name="name">The name of the property in search of.</param>
     public static object Get<T>(this T inst, string name)
-      where T : Object
+      where T : BaseObject
     {
       var props = ClassDB.Get(typeof(T));
 

@@ -3,7 +3,7 @@ using Monolith.IO;
 
 namespace Monolith.Managers
 {
-  public class ResourceManager : Object
+  public class ResourceManager : BaseObject
   {
     private IContentProvider Provider { get; set; }
 

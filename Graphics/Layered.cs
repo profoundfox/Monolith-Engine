@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Monolith.Graphics
 {
-  public abstract class Layered : Object
+  public abstract class Layered : BaseObject
   {
     private int _depth;
 

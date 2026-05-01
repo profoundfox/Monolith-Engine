@@ -17,7 +17,7 @@ namespace Monolith.Managers
     UI
   }
 
-  public sealed class CanvasHandler : Object
+  public sealed class CanvasHandler : BaseObject
   {
     private readonly Dictionary<SpriteBatchParams, SpriteBatch> _spriteBatches = new();
     private readonly SpriteBatch _spriteBatch;

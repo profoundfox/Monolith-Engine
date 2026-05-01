@@ -4,7 +4,7 @@ namespace Monolith.Tools
 {
   /// <summary>
   /// Provides a collection of easing functions used to interpolate values over time.
-  /// Based on Robert Penner's easing equations and adapted for Unity / game tweening.
+  /// BaseObjectd on Robert Penner's easing equations and adapted for Unity / game tweening.
   /// </summary>
   public static class EasingFunctions
   {

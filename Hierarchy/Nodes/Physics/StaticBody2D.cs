@@ -11,14 +11,14 @@ namespace Monolith.Hierarchy
   {
     public StaticBody2D() { }
 
-    public override void OnEnter()
+    public override void _EnterTree()
     {
-      base.OnEnter();
+      base._EnterTree();
     }
 
-    public override void PhysicsUpdate(float delta)
+    public override void _PhysicsUpdate(float delta)
     {
-      base.PhysicsUpdate(delta);
+      base._PhysicsUpdate(delta);
     }
 
   }

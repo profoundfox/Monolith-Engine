@@ -50,9 +50,9 @@ namespace Monolith.Hierarchy
         offset.Y = 0;
     }
 
-    public override void ProcessUpdate(float delta)
+    public override void _Process(float delta)
     {
-      base.ProcessUpdate(delta);
+      base._Process(delta);
 
       var camera = Engine.Index.Get<Camera2D>();
       Vector2 camDelta = camera.Transform.Global.Position - lastCameraPos;
@@ -62,7 +62,7 @@ namespace Monolith.Hierarchy
         child.ApplyCameraDelta(camDelta);
     }
 
-    public override void SubmitCall()
+    public override void _SubmitCall()
     {
       if (!Visibility.Global.Visibile)
         return;

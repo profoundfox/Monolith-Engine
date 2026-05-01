@@ -78,7 +78,7 @@ namespace Monolith.Hierarchy
 
     /// <summary>
     /// Recompute global transform based on parent.
-    /// Automatically ProcessProcessProcessProcessUpdates children.
+    /// Automatically ProcessProcessProcess_Processs children.
     /// </summary>
     internal void UpdateGlobalTransform()
     {
@@ -121,24 +121,24 @@ namespace Monolith.Hierarchy
       Offset(new Vector2(x, y));
     }
 
-    public override void OnEnter()
+    public override void _EnterTree()
     {
-      base.OnEnter();
+      base._EnterTree();
     }
 
-    public override void OnExit()
+    public override void _ExitTree()
     {
-      base.OnExit();
+      base._ExitTree();
     }
 
-    public override void ProcessUpdate(float delta)
+    public override void _Process(float delta)
     {
-      base.ProcessUpdate(delta);
+      base._Process(delta);
     }
 
-    public override void SubmitCall()
+    public override void _SubmitCall()
     {
-      base.SubmitCall();
+      base._SubmitCall();
     }
   }
 }

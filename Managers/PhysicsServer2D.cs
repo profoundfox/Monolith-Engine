@@ -8,7 +8,7 @@ using Monolith.Hierarchy;
 
 namespace Monolith.Managers
 {
-  public class PhysicsServer2D : Object
+  public class PhysicsServer2D : BaseObject
   {
     private readonly SpatialHash<PhysicsBody2D> _broadphase;
     private readonly Dictionary<PhysicsBody2D, List<Rectangle>> _bounds = new();

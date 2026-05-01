@@ -4,7 +4,7 @@ using Monolith.Hierarchy;
 
 namespace Monolith.Managers
 {
-  public class SceneTree : Object
+  public class SceneTree : BaseObject
   {
     private readonly Node _root;
 
@@ -47,11 +47,11 @@ namespace Monolith.Managers
 
       var oldScene = _scene;
 
-      oldScene.OnExit();
+      oldScene._ExitTree();
 
       Engine.Index.Clear();
 
-      oldScene.OnEnter();
+      oldScene._EnterTree();
     }
 
     public void PushOverlay(Node overlay)

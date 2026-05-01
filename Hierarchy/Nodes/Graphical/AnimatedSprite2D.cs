@@ -70,9 +70,9 @@ namespace Monolith.Hierarchy
       _elapsed = TimeSpan.Zero;
     }
 
-    public override void ProcessUpdate(float delta)
+    public override void _Process(float delta)
     {
-      base.ProcessUpdate(delta);
+      base._Process(delta);
 
       if (_finished || CurrentAnimation == null)
         return;
@@ -101,9 +101,9 @@ namespace Monolith.Hierarchy
     }
 
 
-    public override void SubmitCall()
+    public override void _SubmitCall()
     {
-      base.SubmitCall();
+      base._SubmitCall();
 
       if (CurrentAnimation == null || Visibility.Global.Visibile == false) return;
 

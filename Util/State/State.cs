@@ -7,13 +7,13 @@ namespace Monolith.Util
   public interface IState
   {
     event Action<IState, string> TransitionRequested;
-    void OnEnter();
+    void _EnterTree();
 
     void Update(float delta);
-    void OnExit();
+    void _ExitTree();
   }
 
-  public abstract class State : Object, IState
+  public abstract class State : BaseObject, IState
   {
     public event Action<IState, string> TransitionRequested;
 
@@ -22,8 +22,8 @@ namespace Monolith.Util
       TransitionRequested?.Invoke(this, newStateName);
     }
 
-    public virtual void OnEnter() { }
+    public virtual void _EnterTree() { }
     public virtual void Update(float delta) { }
-    public virtual void OnExit() { }
+    public virtual void _ExitTree() { }
   }
 }

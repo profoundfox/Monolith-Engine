@@ -52,9 +52,9 @@ namespace Monolith.Hierarchy
       return transform;
     }
 
-    public override void ProcessUpdate(float delta)
+    public override void _Process(float delta)
     {
-      base.ProcessUpdate(delta);
+      base._Process(delta);
 
       Engine.Canvas.SetMatrix(GetTransform());
     }

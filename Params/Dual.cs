@@ -5,7 +5,7 @@ namespace Monolith.Params
   ///<summary>
   /// A property which has two instances, one global and one local. 
   ///</summary>
-  public class Dual<T> : Object
+  public class Dual<T> : BaseObject
   {
     private T local;
 

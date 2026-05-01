@@ -69,9 +69,9 @@ namespace Monolith.Hierarchy
       }
     }
 
-    public override void ProcessUpdate(float delta)
+    public override void _Process(float delta)
     {
-      base.ProcessUpdate(delta);
+      base._Process(delta);
 
       _intervalLeft -= delta;
 
@@ -90,9 +90,9 @@ namespace Monolith.Hierarchy
       _particles.RemoveAll(p => p.Info.IsFinished);
     }
 
-    public override void SubmitCall()
+    public override void _SubmitCall()
     {
-      base.SubmitCall();
+      base._SubmitCall();
 
       foreach (var particle in _particles)
       {

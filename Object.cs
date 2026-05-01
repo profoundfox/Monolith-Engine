@@ -1,37 +1,40 @@
 using System;
 using System.Threading;
+using Monolith.Params;
 
 namespace Monolith
 {
   ///<summary>
   /// The absolute abstract base class that all others inherit.
   ///</summary>
-  public abstract class Object
+  public abstract class BaseObject
   {
     ///<summary>
     /// Action for when a dynamic setter fails.
     ///</summary>
-    public Action<string, object> OnSetFallback;
+    [Export]
+    public Action<string, object> OnSetFallback { get; set; }
 
     ///<summary>
     /// Action for when a dynamic getter fails.
     ///</summary>
-    public Action<string> OnFallback;
-
+    [Export]
+    public Action<string> OnFallback { get; set; }
+    
     private static int _nextId = 0;
     private readonly int _id;
 
-    public Object()
+    public BaseObject()
     {
       _id = Interlocked.Increment(ref _nextId);
     }
 
     ///<summary>
-    /// If the object on the left is equal to the instance on the right.
+    /// If the object on the left is equal to the object on the right.
     ///</summary>
     public override bool Equals(object obj)
     {
-      return obj is Tracked other && _id == other._id;
+      return obj is BaseObject other && _id == other._id;
     }
 
     ///<summary>
@@ -39,8 +42,10 @@ namespace Monolith
     ///</summary>
     ///<param name="left">The left extent.</param>
     ///<param name="right">The right extent.</param>
-    public static bool operator ==(Object left, Object right)
+    public static bool operator ==(BaseObject left, BaseObject right)
     {
+      if (ReferenceEquals(left, right)) return true;
+      if (left is null || right is null) return false;
       return left.Equals(right);
     }
 
@@ -49,9 +54,9 @@ namespace Monolith
     ///</summary>
     ///<param name="left">The left extent.</param>
     ///<param name="right">The right exten.</param>
-    public static bool operator !=(Object left, Object right)
+    public static bool operator !=(BaseObject left, BaseObject right)
     {
-      return !left.Equals(right);
+      return !(left == right);
     }
 
     ///<summary>

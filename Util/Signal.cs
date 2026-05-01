@@ -1,6 +1,6 @@
 namespace Monolith.Util
 {
-  public class Signal : Object
+  public class Signal : BaseObject
   {
 
   }

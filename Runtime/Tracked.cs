@@ -11,7 +11,7 @@ namespace Monolith
   ///<summary>
   /// The absolute abstract class for other classes.
   ///</summary>
-  public abstract class Tracked : Object
+  public abstract class Tracked : BaseObject
   {
     ///<summary>
     /// The name of this instance.

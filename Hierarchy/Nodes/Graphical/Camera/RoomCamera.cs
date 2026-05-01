@@ -32,9 +32,9 @@ namespace Monolith.Hierarchy
 
     public RoomCamera() { }
 
-    public override void OnEnter()
+    public override void _EnterTree()
     {
-      base.OnEnter();
+      base._EnterTree();
 
       if (TargetNode is KinematicBody2D)
       {
@@ -43,14 +43,14 @@ namespace Monolith.Hierarchy
       }
     }
 
-    public override void OnExit()
+    public override void _ExitTree()
     {
-      base.OnExit();
+      base._ExitTree();
     }
 
-    public override void ProcessUpdate(float delta)
+    public override void _Process(float delta)
     {
-      base.ProcessUpdate(delta);
+      base._Process(delta);
 
       if (TargetNode == null || TargetNode.Get<CollisionShape2D>() == null)
         return;
@@ -91,9 +91,9 @@ namespace Monolith.Hierarchy
 
 
 
-    public override void SubmitCall()
+    public override void _SubmitCall()
     {
-      base.SubmitCall();
+      base._SubmitCall();
     }
 
     private void ShiftRoom(int dir)

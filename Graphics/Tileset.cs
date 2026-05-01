@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace Monolith.Graphics
 {
-  public class Tileset : Object
+  public class Tileset : BaseObject
   {
     private readonly MTexture[] _tiles;
 

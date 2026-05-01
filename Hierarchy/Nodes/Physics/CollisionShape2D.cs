@@ -39,19 +39,19 @@ namespace Monolith.Hierarchy
 
     public CollisionShape2D() { }
 
-    public override void OnEnter()
+    public override void _EnterTree()
     {
-      base.OnEnter();
+      base._EnterTree();
     }
 
-    public override void OnExit()
+    public override void _ExitTree()
     {
-      base.OnExit();
+      base._ExitTree();
     }
 
-    public override void PhysicsUpdate(float delta)
+    public override void _PhysicsUpdate(float delta)
     {
-      base.PhysicsUpdate(delta);
+      base._PhysicsUpdate(delta);
       //CheckOneWay();
     }
 

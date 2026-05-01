@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Monolith.Graphics
 {
-  public class Animation : Object
+  public class Animation : BaseObject
   {
     public List<MTexture> Frames { get; set; }
 

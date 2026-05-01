@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Monolith.Graphics
 {
-  public sealed class BitmapFont : Object, IFont
+  public sealed class BitmapFont : BaseObject, IFont
   {
     public Texture2D Texture { get; }
     public int CharWidth { get; }

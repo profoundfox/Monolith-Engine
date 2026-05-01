@@ -37,9 +37,9 @@ namespace Monolith.Hierarchy
       Path.AddRange(path.ToList());
     }
 
-    public override void ProcessUpdate(float delta)
+    public override void _Process(float delta)
     {
-      base.ProcessUpdate(delta);
+      base._Process(delta);
 
       if (Path == null || Path.Count < 2 || currentTargetIndex >= Path.Count - 1)
         return;

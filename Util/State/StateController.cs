@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace Monolith.Util
 {
-  public class StateController : Object
+  public class StateController : BaseObject
   {
     public Dictionary<string, IState> _states = new Dictionary<string, IState>(StringComparer.OrdinalIgnoreCase);
     private IState _currentState;
@@ -48,8 +48,8 @@ namespace Monolith.Util
       {
         _currentState = _initialState;
         CurrentState = _currentState as State;
-        _currentState.OnEnter();
-        _globalState?.OnEnter();
+        _currentState._EnterTree();
+        _globalState?._EnterTree();
       }
 
     }
@@ -73,10 +73,10 @@ namespace Monolith.Util
 
       if (_states.TryGetValue(newStateName, out IState new_state))
       {
-        _currentState?.OnExit();
+        _currentState?._ExitTree();
 
         _currentState = new_state;
-        _currentState.OnEnter();
+        _currentState._EnterTree();
 
         CurrentState = _currentState as State;
       }

@@ -104,9 +104,9 @@ namespace Monolith.Hierarchy
           _tiles[x, y] = data[x, y] - IndexOffset;
     }
 
-    public override void SubmitCall()
+    public override void _SubmitCall()
     {
-      base.SubmitCall();
+      base._SubmitCall();
 
       if (_tiles == null || Tileset == null)
         return;

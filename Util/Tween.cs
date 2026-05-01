@@ -55,7 +55,7 @@ namespace Monolith.Util
       callbackAction = action;
     }
 
-    public void ProcessUpdate(float delta)
+    public void _Process(float delta)
     {
       if (!isRunning) return;
 

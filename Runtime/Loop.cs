@@ -5,7 +5,7 @@ using Monolith.Util;
 
 namespace Monolith.Runtime
 {
-  public abstract class Loop : Object
+  public abstract class Loop : BaseObject
   {
     private readonly Queue<Action> continuations = new();
 
@@ -16,10 +16,10 @@ namespace Monolith.Runtime
 
       for (int i = 0; i < steps; i++)
       {
-        PhysicsUpdate(context.FixedDelta);
+        _PhysicsUpdate(context.FixedDelta);
       }
 
-      ProcessUpdate(context.FrameDelta);
+      _Process(context.FrameDelta);
 
       int count = continuations.Count;
       for (int i = 0; i < count; i++)
@@ -36,7 +36,7 @@ namespace Monolith.Runtime
       continuations.Enqueue(action);
     }
 
-    public virtual void PhysicsUpdate(TimeSpan delta) { }
-    public virtual void ProcessUpdate(TimeSpan delta) { }
+    public virtual void _PhysicsUpdate(TimeSpan delta) { }
+    public virtual void _Process(TimeSpan delta) { }
   }
 }

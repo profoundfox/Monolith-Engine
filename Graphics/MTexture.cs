@@ -9,7 +9,7 @@ namespace Monolith.Graphics
   /// Represents a texture or a rectangular region of a texture.
   /// Can be created from scratch or as a subregion of an existing texture.
   /// </summary>
-  public class MTexture : Object, IDisposable
+  public class MTexture : BaseObject, IDisposable
   {
     /// <summary>
     /// Internal texture used for rendering.
