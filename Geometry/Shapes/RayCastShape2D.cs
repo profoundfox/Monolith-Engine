@@ -59,7 +59,7 @@ namespace Monolith.Geometry
       int depth = 99;
       int thickness = 2;
 
-      Engine.Canvas.Call(
+      Core.Canvas.Call(
           new TextureDrawCall
           {
             Params = CanvasParams.Identity with
@@ -70,7 +70,7 @@ namespace Monolith.Geometry
               Rotation = MathF.Atan2(Direction.Y, Direction.X),
               Origin = new Vector2(0f, 0.5f)
             },
-            Texture = Engine.Pixel,
+            Texture = Core.Pixel,
             Depth = depth
           },
           DrawLayer.Middleground
@@ -78,7 +78,7 @@ namespace Monolith.Geometry
 
       if (HasHit)
       {
-        Engine.Canvas.Call(
+        Core.Canvas.Call(
             new TextureDrawCall
             {
               Params = CanvasParams.Identity with
@@ -87,7 +87,7 @@ namespace Monolith.Geometry
                 Color = Color.Blue,
                 Scale = new Vector2(4, 4)
               },
-              Texture = Engine.Pixel,
+              Texture = Core.Pixel,
               Depth = depth + 1
             },
             DrawLayer.Middleground

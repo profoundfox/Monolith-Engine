@@ -17,7 +17,7 @@ namespace Monolith.Tools
 
       using (MemoryStream ms = new MemoryStream(imageBytes))
       {
-        texture = Texture2D.FromStream(Engine.GraphicsDevice, ms);
+        texture = Texture2D.FromStream(Core.GraphicsDevice, ms);
       }
 
       Color[] pixels = new Color[texture.Width * texture.Height];

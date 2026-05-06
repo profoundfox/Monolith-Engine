@@ -54,7 +54,7 @@ namespace Monolith.IO
       {
         try
         {
-          result = Engine.Tracked.Content.Load<T>(path);
+          result = Core.Tracked.Content.Load<T>(path);
         }
         catch
         {
@@ -77,7 +77,7 @@ namespace Monolith.IO
     /// <returns></returns>
     public string LoadText(string path)
     {
-      return Engine.Tracked.Content.Load<string>(path);
+      return Core.Tracked.Content.Load<string>(path);
     }
 
     /// <summary>
@@ -104,7 +104,7 @@ namespace Monolith.IO
     public void ClearCache()
     {
       _cache.Clear();
-      Engine.Tracked.Content.Unload();
+      Core.Tracked.Content.Unload();
     }
   }
 }

@@ -20,7 +20,7 @@ namespace Monolith
     ///</summary>
     [Export]
     public Action<string> OnFallback { get; set; }
-    
+
     private static int _nextId = 0;
     private readonly int _id;
 

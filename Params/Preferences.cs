@@ -23,7 +23,7 @@ namespace Monolith
     public AudioPrefs Audio { get; }
 
     /// <summary>
-    /// Engine and Monogame wide preferences.
+    /// Core and Monogame wide preferences.
     /// </summary>
     public Preferences()
     {

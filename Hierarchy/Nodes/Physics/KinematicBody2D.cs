@@ -12,7 +12,7 @@ namespace Monolith.Hierarchy
 
     [Export]
     public Vector2 WallNormal { get; private set; } = Vector2.Zero;
-    
+
     [Export]
     public bool IsOnFloor => _isOnFloor;
 
@@ -70,7 +70,7 @@ namespace Monolith.Hierarchy
       Vector2 horizontalMovement = new Vector2(movement.X, 0);
       LocalPosition += horizontalMovement;
 
-      var nearby = Engine.Physics.Query(Bounds);
+      var nearby = Core.Physics.Query(Bounds);
 
       foreach (var other in nearby.Where(b => b != this))
       {
@@ -112,7 +112,7 @@ namespace Monolith.Hierarchy
       Vector2 verticalMovement = new Vector2(0, movement.Y);
       LocalPosition += verticalMovement;
 
-      nearby = Engine.Physics.Query(Bounds);
+      nearby = Core.Physics.Query(Bounds);
 
       foreach (var other in nearby.Where(b => b != this))
       {
@@ -168,7 +168,7 @@ namespace Monolith.Hierarchy
 
     private void ResolveStaticPenetration()
     {
-      var nearby = Engine.Physics.Query(Bounds);
+      var nearby = Core.Physics.Query(Bounds);
 
       foreach (var other in nearby.Where(b => b != this))
       {

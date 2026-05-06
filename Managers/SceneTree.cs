@@ -9,6 +9,7 @@ namespace Monolith.Managers
     private readonly Node _root;
 
     private Node _scene;
+
     private readonly Stack<Node> _overlays = new();
 
     public SceneTree(Node root)
@@ -45,13 +46,11 @@ namespace Monolith.Managers
 
       ClearOverlays();
 
-      var oldScene = _scene;
+      Core.Index.Clear();
 
-      oldScene._ExitTree();
+      Type t = _scene.GetType();
 
-      Engine.Index.Clear();
-
-      oldScene._EnterTree();
+      object obj = Activator.CreateInstance(t);
     }
 
     public void PushOverlay(Node overlay)

@@ -1,4 +1,5 @@
 using System;
+using Monolith.Managers;
 
 namespace Monolith.Params
 {
@@ -6,10 +7,13 @@ namespace Monolith.Params
   {
     public int Depth { get; init; }
     public bool RelativeDepth { get; init; }
-    public static readonly Ordering Identity =
-        new(0, true);
+    
+    public DrawLayer DrawLayer { get; init; }
 
-    public Ordering(int depth, bool relativeDepth)
+    public static readonly Ordering Identity =
+        new(0, true, DrawLayer.Middleground);
+
+    public Ordering(int depth, bool relativeDepth, DrawLayer drawLayer)
     {
       Depth = depth;
       RelativeDepth = relativeDepth;
@@ -18,7 +22,7 @@ namespace Monolith.Params
     public static Ordering Combine(in Ordering parent, in Ordering child)
     {
       int depth = child.RelativeDepth ? parent.Depth + child.Depth : child.Depth;
-      return new Ordering(depth, child.RelativeDepth);
+      return new Ordering(depth, child.RelativeDepth, child.DrawLayer);
     }
   }
 }

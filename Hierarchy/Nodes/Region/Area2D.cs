@@ -21,14 +21,14 @@ namespace Monolith.Hierarchy
 
     private IEnumerable<Area2D> GetOverlappingAreas()
     {
-      return Engine.Index.GetAll()
+      return Core.Index.GetAll()
         .Where(a => a != this && a is Area2D area && Intersects(area))
         .Cast<Area2D>();
     }
 
     private IEnumerable<PhysicsBody2D> GetOverlappingBodies()
     {
-      return Engine.Index.GetAll()
+      return Core.Index.GetAll()
         .Where(a => a != this && a is PhysicsBody2D body && Intersects(body))
         .Cast<PhysicsBody2D>();
     }

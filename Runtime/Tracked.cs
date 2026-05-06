@@ -24,7 +24,7 @@ namespace Monolith
 
     public Tracked()
     {
-      Engine.Index.QueueAdd(this);
+      Core.Index.QueueAdd(this);
     }
 
     ///<summary>
@@ -35,7 +35,7 @@ namespace Monolith
     ///</remarks>
     public void QueueFree()
     {
-      Engine.Index.QueueRemove(this);
+      Core.Index.QueueRemove(this);
     }
 
     ///<summary>
@@ -43,7 +43,7 @@ namespace Monolith
     ///</summary>
     public void FreeImmediate()
     {
-      Engine.Index.RemoveNow(this);
+      Core.Index.RemoveNow(this);
     }
 
     ///<summary>

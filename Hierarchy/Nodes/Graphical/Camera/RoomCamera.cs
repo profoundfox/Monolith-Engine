@@ -60,7 +60,7 @@ namespace Monolith.Hierarchy
 
       var pos = TargetNode.Transform.Global.Position;
 
-      var camera = Engine.Canvas.GetWorldViewRectangle();
+      var camera = Core.Canvas.GetWorldViewRectangle();
 
       CameraSide side = CameraSide.None;
 
@@ -100,7 +100,7 @@ namespace Monolith.Hierarchy
     {
       _dir = dir;
 
-      var camera = Engine.Canvas.GetWorldViewRectangle();
+      var camera = Core.Canvas.GetWorldViewRectangle();
 
       Vector2 targetPos = new Vector2(Transform.Global.Position.X + camera.Width * dir, Transform.Global.Position.Y);
 
@@ -109,7 +109,7 @@ namespace Monolith.Hierarchy
         action?.Invoke();
 
 
-      var cameraXTween = Engine.Index.CreateTween(t => LocalPosition = t, Transform.Global.Position, targetPos, 0.5f, Vector2.Lerp, EasingFunctions.Linear);
+      var cameraXTween = Core.Index.CreateTween(t => LocalPosition = t, Transform.Global.Position, targetPos, 0.5f, Vector2.Lerp, EasingFunctions.Linear);
 
       cameraXTween.SetCallbackAction
       (

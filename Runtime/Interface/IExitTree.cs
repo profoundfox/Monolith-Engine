@@ -1,6 +1,6 @@
 namespace Monolith.Runtime
 {
-  public interface IExitTree 
+  public interface IExitTree
   {
     void _ExitTree();
   }

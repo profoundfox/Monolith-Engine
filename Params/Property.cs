@@ -20,7 +20,7 @@ namespace Monolith.Params
     /// Directly sets properties within an object.
     ///<para>Example:</para>
     ///<code>
-    /// var node = Engine.Index.Create&lt;Node&gt;().Set(n =&gt; { });
+    /// var node = Core.Index.Create&lt;Node&gt;().Set(n =&gt; { });
     ///</code>
     ///</summary>
     ///<param name="inst">A reference to the object.</param

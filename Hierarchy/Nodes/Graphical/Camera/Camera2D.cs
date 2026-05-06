@@ -16,8 +16,8 @@ namespace Monolith.Hierarchy
     {
       get
       {
-        float width = Engine.Canvas.RenderTarget.Width / Zoom.X;
-        float height = Engine.Canvas.RenderTarget.Height / Zoom.Y;
+        float width = Core.Canvas.RenderTarget.Width / Zoom.X;
+        float height = Core.Canvas.RenderTarget.Height / Zoom.Y;
 
         float left = Transform.Global.Position.X - width * 0.5f;
         float top = Transform.Global.Position.Y - height * 0.5f;
@@ -33,7 +33,7 @@ namespace Monolith.Hierarchy
 
     public Camera2D()
     {
-      Engine.Canvas.SetMatrix(GetTransform());
+      Core.Canvas.SetMatrix(GetTransform());
     }
 
     /// <summary>
@@ -42,7 +42,7 @@ namespace Monolith.Hierarchy
     /// </summary>
     public Matrix GetTransform()
     {
-      Vector2 CanvasCenter = new Vector2(Engine.Canvas.RenderTarget.Width / Zoom.X, Engine.Canvas.RenderTarget.Height / Zoom.Y) * 0.5f;
+      Vector2 CanvasCenter = new Vector2(Core.Canvas.RenderTarget.Width / Zoom.X, Core.Canvas.RenderTarget.Height / Zoom.Y) * 0.5f;
 
       Matrix transform = Matrix.CreateScale(Zoom.X, Zoom.Y, 1f)
           * Matrix.CreateRotationZ(Transform.Global.Rotation)
@@ -56,7 +56,7 @@ namespace Monolith.Hierarchy
     {
       base._Process(delta);
 
-      Engine.Canvas.SetMatrix(GetTransform());
+      Core.Canvas.SetMatrix(GetTransform());
     }
   }
 }

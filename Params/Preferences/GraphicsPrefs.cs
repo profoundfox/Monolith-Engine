@@ -26,12 +26,12 @@ namespace Monolith
 
     public void Apply()
     {
-      Engine.Graphics.IsFullScreen = Fullscreen;
+      Core.Graphics.IsFullScreen = Fullscreen;
 
-      Engine.Canvas.RenderSize = RenderSize;
+      Core.Canvas.RenderSize = RenderSize;
 
-      Engine.Canvas.UpdateTransform();
-      Engine.Graphics.ApplyChanges();
+      Core.Canvas.UpdateTransform();
+      Core.Graphics.ApplyChanges();
     }
   }
 }

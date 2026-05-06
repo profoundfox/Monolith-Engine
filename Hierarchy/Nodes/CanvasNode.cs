@@ -3,6 +3,7 @@ using System.IO.Compression;
 using System.Reflection.Metadata.Ecma335;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Monolith.Managers;
 using Monolith.Params;
 
 namespace Monolith.Hierarchy
@@ -68,6 +69,21 @@ namespace Monolith.Hierarchy
       set
       {
         Material.Local = Material.Local with { Shader = value };
+      }
+    }
+
+    ///<summary>
+    /// The self contained draw layer of this node.
+    ///</summary>
+    ///<remarks>
+    /// For the moment, this is not passed down.
+    ///</remarks>
+    public DrawLayer LocalDrawLayer 
+    {
+      get => Ordering.Local.DrawLayer;
+      set 
+      {
+        Ordering.Local = Ordering.Local with { DrawLayer = value };
       }
     }
 

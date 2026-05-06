@@ -11,9 +11,9 @@ using Monolith.Hierarchy;
 
 namespace Monolith
 {
-  public class Engine : Game
+  public class Core : Game
   {
-    public static Engine Tracked { get; set; }
+    public static Core Tracked { get; set; }
 
     public static GraphicsDeviceManager Graphics { get; private set; }
     public static new GraphicsDevice GraphicsDevice { get; private set; }
@@ -38,10 +38,10 @@ namespace Monolith
     private int _fpsFrames;
     private double _fpsTimer;
 
-    public Engine()
+    public Core()
     {
       if (Tracked != null)
-        throw new InvalidOperationException("Only one Engine instance can exist.");
+        throw new InvalidOperationException("Only one Core instance can exist.");
 
       Tracked = this;
       Graphics = new GraphicsDeviceManager(this)
@@ -60,7 +60,7 @@ namespace Monolith
     protected override void Initialize()
     {
 
-      ClassDB.Initialize(typeof(Engine).Assembly);
+      ClassDB.Initialize(typeof(Core).Assembly);
 
       GraphicsDevice = base.GraphicsDevice;
 
@@ -87,7 +87,7 @@ namespace Monolith
     {
       base.LoadContent();
 
-      var assembly = typeof(Engine).Assembly;
+      var assembly = typeof(Core).Assembly;
       using var stream = assembly.GetManifestResourceStream("Monolith.Graphics.Font.bitmap_font.png");
       if (stream == null)
         throw new InvalidOperationException("Embedded resource not found: Monolith.Graphics.Font.bitmap_font.png");
@@ -134,7 +134,7 @@ namespace Monolith
     protected override void Draw(GameTime gameTime)
     {
       GraphicsDevice.SetRenderTarget(Canvas.RenderTarget);
-      GraphicsDevice.Clear(Color.CornflowerBlue);
+      GraphicsDevice.Clear(Color.Black);
 
       Canvas.Flush();
 

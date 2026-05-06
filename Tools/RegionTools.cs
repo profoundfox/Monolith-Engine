@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Monolith.Geometry;
+using Monolith.Hierarchy;
+using Monolith.Params;
 
 namespace Monolith.Tools
 {
-  public static class ShapeTools
+  public static class RegionTools 
   {
     public static RectangleShape2D ToShape(this Rectangle normRect)
     {
@@ -35,6 +37,51 @@ namespace Monolith.Tools
       int newHeight = newBottom - newY;
 
       return new Rectangle(newX, newY, newWidth, newHeight);
+    }
+
+    public static List<Rectangle> HorizontalSplit(this Rectangle rect, int segments)
+    {
+        if (segments <= 0)
+            throw new ArgumentException("Segments must be greater than 0.", nameof(segments));
+
+        var result = new List<Rectangle>(segments);
+
+        int baseWidth = rect.Width / segments;
+        int remainder = rect.Width % segments;
+
+        int x = rect.X;
+
+        for (int i = 0; i < segments; i++)
+        {
+            int width = baseWidth;
+
+            if (i < remainder)
+                width += 1;
+
+            result.Add(new Rectangle(
+                x,
+                rect.Y,
+                width,
+                rect.Height
+            ));
+
+            x += width;
+        }
+
+        return result;
+    }
+      
+    public static CollisionShape2D ToCollisionShape(this Rectangle rect)
+    {
+      var position = rect.Location.ToVector2();
+
+      var rectShape = rect.ToShape();
+
+      return new CollisionShape2D().Set(n => 
+      {
+        n.LocalPosition = position;
+        n.Shape = rectShape;
+      });
     }
 
     public static List<Rectangle> Split(this Rectangle rect, int splitWidth, int splitHeight)

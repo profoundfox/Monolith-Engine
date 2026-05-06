@@ -14,7 +14,7 @@ namespace Monolith.Managers
 
     public ResourceManager()
     {
-      Engine.Tracked.Content.RootDirectory = ContentRoot;
+      Core.Tracked.Content.RootDirectory = ContentRoot;
 
       Provider = new PipelineLoader();
     }

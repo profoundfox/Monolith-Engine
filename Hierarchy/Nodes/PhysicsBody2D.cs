@@ -21,13 +21,13 @@ namespace Monolith.Hierarchy
         if (node is not CollisionShape2D)
           return;
 
-        Engine.Physics.RegisterBody(this);
-        Engine.Physics.NotifyMoved(this);
+        Core.Physics.RegisterBody(this);
+        Core.Physics.NotifyMoved(this);
       };
 
       OnTransformChanged += (transform) =>
       {
-        Engine.Physics.NotifyMoved(this);
+        Core.Physics.NotifyMoved(this);
       };
 
 
@@ -35,14 +35,14 @@ namespace Monolith.Hierarchy
 
       if (!CollisionShapes.IsEmpty())
       {
-        Engine.Physics.RegisterBody(this);
-        Engine.Physics.NotifyMoved(this);
+        Core.Physics.RegisterBody(this);
+        Core.Physics.NotifyMoved(this);
       }
     }
 
     public override void _ExitTree()
     {
-      Engine.Physics.UnregisterBody(this);
+      Core.Physics.UnregisterBody(this);
 
       base._ExitTree();
     }

@@ -45,7 +45,7 @@ namespace Monolith.Managers
     public void Initialize()
     {
       CreateRenderTarget();
-      Engine.Tracked.Window.ClientSizeChanged += (_, _) => UpdateTransform();
+      Core.Tracked.Window.ClientSizeChanged += (_, _) => UpdateTransform();
       UpdateTransform();
     }
 
@@ -155,7 +155,7 @@ namespace Monolith.Managers
       RenderTarget?.Dispose();
 
       RenderTarget = new RenderTarget2D(
-          Engine.GraphicsDevice,
+          Core.GraphicsDevice,
           RenderSize.Width,
           RenderSize.Height,
           false,
@@ -165,7 +165,7 @@ namespace Monolith.Managers
 
     internal void UpdateTransform()
     {
-      var pp = Engine.GraphicsDevice.PresentationParameters;
+      var pp = Core.GraphicsDevice.PresentationParameters;
 
       float scale = Math.Min(
           pp.BackBufferWidth / (float)RenderSize.Width,

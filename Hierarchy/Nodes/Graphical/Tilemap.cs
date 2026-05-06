@@ -129,7 +129,7 @@ namespace Monolith.Hierarchy
 
           Vector2 worldTilePos = localTilePos + Transform.Global.Position;
 
-          Engine.Canvas.Call(new TextureDrawCall
+          Core.Canvas.Call(new TextureDrawCall
           {
             Texture = tile,
             Params = CanvasParams.Identity with
@@ -146,7 +146,7 @@ namespace Monolith.Hierarchy
             {
               Effect = Material.Global.Shader
             }
-          });
+          }, Ordering.Global.DrawLayer);
         }
       }
     }

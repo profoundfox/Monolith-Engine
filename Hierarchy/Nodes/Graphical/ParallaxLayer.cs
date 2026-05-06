@@ -54,7 +54,7 @@ namespace Monolith.Hierarchy
     {
       base._Process(delta);
 
-      var camera = Engine.Index.Get<Camera2D>();
+      var camera = Core.Index.Get<Camera2D>();
       Vector2 camDelta = camera.Transform.Global.Position - lastCameraPos;
       lastCameraPos = camera.Transform.Global.Position;
 
@@ -67,7 +67,7 @@ namespace Monolith.Hierarchy
       if (!Visibility.Global.Visibile)
         return;
 
-      Rectangle view = Engine.Canvas.GetWorldViewRectangle();
+      Rectangle view = Core.Canvas.GetWorldViewRectangle();
 
       int texW = Texture.Bounds.Width;
       int texH = Texture.Bounds.Height;
@@ -107,7 +107,7 @@ namespace Monolith.Hierarchy
           );
 
 
-          Engine.Canvas.Call(new TextureDrawCall
+          Core.Canvas.Call(new TextureDrawCall
           {
             Texture = this.Texture,
             Params = CanvasParams.Identity with
@@ -116,7 +116,7 @@ namespace Monolith.Hierarchy
               Color = Color.White
             },
             Depth = Ordering.Global.Depth,
-          }, DrawLayer.Background);
+          }, Ordering.Global.DrawLayer);
         }
       }
     }

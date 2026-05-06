@@ -77,7 +77,7 @@ namespace Monolith.Hierarchy
       if (_finished || CurrentAnimation == null)
         return;
 
-      _elapsed += Engine.Time.GetContext().FrameDelta;
+      _elapsed += Core.Time.GetContext().FrameDelta;
 
       while (_elapsed >= CurrentAnimation.Delay)
       {
@@ -107,7 +107,7 @@ namespace Monolith.Hierarchy
 
       if (CurrentAnimation == null || Visibility.Global.Visibile == false) return;
 
-      Engine.Canvas.Call(new TextureDrawCall
+      Core.Canvas.Call(new TextureDrawCall
       {
         Texture = CurrentFrame,
         Params = CanvasParams.Identity with
@@ -124,7 +124,7 @@ namespace Monolith.Hierarchy
         {
           Effect = Material.Global.Shader
         }
-      });
+      }, Ordering.Global.DrawLayer);
     }
   }
 }

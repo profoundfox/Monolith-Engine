@@ -21,7 +21,7 @@ namespace Monolith.Hierarchy
       if (Texture == null)
         return;
 
-      Engine.Canvas.Call(new TextureDrawCall
+      Core.Canvas.Call(new TextureDrawCall
       {
         Texture = Texture,
         Params = CanvasParams.Identity with
@@ -38,7 +38,7 @@ namespace Monolith.Hierarchy
         {
           Effect = Material.Global.Shader
         }
-      });
+      }, Ordering.Global.DrawLayer);
 
     }
   }

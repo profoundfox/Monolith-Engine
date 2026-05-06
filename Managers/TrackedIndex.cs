@@ -66,26 +66,17 @@ namespace Monolith.Managers
       );
     }
 
-    internal void AddTracked(Tracked tracked)
-    {
-      QueueAdd(tracked);
-
-      Flush();
-
-      if (tracked is IEnterTree instEnter)
-        instEnter._EnterTree();
-    }
 
     /// <summary>
     /// Queues an instance to be added to this tree.
     /// </summary>
     /// <param name="instance"></param>
-    internal void QueueAdd(Tracked instance) => pendingAdd.Add(instance);
+    public void QueueAdd(Tracked instance) => pendingAdd.Add(instance);
     /// <summary>
     /// Queues an intance to be removed from this tree.
     /// </summary>
     /// <param name="instance"></param>
-    internal void QueueRemove(Tracked instance) => pendingRemove.Add(instance);
+    public void QueueRemove(Tracked instance) => pendingRemove.Add(instance);
 
     /// <summary>
     /// Flushes all instances.
@@ -169,11 +160,14 @@ namespace Monolith.Managers
     {
       foreach (var instance in instances.ToList())
       {
-        RemoveNow(instance);
+        RemoveInternal(instance);
       }
 
       instances.Clear();
       byName.Clear();
+
+      pendingAdd.Clear();
+      pendingRemove.Clear();
     }
 
 

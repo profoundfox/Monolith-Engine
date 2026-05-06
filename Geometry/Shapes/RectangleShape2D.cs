@@ -38,6 +38,13 @@ namespace Monolith.Geometry
       }
     }
 
+    public RectangleShape2D(Extent size)
+    {
+      Width = size.Width;
+      Height = size.Height;
+      _vertices = null;
+    }
+
     public RectangleShape2D(int width, int height)
     {
       Width = width;

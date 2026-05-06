@@ -55,7 +55,7 @@ namespace Monolith.Graphics
     /// </summary>
     public MTexture(int width, int height, bool mipMap = false, SurfaceFormat format = SurfaceFormat.Color)
     {
-      Texture = new Texture2D(Engine.GraphicsDevice, width, height, mipMap, format);
+      Texture = new Texture2D(Core.GraphicsDevice, width, height, mipMap, format);
       SourceRectangle = null;
     }
 
@@ -67,7 +67,7 @@ namespace Monolith.Graphics
       if (data.Length != width * height)
         throw new ArgumentException("Color array length does not match width*height");
 
-      Texture = new Texture2D(Engine.GraphicsDevice, width, height, mipMap, format);
+      Texture = new Texture2D(Core.GraphicsDevice, width, height, mipMap, format);
       Texture.SetData(data);
       SourceRectangle = null;
     }
@@ -80,7 +80,7 @@ namespace Monolith.Graphics
     /// <exception cref="ArgumentNullException"></exception>
     public MTexture(string texturePath, Rectangle? region = null)
     {
-      Texture2D texture = Engine.Resource.Load<Texture2D>(texturePath);
+      Texture2D texture = Core.Resource.Load<Texture2D>(texturePath);
       Texture = texture ?? throw new ArgumentNullException(nameof(texture));
       SourceRectangle = region;
     }

@@ -106,7 +106,7 @@ namespace Monolith.Tools
 
       int[,] grid = new int[gridHeight, gridWidth];
 
-      var nearby = Engine.Physics.Query([usableArea]);
+      var nearby = Core.Physics.Query([usableArea]);
 
       foreach (var body in nearby)
       {

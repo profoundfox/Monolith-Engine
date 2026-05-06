@@ -102,7 +102,7 @@ namespace Monolith.Graphics
 
     public void Draw()
     {
-      Engine.Canvas.Call(new TextureDrawCall
+      Core.Canvas.Call(new TextureDrawCall
       {
         Texture = _initialData.Texture,
         Params = CanvasParams.Identity with
